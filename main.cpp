@@ -5,6 +5,7 @@
 #include <vector>
 #include <cctype>
 #include <utility>
+#include <algorithm>
 #include <sstream> 
 
 using namespace std;
@@ -16,7 +17,13 @@ map<string, string> nouns = {
   {"areia", "sand"},
   {"chuva", "rain"},
   {"chuva", "rain"},
-  {"cachorro", "dog"}
+  {"cachorro", "dog"},
+  {"suco", "juice"},
+  {"laranja", "orange"}, // how the hell will i handle that ?
+  {"e", "and"},
+  {"porta", "door"},
+  {"janela", "window"},
+  {"não", "no"} // ts is dynamic as well, not before nouns and 'don't' before verbs
 };
 
 map <string, string> art = {
@@ -50,6 +57,9 @@ map<string, string> obj_pro = {
   {"they", {"them"}}
 };
 
+vector<string> th_per_aux = {"she", "he", "it"};
+vector<string> reg_aux = {"i", "you", "we", "they"};
+
 // oblique pronouns
 map<string, string> obl_pro = {
   {"te", "you"},
@@ -59,10 +69,12 @@ map<string, string> obl_pro = {
 // adjectives
 map<string, string> adj = {
   {"azul", "blue"},
+  {"vermelho", "red"},
   {"bonito", "beautiful"},
   {"legal", "cool"},
   {"grande", "big"},
   {"forte", "strong"},
+  {"pequeno", "little"},
   {"mais", "more"}
 };
 
@@ -81,8 +93,11 @@ map<string, pair<string, int>> verbs = {
   {"pens", {"think", 1}},
   {"quer", {"want", 0}},
   {"corr", {"run", 1}},
-  {"abr", {"open", 0}},
-  {"fech", {"clos", 0}}
+  {"ab", {"open", 0}},
+  {"fech", {"clos", 0}},
+  {"beb", {"drink", 1}},
+  {"fal", {"speak", 1}}
+
 };
 
 // common suffixes with traceable trnaslation pattern
@@ -103,9 +118,9 @@ pair<string, int> prefixLookup(string word){
   int word_type;
 
   vector<string> infinitive = {"ar", "er", "ir"};
-  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "mos"};
+  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "mos", "mo", "lo"};
   vector<string> present_s = {"a", "ta", "re", "ga"};
-  vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia"};
+  vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i"};
 
   string reg_past_ending = "ed";
   string inf_ending = "e";
@@ -190,8 +205,10 @@ pair<string, int> nounLookup(string word){
   int word_type;
   
   // rules
-   bool plural = nouns.count(word.substr(0, word.length() - 1));
-   bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o");
+   bool plural = nouns.count(word.substr(0, word.length() - 1)); // this is plural nouns only
+   bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
+   bool adj_plural = adj.count(word.substr(0, word.length() - 1)); // this is plural adjectives only
+   bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
 
   // for each individual word loop, you look in the noun dictionary
    if(nouns.count(word)){
@@ -225,15 +242,31 @@ pair<string, int> nounLookup(string word){
       translation = adv[word];
       word_type = 13;
     }
+    
    else if(plural){
-     
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
-         translation = nouns[word.substr(0, word.length() - 1)] + "s";
+         translation = nouns[word.substr(0, word.length() - 1)] + "s";    
          
-    } // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> cachorro - a + o -> cachorro  
+      word_type = 0;
+    } 
+    
+    // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
+      else if(adj_plural){
+         translation = adj[word.substr(0, word.length() - 1)];
+      word_type = 1;
+    }  
+    // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
    else if(gender_shift){
           
          translation = nouns[word.substr(0, word.length() - 1) + "o"];
+         word_type = 0;
+        }
+        
+    // same as above for adjectives. e.g pequena -> (pequena - a) + o -> pequeno
+    else if(adj_gender_shift){
+          
+         translation = adj[word.substr(0, word.length() - 1) + "o"];
+         word_type = 1;
         }
        // if not found suffix match
         else if(suffixLookup(word).first.length() > 0){ 
@@ -307,6 +340,35 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             reordered_arr.push_back(sentence_arr[i]);
         } 
         
+    // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
+    // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
+           else if (i > 1 && sentence_arr[i - 2].second == 0  && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 0) {
+            reordered_arr.pop_back();
+            reordered_arr.pop_back();   
+            reordered_arr.push_back(sentence_arr[i]);  
+            reordered_arr.push_back(sentence_arr[i - 2]);
+        } 
+         // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
+         // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PEROSN
+    // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
+    
+    //doesnt or dont
+           else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "no"  && sentence_arr[i].second == 3) {
+            cout << "it is happening again";
+            string aux_verb;
+            reordered_arr.pop_back();
+            // does the pronoun before negation exist in the th_per_aux vector array? if so you push 'does' in there as result
+                  if (std::find(th_per_aux.begin(), th_per_aux.end(), sentence_arr[i - 2].first) != th_per_aux.end()) {
+                       aux_verb = "does";
+                  }
+                  // does the pronoun before negation exist in the reg_aux vector array? if so you push 'do' in there as result
+                  else if (std::find(reg_aux.begin(), reg_aux.end(), sentence_arr[i - 2].first) != reg_aux.end()) {
+                      aux_verb = "do";
+                }
+                   reordered_arr.push_back(pair<string, int>{aux_verb + "n't", 3});
+                   reordered_arr.push_back(pair<string, int>{sentence_arr[i].first.substr(0, sentence_arr[i].first.length() - 1), 3});
+        } 
+        
         else {
             reordered_arr.push_back(sentence_arr[i]);
         }
@@ -367,8 +429,15 @@ vector<string> traduzir(string sentence) {
     string original_sentence;
 
     std::cout << "O que deseja traduzir (pt-en)?\n";
+    cout << "Digite 'sair' para encerrar.\n";
+    while(true){
     getline(cin, original_sentence);
     traduzir(original_sentence + " ");
+    
+    if (original_sentence == "sair")
+      break;
+    }
+    
     return 0;
   
 }
