@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <map>
@@ -9,6 +8,13 @@
 #include <sstream> 
 
 using namespace std;
+
+// any set of (n)words in portuguese that can't be translated separately
+map<string, string> fixed_ngrams = {
+  {"de novo", "again"},
+  {"obrigado", "thank you"},
+  {"o que", "what"}
+};
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -109,7 +115,10 @@ map<string, pair<string, int>> irr_verbs = {
   {"sangr", {"bleed", 1}},
   {"procri", {"breed", 1}},
   {"aliment", {"feed", 1}},
-  {"nad", {"swim", 1}}
+  {"nad", {"swim", 1}},
+  {"quebr", {"break", 1}},
+  {"escrev", {"writ", 1}},
+  {"dirig", {"driv", 1}},
 
 };
 
@@ -125,6 +134,17 @@ map<string, string> suff = {
   {"ágico", "agic"},
   {"ágica", "agic"}
 };
+
+//is it a vowel? 
+bool isVowel(char x)
+{
+    if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
+        || x == 'u' || x == 'A' || x == 'E' || x == 'I'
+        || x == 'O' || x == 'U')
+    return true;
+    else
+     return false;
+}
 
 // dictionary lookup
 
@@ -204,15 +224,100 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
            verb_type = reg_verbs[root].second;
            cout << verb_type;
            return pair<string, int>{translation_, word_type_};
-       }
+       } 
        if(irr_verbs.find(root) != irr_verbs.end()){
                 
+
+        switch (verb_info)
+         {
+            case 0:
+                if(irr_verbs[root].second == 0){
+                  ending = "e";
+                }else{
+                  ending = "";
+                }
+            break;
+            case 1:
+             ending = "ed";
+            break;
+            case 2:
+               if(irr_verbs[root].second == 0){
+                  ending = "e";
+                }else{
+                  ending = "";
+                }
+            break;
+            case 3:
+               if(irr_verbs[root].second == 0){
+                  ending = "es";
+                }else{
+                  ending = "s";
+                }
+            break;
+            case 4:
+             ending = "e";
+            break;
+            default:
+            break;
+        }; 
          if(verb_info == 4){
             
-              translation_ = "used to " + irr_verbs[root].first;
-           }else{
-              translation_ = irr_verbs[root].first + ending;
-           }   
+              translation_ = "used to " + irr_verbs[root].first + ending;
+           }
+           else if(verb_info == 1){
+         //TODO: Set up the very specific rules that most verbs can abide to.
+                
+                if(irr_verbs[root].first.substr(irr_verbs[root].first.length() - 3, 3) == "eed"){
+                      translation_ = irr_verbs[root].first.substr(0, irr_verbs[root].first.length() - 3) + "ed";
+
+                      // this is a weird ass pattern that works for a small lil list of verbs (7 as of right now T-T)
+                      // if an irregular verb starts with two consonants (substr(0, 1) and substr(1, 1) dont pass isVowel())
+                      // and the two consonants are followed by either 'ea', 'i' or 'ee'*
+                      // BUT IT DOESNT END IN D G OR P LMAOOOOOOOOOO
+                      // you basically get the vowel(s)* that follow the two consonants and replace them with an O
+                    //and if it DOESNT end with an E, you add it 
+                        // the vowel to o shift also works if the verb ends in 'get' (get got forget forgot )
+                      // this way steal => stole, break => broke, speak => spoke, drive => drove 
+
+                } else if (irr_verbs[root].first.length() >= 3 && // is the word more than three letters?
+                      !isVowel(irr_verbs[root].first[0]) &&   // is the first letter not a vowel?
+                      !isVowel(irr_verbs[root].first[1]) &&   // is the second letter not a vowel?
+                      (irr_verbs[root].first.substr(2, 2) == "ea" || //are they followed by either "ea" || "i" || "ee"
+                        irr_verbs[root].first.substr(2, 1) == "i" || 
+                        irr_verbs[root].first.substr(2, 2) == "ee") &&
+                      irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p'
+                      irr_verbs[root].first.back() != 'g' && 
+                      irr_verbs[root].first.back() != 'p') {
+                            size_t pos;
+                            size_t length;
+
+                            // qual das vogais é a que o verbo tem? 
+                            if ((pos = irr_verbs[root].first.find("ea")) != string::npos) {
+                                length = 2;  
+                            } else if ((pos = irr_verbs[root].first.find("i")) != string::npos) {
+                                length = 1; 
+                            } else if ((pos = irr_verbs[root].first.find("ee")) != string::npos) {
+                                length = 2; 
+                            } else {
+                                translation_ = irr_verbs[root].first;
+                            }
+
+                          translation_ = irr_verbs[root].first;
+                          
+                          // remover as vogais e substituir por 'o'
+                          translation_.replace(pos, length, "o");
+                          if (translation_.back() != 'e') {
+                              translation_ += "e";
+                          }
+                else{
+                  translation_ = irr_verbs[root].first + "huh";
+                }
+            }   
+          }
+           else{
+            translation_ = irr_verbs[root].first + ending;
+       
+           }
         
            word_type_ = 3;
            verb_type = irr_verbs[root].second;
