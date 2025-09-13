@@ -14,7 +14,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS | BINARY SIZE |
 | ------------- | ------------- | ------ | ----------- |
-| Portuguese    | English       |        |    172kb    |
+| Portuguese    | English       |        |    187kb    |
 | English       | Portuguese    |        |             |
 | English       | French        |        |             |
 | Spanish       | Portuguese    |        |             |

@@ -23,7 +23,8 @@ map<string, string> nouns = {
   {"e", "and"},
   {"porta", "door"},
   {"janela", "window"},
-  {"não", "no"} // ts is dynamic as well, not before nouns and 'don't' before verbs
+  {"não", "no"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
+  {"jogo", "game"}
 };
 
 map <string, string> art = {
@@ -40,13 +41,13 @@ map <string, string> pre = {
 
 // nominative/personal pronouns
 map<string, string> pro = {
-  {"eu", {"i"}},
-  {"você", {"you"}},
-  {"nós",  {"we"}},
-  {"ele",  {"he"}},
-  {"ela",  {"she"}},
-  {"elas",  {"they"}},
-  {"eles",  {"they"}}
+  {"eu", "i"},
+  {"você", "you"},
+  {"nós",  "we"},
+  {"ele",  "he"},
+  {"ela",  "she"},
+  {"elas",  "they"},
+  {"eles", "they"}
 };
 
 //object pronoun match (in english)
@@ -75,7 +76,8 @@ map<string, string> adj = {
   {"grande", "big"},
   {"forte", "strong"},
   {"pequeno", "little"},
-  {"mais", "more"}
+  {"mais", "more"},
+  {"engraçado", "funny"}
 };
 
 //adverbs
@@ -83,20 +85,31 @@ map<string, string> adj = {
 map<string, string> adv = {
   {"mas", "but"},
   {"quando", "when"},
-  {"quem", "who"}
+  {"quem", "who"},
+  {"se", "if"},
+  {"também", "too"}
 };
 
 // verb prefixes where 0 = regular, 1 = irregular conjugation
-map<string, pair<string, int>> verbs = {
+map<string, pair<string, int>> reg_verbs = {
   {"am", {"lov", 0}},
   {"gost", {"lik", 0}},
-  {"pens", {"think", 1}},
-  {"quer", {"want", 0}},
+  {"quer", {"want", 1}},
+  {"quis", {"want", 1}},
   {"corr", {"run", 1}},
-  {"ab", {"open", 0}},
+  {"abr", {"open", 1}},
   {"fech", {"clos", 0}},
+  {"pergunt", {"ask", 1}}
+
+};
+
+map<string, pair<string, int>> irr_verbs = {
+  {"fal", {"speak", 1}},
   {"beb", {"drink", 1}},
-  {"fal", {"speak", 1}}
+  {"sangr", {"bleed", 1}},
+  {"procri", {"breed", 1}},
+  {"aliment", {"feed", 1}},
+  {"nad", {"swim", 1}}
 
 };
 
@@ -107,13 +120,18 @@ map<string, string> suff = {
   {"ível", "ible"},
   {"ória", "ory"},
   {"ência", "ency"},
-  {"cidade", "city"}
+  {"cidade", "city"},
+  {"açado", "aced"},
+  {"ágico", "agic"},
+  {"ágica", "agic"}
 };
 
 // dictionary lookup
 
 //look for preffix matches 
 pair<string, int> prefixLookup(string word){
+
+  
   string translation = word; 
   int word_type;
 
@@ -121,28 +139,85 @@ pair<string, int> prefixLookup(string word){
   vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "mos", "mo", "lo"};
   vector<string> present_s = {"a", "ta", "re", "ga"};
   vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i"};
+  vector<string> completed_past = {"ava", "ávamos"};
 
-  string reg_past_ending = "ed";
-  string inf_ending = "e";
-  string inf_ending_third = "es";
 
   // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
   // it's a lambda that returns a pair with the match lemma + the vowel/conjugation.
-auto find_verb = [](vector<string> format, string word, string ending) {
+auto find_verb = [](vector<string> format, string word, int verb_info) {
+
   for(size_t i = 0; i < format.size(); ++i){
+
+    
      string translation_;
      int word_type_;
      int verb_type;
+     string ending;
+
      
       size_t match = word.rfind(format[i]);
       if (match != string::npos && match + format[i].length() == word.length()) {
        string root = word.substr(0, match);
-       
-       if(verbs.find(root) != verbs.end()) {
-           translation_ = verbs[root].first + ending;
+
+       if(reg_verbs.find(root) != reg_verbs.end()) {
+
+      switch (verb_info)
+         {
+            case 0:
+                if(reg_verbs[root].second == 0){
+                  ending = "e";
+                }else{
+                  ending = "";
+                }
+            break;
+            case 1:
+             ending = "ed";
+            break;
+            case 2:
+               if(reg_verbs[root].second == 0){
+                  ending = "e";
+                }else{
+                  ending = "";
+                }
+            break;
+            case 3:
+               if(reg_verbs[root].second == 0){
+                  ending = "es";
+                }else{
+                  ending = "s";
+                }
+            break;
+            case 4:
+             ending = "e";
+            break;
+            default:
+            break;
+        };
+           if(verb_info != 4){
+            
+              translation_ = reg_verbs[root].first + ending;
+           }else{
+
+              translation_ = "used to " + reg_verbs[root].first + "e";
+           }
            word_type_ = 3;
-           verb_type = verbs[root].second;
+           verb_type = reg_verbs[root].second;
            cout << verb_type;
+           return pair<string, int>{translation_, word_type_};
+       }
+       if(irr_verbs.find(root) != irr_verbs.end()){
+                
+         if(verb_info == 4){
+            
+              translation_ = "used to " + irr_verbs[root].first;
+           }else{
+              translation_ = irr_verbs[root].first + ending;
+           }   
+        
+           word_type_ = 3;
+           verb_type = irr_verbs[root].second;
+           cout << verb_type;
+
            return pair<string, int>{translation_, word_type_};
        }
      }
@@ -150,16 +225,19 @@ auto find_verb = [](vector<string> format, string word, string ending) {
       return pair<string, int>{"", -1};
 };
 // try with every possible ending set, infinitive being the first match attempt
-auto result_set = find_verb(infinitive, word, inf_ending);
+auto result_set = find_verb(infinitive, word, 0);
 
 if (result_set.first.empty()) 
-    result_set = find_verb(general_past, word, reg_past_ending);
+    result_set = find_verb(general_past, word, 1);
 
 if (result_set.first.empty()) 
-    result_set = find_verb(present_non_s, word, inf_ending);
+    result_set = find_verb(present_non_s, word, 2);
 
 if (result_set.first.empty()) 
-    result_set = find_verb(present_s, word, inf_ending_third);
+    result_set = find_verb(present_s, word, 3);
+
+if (result_set.first.empty()) 
+    result_set = find_verb(completed_past, word, 4);
 
   return result_set;
 }
@@ -190,10 +268,13 @@ pair<string, int> suffixLookup(string word){
   else if(suff.count(word.substr(3))){
     translation = word.substr(0, 3) + suff[word.substr(3)];
   }
-  else{
-    translation = "$";
-    
+    else if(suff.count(word.substr(2))){
+    translation = word.substr(0, 2) + suff[word.substr(2)];
   }
+    else{
+        translation = "";  
+        word_type = -1;
+    }
 }
   return {translation, word_type};
 }
@@ -339,6 +420,12 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             reordered_arr.push_back(pair<string, int>{"to", -1});  
             reordered_arr.push_back(sentence_arr[i]);
         } 
+         else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 3) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(sentence_arr[i - 2]);  
+            reordered_arr.push_back(pair<string, int>{"to", -1});  
+            reordered_arr.push_back(sentence_arr[i]);
+        } 
         
     // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
     // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
@@ -353,7 +440,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
     // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
     
     //doesnt or dont
-           else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "no"  && sentence_arr[i].second == 3) {
+           else if (i > 1 && (sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "no")  && sentence_arr[i].second == 3) {
             cout << "it is happening again";
             string aux_verb;
             reordered_arr.pop_back();
@@ -366,7 +453,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
                       aux_verb = "do";
                 }
                    reordered_arr.push_back(pair<string, int>{aux_verb + "n't", 3});
-                   reordered_arr.push_back(pair<string, int>{sentence_arr[i].first.substr(0, sentence_arr[i].first.length() - 1), 3});
+                   reordered_arr.push_back(pair<string, int>{sentence_arr[i].first, 3});
         } 
         
         else {
@@ -437,7 +524,7 @@ vector<string> traduzir(string sentence) {
     if (original_sentence == "sair")
       break;
     }
-    
+
     return 0;
   
 }
