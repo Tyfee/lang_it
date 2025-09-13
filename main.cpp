@@ -32,19 +32,28 @@ map <string, string> pre = {
 };
 
 // nominative/personal pronouns
-map<string, pair<string, string>> pro = {
-  {"eu", {"i", "me"}},
-  {"você", {"you", "you"}},
-  {"nós",  {"we", "us"}},
-  {"ele",  {"he", "him"}},
-  {"ela",  {"she", "her"}},
-  {"elas",  {"they", "them"}},
-  {"eles",  {"they", "them"}}
+map<string, string> pro = {
+  {"eu", {"i"}},
+  {"você", {"you"}},
+  {"nós",  {"we"}},
+  {"ele",  {"he"}},
+  {"ela",  {"she"}},
+  {"elas",  {"they"}},
+  {"eles",  {"they"}}
 };
+
+//object pronoun match (in english)
+
+map<string, string> obj_pro = {
+  {"she", {"her"}},
+  {"he", {"him"}},
+  {"they", {"them"}}
+};
+
 // oblique pronouns
 map<string, string> obl_pro = {
   {"te", "you"},
-  {"me", "me"}
+  {"me", "me"},
 };
 
 // adjectives
@@ -55,6 +64,14 @@ map<string, string> adj = {
   {"grande", "big"},
   {"forte", "strong"},
   {"mais", "more"}
+};
+
+//adverbs
+
+map<string, string> adv = {
+  {"mas", "but"},
+  {"quando", "when"},
+  {"quem", "who"}
 };
 
 // verb prefixes where 0 = regular, 1 = irregular conjugation
@@ -186,7 +203,7 @@ pair<string, int> nounLookup(string word){
       word_type = 1;
     }
     else if(pro.count(word)){
-      translation = pro[word].first;
+      translation = pro[word];
       word_type = 4;
     }
     
@@ -202,6 +219,11 @@ pair<string, int> nounLookup(string word){
      else if(pre.count(word)){
       translation = pre[word];
       word_type = 8;
+    }
+    
+     else if(adv.count(word)){
+      translation = adv[word];
+      word_type = 13;
     }
    else if(plural){
      
@@ -265,8 +287,17 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].first == "of") {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);  
-
         } 
+  // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
+        // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
+        // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
+        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(sentence_arr[i - 1]);
+            reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
+        } 
+
+
     // ------------------------ DOUBLE VERBS ----------------- TODO: figure out if verb1 verb[2]-ing is needed at some case
     // a set is verb[3] and verb[3], we add 'to' between them, so that amo[3] correr[3] -> love[3] *to* run[3]
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 3) {
@@ -298,7 +329,7 @@ std::string unigramLookup(vector<string> array_of_words){
   for(size_t i = 0; i < sentence_arr.size(); ++i){
      sentence = sentence + " " + sentence_arr[i].first;
   }
-  cout << "\n" << sentence;
+  cout << "\n" << sentence << "\n";
   return sentence;
 }
 
