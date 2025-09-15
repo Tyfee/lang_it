@@ -29,8 +29,8 @@ map<string, string> nouns = {
   {"e", "and"},
   {"porta", "door"},
   {"janela", "window"},
-  {"não", "no"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
-  {"jogo", "game"}
+  {"não", "not"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
+  {"jogo", "game"} // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo)
 };
 
 map <string, string> art = {
@@ -39,7 +39,7 @@ map <string, string> art = {
   {"do que", "than"}
 };
 
-map <string, string> pre = {
+map <string, string> pre = { 
   {"do", "of"},
   {"da", "of"},
   {"de", "of"}
@@ -48,21 +48,30 @@ map <string, string> pre = {
 // nominative/personal pronouns
 map<string, string> pro = {
   {"eu", "i"},
-  {"você", "you"},
-  {"nós",  "we"},
+  {"voce", "you"},
+  {"nos",  "we"},
   {"ele",  "he"},
   {"ela",  "she"},
   {"elas",  "they"},
   {"eles", "they"}
 };
+map<string, string> poss_pro = {
+  {"seu", "your"},
+  {"dela", "her"},
+  {"dele",  "his"},
+  {"nosso",  "our"},
+  {"meu",  "my"}
+};
 
 //object pronoun match (in english)
 
 map<string, string> obj_pro = {
-  {"she", {"her"}},
-  {"he", {"him"}},
-  {"they", {"them"}}
+  {"she", "her"},
+  {"he", "him"},
+  {"they", "them"},
 };
+
+
 
 vector<string> th_per_aux = {"she", "he", "it"};
 vector<string> reg_aux = {"i", "you", "we", "they"};
@@ -83,7 +92,9 @@ map<string, string> adj = {
   {"forte", "strong"},
   {"pequeno", "little"},
   {"mais", "more"},
-  {"engraçado", "funny"}
+  {"engraçado", "funny"},
+  {"molhado", "wet"},
+  {"seco", "dry"}
 };
 
 //adverbs
@@ -106,7 +117,6 @@ map<string, pair<string, int>> reg_verbs = {
   {"abr", {"open", 1}},
   {"fech", {"clos", 0}},
   {"pergunt", {"ask", 1}}
-
 };
 
 map<string, pair<string, int>> irr_verbs = {
@@ -119,7 +129,17 @@ map<string, pair<string, int>> irr_verbs = {
   {"quebr", {"break", 1}},
   {"escrev", {"writ", 1}},
   {"dirig", {"driv", 1}},
+  {"est", {"%", 1}}, // % is a flag for the 'to be' verb, i don't want to figure out a clever way to do that right now, so i'll simply mark it with a flag
+                    // and deal with conjugation based on what's goin on around it (i - 1) and (i + 1), since it could match:
+                    // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
 
+  {"cant", {"sing", 1}}
+                  };
+// 0 == ar 1 = odir
+map <string, int> patt_verbs = {
+  {"pt", 0},
+  {"ate", 0},
+  {"ode", 1}
 };
 
 // common suffixes with traceable trnaslation pattern
@@ -132,7 +152,10 @@ map<string, string> suff = {
   {"cidade", "city"},
   {"açado", "aced"},
   {"ágico", "agic"},
-  {"ágica", "agic"}
+  {"ágica", "agic"},
+  {"culo", "cle"},
+  {"cula", "cle"},
+  {"cleta", "cle"}
 };
 
 //is it a vowel? 
@@ -156,9 +179,10 @@ pair<string, int> prefixLookup(string word){
   int word_type;
 
   vector<string> infinitive = {"ar", "er", "ir"};
-  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "mos", "mo", "lo"};
+  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo"};
   vector<string> present_s = {"a", "ta", "re", "ga"};
   vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i"};
+  vector<string> present_continuous = {"ando"};
   vector<string> completed_past = {"ava", "ávamos"};
 
 
@@ -178,6 +202,8 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
       size_t match = word.rfind(format[i]);
       if (match != string::npos && match + format[i].length() == word.length()) {
        string root = word.substr(0, match);
+
+       
 
        if(reg_verbs.find(root) != reg_verbs.end()) {
 
@@ -226,7 +252,22 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
            return pair<string, int>{translation_, word_type_};
        } 
        if(irr_verbs.find(root) != irr_verbs.end()){
-                
+        
+        if(root == "est"){
+          // estou == am estamos == are está == is estão == are
+          if (word.substr(3, word.length()) == "ou"){
+           translation_ = "am";
+          }
+          else if(word.substr(3, word.length()) == "amos" || word.substr(3, word.length()) == "ão"){
+            translation_ = "are";
+          }
+            else if(word.substr(3, word.length()) == "á"){
+            translation_ = "is";
+          }
+           
+           word_type_ = 28; // 28 == to be cause 2 == TO 8 == B
+           return pair<string, int>{translation_, word_type_};
+       }
 
         switch (verb_info)
          {
@@ -257,6 +298,9 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
             case 4:
              ending = "e";
             break;
+             case 5:
+             ending = "ing";
+            break;
             default:
             break;
         }; 
@@ -285,9 +329,11 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
                       (irr_verbs[root].first.substr(2, 2) == "ea" || //are they followed by either "ea" || "i" || "ee"
                         irr_verbs[root].first.substr(2, 1) == "i" || 
                         irr_verbs[root].first.substr(2, 2) == "ee") &&
-                      irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p'
+                      irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p' || 'k'
                       irr_verbs[root].first.back() != 'g' && 
-                      irr_verbs[root].first.back() != 'p') {
+                      irr_verbs[root].first.back() != 'p' &&
+                     irr_verbs[root].first.back() != 'k'
+                    ) {
                             size_t pos;
                             size_t length;
 
@@ -313,6 +359,19 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
                   translation_ = irr_verbs[root].first + "huh";
                 }
             }   
+            // ANOTHER HYPERSPECIFIC RULE
+            // is the verbs second letter not 'h'?
+            // does it end in either ng or nk?
+
+            string base_ = irr_verbs[root].first;
+            if (base_.length() >= 3 
+            && base_[1] != 'h' 
+           && (base_.substr(base_.length()-2) == "ng" 
+           || base_.substr(base_.length()-2) == "nk"))
+            {
+                          // replace the i for an 'a' so that e.g: drink => drank
+                translation_ = base_.replace(base_.find("i"), 1, "a");;  
+            }
           }
            else{
             translation_ = irr_verbs[root].first + ending;
@@ -343,6 +402,9 @@ if (result_set.first.empty())
 
 if (result_set.first.empty()) 
     result_set = find_verb(completed_past, word, 4);
+
+if (result_set.first.empty()) 
+    result_set = find_verb(present_continuous, word, 5);
 
   return result_set;
 }
@@ -408,8 +470,11 @@ pair<string, int> nounLookup(string word){
     else if(pro.count(word)){
       translation = pro[word];
       word_type = 4;
+    } else if(poss_pro.count(word)){
+      translation = poss_pro[word];
+      word_type = 4;
     }
-    
+  
     else if(obl_pro.count(word)){
       translation = obl_pro[word];
       word_type = 11;
@@ -460,7 +525,7 @@ pair<string, int> nounLookup(string word){
        }else if(prefixLookup(word).first.length() > 0){
         // if suffix not found, look for prefix
         translation = prefixLookup(word).first;
-        word_type = 3;
+        word_type = prefixLookup(word).second;
        }
    
     cout << translation + " " << word_type << " ";

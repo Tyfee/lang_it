@@ -9,15 +9,14 @@ My goal with whatever this is, is to be able to achieve C1 translation between P
 Getting deep into studies about computational linguistics and machine translation, i wanted to know how far i can get with small amounts of code for a translation program based on rules on lemmas and stems.
 
 My benchmarks will be:
-- The book "O pequeno principe". (Full translation from PT-EN) ( ?? %);
-- The song "We're all gonna die" by AJJ. (Full translation from EN-PT) ( ?? %);
+- The book "The little prince". (Full translation) ( ?? %);
 
 At first, My goal is to introduce the following translations, and then pivot them between each other, so that any can be translated to any other:
 
-| FROM          | TO            | STATUS | BINARY SIZE |
-| ------------- | ------------- | ------ | ----------- |
-| Portuguese    | English       |        |    196kb    |
-| English       | Portuguese    |        |             |
-| English       | French        |        |             |
-| Spanish       | Portuguese    |        |             |
-| Swedish       | English       |        |             |
+| FROM          | TO            | STATUS | BINARY SIZE | The Little Prince |
+| ------------- | ------------- | ------ | ----------- | ----------------- |
+| Portuguese    | English       |        |    219kb    |       ?? %        |
+| English       | Portuguese    |        |             |       ?? %        |
+| English       | French        |        |             |       ?? %        |
+| Spanish       | Portuguese    |        |             |       ?? %        |
+| Swedish       | English       |        |             |       ?? %        |
