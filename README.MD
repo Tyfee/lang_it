@@ -2,7 +2,7 @@
 
 Langit means sky in some austronesian languages (malay being one i can speak).
 
-My goal with whatever this is, is to be able to achieve C1 translation between PT and a different language with a compiled binary with less than 500kb, and then move on to different language pairs, more similar or more distant. 
+My goal with whatever this is, is to be able to achieve B1 translation between PT and a different language with a compiled binary with less than 500kb, and then move on to different language pairs, more similar or more distant so that i can document the different processes involved, how do they affect the final binary size and how does accuracy compare. 
 
 ## why would i do that to myself
 
@@ -15,7 +15,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS | BINARY SIZE | The Little Prince |
 | ------------- | ------------- | ------ | ----------- | ----------------- |
-| Portuguese    | English       |        |    219kb    |       ?? %        |
+| Portuguese    | English       |        |    236kb    |       ?? %        |
 | English       | Portuguese    |        |             |       ?? %        |
 | English       | French        |        |             |       ?? %        |
 | Spanish       | Portuguese    |        |             |       ?? %        |

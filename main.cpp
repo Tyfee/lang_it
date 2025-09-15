@@ -11,10 +11,12 @@ using namespace std;
 
 // any set of (n)words in portuguese that can't be translated separately
 map<string, string> fixed_ngrams = {
-  {"de novo", "again"},
-  {"obrigado", "thank you"},
-  {"o que", "what"}
+  {"de_novo", "again"},
+  {"o_que", "what"},
+  {"por_que", "why"},
+  {"do_que", "than"}
 };
+
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -29,14 +31,22 @@ map<string, string> nouns = {
   {"e", "and"},
   {"porta", "door"},
   {"janela", "window"},
-  {"não", "not"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
-  {"jogo", "game"} // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo)
+  {"não", "no"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
+  {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo)
+  {"todo", "all"},
+  {"comida", "food"},
+  {"cidade", "town"},
+  {"arma", "gun"},
+  {"vida", "life"},
+  {"folha", "leaf"},
+  {"faca", "knife"}
 };
 
 map <string, string> art = {
   {"o", "the"},
   {"a", "the"},
-  {"do que", "than"}
+  {"um", "a"},
+  {"uma", "a"},
 };
 
 map <string, string> pre = { 
@@ -94,7 +104,8 @@ map<string, string> adj = {
   {"mais", "more"},
   {"engraçado", "funny"},
   {"molhado", "wet"},
-  {"seco", "dry"}
+  {"seco", "dry"},
+  {"novo", "new"}
 };
 
 //adverbs
@@ -104,7 +115,8 @@ map<string, string> adv = {
   {"quando", "when"},
   {"quem", "who"},
   {"se", "if"},
-  {"também", "too"}
+  {"também", "too"},
+  {"porque", "because"}
 };
 
 // verb prefixes where 0 = regular, 1 = irregular conjugation
@@ -116,7 +128,8 @@ map<string, pair<string, int>> reg_verbs = {
   {"corr", {"run", 1}},
   {"abr", {"open", 1}},
   {"fech", {"clos", 0}},
-  {"pergunt", {"ask", 1}}
+  {"pergunt", {"ask", 1}},
+  {"precis", {"need", 1}}
 };
 
 map<string, pair<string, int>> irr_verbs = {
@@ -133,7 +146,11 @@ map<string, pair<string, int>> irr_verbs = {
                     // and deal with conjugation based on what's goin on around it (i - 1) and (i + 1), since it could match:
                     // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
 
-  {"cant", {"sing", 1}}
+  {"cant", {"sing", 1}},
+  {"ganh", {"win", 1}},
+  {"é", {"is", 1}},
+  {"são", {"are", 1}},
+  {"sou", {"am", 1}}
                   };
 // 0 == ar 1 = odir
 map <string, int> patt_verbs = {
@@ -317,10 +334,10 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
                       // this is a weird ass pattern that works for a small lil list of verbs (7 as of right now T-T)
                       // if an irregular verb starts with two consonants (substr(0, 1) and substr(1, 1) dont pass isVowel())
                       // and the two consonants are followed by either 'ea', 'i' or 'ee'*
-                      // BUT IT DOESNT END IN D G OR P LMAOOOOOOOOOO
+                      // BUT IT DOESNT END IN D, G, P, K or M LMAOOOOOOOOOO
                       // you basically get the vowel(s)* that follow the two consonants and replace them with an O
                     //and if it DOESNT end with an E, you add it 
-                        // the vowel to o shift also works if the verb ends in 'get' (get got forget forgot )
+                        // the vowel to o shift also works if the verb ends in 'get' (get => got, forget => forgot )
                       // this way steal => stole, break => broke, speak => spoke, drive => drove 
 
                 } else if (irr_verbs[root].first.length() >= 3 && // is the word more than three letters?
@@ -332,7 +349,8 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
                       irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p' || 'k'
                       irr_verbs[root].first.back() != 'g' && 
                       irr_verbs[root].first.back() != 'p' &&
-                     irr_verbs[root].first.back() != 'k'
+                     irr_verbs[root].first.back() != 'k' &&
+                       irr_verbs[root].first.back() != 'm'
                     ) {
                             size_t pos;
                             size_t length;
@@ -406,6 +424,9 @@ if (result_set.first.empty())
 if (result_set.first.empty()) 
     result_set = find_verb(present_continuous, word, 5);
 
+if (result_set.first.empty()) 
+    result_set = pair<string, int>{irr_verbs[word].first, 3};
+
   return result_set;
 }
 
@@ -457,7 +478,7 @@ pair<string, int> nounLookup(string word){
    bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
    bool adj_plural = adj.count(word.substr(0, word.length() - 1)); // this is plural adjectives only
    bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
-
+   bool article_plural = art.count(word.substr(0, word.length() - 1));
   // for each individual word loop, you look in the noun dictionary
    if(nouns.count(word)){
    translation = nouns[word];
@@ -484,6 +505,10 @@ pair<string, int> nounLookup(string word){
       translation = art[word];
       word_type = 9;
     }
+     else if(article_plural){
+      translation = art[word.substr(0, word.length() - 1)];
+      word_type = 9;
+    }
      else if(pre.count(word)){
       translation = pre[word];
       word_type = 8;
@@ -496,11 +521,18 @@ pair<string, int> nounLookup(string word){
     
    else if(plural){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
-         translation = nouns[word.substr(0, word.length() - 1)] + "s";    
-         
-      word_type = 0;
-    } 
-    
+    //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
+     string singular_pt = word.substr(0, word.length() - 1);  
+    string singular_en = nouns[singular_pt];          
+translation = (!singular_en.empty() && 
+               singular_en.size() >= 2 && 
+               singular_en.substr(singular_en.size()-2) == "fe")
+    ? singular_en.substr(0, singular_en.size()-2) + "ves"
+    : (singular_en.back() == 'f'
+        ? singular_en.substr(0, singular_en.size()-1) + "ves"
+        : singular_en + "s");
+         word_type = 0;
+   }
     // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
       else if(adj_plural){
          translation = adj[word.substr(0, word.length() - 1)];
@@ -635,14 +667,24 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
 }
 
 //ngram groups
-std::string unigramLookup(vector<string> array_of_words){
+std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
 
   vector<pair<string, int>> sentence_arr;
 
   string sentence;
   for(size_t i = 0; i < array_of_words.size(); ++i){
     pair<string, int> match = nounLookup(array_of_words[i]);
+    switch (ignore_flags[i])
+    {
+    case 0:
     sentence_arr.push_back({match.first, match.second});
+      break;
+    case 1:
+    sentence_arr.push_back({array_of_words[i], 0});
+      break;
+    default:
+      break;
+    }
   }
   sentence_arr = reorder_helpers(sentence_arr);
   for(size_t i = 0; i < sentence_arr.size(); ++i){
@@ -654,9 +696,33 @@ std::string unigramLookup(vector<string> array_of_words){
 
 std::string bigramLookup(vector<string> array_of_words){
   vector<string> bi_array_of_words = array_of_words;
+  // 0 is false lolz
+  int should_ignore = 0;
   
-  return unigramLookup(bi_array_of_words);
-}
+  // if the sentence has 2 or more words, we can look up word bigrams
+vector<string> mended_array_of_words;
+vector<int> ignore_flags;
+
+  size_t i = 1;
+  while (i < bi_array_of_words.size()) {
+      string bigram = bi_array_of_words[i-1] + "_" + bi_array_of_words[i];
+      if (fixed_ngrams.count(bigram)) {
+          mended_array_of_words.push_back(fixed_ngrams[bigram]);
+          ignore_flags.push_back(1);  // mark this word as "already translated"
+          i += 2;
+      } else {
+          mended_array_of_words.push_back(bi_array_of_words[i-1]);
+          ignore_flags.push_back(0);  // normal word
+          i += 1; 
+      }
+  }
+  if (i == bi_array_of_words.size()) {
+      mended_array_of_words.push_back(bi_array_of_words.back());
+      ignore_flags.push_back(0);
+  }
+
+  return unigramLookup(mended_array_of_words, ignore_flags);
+    }
 
 std::string trigramLookup(vector<string> array_of_words){
     vector<string> tri_array_of_words = array_of_words;
