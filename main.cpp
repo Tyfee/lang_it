@@ -14,7 +14,9 @@ map<string, string> fixed_ngrams = {
   {"de_novo", "again"},
   {"o_que", "what"},
   {"por_que", "why"},
-  {"do_que", "than"}
+  {"do_que", "than"},
+  {"por_favor", "please"},
+  {"por_causa", "because of"}
 };
 
 
@@ -24,8 +26,9 @@ map<string, string> nouns = {
   {"melancia", "watermelon"},
   {"areia", "sand"},
   {"chuva", "rain"},
-  {"chuva", "rain"},
+  {"açucar", "sugar"},
   {"cachorro", "dog"},
+  {"água", "water"},
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
   {"e", "and"},
@@ -39,7 +42,14 @@ map<string, string> nouns = {
   {"arma", "gun"},
   {"vida", "life"},
   {"folha", "leaf"},
-  {"faca", "knife"}
+  {"faca", "knife"},
+  {"gato", "cat"},
+  {"mulher", "woman"},
+  {"homem", "man"},
+  {"pessoa", "person"},
+  {"cogumelo", "mushroom"},
+  {"nuvem", "cloud"} // TODO. IRREGULAR PLURAL SUCH AS M => NS
+
 };
 
 map <string, string> art = {
@@ -52,7 +62,11 @@ map <string, string> art = {
 map <string, string> pre = { 
   {"do", "of"},
   {"da", "of"},
-  {"de", "of"}
+  {"de", "of"},
+  {"com", "with"},
+  {"sem", "without"},
+  {"ou", "or"},
+  {"em", "in"}
 };
 
 // nominative/personal pronouns
@@ -101,11 +115,15 @@ map<string, string> adj = {
   {"grande", "big"},
   {"forte", "strong"},
   {"pequeno", "little"},
+  {"grande", "big"},
   {"mais", "more"},
   {"engraçado", "funny"},
   {"molhado", "wet"},
   {"seco", "dry"},
-  {"novo", "new"}
+  {"novo", "new"},
+  {"triste", "sad"},
+  {"feliz", "happy"},
+  {"alto", "high"}
 };
 
 //adverbs
@@ -116,7 +134,16 @@ map<string, string> adv = {
   {"quem", "who"},
   {"se", "if"},
   {"também", "too"},
-  {"porque", "because"}
+  {"porque", "because"},
+  {"onde", "where"},
+  {"quantos", "how many"},
+  {"quanto", "how much"},
+  {"nunca", "never"},
+  {"sempre", "always"},
+  {"aqui", "here"},
+  {"ali", "there"},
+  {"desde", "since"},
+  {"ninguém", "nobody"}
 };
 
 // verb prefixes where 0 = regular, 1 = irregular conjugation
@@ -129,7 +156,13 @@ map<string, pair<string, int>> reg_verbs = {
   {"abr", {"open", 1}},
   {"fech", {"clos", 0}},
   {"pergunt", {"ask", 1}},
-  {"precis", {"need", 1}}
+  {"pe", {"ask", 1}},
+  {"precis", {"need", 1}},
+  {"morr", {"di", 0}},
+  {"sonh", {"dream", 1}},
+  {"grit", {"scream", 1}},
+  {"acredit", {"believ", 0}},
+  {"viv", {"liv", 0}},
 };
 
 map<string, pair<string, int>> irr_verbs = {
@@ -141,7 +174,7 @@ map<string, pair<string, int>> irr_verbs = {
   {"nad", {"swim", 1}},
   {"quebr", {"break", 1}},
   {"escrev", {"writ", 1}},
-  {"dirig", {"driv", 1}},
+  {"dirig", {"driv", 0}},
   {"est", {"%", 1}}, // % is a flag for the 'to be' verb, i don't want to figure out a clever way to do that right now, so i'll simply mark it with a flag
                     // and deal with conjugation based on what's goin on around it (i - 1) and (i + 1), since it could match:
                     // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
@@ -150,14 +183,20 @@ map<string, pair<string, int>> irr_verbs = {
   {"ganh", {"win", 1}},
   {"é", {"is", 1}},
   {"são", {"are", 1}},
-  {"sou", {"am", 1}}
+  {"sou", {"am", 1}},
+  {"volt", {"go back", 1}},
+  {"te", {"have", 1}}
                   };
-// 0 == ar 1 = odir
+
+// 0 == pt 1 = ode 2 = ct 3 == ate
+// quick dirty verb guessing
 map <string, int> patt_verbs = {
-  {"pt", 0},
-  {"ate", 0},
-  {"ode", 1}
+  {"ptar", 0}, // adaptar = adapt,
+  {"odir", 1}, // explodir = explode 
+  {"tar", 2}, // contatar = contact
+  {"trar", 3} // contatar = contact // what about encontrar.... (needs more specification)
 };
+
 
 // common suffixes with traceable trnaslation pattern
 map<string, string> suff = {
@@ -195,12 +234,14 @@ pair<string, int> prefixLookup(string word){
   string translation = word; 
   int word_type;
 
-  vector<string> infinitive = {"ar", "er", "ir"};
-  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo"};
+  vector<string> infinitive = {"ar", "er", "ir", "dir", "r"};
+  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo", "ço", "nho"};
   vector<string> present_s = {"a", "ta", "re", "ga"};
-  vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i"};
+  vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i", "iu"};
   vector<string> present_continuous = {"ando"};
   vector<string> completed_past = {"ava", "ávamos"};
+  vector<string> subjunctive = {"sse", "ssemos"};
+  vector<string> conditional = {"ia", "iamos"};
 
 
   // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
@@ -219,8 +260,26 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
       size_t match = word.rfind(format[i]);
       if (match != string::npos && match + format[i].length() == word.length()) {
        string root = word.substr(0, match);
-
-       
+      string ending_ = "";
+       // verb guesser, only for infinitive, will figure out how to add the other tenses 
+       for (const auto& [endingStr, code] : patt_verbs) {
+        if (word.size() >= endingStr.size() &&
+            word.compare(word.size() - endingStr.size(), endingStr.size(), endingStr) == 0) {
+            
+           
+            string stem = word.substr(0, word.size() - endingStr.size());
+            switch (code) {
+                case 0: ending = "pt";   break;
+                case 1: ending = "ode";  break;
+                case 2: ending = "ct";   break;
+                case 3: ending = "trate";   break;
+            }
+            
+            translation_ = stem + ending;
+            word_type_ = 3;
+            return pair<string, int>{translation_, word_type_};
+        }
+        }
 
        if(reg_verbs.find(root) != reg_verbs.end()) {
 
@@ -374,7 +433,7 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
                               translation_ += "e";
                           }
                 else{
-                  translation_ = irr_verbs[root].first + "huh";
+                  translation_ = irr_verbs[root].first;
                 }
             }   
             // ANOTHER HYPERSPECIFIC RULE
@@ -439,6 +498,10 @@ pair<string, int> suffixLookup(string word){
 
  // if the last 6 letters of a word match a suff. e.g: totalmente, strip the 6 letters and look up
  // the corresposing translation for the length-6 suffix
+
+ // TODO; Before translating it directly as stem + ending, look up stem and try to translate and keep the 
+ // raw stem as fallback. so that Felizmente = [Happy] + ly instead of felizly :p.
+ // i also need to figure out how to handle stuff like incredibly
  if(word.length() > 6){
   if(suff.count(word.substr(6))){
     translation = word.substr(0, 6) + suff[word.substr(6)];
@@ -476,9 +539,12 @@ pair<string, int> nounLookup(string word){
   // rules
    bool plural = nouns.count(word.substr(0, word.length() - 1)); // this is plural nouns only
    bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
+   bool diminutive = nouns.count(word.substr(0, word.length() - 4) + "o") ||  nouns.count(word.substr(0, word.length() - 6) + "o");
    bool adj_plural = adj.count(word.substr(0, word.length() - 1)); // this is plural adjectives only
    bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
    bool article_plural = art.count(word.substr(0, word.length() - 1));
+  
+
   // for each individual word loop, you look in the noun dictionary
    if(nouns.count(word)){
    translation = nouns[word];
@@ -550,6 +616,16 @@ translation = (!singular_en.empty() &&
           
          translation = adj[word.substr(0, word.length() - 1) + "o"];
          word_type = 1;
+        }
+         else if(diminutive){
+         if(nouns.count(word.substr(0, word.length() - 4)  + "o")){
+             translation = "little " + nouns[word.substr(0, word.length() - 4) + "o"];
+
+         }else if(nouns.count(word.substr(0, word.length() - 6) + "o") ){
+             translation = "little " + nouns[word.substr(0, word.length() - 6) + "o"];
+         }
+           
+            word_type = 0;
         }
        // if not found suffix match
         else if(suffixLookup(word).first.length() > 0){ 

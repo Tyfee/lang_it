@@ -4,6 +4,8 @@ Langit means sky in some austronesian languages (malay being one i can speak).
 
 My goal with whatever this is, is to be able to achieve B1 translation between PT and a different language with a compiled binary with less than 500kb, and then move on to different language pairs, more similar or more distant so that i can document the different processes involved, how do they affect the final binary size and how does accuracy compare. 
 
+Eventually i wanna compare pairs as distant as Malay-Japanese and Chinese-Portuguese or as close as Italian-Portuguese and Portuguese-Spanish. 
+
 ## why would i do that to myself
 
 Getting deep into studies about computational linguistics and machine translation, i wanted to know how far i can get with small amounts of code for a translation program based on rules on lemmas and stems.
@@ -15,7 +17,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS | BINARY SIZE | The Little Prince |
 | ------------- | ------------- | ------ | ----------- | ----------------- |
-| Portuguese    | English       |        |    236kb    |       ?? %        |
+| Portuguese    | English       |        |    247kb    |       ?? %        |
 | English       | Portuguese    |        |             |       ?? %        |
 | English       | French        |        |             |       ?? %        |
 | Spanish       | Portuguese    |        |             |       ?? %        |
