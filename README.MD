@@ -17,7 +17,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS | BINARY SIZE | The Little Prince |
 | ------------- | ------------- | ------ | ----------- | ----------------- |
-| Portuguese    | English       |        |    247kb    |       ?? %        |
+| Portuguese    | English       |        |    251kb    |       ?? %        |
 | English       | Portuguese    |        |             |       ?? %        |
 | English       | French        |        |             |       ?? %        |
 | Spanish       | Portuguese    |        |             |       ?? %        |

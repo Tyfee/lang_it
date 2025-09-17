@@ -48,8 +48,8 @@ map<string, string> nouns = {
   {"homem", "man"},
   {"pessoa", "person"},
   {"cogumelo", "mushroom"},
-  {"nuvem", "cloud"} // TODO. IRREGULAR PLURAL SUCH AS M => NS
-
+  {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
+  {"flor", "flower"}
 };
 
 map <string, string> art = {
@@ -63,7 +63,7 @@ map <string, string> pre = {
   {"do", "of"},
   {"da", "of"},
   {"de", "of"},
-  {"com", "with"},
+  {"com", "with"}, // have to differentiate this from 'como' as in 'like' 
   {"sem", "without"},
   {"ou", "or"},
   {"em", "in"}
@@ -114,6 +114,7 @@ map<string, string> adj = {
   {"legal", "cool"},
   {"grande", "big"},
   {"forte", "strong"},
+  {"fraco", "weak"},
   {"pequeno", "little"},
   {"grande", "big"},
   {"mais", "more"},
@@ -163,6 +164,7 @@ map<string, pair<string, int>> reg_verbs = {
   {"grit", {"scream", 1}},
   {"acredit", {"believ", 0}},
   {"viv", {"liv", 0}},
+  {"tent", {"try", 1}},
 };
 
 map<string, pair<string, int>> irr_verbs = {
@@ -185,8 +187,10 @@ map<string, pair<string, int>> irr_verbs = {
   {"são", {"are", 1}},
   {"sou", {"am", 1}},
   {"volt", {"go back", 1}},
-  {"te", {"have", 1}}
-                  };
+  {"te", {"have", 1}},
+  {"com", {"eat", 1}},
+  {"lut", {"fight", 1}}
+};
 
 // 0 == pt 1 = ode 2 = ct 3 == ate
 // quick dirty verb guessing
@@ -261,25 +265,7 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
       if (match != string::npos && match + format[i].length() == word.length()) {
        string root = word.substr(0, match);
       string ending_ = "";
-       // verb guesser, only for infinitive, will figure out how to add the other tenses 
-       for (const auto& [endingStr, code] : patt_verbs) {
-        if (word.size() >= endingStr.size() &&
-            word.compare(word.size() - endingStr.size(), endingStr.size(), endingStr) == 0) {
-            
-           
-            string stem = word.substr(0, word.size() - endingStr.size());
-            switch (code) {
-                case 0: ending = "pt";   break;
-                case 1: ending = "ode";  break;
-                case 2: ending = "ct";   break;
-                case 3: ending = "trate";   break;
-            }
-            
-            translation_ = stem + ending;
-            word_type_ = 3;
-            return pair<string, int>{translation_, word_type_};
-        }
-        }
+
 
        if(reg_verbs.find(root) != reg_verbs.end()) {
 
@@ -461,6 +447,25 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
 
            return pair<string, int>{translation_, word_type_};
        }
+              // verb guesser, only for infinitive, will figure out how to add the other tenses 
+       for (const auto& [endingStr, code] : patt_verbs) {
+        if (word.size() >= endingStr.size() &&
+            word.compare(word.size() - endingStr.size(), endingStr.size(), endingStr) == 0) {
+            
+           
+            string stem = word.substr(0, word.size() - endingStr.size());
+            switch (code) {
+                case 0: ending = "pt";   break;
+                case 1: ending = "ode";  break;
+                case 2: ending = "ct";   break;
+                case 3: ending = "trate";   break;
+            }
+            
+            translation_ = stem + ending;
+            word_type_ = 3;
+            return pair<string, int>{translation_, word_type_};
+        }
+        }
      }
   }
       return pair<string, int>{"", -1};
@@ -499,25 +504,39 @@ pair<string, int> suffixLookup(string word){
  // if the last 6 letters of a word match a suff. e.g: totalmente, strip the 6 letters and look up
  // the corresposing translation for the length-6 suffix
 
- // TODO; Before translating it directly as stem + ending, look up stem and try to translate and keep the 
- // raw stem as fallback. so that Felizmente = [Happy] + ly instead of felizly :p.
  // i also need to figure out how to handle stuff like incredibly
  if(word.length() > 6){
   if(suff.count(word.substr(6))){
-    translation = word.substr(0, 6) + suff[word.substr(6)];
+    if(adj.count(word.substr(0, 6))){
+      translation = adj[word.substr(0, 6)] + suff[word.substr(6)];
+    }else{
+      translation = word.substr(0, 6) + suff[word.substr(6)];
+    }
     
   word_type = 2;
   }
   //same shit 
   else if(suff.count(word.substr(5))){
-    translation = word.substr(0, 5) + suff[word.substr(5)];
+      if(adj.count(word.substr(0, 5))){
+      translation = adj[word.substr(0, 5)] + suff[word.substr(5)];
+     }else{
+      translation = word.substr(0, 5) + suff[word.substr(5)];
+     }
   }
   //same shit 
   else if(suff.count(word.substr(4))){
-    translation = word.substr(0, 4) + suff[word.substr(4)];
+     if(adj.count(word.substr(0, 4))){
+      translation = adj[word.substr(0, 4)] + suff[word.substr(4)];
+     }else{
+      translation = word.substr(0,4) + suff[word.substr(4)];
+     }
   }
   else if(suff.count(word.substr(3))){
-    translation = word.substr(0, 3) + suff[word.substr(3)];
+       if(adj.count(word.substr(0, 3))){
+      translation = adj[word.substr(0, 3)] + suff[word.substr(3)];
+     }else{
+      translation = word.substr(0, 3) + suff[word.substr(3)];
+     }
   }
     else if(suff.count(word.substr(2))){
     translation = word.substr(0, 2) + suff[word.substr(2)];
@@ -537,10 +556,10 @@ pair<string, int> nounLookup(string word){
   int word_type;
   
   // rules
-   bool plural = nouns.count(word.substr(0, word.length() - 1)); // this is plural nouns only
+   bool plural = ((nouns.count(word.substr(0, word.length() - 1)) || nouns.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
    bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
    bool diminutive = nouns.count(word.substr(0, word.length() - 4) + "o") ||  nouns.count(word.substr(0, word.length() - 6) + "o");
-   bool adj_plural = adj.count(word.substr(0, word.length() - 1)); // this is plural adjectives only
+   bool adj_plural = ((adj.count(word.substr(0, word.length() - 1)) || adj.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
    bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
    bool article_plural = art.count(word.substr(0, word.length() - 1));
   
@@ -588,20 +607,37 @@ pair<string, int> nounLookup(string word){
    else if(plural){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
-     string singular_pt = word.substr(0, word.length() - 1);  
-    string singular_en = nouns[singular_pt];          
-translation = (!singular_en.empty() && 
-               singular_en.size() >= 2 && 
-               singular_en.substr(singular_en.size()-2) == "fe")
-    ? singular_en.substr(0, singular_en.size()-2) + "ves"
-    : (singular_en.back() == 'f'
-        ? singular_en.substr(0, singular_en.size()-1) + "ves"
-        : singular_en + "s");
-         word_type = 0;
-   }
+    string singular_pt;
+if (word.size() > 2 && word.substr(word.size() - 2) == "os" && nouns.count(word.substr(0, word.size() - 2) + "o")) {
+    singular_pt = word.substr(0, word.size() - 2); // "gatos" -> "gato"
+} else if (word.size() > 2 && word.substr(word.size() - 2) == "as" && nouns.count(word.substr(0, word.size() - 2) + "o")) {
+    singular_pt = word.substr(0, word.size() - 2); // "gatas" -> "gato"
+} else if (word.size() > 1 && word.substr(word.size() - 1) == "s" && nouns.count(word.substr(0, word.size() - 1))) {
+    singular_pt = word.substr(0, word.size() - 1); // "casas" -> "casa"
+} else {
+    singular_pt = ""; // não é plural conhecido
+}
+
+if(!singular_pt.empty()) {
+    string singular_en = nouns[singular_pt + (word.substr(word.size()-2)=="as" || word.substr(word.size()-2)=="os" ? "o" : "")];
+    translation = (!singular_en.empty() && singular_en.size() >= 2 && singular_en.substr(singular_en.size()-2) == "fe")
+        ? singular_en.substr(0, singular_en.size()-2) + "ves"
+        : (singular_en.back() == 'f'
+            ? singular_en.substr(0, singular_en.size()-1) + "ves"
+            : singular_en + "s");
+    word_type = 0;
+}
+
+}
     // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
       else if(adj_plural){
+        if(adj.count(word.substr(0, word.length() - 1))){
          translation = adj[word.substr(0, word.length() - 1)];
+
+        }else if(adj.count(word.substr(0, word.length() - 2) + "o")){
+             translation = adj[word.substr(0, word.length() - 2) + "o"];
+          }
+
       word_type = 1;
     }  
     // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
