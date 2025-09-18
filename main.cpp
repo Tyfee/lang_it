@@ -9,8 +9,18 @@
 
 using namespace std;
 
+
+typedef struct
+{
+  const char* w;
+  const char* t;
+} Entry;
+
+// constexpr struct test, eventually i want this bitch to be embedded-friendly; so i'll try to eliminate
+// maps, then vectors, then strings (highly doubt i'm capable but eh)
 // any set of (n)words in portuguese that can't be translated separately
-map<string, string> fixed_ngrams = {
+
+constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
   {"o_que", "what"},
   {"por_que", "why"},
@@ -18,6 +28,17 @@ map<string, string> fixed_ngrams = {
   {"por_favor", "please"},
   {"por_causa", "because of"}
 };
+
+template <size_t N>
+const char* lookup(const Entry (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].w;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return dict[i].t;
+    }
+    return nullptr;
+}
 
 
 // noun dictionary, not only nouns anymore lol
@@ -59,7 +80,7 @@ map <string, string> art = {
   {"uma", "a"},
 };
 
-map <string, string> pre = { 
+constexpr Entry pre[] = { 
   {"do", "of"},
   {"da", "of"},
   {"de", "of"},
@@ -70,7 +91,7 @@ map <string, string> pre = {
 };
 
 // nominative/personal pronouns
-map<string, string> pro = {
+constexpr Entry pro[] = {
   {"eu", "i"},
   {"voce", "you"},
   {"nos",  "we"},
@@ -79,7 +100,7 @@ map<string, string> pro = {
   {"elas",  "they"},
   {"eles", "they"}
 };
-map<string, string> poss_pro = {
+constexpr Entry poss_pro[] = {
   {"seu", "your"},
   {"dela", "her"},
   {"dele",  "his"},
@@ -129,7 +150,7 @@ map<string, string> adj = {
 
 //adverbs
 
-map<string, string> adv = {
+constexpr Entry adv[] = {
   {"mas", "but"},
   {"quando", "when"},
   {"quem", "who"},
@@ -147,25 +168,42 @@ map<string, string> adv = {
   {"ninguém", "nobody"}
 };
 
-// verb prefixes where 0 = regular, 1 = irregular conjugation
-map<string, pair<string, int>> reg_verbs = {
-  {"am", {"lov", 0}},
-  {"gost", {"lik", 0}},
-  {"quer", {"want", 1}},
-  {"quis", {"want", 1}},
-  {"corr", {"run", 1}},
-  {"abr", {"open", 1}},
-  {"fech", {"clos", 0}},
-  {"pergunt", {"ask", 1}},
-  {"pe", {"ask", 1}},
-  {"precis", {"need", 1}},
-  {"morr", {"di", 0}},
-  {"sonh", {"dream", 1}},
-  {"grit", {"scream", 1}},
-  {"acredit", {"believ", 0}},
-  {"viv", {"liv", 0}},
-  {"tent", {"try", 1}},
+struct Verb {
+    const char* root;       
+    const char* translation; 
+    int type;      
 };
+
+// verb prefixes where 0 = regular, 1 = irregular conjugation
+constexpr Verb reg_verbs[]  = {
+  {"am", "lov", 0},
+  {"gost", "lik", 0},
+  {"quer", "want", 1},
+  {"quis", "want", 1},
+  {"corr", "run", 1},
+  {"abr", "open", 1},
+  {"fech", "clos", 0},
+  {"pergunt", "ask", 1},
+  {"pe", "ask", 1},
+  {"precis", "need", 1},
+  {"morr", "di", 0},
+  {"sonh", "dream", 1},
+  {"grit", "scream", 1},
+  {"acredit","believ", 0},
+  {"viv", "liv", 0},
+  {"tent", "try", 1}
+};
+
+const Verb* lookupRegVerb(const char* root) {
+    for (const auto& v : reg_verbs) {
+        const char* p = v.root;
+        const char* q = root;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return &v; 
+    }
+    return nullptr;
+}
+
 
 map<string, pair<string, int>> irr_verbs = {
   {"fal", {"speak", 1}},
@@ -192,18 +230,26 @@ map<string, pair<string, int>> irr_verbs = {
   {"lut", {"fight", 1}}
 };
 
-// 0 == pt 1 = ode 2 = ct 3 == ate
+// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed
 // quick dirty verb guessing
 map <string, int> patt_verbs = {
   {"ptar", 0}, // adaptar = adapt,
   {"odir", 1}, // explodir = explode 
   {"tar", 2}, // contatar = contact
-  {"trar", 3} // contatar = contact // what about encontrar.... (needs more specification)
+  {"trair", 2}, // extrair = extract
+  {"trar", 3}, // contatar = contact // what about encontrar.... (needs more specification)
+  
+  //surely theres a way to imolement the past tense endings dinamically, will i? who knows
+  {"ptou", 4}, {"ptei", 4},
+  {"odiu", 4}, {"odi", 4},
+  {"tou", 4}, {"tei", 4},
+  {"traiu", 4}, {"traí", 4},
+  {"trou", 4}, {"trei", 4},
 };
 
 
 // common suffixes with traceable trnaslation pattern
-map<string, string> suff = {
+constexpr Entry suff[] = {
   {"mente", "ly"},
   {"ável", "able"},
   {"ível", "ible"},
@@ -266,53 +312,44 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
        string root = word.substr(0, match);
       string ending_ = "";
 
+char buffer[64];
 
-       if(reg_verbs.find(root) != reg_verbs.end()) {
+const Verb* v = lookupRegVerb(root.c_str());
 
-      switch (verb_info)
-         {
-            case 0:
-                if(reg_verbs[root].second == 0){
-                  ending = "e";
-                }else{
-                  ending = "";
-                }
-            break;
-            case 1:
-             ending = "ed";
-            break;
-            case 2:
-               if(reg_verbs[root].second == 0){
-                  ending = "e";
-                }else{
-                  ending = "";
-                }
-            break;
-            case 3:
-               if(reg_verbs[root].second == 0){
-                  ending = "es";
-                }else{
-                  ending = "s";
-                }
-            break;
-            case 4:
-             ending = "e";
-            break;
-            default:
-            break;
-        };
-           if(verb_info != 4){
-            
-              translation_ = reg_verbs[root].first + ending;
-           }else{
+if (v) {
+    const char* ending = "";
+    switch (verb_info) {
+        case 0: ending = (v->type == 0) ? "e" : ""; break;
+        case 1: ending = "ed"; break;
+        case 2: ending = (v->type == 0) ? "e" : ""; break;
+        case 3: ending = (v->type == 0) ? "es" : "s"; break;
+        case 4: ending = "e"; break;
+        default: break;
+    }
 
-              translation_ = "used to " + reg_verbs[root].first + "e";
-           }
-           word_type_ = 3;
-           verb_type = reg_verbs[root].second;
-           cout << verb_type;
-           return pair<string, int>{translation_, word_type_};
-       } 
+    if (verb_info != 4) {
+        size_t i = 0;
+        const char* base = v->translation;
+        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+        const char* e = ending;
+        while (*e && i + 1 < sizeof(buffer)) buffer[i++] = *e++;
+        buffer[i] = '\0';
+    } else {
+        const char* used = "used to ";
+        size_t i = 0;
+        while (*used && i + 1 < sizeof(buffer)) buffer[i++] = *used++;
+        const char* base = v->translation;
+        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+        buffer[i++] = 'e'; // final 'e'
+        buffer[i] = '\0';
+    }
+
+    word_type_ = 3;
+    verb_type = v->type;
+
+   return pair<string, int>{string(buffer), word_type_ };
+
+}
        if(irr_verbs.find(root) != irr_verbs.end()){
         
         if(root == "est"){
@@ -448,17 +485,27 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
            return pair<string, int>{translation_, word_type_};
        }
               // verb guesser, only for infinitive, will figure out how to add the other tenses 
+              // i think every [latin-origin] verb that fits this type of convertion is ALWAYS regular
+              // will check for exceptions later
        for (const auto& [endingStr, code] : patt_verbs) {
         if (word.size() >= endingStr.size() &&
             word.compare(word.size() - endingStr.size(), endingStr.size(), endingStr) == 0) {
             
            
-            string stem = word.substr(0, word.size() - endingStr.size());
+            
+            string stem;
+            
+            if(code == 4){ 
+               stem = word.substr(0, word.size() -( endingStr.size() - 2));
+            }else{
+              stem = word.substr(0, word.size() - endingStr.size());
+            }
             switch (code) {
                 case 0: ending = "pt";   break;
                 case 1: ending = "ode";  break;
                 case 2: ending = "ct";   break;
                 case 3: ending = "trate";   break;
+                case 4: ending = "ed";   break;
             }
             
             translation_ = stem + ending;
@@ -506,40 +553,40 @@ pair<string, int> suffixLookup(string word){
 
  // i also need to figure out how to handle stuff like incredibly
  if(word.length() > 6){
-  if(suff.count(word.substr(6))){
+  if(lookup(suff, word.substr(6).c_str())){
     if(adj.count(word.substr(0, 6))){
-      translation = adj[word.substr(0, 6)] + suff[word.substr(6)];
+      translation = adj[word.substr(0, 6)] + lookup(suff, word.substr(6).c_str());
     }else{
-      translation = word.substr(0, 6) + suff[word.substr(6)];
+      translation = word.substr(0, 6) + lookup(suff, word.substr(6).c_str());
     }
     
   word_type = 2;
   }
   //same shit 
-  else if(suff.count(word.substr(5))){
+  else if(lookup(suff, word.substr(5).c_str())){
       if(adj.count(word.substr(0, 5))){
-      translation = adj[word.substr(0, 5)] + suff[word.substr(5)];
+      translation = adj[word.substr(0, 5)] + lookup(suff, word.substr(5).c_str());
      }else{
-      translation = word.substr(0, 5) + suff[word.substr(5)];
+      translation = word.substr(0, 5) + lookup(suff, word.substr(5).c_str());
      }
   }
   //same shit 
-  else if(suff.count(word.substr(4))){
+  else if(lookup(suff, word.substr(4).c_str())){
      if(adj.count(word.substr(0, 4))){
-      translation = adj[word.substr(0, 4)] + suff[word.substr(4)];
+      translation = adj[word.substr(0, 4)] + lookup(suff, word.substr(4).c_str());
      }else{
-      translation = word.substr(0,4) + suff[word.substr(4)];
+      translation = word.substr(0,4) + lookup(suff, word.substr(4).c_str());
      }
   }
-  else if(suff.count(word.substr(3))){
+  else if(lookup(suff, word.substr(3).c_str())){
        if(adj.count(word.substr(0, 3))){
-      translation = adj[word.substr(0, 3)] + suff[word.substr(3)];
+      translation = adj[word.substr(0, 3)] + word.substr(3).c_str();
      }else{
-      translation = word.substr(0, 3) + suff[word.substr(3)];
+      translation = word.substr(0, 3) + lookup(suff, word.substr(3).c_str());
      }
   }
-    else if(suff.count(word.substr(2))){
-    translation = word.substr(0, 2) + suff[word.substr(2)];
+    else if(lookup(suff, word.substr(2).c_str())){
+    translation = word.substr(0, 2) + lookup(suff, word.substr(2).c_str());
   }
     else{
         translation = "";  
@@ -573,11 +620,11 @@ pair<string, int> nounLookup(string word){
       translation = adj[word];
       word_type = 1;
     }
-    else if(pro.count(word)){
-      translation = pro[word];
+    else if(lookup(pro, word.c_str())){
+      translation = lookup(pro, word.c_str());
       word_type = 4;
-    } else if(poss_pro.count(word)){
-      translation = poss_pro[word];
+    } else if(lookup(poss_pro, word.c_str())){
+      translation = lookup(poss_pro, word.c_str());
       word_type = 4;
     }
   
@@ -594,13 +641,13 @@ pair<string, int> nounLookup(string word){
       translation = art[word.substr(0, word.length() - 1)];
       word_type = 9;
     }
-     else if(pre.count(word)){
-      translation = pre[word];
+     else if(lookup(pre, word.c_str())){
+      translation = lookup(pre, word.c_str());
       word_type = 8;
     }
     
-     else if(adv.count(word)){
-      translation = adv[word];
+     else if(lookup(adv, word.c_str())){
+      translation = lookup(adv, word.c_str());
       word_type = 13;
     }
     
@@ -818,8 +865,8 @@ vector<int> ignore_flags;
   size_t i = 1;
   while (i < bi_array_of_words.size()) {
       string bigram = bi_array_of_words[i-1] + "_" + bi_array_of_words[i];
-      if (fixed_ngrams.count(bigram)) {
-          mended_array_of_words.push_back(fixed_ngrams[bigram]);
+      if (lookup(fixed_ngrams, bigram.c_str())) {
+          mended_array_of_words.push_back(lookup(fixed_ngrams, bigram.c_str()));
           ignore_flags.push_back(1);  // mark this word as "already translated"
           i += 2;
       } else {
