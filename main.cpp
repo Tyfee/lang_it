@@ -291,7 +291,7 @@ pair<string, int> prefixLookup(string word){
   vector<string> present_continuous = {"ando"};
   vector<string> completed_past = {"ava", "ávamos"};
   vector<string> subjunctive = {"sse", "ssemos"};
-  vector<string> conditional = {"ia", "iamos"};
+  vector<string> conditional = {"aria", "ariamos", "eria"};
 
 
   // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
@@ -327,20 +327,30 @@ if (v) {
         default: break;
     }
 
-    if (verb_info != 4) {
-        size_t i = 0;
-        const char* base = v->translation;
-        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
-        const char* e = ending;
-        while (*e && i + 1 < sizeof(buffer)) buffer[i++] = *e++;
-        buffer[i] = '\0';
-    } else {
+    if (verb_info == 4) { 
         const char* used = "used to ";
         size_t i = 0;
         while (*used && i + 1 < sizeof(buffer)) buffer[i++] = *used++;
         const char* base = v->translation;
         while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
         buffer[i++] = 'e'; // final 'e'
+        buffer[i] = '\0';
+    }
+    else if(verb_info == 6){
+       const char* would = "would ";
+        size_t i = 0;
+        while (*would && i + 1 < sizeof(buffer)) buffer[i++] = *would++;
+        const char* base = v->translation;
+        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+        buffer[i++] = 'e'; // final 'e'
+        buffer[i] = '\0';
+    }
+    else{
+       size_t i = 0;
+        const char* base = v->translation;
+        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+        const char* e = ending;
+        while (*e && i + 1 < sizeof(buffer)) buffer[i++] = *e++;
         buffer[i] = '\0';
     }
 
@@ -400,12 +410,22 @@ if (v) {
              case 5:
              ending = "ing";
             break;
+             case 6:
+              if(irr_verbs[root].second == 0){
+                  ending = "e";
+                }else{
+                  ending = "";
+                }
+            break;
             default:
             break;
         }; 
          if(verb_info == 4){
             
               translation_ = "used to " + irr_verbs[root].first + ending;
+           }else if(verb_info == 6){
+            
+              translation_ = "would" + irr_verbs[root].first + ending;
            }
            else if(verb_info == 1){
          //TODO: Set up the very specific rules that most verbs can abide to.
@@ -534,6 +554,10 @@ if (result_set.first.empty())
 
 if (result_set.first.empty()) 
     result_set = find_verb(present_continuous, word, 5);
+
+if (result_set.first.empty()) 
+    result_set = find_verb(conditional, word, 6);
+
 
 if (result_set.first.empty()) 
     result_set = pair<string, int>{irr_verbs[word].first, 3};
