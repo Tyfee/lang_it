@@ -512,7 +512,6 @@ if (v) {
         
            word_type_ = !aux ? 3 : 33;
            verb_type = irr_verbs[root].second;
-           cout << verb_type;
 
            return pair<string, int>{translation_, word_type_};
        }
@@ -754,8 +753,6 @@ if(!singular_pt.empty()) {
         translation = prefixLookup(word).first;
         word_type = prefixLookup(word).second;
        }
-   
-    cout << translation + " " << word_type << " ";
   return {translation, word_type};
 }
 
@@ -847,7 +844,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
     
     //doesnt or dont
            else if (i > 1 && (sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "no")  && sentence_arr[i].second == 3) {
-            cout << "it is happening again";
+     
             string aux_verb;
             reordered_arr.pop_back();
             // does the pronoun before negation exist in the th_per_aux vector array? if so you push 'does' in there as result
@@ -894,7 +891,6 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
   for(size_t i = 0; i < sentence_arr.size(); ++i){
      sentence = sentence + " " + sentence_arr[i].first;
   }
-  cout << "\n" << sentence << "\n";
   return sentence;
 }
 
@@ -934,7 +930,7 @@ std::string trigramLookup(vector<string> array_of_words){
     return bigramLookup(tri_array_of_words);
 }
 
-vector<string> traduzir_en(string sentence) {
+string traduzir_en(string sentence) {
     vector<string> arr;
     istringstream iss(sentence);
     string word;
@@ -942,29 +938,6 @@ vector<string> traduzir_en(string sentence) {
     while (iss >> word) {
         arr.push_back(word);
     }
-
-    for(size_t i = 0; i < arr.size(); ++i){
-      // cout << arr[i] << ", ";
-    }
-   // cout << "\n";
-    trigramLookup(arr);
-    return arr;
-}
-//main body
-  int main (){
-   
-    string original_sentence;
-
-    std::cout << "O que deseja traduzir (pt-en)?\n";
-    cout << "Digite 'sair' para encerrar.\n";
-    while(true){
-    getline(cin, original_sentence);
-    traduzir_en(original_sentence + " ");
-    
-    if (original_sentence == "sair")
-      break;
-    }
-
-    return 0;
-  
+    string translated = trigramLookup(arr);
+    return translated; 
 }

@@ -1,22 +1,59 @@
-input_file = "./o_pequeno_principe.txt"
-output_file = "./result.txt"
+book_file       = "./o_pequeno_principe.txt"
+dictionary_file = "./dicionario_pt_usp.txt"
+book_output     = "./result.txt"
+dict_output     = "./translated_result.txt"
+translate_exe   = "../translate_line"
 
-line_count = 0
+book_lines_translated = 0
+dictionary_lines_translated = 0
 
-File.open(output_file, "w") do |out|
-  IO.popen("../translate_line", "r+") do |io|
-    File.foreach(input_file) do |line|
-      line_count += 1
+File.open(book_output, "w") do |out|
+  IO.popen(translate_exe, "r+") do |io|
+    puts "Translating book..."
+    File.foreach(book_file).with_index(1) do |line, line_index|
+      line.strip!
+      next if line.empty?
 
       io.puts line
       io.flush
 
-      translation = io.gets
-      out.puts translation if translation
+      translation = io.gets&.strip
+      next unless translation && !translation.empty? && translation != line
 
-      puts "Processed line #{line_count}" if line_count % 50 == 0
+      out.puts translation
+      book_lines_translated += 1
+
+      puts "Processed book line #{line_index}" if line_index % 50 == 0
     end
   end
 end
 
-puts "Translation complete! Total lines: #{line_count}"
+File.open(dict_output, "w") do |out|
+  IO.popen(translate_exe, "r+") do |io|
+    puts "Translating dictionary..."
+    bad_tokens = ["e", "es", "ee"] 
+
+    File.foreach(dictionary_file).with_index(1) do |line, line_index|
+      line.strip!
+      next if line.empty?
+
+      io.puts line
+      io.flush
+
+      translation = io.gets&.strip
+      next unless translation && !translation.empty? && translation != line
+      next if bad_tokens.include?(translation)
+      next unless translation.match?(/[A-Za-zÀ-ÖØ-öø-ÿ]/)
+
+      out.puts translation
+      dictionary_lines_translated += 1
+
+
+      puts "Processed dictionary line #{line_index}" if line_index % 50 == 0
+    end
+  end
+end
+
+puts "Book benchmark completed! #{book_lines_translated} lines translated to #{book_output}"
+puts "Dictionary benchmark completed! #{dictionary_lines_translated} lines translated to #{dict_output}"
+
