@@ -6,6 +6,7 @@
 #include <utility>
 #include <algorithm>
 #include <sstream> 
+#include "lang_it.h"
 
 using namespace std;
 
@@ -70,7 +71,8 @@ map<string, string> nouns = {
   {"pessoa", "person"},
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
-  {"flor", "flower"}
+  {"flor", "flower"},
+  {"dinheiro", "money"}
 };
 
 map <string, string> art = {
@@ -227,7 +229,10 @@ map<string, pair<string, int>> irr_verbs = {
   {"volt", {"go back", 1}},
   {"te", {"have", 1}},
   {"com", {"eat", 1}},
-  {"lut", {"fight", 1}}
+  {"lut", {"fight", 1}},
+  {"pod", {"can", 1}},
+  {"pos", {"can", 1}},
+  {"dev", {"should", 1}}
 };
 
 // 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed
@@ -285,7 +290,7 @@ pair<string, int> prefixLookup(string word){
   int word_type;
 
   vector<string> infinitive = {"ar", "er", "ir", "dir", "r"};
-  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo", "ço", "nho"};
+  vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo", "ço", "nho", "so"};
   vector<string> present_s = {"a", "ta", "re", "ga"};
   vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i", "iu"};
   vector<string> present_continuous = {"ando"};
@@ -304,6 +309,7 @@ auto find_verb = [](vector<string> format, string word, int verb_info) {
      string translation_;
      int word_type_;
      int verb_type;
+     bool aux = false;
      string ending;
 
      
@@ -424,8 +430,14 @@ if (v) {
             
               translation_ = "used to " + irr_verbs[root].first + ending;
            }else if(verb_info == 6){
-            
-              translation_ = "would" + irr_verbs[root].first + ending;
+              if (root == "pod"){
+                translation_ = "could";
+               } else if(root == "dev"){
+                 translation_ = "should";
+               }else{
+              translation_ = "would " + irr_verbs[root].first + ending;
+              }
+              aux = true;
            }
            else if(verb_info == 1){
          //TODO: Set up the very specific rules that most verbs can abide to.
@@ -498,7 +510,7 @@ if (v) {
        
            }
         
-           word_type_ = 3;
+           word_type_ = !aux ? 3 : 33;
            verb_type = irr_verbs[root].second;
            cout << verb_type;
 
@@ -913,7 +925,7 @@ std::string trigramLookup(vector<string> array_of_words){
     return bigramLookup(tri_array_of_words);
 }
 
-vector<string> traduzir(string sentence) {
+vector<string> traduzir_en(string sentence) {
     vector<string> arr;
     istringstream iss(sentence);
     string word;
@@ -938,7 +950,7 @@ vector<string> traduzir(string sentence) {
     cout << "Digite 'sair' para encerrar.\n";
     while(true){
     getline(cin, original_sentence);
-    traduzir(original_sentence + " ");
+    traduzir_en(original_sentence + " ");
     
     if (original_sentence == "sair")
       break;
