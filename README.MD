@@ -15,11 +15,11 @@ My benchmarks will be:
 
 At first, My goal is to introduce the following translations, and then pivot them between each other, so that any can be translated to any other:
 
-| FROM          | TO            | STATUS | BINARY SIZE | The Little Prince |
-| ------------- | ------------- | ------ | ----------- | ----------------- |
-| Portuguese    | English       |        |    247kb    |       ?? %        |
-| English       | Japanese      |        |             |       ?? %        |
-| English       | Portuguese    |        |             |       ?? %        |
-| English       | French        |        |             |       ?? %        |
-| Spanish       | Portuguese    |        |             |       ?? %        |
-| Swedish       | English       |        |             |       ?? %        |
+| FROM          | TO            | STATUS | BINARY SIZE | The Little Prince | Estimated CEFR Level | Words |
+| ------------- | ------------- | ------ | ----------- | ----------------- | -------------------- | ----- |
+| Portuguese    | English       |  ⚠️    |    247kb    |       ?? %        |                      |       |
+| English       | Japanese      |  ⚠️    |             |       ?? %        |                      |       | 
+| English       | Portuguese    |  ⚠️    |             |       ?? %        |                      |       | 
+| English       | French        |  ⚠️    |             |       ?? %        |                      |       | 
+| Spanish       | Portuguese    |  ⚠️    |             |       ?? %        |                      |       | 
+| Swedish       | English       |  ⚠️    |             |       ?? %        |                      |       | 
