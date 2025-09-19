@@ -766,12 +766,21 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
     vector<pair<string, int>> reordered_arr;
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
+      
     // ------------------------ ADJECTIVE ORDER  -----------------
     // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
       if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]);
+        } 
+
+          // ------------------------ ARTICLE TWEAKS  --------------------
+        // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
+        else if (i > 0 && sentence_arr[i - 1].second == 9 && isVowel(sentence_arr[i].first[0])) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + "n", 9});
+            reordered_arr.push_back(sentence_arr[i]);  
         } 
        // ------------------------ OBLIQUE PRONOUNS  -----------------
        // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
