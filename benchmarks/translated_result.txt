@@ -3,19 +3,28 @@ abarroct
 abarroteed
 abarrotoed
 abateed
+abattery
+abdication
+aberration
 abertaly
 abiscoict
 abiscoiteed
 abiscoitoed
+abjuration
+ablation
+ablution
+abnegation
 abolect
 aboleteed
 aboletoed
+abolition
 abominable
 aborct
 aborteed
 abortoed
 opens
 abraced
+abration
 open
 open
 open
@@ -34,13 +43,18 @@ abrilhantoed
 open
 opened
 open
+absortion
 absorvible
+abstention
+absttery
 abstinency
+abstration
 absct
 abstred
 acalenct
 acalenteed
 acalentoed
+acareation
 acarpect
 acarpeteed
 acarpetoed
@@ -50,10 +64,12 @@ acarretoed
 acact
 acateed
 acatoed
+aceitation
 aceict
 aceitable
 aceiteed
 aceitoed
+aception
 acerct
 acerteed
 acertoed
@@ -65,6 +81,8 @@ acidentoed
 acinzenct
 acinzenteed
 acinzentoed
+aclamation
+aclaration
 aclimact
 aclimateed
 aclimatoed
@@ -75,6 +93,7 @@ açoict
 açoiteed
 açoitoed
 acometeed
+acomettery
 acorrenct
 acorrenteed
 acorrentoed
@@ -94,6 +113,8 @@ believed
 acrescenct
 acrescenteed
 acrescentoed
+acusation
+adaptation
 adapt
 adaptable
 adapted
@@ -102,6 +123,7 @@ adelgaced
 adentrate
 adentred
 adentred
+adequation
 aderency
 adestrate
 adestred
@@ -113,6 +135,7 @@ adiantoed
 would e
 used to e
 used to e
+adition
 adimplency
 adict
 aditeed
@@ -121,23 +144,31 @@ adjacency
 administrate
 administred
 administred
+admiration
 admirable
 admoesct
 admoesteed
 admoestoed
+adotion
 adoenct
 adoenteed
 adoentoed
+adoration
 adorable
 adoct
 adoteed
 adotoed
 adquirible
+adulation
+adultery
 advertency
 afasct
 afasteed
 afastoed
 afable
+afection
+afeition
+aferition
 ing
 would e
 used to e
@@ -145,10 +176,17 @@ used to e
 afervenct
 aferventeed
 aferventoed
+afetation
 afect
 afeteed
 afetoed
+afiliation
+afination
+afirmation
+afixation
+aflition
 afluency
+afobation
 afoict
 afoiteed
 afoitoed
@@ -162,6 +200,7 @@ afrontoed
 afugenct
 afugenteed
 afugentoed
+agarration
 agency
 agiganct
 agiganteed
@@ -170,6 +209,7 @@ agilly
 agioct
 agioteed
 agiotoed
+agitation
 agict
 agiteed
 agitoed
@@ -202,6 +242,7 @@ alastrate
 alastred
 alastred
 aleatory
+alegation
 aleict
 aleiteed
 aleitoed
@@ -215,6 +256,7 @@ alevanct
 alevanteed
 alevantoed
 there
+alienation
 feeds
 feed
 feed
@@ -232,10 +274,13 @@ fed
 alisct
 alisteed
 alistoed
+alocation
+alocution
 high
 altaly
 alct
 high
+alteration
 high
 high
 loves
@@ -249,12 +294,14 @@ lov
 love
 loved
 would love
+amarration
 amarroct
 amarroteed
 amarrotoed
 used to love
 used to love
 amable
+ambition
 ambienct
 ambienteed
 ambientoed
@@ -269,12 +316,15 @@ love
 amoict
 amoiteed
 amoitoed
+amolation
 amordaced
 amostrate
 amostred
 amostred
 loved
 amplaly
+ampliation
+amputation
 ampuct
 amputeed
 amputoed
@@ -282,6 +332,9 @@ ing
 would e
 used to e
 used to e
+anexation
+animation
+anotation
 anoct
 anoteed
 anotoed
@@ -291,17 +344,20 @@ antedatoed
 antigaly
 anually
 anuency
+anulation
 the
 aparency
 aparenct
 aparenteed
 aparentoed
+aparition
 aparct
 aparteed
 apartoed
 apascenct
 apascenteed
 apascentoed
+apelation
 apelatory
 aperct
 aperteed
@@ -314,6 +370,7 @@ apimentoed
 apict
 apiteed
 apitoed
+aplication
 aplicable
 aponct
 aponteed
@@ -338,14 +395,17 @@ apresentoed
 apronct
 apronteed
 aprontoed
+aprovation
 aprovable
 aproveict
 aproveiteed
 aproveitoed
+apuration
 here
 aquilact
 aquilateed
 aquilatoed
+aquisition
 the
 arable
 arbitrate
@@ -355,11 +415,13 @@ ardency
 ardualy
 sand
 s
+arguition
 argumenct
 arguly
 argumenteed
 argumentoed
 gun
+armation
 s
 little
 little
@@ -404,12 +466,15 @@ arremact
 arremateed
 arrematoed
 arremeteed
+arremettery
 arrosct
 arrosteed
 arrostoed
 arroct
 arroteed
 arrotoed
+arrumation
+artery
 article
 article
 the
@@ -417,6 +482,7 @@ ascendency
 asfalct
 asfalteed
 asfaltoed
+aspiration
 assalct
 assalteed
 assaltoed
@@ -427,6 +493,7 @@ used to e
 assenct
 assenteed
 assentoed
+assertion
 ing
 would e
 used to e
@@ -438,6 +505,7 @@ ing
 would e
 used to e
 used to e
+assuntion
 assusct
 assusteed
 assustoed
@@ -450,13 +518,16 @@ would e
 used to e
 used to e
 ateed
+atention
 atenct
 atenteed
 atentoed
+atenuation
 atesct
 atesteed
 atestoed
 atingible
+ativation
 ativaly
 ing
 would e
@@ -467,13 +538,17 @@ atorly
 atormenteed
 atormentoed
 atoed
+atration
 act
 atred
+atrition
 atrict
 atriteed
 atritoed
+atuation
 atually
 audazly
+audition
 audiency
 audible
 aumenct
@@ -487,10 +562,13 @@ ausency
 ausenct
 ausenteed
 ausentoed
+automation
+avaliation
 avaraly
 avenct
 aventeed
 aventoed
+aviation
 avilct
 avilteed
 aviltoed
@@ -512,10 +590,14 @@ ing
 would e
 used to e
 used to e
+bactery
+badalation
+bajulation
 ing
 would e
 used to e
 used to e
+baldeation
 ing
 would e
 used to e
@@ -537,6 +619,8 @@ basct
 basteed
 bastoed
 bateed
+battery
+batistery
 drinks
 drink
 drink
@@ -548,12 +632,18 @@ drank
 drank
 drank
 drink
+bention
+bêntion
 besunct
 besunteed
 besuntoed
 bicicle
 bienally
+bijetion
+bijuttery
+bilhettery
 binócle
+biotery
 bisbilhoct
 bisbilhoteed
 bisbilhotoed
@@ -590,7 +680,9 @@ broct
 broteed
 brotoed
 brutally
+cabetion
 cabible
+cation
 ing
 would e
 used to e
@@ -611,6 +703,7 @@ cadastred
 cadastred
 cadency
 caducity
+caiation
 ing
 would e
 used to e
@@ -622,14 +715,17 @@ ing
 would e
 used to e
 used to e
+caltion
 calcle
 calcle
 cálcle
+calefation
 calmaly
 ing
 would e
 used to e
 used to e
+cantion
 candidact
 candidateed
 candidatoed
@@ -654,23 +750,34 @@ capacitoed
 capoct
 capoteed
 capotoed
+captation
 capt
 capted
 capted
 carency
+carrotion
+cassation
+castration
 castrate
 castred
 castred
+catation
 cact
 cateed
 catoed
+caution
+cavation
 cegaly
+cemitery
 cenácle
 censurable
 centrate
 centred
 centred
+cerration
 certaly
+cessation
+chateation
 ing
 would e
 used to e
@@ -706,6 +813,7 @@ circuitoed
 circle
 circle
 círcle
+citation
 cict
 citeed
 citoed
@@ -713,18 +821,26 @@ civilly
 claraly
 clavícle
 clemency
+cloration
 coabict
 coabiteed
 coabitoed
+coation
+coertion
 coerency
 cogict
 cogiteed
 cogitoed
 mushroom
 mushrooms
+colation
+coletion
 colect
 coleteed
 coletoed
+coligation
+colocation
+coloration
 with
 eats
 eat
@@ -732,6 +848,7 @@ eat
 eating
 combact
 combateed
+combattery
 combatoed
 eat
 comenct
@@ -742,9 +859,11 @@ eat
 would eat
 comestible
 cometeed
+comettery
 food
 s
 eat
+comotion
 comodaly
 compacity
 compacct
@@ -768,26 +887,32 @@ comportoed
 comprable
 would e
 comprometeed
+compuntion
 compuct
 computeed
 computoed
+comutation
 comuct
 comuteed
 comutoed
 concentrate
 concentred
 concentred
+conception
 concerct
 concerteed
 concertoed
+condition
 condimenct
 condily
 condimenteed
 condimentoed
 condolency
+condution
 conecct
 conecteed
 conectoed
+confection
 confeict
 confeiteed
 confeitoed
@@ -804,6 +929,8 @@ confrontoed
 congraced
 congruency
 conivency
+conjuntion
+conotation
 conquisct
 conquisteed
 conquistoed
@@ -828,33 +955,45 @@ conteed
 contenct
 contenteed
 contentoed
+conttery
 contesct
 contesteed
 contestoed
 continency
+contortion
 contoed
+contration
 contrasct
 contrasteed
 contrastoed
 contract
 contrateed
 contratoed
+contrition
 contrisct
 contristeed
 contristoed
+convection
+convention
 converteed
+converttery
+conviction
 convivency
 coopt
 coopted
 coopted
+copulation
+coration
 ing
 would e
 used to e
 used to e
+coroation
 corpulency
 runs
 run
 run
+corretion
 runed
 run
 run
@@ -862,24 +1001,30 @@ would rune
 runed
 runed
 run
+corruption
 corct
 corteed
 cortoed
+cotation
 coct
 coteed
+cotization
 cotoed
 couraced
 credict
 crediteed
 creditoed
+cremation
 crematory
 crepict
 crepiteed
 crepitoed
+criation
 ing
 would e
 used to e
 used to e
+critery
 crible
 cronometrate
 cronometred
@@ -897,7 +1042,9 @@ cumprimenct
 cumprily
 cumprimenteed
 cumprimentoed
+cumulation
 currícle
+curtition
 cusct
 ing
 would e
@@ -907,8 +1054,11 @@ custeed
 custoed
 cutícle
 of
+danation
+dancettery
 ing
 would e
+datation
 dact
 dateed
 datoed
@@ -916,6 +1066,7 @@ used to e
 used to e
 of
 debateed
+debattery
 debilict
 debiliteed
 debilitoed
@@ -933,8 +1084,10 @@ decapict
 decapiteed
 decapitoed
 decency
+deception
 decidible
 decisory
+decoration
 decorrency
 decoct
 decoteed
@@ -946,13 +1099,21 @@ decrementoed
 decrect
 decreteed
 decretoed
+dedication
+dedution
+defecation
+defection
 defensable
 deferency
 deficiency
+definition
 definible
+deflation
 defronct
 defronteed
 defrontoed
+defumation
+degolation
 degusct
 degusteed
 degustoed
@@ -960,39 +1121,52 @@ deict
 deiteed
 deitoed
 her
+delation
 delact
 delateed
 delatoed
 his
+delegation
 deleict
 deleiteed
 deleitoed
+deletery
 delimict
 delimiteed
 delimitoed
 demency
 dely
 demissible
+demolition
 demonstrate
 demonstred
 demonstred
+denegation
+denotation
 denoct
 denoteed
 denotoed
 densaly
+dentition
+denudation
 dependency
+depilation
 deplorable
 deporct
 deporteed
 deportoed
+deposition
 deposict
 depositeed
 depositoed
 deprily
+depuration
 depuct
 deputeed
 deputoed
+derivation
 derreteed
+derrettery
 derroct
 derroteed
 derrotoed
@@ -1039,6 +1213,7 @@ ing
 would e
 used to e
 used to e
+descrition
 since
 desejable
 desempacoct
@@ -1053,6 +1228,7 @@ desencostoed
 desentorct
 desentorteed
 desentortoed
+desertion
 deserct
 deserteed
 desertoed
@@ -1070,6 +1246,7 @@ desinency
 desinfect
 desinfeteed
 desinfetoed
+desinttery
 desistency
 deslustrate
 deslustred
@@ -1078,6 +1255,7 @@ desly
 desmonct
 desmonteed
 desmontoed
+desolation
 desorienct
 desorienteed
 desorientoed
@@ -1102,9 +1280,12 @@ destrateed
 destratoed
 desvincle
 desvincle
+detection
 detecct
 detecteed
 detectoed
+detention
+dettery
 detesct
 detestable
 detesteed
@@ -1112,6 +1293,8 @@ detestoed
 detect
 deteteed
 detetoed
+detonation
+detration
 shoulds
 should
 should
@@ -1122,32 +1305,44 @@ should
 should
 should
 should
+devotion
+devolution
 devoct
 devoteed
 devotoed
 diarialy
+diction
+difamation
 dificulct
 dificulteed
 dificultoed
+difration
 difract
 difrateed
 difratoed
+difttery
 digerible
+digitation
 digict
 digiteed
 digitoed
 dignaly
+dilation
+dilatation
 dilact
 dilatable
 dilateed
 dilatoed
+diletion
 diligency
+diluition
 dinamict
 dinamiteed
 dinamitoed
 little money
 money
 moneys
+diretion
 diretaly
 drive
 drove
@@ -1155,28 +1350,37 @@ drove
 drive
 drove
 dirigible
+discrition
 discutible
+disfuntion
+disjuntion
 disponible
 dispuct
 disputable
 disputeed
 disputoed
+dissention
 disserct
 disserteed
 dissertoed
 dissidency
 disct
 disteed
+distintion
+distortion
 distoed
+distration
 disct
 distred
 dict
 diteed
 ditoed
+divagation
 divergency
 divisible
 divisory
 of
+doation
 docency
 documenct
 doculy
@@ -1187,6 +1391,7 @@ ing
 would e
 used to e
 used to e
+domination
 dormency
 dormict
 dormiteed
@@ -1195,25 +1400,32 @@ ing
 would e
 used to e
 used to e
+dotation
 doct
 doteed
 dotoed
+douration
 duplaly
+duration
 duraly
 durable
 and
 is
+ebulition
 ing
 would e
 used to e
 used to e
+edition
 edícle
 edict
 editeed
 editoed
+education
 eficiency
 ejacle
 ejacle
+ejetion
 eject
 ejetable
 ejeteed
@@ -1223,23 +1435,31 @@ they
 elasticity
 he
 elegible
+eleition
 elemenct
 they
 eletricity
 eletrocuct
 eletrocuteed
 eletrocutoed
+elevation
 elevatory
+elongation
 eloquency
 in
+emanation
 embaced
 embaraced
 embateed
+embattery
+embolation
 emboct
 emboteed
 embotoed
 emergency
+emigration
 eminency
+emotion
 empacoct
 empacoteed
 empacotoed
@@ -1252,12 +1472,14 @@ empreitoed
 empresct
 empresteed
 emprestoed
+emulation
 encaixoct
 encaixoteed
 encaixotoed
 encanct
 encanteed
 encantoed
+encenation
 encect
 enceteed
 encetoed
@@ -1301,6 +1523,7 @@ enlaced
 enlact
 enlateed
 enlatoed
+entonation
 entorct
 entorteed
 entortoed
@@ -1308,6 +1531,7 @@ entrate
 entred
 entrelaced
 entreteed
+entrettery
 entrevisct
 entrevisteed
 entrevistoed
@@ -1328,21 +1552,30 @@ enxertoed
 enxoct
 enxoteed
 enxotoed
+equation
 equidisct
 equidisteed
 equidistoed
+equitation
+eretion
+eremitery
 eroded
 erode
 eroded
+erudition
+eruption
+escamation
 escarmenct
 escarly
 escarmenteed
 escarmentoed
+escavation
 escolct
 escolteed
 escoltoed
 escory
 escorraced
+escovation
 writs
 writ
 writ
@@ -1389,6 +1622,7 @@ would e
 used to e
 used to e
 essency
+estation
 are
 estable
 estendible
@@ -1410,23 +1644,33 @@ etiquect
 etiqueteed
 etiquetoed
 i
+evacuation
 evidency
 evict
 evitable
 eviteed
 evitoed
+evocation
+evolution
+exalation
+exaltation
 exalct
 exalteed
 exaltoed
 exataly
+excetion
 excelency
+excitation
 excict
 excitable
 exciteed
 excitoed
+excretion
 excrect
 excreteed
 excretoed
+execration
+execution
 execuct
 executable
 executeed
@@ -1435,21 +1679,26 @@ exequible
 exercict
 exerciteed
 exercitoed
+exibition
 exigency
 exigible
 existency
 exorbict
 exorbiteed
 exorbitoed
+exortation
 exorct
 exorteed
 exortoed
+expedition
 experiency
 experimenct
 experily
 experimenteed
 experimentoed
+expiation
 expiatory
+expiration
 explicable
 explicict
 expliciteed
@@ -1461,16 +1710,21 @@ explorable
 exporct
 exporteed
 exportoed
+exposition
 expugnable
 extensible
+extintion
+extration
 extradict
 extraditeed
 extraditoed
 exulct
 exulteed
 exultoed
+exumation
 knife
 s
+faction
 facilict
 faciliteed
 facilitoed
@@ -1480,6 +1734,7 @@ faculct
 faculteed
 facultoed
 speaks
+falation
 speak
 speak
 speaking
@@ -1505,6 +1760,7 @@ farteed
 fartoed
 fascícle
 fatally
+fatoration
 favorable
 febrilly
 closes
@@ -1521,6 +1777,8 @@ close
 close
 closed
 fécle
+federation
+feition
 felicity
 felicict
 feliciteed
@@ -1533,7 +1791,11 @@ fermenteed
 fermentoed
 ferocity
 ferozly
+fiation
+fiction
 fielly
+figuration
+filiation
 filtrate
 filtred
 filtred
@@ -1547,17 +1809,22 @@ fisicaly
 fict
 fiteed
 fitoed
+fixation
 fixaly
 flatulency
 flexible
 flower
+floration
 fluency
+fluoration
+flutuation
 leaf
 s
 fomenct
 foly
 fomenteed
 fomentoed
+formation
 formally
 formact
 formateed
@@ -1568,6 +1835,7 @@ strongly
 strong
 weak
 fracaly
+fration
 weak
 weak
 weak
@@ -1588,13 +1856,17 @@ frect
 freteed
 fretoed
 frialy
+friction
 frict
 friteed
 fritoed
+fruition
 frustrate
 frustred
 frustred
 fugacity
+funtion
+fundation
 fundamenct
 fundaly
 fundamenteed
@@ -1603,7 +1875,9 @@ ing
 would e
 used to e
 used to e
+fundition
 would e
+furation
 furct
 furteed
 furtoed
@@ -1620,6 +1894,8 @@ ing
 would e
 used to e
 used to e
+galanttery
+gamation
 wins
 win
 win
@@ -1642,12 +1918,15 @@ cat
 cats
 little cat
 little cat
+geration
 gerally
 gerency
+gestation
 gestatory
 gesticle
 gesticle
 giratory
+glaciation
 globally
 glory
 Glory
@@ -1673,8 +1952,12 @@ like
 like
 liked
 gotícle
+gozation
+gradation
+graduation
 big
 big
+gravation
 gravable
 gravict
 graviteed
@@ -1692,9 +1975,12 @@ screamed
 scream
 scream
 screamed
+guarnition
+gustation
 habilict
 habiliteed
 habilitoed
+habitation
 habict
 habiteed
 habitoed
@@ -1705,9 +1991,11 @@ used to e
 hemorragic
 hemorragic
 heroicity
+hesitation
 hesict
 hesiteed
 hesitoed
+histtery
 history
 man
 homúncle
@@ -1716,6 +2004,7 @@ ideally
 idolatrate
 idolatred
 idolatred
+ignition
 ing
 would e
 used to e
@@ -1728,13 +2017,18 @@ ilustrate
 ilustred
 ilustred
 imanency
+imantation
 imanct
 imanteed
 imantoed
+imediation
+imigration
 iminency
+imitation
 imict
 imiteed
 imitoed
+imolation
 impaciency
 impacct
 impacteed
@@ -1758,6 +2052,7 @@ imponency
 imporct
 importeed
 importoed
+imposition
 impossibilict
 impossibiliteed
 impossibilitoed
@@ -1779,12 +2074,16 @@ inabiliteed
 inabilitoed
 inabitable
 inadiable
+inalation
 inamovible
+inanition
 inapetency
 inatacable
 incansable
 incapacity
+inchation
 incidency
+incitation
 incict
 inciteed
 incitoed
@@ -1800,20 +2099,27 @@ incrible
 incrusct
 incrusteed
 incrustoed
+incubation
 incumbency
 incurable
+indagation
 indecency
+indexation
+indication
 indigency
 indizible
 indolency
 indomable
+indution
 indulgency
 inegable
 inelegible
 inelutable
+inequation
 inevitable
 inexorable
 infalible
+infection
 infecct
 infecteed
 infectoed
@@ -1824,6 +2130,7 @@ infestoed
 infiltrate
 infiltred
 infiltred
+inflation
 ing
 would e
 used to e
@@ -1831,33 +2138,44 @@ used to e
 inflamable
 inflexible
 influency
+infration
 ingerency
 inglory
+inibition
 inibitory
+iniciation
 inimitable
+injetion
 inject
 injetable
 injeteed
 injetoed
+injuntion
 inocency
 inocenct
 inocenteed
 inocentoed
 inocle
 inocle
+inovation
 inquiect
 inquieteed
 inquietoed
 insaciable
 insanable
+inscrition
 insensible
+insertion
 insistency
+insolation
 insolency
 insolvency
+inspetion
 insct
 instable
 insteed
 instoed
+instrution
 instrumenct
 instruly
 instrumenteed
@@ -1866,41 +2184,56 @@ insulct
 insulteed
 insultoed
 intangible
+intention
 intendency
 intenct
 intenteed
 intentoed
+interation
 intercept
 intercepted
 intercepted
 interprect
 interpreteed
 interpretoed
+intimation
 intocable
 intorcible
 intragable
 intrometeed
+intuition
+inundation
 inutilly
 invariable
 invejable
+invention
 invencible
 invenct
 inventeed
 inventoed
 inversible
 inverteed
+inverttery
 invertible
 inviable
 inviolable
 invisible
+invocation
+ionization
 irascible
+irrigation
 irrisory
+irritation
 irrict
 irriteed
 irritoed
+irruption
+isention
 isenct
 isenteed
 isentoed
+isolation
+iteration
 window
 s
 janct
@@ -1936,46 +2269,66 @@ game
 games
 little game
 little game
+jubilation
+judiation
+juntion
 juntaly
 junct
 junteed
 juntoed
 justaly
+laboration
 ing
 would e
 used to e
 used to e
+labutation
 labuct
 labuteed
 labutoed
+laceration
+lactation
 lamenct
 lamentable
 laly
 lamenteed
 lamentoed
+lamination
+lapidation
+laqueation
 orange
 s
 largaly
 lastimable
 latency
+lavation
 leally
+legation
 cool
 coolly
 legible
+leittery
 lentaly
 levanct
 levanteed
 levantoed
 levely
+levitation
 levict
 leviteed
 levitoed
+libation
+liberation
 liberct
 liberteed
 libertoed
+lition
+licitation
 licict
 liciteed
 licitoed
+ligation
+limitation
 limict
 limiteed
 limitoed
@@ -1984,16 +2337,24 @@ lisct
 listeed
 listoed
 livrely
+location
 locally
+lotion
+locomotion
+locution
 logicaly
+lotation
 loct
 ing
 would e
 used to e
 used to e
 loteed
+lottery
 lotoed
 loucaly
+loution
+louvation
 louvable
 lustrate
 lustred
@@ -2008,11 +2369,15 @@ used to fighte
 used to fighte
 fight
 fight
+luxation
+maceration
 mácle
 maduraly
+magistery
 more
 maiúscle
 maiúscle
+majoration
 ing
 would e
 used to e
@@ -2020,6 +2385,8 @@ used to e
 malbaract
 malbarateed
 malbaratoed
+maldition
+malhation
 maltract
 maltrateed
 maltratoed
@@ -2029,7 +2396,9 @@ manietoed
 manifesct
 manifesteed
 manifestoed
+manttery
 manually
+marcation
 marchect
 marcheteed
 marchetoed
@@ -2038,21 +2407,27 @@ máscle
 máscle
 mact
 mateed
+matery
 matoed
 matricle
 matrícle
 matricle
+maturation
 matuct
 matuteed
 matutoed
+mediation
 ing
 would e
 used to e
 used to e
+medication
 medicamenct
 medicaly
 medicamenteed
 medicamentoed
+medition
+meditation
 medict
 mediteed
 meditoed
@@ -2068,6 +2443,7 @@ used to e
 used to e
 memorable
 memory
+mention
 mensally
 mensurable
 mentally
@@ -2078,7 +2454,10 @@ would e
 used to e
 used to e
 meteed
+mettery
 my
+miction
+migration
 migratory
 milict
 militeed
@@ -2087,13 +2466,19 @@ ing
 would e
 used to e
 used to e
+mineration
+ministery
 ministrate
 ministred
 ministred
 minúscle
 minúscle
 miserable
+mistery
+motion
 mocity
+moderation
+modulation
 would e
 molécle
 molesct
@@ -2103,6 +2488,7 @@ wet
 wet
 wet
 wet
+montion
 ing
 would e
 used to e
@@ -2131,6 +2517,7 @@ mortally
 mostrate
 mostred
 mostred
+motivation
 motocicle
 movimenct
 movily
@@ -2140,9 +2527,13 @@ woman
 mulct
 multeed
 multoed
+munition
 múscle
+mutation
 mutable
+mutilation
 mutualy
+nation
 swims
 swim
 swim
@@ -2154,14 +2545,21 @@ used to swime
 swim
 swim
 no
+narration
+natation
+navegation
 navegable
 necessict
 necessiteed
 necessitoed
+necrotery
+negation
 negligency
 nobody
 nitidaly
 nobrely
+notion
+nomeation
 ing
 would e
 used to e
@@ -2173,6 +2571,7 @@ used to e
 used to e
 we
 our
+notation
 noct
 notable
 noteed
@@ -2185,38 +2584,56 @@ new
 new
 new
 nualy
+numeration
 never
+nutrition
 cloud
 the
 obediency
+obervation
+objetion
 object
 objeteed
 objetoed
+oblation
+obrigation
 obstácle
 obsct
 obsteed
 obstoed
+obstrution
+obtention
+obttery
+obturation
 obvialy
 ocorrency
+ocultation
 oculct
 oculteed
 ocultoed
+ocupation
 oferct
 oferteed
 ofertoed
 the
 the
 where
+ondulation
 onipotency
 onisciency
+option
+operation
+oposition
 opt
 opted
 opted
 opulency
 opúscle
+oration
 orácle
 orally
 oratory
+ordenation
 orienct
 orienteed
 orientoed
@@ -2228,12 +2645,17 @@ orquestrate
 orquestred
 orquestred
 the
+oscilation
 óscle
 ostenct
 ostenteed
 ostentoed
 the
+ovation
+ovulation
+oxidation
 paciency
+pagination
 palestrate
 palestred
 palestred
@@ -2263,6 +2685,7 @@ would e
 used to e
 used to e
 parlamenct
+partition
 partícle
 ing
 would e
@@ -2277,6 +2700,7 @@ ing
 would e
 used to e
 used to e
+patination
 pauct
 pauteed
 pautoed
@@ -2318,7 +2742,10 @@ little
 little
 little
 ask
+perception
+perdition
 perenely
+perfeition
 asks
 ask
 ask
@@ -2340,6 +2767,7 @@ permutoed
 pernoict
 pernoiteed
 pernoitoed
+peroration
 perpetrate
 perpetred
 perpetred
@@ -2348,13 +2776,16 @@ perscruteed
 perscrutoed
 pertinency
 perverteed
+perverttery
 pesadaly
 ask
 person
 s
+petition
 picarect
 picareteed
 picaretoed
+pichation
 pigmenct
 pigly
 pigmenteed
@@ -2374,6 +2805,7 @@ used to e
 pinct
 pinteed
 pintoed
+plantation
 planct
 planteed
 plantoed
@@ -2381,6 +2813,7 @@ plasticity
 ploct
 ploteed
 plotoed
+potion
 cans
 can
 can
@@ -2393,7 +2826,11 @@ can
 can
 could
 can
+poluition
 ponderable
+pontuation
+population
+portion
 because
 door
 porct
@@ -2413,6 +2850,7 @@ would can
 used to cane
 used to cane
 can
+position
 can
 possibilict
 possibiliteed
@@ -2426,12 +2864,14 @@ can
 postoed
 potable
 potency
+povoation
 ing
 would e
 used to e
 used to e
 praticable
 praticity
+precaution
 precedency
 precipict
 precipiteed
@@ -2450,38 +2890,48 @@ need
 need
 needed
 predatory
+predition
 preferency
 preferible
+pregation
 ing
 would e
 used to e
 used to e
+preletion
 premency
 prely
+premiation
 ing
 would e
 used to e
 used to e
 prepotency
+presbitery
 presciency
 ing
 would e
 used to e
 used to e
 presidency
+prestation
 presct
 presteed
 prestidigict
 prestidigiteed
 prestidigitoed
 prestoed
+presuntion
+prettery
 pretexct
 pretexteed
 pretextoed
 prevalency
+prevention
 previaly
 previdency
 previsible
+privation
 privacity
 probatory
 procedency
@@ -2498,30 +2948,42 @@ bred
 breed
 breed
 bred
+prodution
+proibition
+projetion
 project
 projeteed
 projetoed
 prometeed
+promettery
+promotion
 prontaly
+proportion
 prospecct
 prospecteed
 prospectoed
 prostrate
 prostred
 prostred
+protetion
 protesct
 protesteed
 protestoed
+provation
 provable
 providency
 provisory
 prudency
 publicity
+pulsation
 ing
 would e
 used to e
 used to e
+puntion
+punition
 puraly
+purgation
 purulency
 quadricle
 quadricle
@@ -2538,6 +3000,7 @@ used to breake
 used to breake
 break
 break
+queimation
 who
 wanted
 want
@@ -2545,11 +3008,15 @@ want
 would wante
 wanted
 want
+quietation
 want
 want
+quitation
 quict
 quiteed
 quitoed
+ration
+radiation
 radícle
 rapidaly
 rapt
@@ -2560,6 +3027,7 @@ razoable
 reabilict
 reabiliteed
 reabilitoed
+reation
 reajusct
 reajusteed
 reajustoed
@@ -2575,6 +3043,7 @@ react
 reateed
 reatoed
 rebateed
+rebattery
 rebenct
 rebenteed
 rebentoed
@@ -2592,10 +3061,12 @@ recalcle
 receict
 receiteed
 receitoed
+reception
 recept
 recepted
 recepted
 rechaced
+recitation
 recict
 reciteed
 recitoed
@@ -2615,32 +3086,42 @@ recortoed
 recosct
 recosteed
 recostoed
+recreation
 recruct
 recruteed
 recrutoed
+redation
 redemonstrate
 redemonstred
 redemonstred
+redention
 redigict
 redigiteed
 redigitoed
+redution
 redutible
+reedition
 reedict
 reediteed
 reeditoed
+reeleition
 reencontrate
 reencontred
 reencontred
 reentrate
 reentred
 reentred
+refeition
 referency
+refination
 reformact
 reformateed
 reformatoed
+refration
 refract
 refrateed
 refratoed
+refutation
 refuct
 refuteed
 refutoed
@@ -2658,15 +3139,19 @@ regurgitoed
 reimplemenct
 reimplementeed
 reimplementoed
+reination
+rejeition
 rejeict
 rejeiteed
 rejeitoed
 rejunct
 rejunteed
 rejuntoed
+relation
 relact
 relateed
 relatoed
+relaxation
 reluct
 reluteed
 relutoed
@@ -2674,28 +3159,37 @@ remact
 remateed
 rematoed
 remeteed
+remettery
+remition
+remotion
 would e
 remonct
 remonteed
 remontoed
 remotaly
 removible
+rendition
 ing
 would e
 used to e
 used to e
+renovation
 renovable
+reparation
 repetency
+repetition
 reponct
 reponteed
 repontoed
 reporct
 reporteed
 reportoed
+reposition
 represenct
 representeed
 representoed
 reprovable
+reputation
 repuct
 reputeed
 reputoed
@@ -2715,6 +3209,7 @@ resgateed
 resgatoed
 residency
 resistency
+resolution
 respeict
 respeiteed
 respeitoed
@@ -2727,26 +3222,34 @@ ressuscitoed
 resct
 resteed
 restoed
+restrition
 resulct
 resulteed
 resultoed
+retention
+rettery
 reticency
 retícle
 retícle
 retraced
+retration
 rect
 retred
 retract
 retrateed
 retratoed
+revelation
 reverency
 reverteed
+reverttery
 revisct
 revisteed
 revistoed
+revogation
 revolct
 revolteed
 revoltoed
+revolution
 ing
 would e
 used to e
@@ -2768,13 +3271,16 @@ ing
 would e
 used to e
 used to e
+rotation
 rotatory
+rotulation
 rudely
 rudimenct
 ing
 would e
 used to e
 used to e
+rumination
 ing
 would e
 used to e
@@ -2783,10 +3289,12 @@ sacramenct
 sacraly
 sacramenteed
 sacramentoed
+sagration
 saliency
 salienct
 salienteed
 salientoed
+salivation
 salpinct
 salpinteed
 salpintoed
@@ -2796,10 +3304,14 @@ would e
 used to e
 used to e
 salteed
+saltery
+saltery
 saltict
 saltiteed
 saltitoed
 saltoed
+salvation
+santion
 ing
 would e
 used to e
@@ -2823,30 +3335,39 @@ ing
 would e
 used to e
 used to e
+saturation
+saudation
 if
 dry
+setion
 dry
 dry
 dry
+secretion
 secrect
 secreteed
 secretoed
 sécle
+sedition
 sedimenct
 sedily
 sedimenteed
 sedimentoed
+sedution
 segmenct
 segly
 segmenteed
 segmentoed
+seletion
 without
 sely
 always
+sensation
 sensible
 senct
 senteed
 sentoed
+separation
 sepulct
 sepulteed
 sepultoed
@@ -2854,11 +3375,14 @@ sequency
 sequestrate
 sequestred
 sequestred
+serration
 your
 severaly
 sexually
 simplicity
 simplory
+simulation
+situation
 sobressalct
 sobressalteed
 sobressaltoed
@@ -2879,11 +3403,13 @@ solicitoed
 solct
 solteed
 soltoed
+solution
 ing
 would e
 used to e
 used to e
 soly
+sonegation
 dreams
 dream
 dream
@@ -2902,13 +3428,19 @@ ing
 would e
 used to e
 used to e
+sorvettery
 am
 suavely
 subitaly
 submeteed
+submettery
+subsetion
+subtration
 subct
 subtred
+subvention
 subverteed
+subverttery
 little juice
 little juice
 little juice
@@ -2921,6 +3453,7 @@ little juice
 little juice
 little juice
 little juice
+suction
 little juice
 little juice
 little juice
@@ -2970,9 +3503,13 @@ little juice
 little juice
 little juice
 suficiency
+sufixation
+sufocation
+sujeition
 sujeict
 sujeiteed
 sujeitoed
+superation
 ing
 would e
 used to e
@@ -2992,6 +3529,7 @@ suporct
 suportable
 suporteed
 suportoed
+suposition
 surdaly
 suscetible
 suscict
@@ -3005,10 +3543,13 @@ susteed
 sustenct
 sustenteed
 sustentoed
+susttery
 sustoed
+tabulation
 too
 tangency
 tangible
+tapeation
 ing
 would e
 used to e
@@ -3017,6 +3558,7 @@ ing
 would e
 used to e
 used to e
+taxation
 you
 have
 have
@@ -3027,6 +3569,7 @@ tenazly
 tendency
 have
 trys
+tentation
 tentácle
 try
 try
@@ -3049,6 +3592,7 @@ testícle
 testoed
 haves
 have
+tition
 tilinct
 tilinteed
 tilintoed
@@ -3056,6 +3600,7 @@ tipicaly
 tirict
 tiriteed
 tiritoed
+titulation
 all
 alls
 little all
@@ -3069,19 +3614,26 @@ ing
 would e
 used to e
 used to e
+torration
 tosct
 tosteed
 tostoed
 totally
 traced
+tration
+tradition
+tradution
 tragic
 tragic
+traition
 ct
 tred
 trajetory
 tramict
 tramiteed
 tramitoed
+transation
+transition
 transict
 transiteed
 transitoed
@@ -3108,6 +3660,7 @@ tricotoed
 sad
 sadly
 sad
+tropetion
 troct
 ing
 would e
@@ -3117,19 +3670,26 @@ troteed
 trotoed
 truculency
 tubércle
+tubulation
 turbulency
+ulceration
 a
 a
 a
+untion
 unicaly
 unicity
 unct
 unteed
 untoed
 urgency
+urination
 usable
 usually
+usurpation
 utilizable
+vacilation
+vacination
 vagaly
 ing
 would e
@@ -3140,10 +3700,14 @@ would e
 used to e
 used to e
 valency
+validation
 vanglory
+variation
 variable
+vedation
 veemency
 veely
+vegetation
 vegect
 vegeteed
 vegetoed
@@ -3152,6 +3716,7 @@ veicle
 veícle
 velocity
 velozly
+veneration
 venerable
 venct
 venteed
@@ -3167,12 +3732,16 @@ red
 vernácle
 versícle
 verteed
+verttery
 vesícle
 vect
 veteed
 vetoed
+vexation
 vexatory
+viation
 viable
+vibration
 vibratory
 life
 s
@@ -3185,15 +3754,18 @@ used to e
 vincle
 vincle
 víncle
+violation
 violency
 violenct
 violenteed
 violentoed
+viration
 virulency
 ing
 would e
 used to e
 used to e
+visitation
 visict
 visiteed
 visitoed
@@ -3215,6 +3787,8 @@ lived
 lived
 lived
 live
+vocation
+volition
 go backs
 go back
 go back
@@ -3228,6 +3802,7 @@ go back
 vomict
 vomiteed
 vomitoed
+votation
 voct
 voteed
 votoed
@@ -3237,6 +3812,7 @@ vulnerable
 xerect
 xereteed
 xeretoed
+xingation
 ing
 would e
 used to e

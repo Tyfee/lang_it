@@ -264,9 +264,13 @@ constexpr Entry suff[] = {
   {"açado", "aced"},
   {"ágico", "agic"},
   {"ágica", "agic"},
+  {"ção", "tion"},
   {"culo", "cle"},
   {"cula", "cle"},
-  {"cleta", "cle"}
+  {"cleta", "cle"},
+  {"tério", "tery"},
+  {"téria", "tery"},
+  {"teria", "ttery"}
 };
 
 //is it a vowel? 
