@@ -17,7 +17,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS | BINARY SIZE | The Little Prince | Estimated CEFR Level | Words |
 | ------------- | ------------- | ------ | ----------- | ----------------- | -------------------- | ----- |
-| Portuguese    | English       |  ⚠️    |    258kb    |       ?? %        |                      |  837  |
+| Portuguese    | English       |  ⚠️    |    262kb    |       ?? %        |                      |  1066  |
 | English       | Japanese      |  ⚠️    |             |       ?? %        |                      |       | 
 | English       | Portuguese    |  ⚠️    |             |       ?? %        |                      |       | 
 | English       | French        |  ⚠️    |             |       ?? %        |                      |       | 

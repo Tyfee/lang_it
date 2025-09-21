@@ -72,7 +72,18 @@ map<string, string> nouns = {
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
   {"flor", "flower"},
-  {"dinheiro", "money"}
+  {"dinheiro", "money"},
+  {"criança", "kid"},
+  {"amigo", "friend"},
+  {"fome", "hunger"},
+  {"frio", "cold"},
+  {"dia", "day"},
+  {"noite", "night"},
+  {"olho", "eye"},
+  {"coração", "heart"},
+  {"coisa", "thing"},
+  {"principe", "prince"},
+  {"estrela", "star"}
 };
 
 map <string, string> art = {
@@ -96,6 +107,7 @@ constexpr Entry pre[] = {
 constexpr Entry pro[] = {
   {"eu", "i"},
   {"voce", "you"},
+  {"tu", "you"},
   {"nos",  "we"},
   {"ele",  "he"},
   {"ela",  "she"},
@@ -194,7 +206,12 @@ constexpr Verb reg_verbs[]  = {
   {"grit", "scream", 1},
   {"acredit","believ", 0},
   {"viv", "liv", 0},
-  {"tent", "try", 1}
+  {"tent", "try", 1},
+  {"compreend", "comprehend", 1},
+  {"busc", "search", 1},
+  {"brilh", "glow", 1},
+  {"possu", "own", 1}
+
 };
 
 const Verb* lookupRegVerb(const char* root) {
@@ -249,7 +266,7 @@ map <string, int> patt_verbs = {
   //surely theres a way to imolement the past tense endings dinamically, will i? who knows
   {"ptou", 4}, {"ptei", 4},
   {"odiu", 4}, {"odi", 4},
-  {"tou", 4}, {"tei", 4},
+  {"tou", 4}, {"tei", 4}, {"tado", 4},
   {"traiu", 4}, {"traí", 4},
   {"trou", 4}, {"trei", 4},
 };
@@ -274,6 +291,8 @@ constexpr Entry suff[] = {
   {"tério", "tery"},
   {"téria", "tery"},
   {"teria", "ttery"},
+  {"ário", "ary"},
+  {"ária", "ary"},
   {"ral", "ral"},
   {"ador", "ator"},
   {"etro", "meter"}
@@ -288,6 +307,24 @@ bool isVowel(char x)
     return true;
     else
      return false;
+}
+
+
+//normalization
+//this will turn sets of letters that shift on translation and change them accordingly.
+// stuff such as aceitar -> aceipt -> accept
+string normalize(string word) {
+    string normalized_ = word;
+
+    if (word.length() > 3) {
+        string last2 = word.substr(word.size() - 2);
+        char thirdLast = word[word.size() - 3];
+
+        if (isVowel(thirdLast) && last2 == "ed") {
+            normalized_ = word.substr(0, word.size() - 3) + "ed";
+        }
+    }
+    return normalized_;
 }
 
 // dictionary lookup
@@ -365,9 +402,9 @@ pair<string, int> prefixLookup(string word){
   string translation = word; 
   int word_type;
 
-  vector<string> infinitive = {"ar", "er", "ir", "dir", "r"};
+  vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir"};
   vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "mo", "lo", "ço", "nho", "so"};
-  vector<string> present_s = {"a", "ta", "re", "ga"};
+  vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis"};
   vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ia", "ri", "i", "iu"};
   vector<string> present_continuous = {"ando"};
   vector<string> completed_past = {"ava", "ávamos"};
@@ -378,6 +415,7 @@ pair<string, int> prefixLookup(string word){
   // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
   // it's a lambda that returns a pair with the match lemma + the vowel/conjugation.
 auto find_verb = [](vector<string> format, string word, int verb_info) {
+
 
   for(size_t i = 0; i < format.size(); ++i){
 
@@ -441,8 +479,7 @@ if (v) {
 
    return pair<string, int>{string(buffer), word_type_ };
 
-}
-       if(irr_verbs.find(root) != irr_verbs.end()){
+} else if(irr_verbs.find(root) != irr_verbs.end()){
         
         if(root == "est"){
           // estou == am estamos == are está == is estão == are
@@ -517,7 +554,6 @@ if (v) {
            }
            else if(verb_info == 1){
          //TODO: Set up the very specific rules that most verbs can abide to.
-                
                 if(irr_verbs[root].first.substr(irr_verbs[root].first.length() - 3, 3) == "eed"){
                       translation_ = irr_verbs[root].first.substr(0, irr_verbs[root].first.length() - 3) + "ed";
 
@@ -532,14 +568,15 @@ if (v) {
 
                 } else if (irr_verbs[root].first.length() >= 3 && // is the word more than three letters?
                       !isVowel(irr_verbs[root].first[0]) &&   // is the first letter not a vowel?
+            
                       !isVowel(irr_verbs[root].first[1]) &&   // is the second letter not a vowel?
-                      (irr_verbs[root].first.substr(2, 2) == "ea" || //are they followed by either "ea" || "i" || "ee"
+                      ( //are they followed by either  || "i" || "ee"
                         irr_verbs[root].first.substr(2, 1) == "i" || 
                         irr_verbs[root].first.substr(2, 2) == "ee") &&
-                      irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p' || 'k'
+                      irr_verbs[root].first.back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p' ||
                       irr_verbs[root].first.back() != 'g' && 
                       irr_verbs[root].first.back() != 'p' &&
-                     irr_verbs[root].first.back() != 'k' &&
+                      irr_verbs[root].first.back() != 'k' &&
                        irr_verbs[root].first.back() != 'm'
                     ) {
                             size_t pos;
@@ -566,6 +603,7 @@ if (v) {
                 else{
                   translation_ = irr_verbs[root].first;
                 }
+            return pair<string, int>{translation_, word_type_};
             }   
             // ANOTHER HYPERSPECIFIC RULE
             // is the verbs second letter not 'h'?
@@ -615,7 +653,7 @@ if (v) {
                 case 4: ending = "ed";   break;
             }
             
-            translation_ = stem + ending;
+            translation_ = normalize(stem + ending);
             word_type_ = 3;
             return pair<string, int>{translation_, word_type_};
         }
