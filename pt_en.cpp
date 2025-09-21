@@ -147,7 +147,8 @@ map<string, string> adj = {
   {"novo", "new"},
   {"triste", "sad"},
   {"feliz", "happy"},
-  {"alto", "high"}
+  {"alto", "high"},
+  {"correto", "correct"}
 };
 
 //adverbs
@@ -232,7 +233,8 @@ map<string, pair<string, int>> irr_verbs = {
   {"lut", {"fight", 1}},
   {"pod", {"can", 1}},
   {"pos", {"can", 1}},
-  {"dev", {"should", 1}}
+  {"dev", {"should", 1}},
+  {"pens", {"think", 0}}
 };
 
 // 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed
@@ -256,6 +258,7 @@ map <string, int> patt_verbs = {
 // common suffixes with traceable trnaslation pattern
 constexpr Entry suff[] = {
   {"mente", "ly"},
+  {"mento", "ment"},
   {"ável", "able"},
   {"ível", "ible"},
   {"ória", "ory"},
@@ -270,7 +273,10 @@ constexpr Entry suff[] = {
   {"cleta", "cle"},
   {"tério", "tery"},
   {"téria", "tery"},
-  {"teria", "ttery"}
+  {"teria", "ttery"},
+  {"ral", "ral"},
+  {"ador", "ator"},
+  {"etro", "meter"}
 };
 
 //is it a vowel? 
@@ -285,6 +291,72 @@ bool isVowel(char x)
 }
 
 // dictionary lookup
+
+// this is about to be nuts, maybe
+// we'll do basic fragmentation, using the list of preffixes, and try to find a match
+// i want this to be separate from prefixLookup() cause this will be >=3 and i need to lookup more than one table
+//e.g inquebrável -> unbreakable. 
+// we need to match the preffix "in" to "un", remove the last vowel and check if the root exists, (quebrá -> quebr -> break).
+// and get the suffix and map it "ável" -> able
+// putting this all together we get unbreakable.
+// preffixes that are highly productive, [in -> un], [des -> de]
+//yeah i'll need to make up rules like crazy here. theres no pattern at all
+// you have un, in, ir and they just work by vibes i guess, unreal, incorrect, uncanny
+// like a bunch of starting with r adjectives like real, will take ir, such as irrational, irresponsible 
+// but what about exceptions such as unreal? unrequited?
+// without
+pair<string, int> morphemeLookup(string word){
+  string translation_; 
+  string p;
+  string m;
+  string s;
+  int word_type_;
+  
+  if(word.length() > 1){
+         
+       // this will lookup the basic adjective negation (?), whats even the name of this linguistically, idk
+       // but like, if you find the preffix (un) and the rest of the word is an adjective
+       // you just put them together: incorreto -> [in] + [correct]
+        if(word.substr(0, 2) == "in" && adj.count(word.substr(2, word.length()))){
+             p = "in";
+             m = adj[word.substr(2, word.length())];
+             translation_ = p + m;
+             word_type_ = 1;
+          }else if (word.substr(0, 2) == "in") {
+    string stem = word.substr(2);  
+
+    for (auto &entry : suff) {
+        const string &suffix = entry.w;
+
+        if (stem.size() >= suffix.size() &&
+            stem.compare(stem.size() - suffix.size(), suffix.size(), suffix) == 0) {
+            
+            string base = stem.substr(0, stem.size() - suffix.size());
+            p = "un";
+
+            string m;
+            if (irr_verbs.count(base)) {
+                m = irr_verbs[base].first;  
+            } else {
+                const Verb* v = lookupRegVerb(base.c_str());
+                m = v ? v->root : base; 
+            }
+            s = m + entry.t;               
+            translation_ = p + s;          
+            word_type_ = 1;
+            break;
+        }
+    }
+}
+else{
+             translation_ = "";
+             word_type_ = -1;
+          }
+  };
+  
+
+  return pair<string, int>{translation_, word_type_};
+};
 
 //look for preffix matches 
 pair<string, int> prefixLookup(string word){
@@ -578,62 +650,39 @@ if (result_set.first.empty())
     result_set = pair<string, int>{irr_verbs[word].first, 3};
 
   return result_set;
-}
+}pair<string, int> suffixLookup(const string& word) {
+    string translation;
+    int word_type = -1;
 
-//look for suffix matches
-pair<string, int> suffixLookup(string word){
-  
- string translation;
- int word_type;
- // TODO, make this smaller and not manually check if
-
- // if the last 6 letters of a word match a suff. e.g: totalmente, strip the 6 letters and look up
- // the corresposing translation for the length-6 suffix
-
- // i also need to figure out how to handle stuff like incredibly
- if(word.length() > 6){
-  if(lookup(suff, word.substr(6).c_str())){
-    if(adj.count(word.substr(0, 6))){
-      translation = adj[word.substr(0, 6)] + lookup(suff, word.substr(6).c_str());
-    }else{
-      translation = word.substr(0, 6) + lookup(suff, word.substr(6).c_str());
+    if (word.size() > 4) {
+        if (word.substr(0, 2) == "in" && lookup(suff, word.substr(word.size() - 4).c_str())) {
+            return {"", -1};
+        }
     }
-    
-  word_type = 2;
-  }
-  //same shit 
-  else if(lookup(suff, word.substr(5).c_str())){
-      if(adj.count(word.substr(0, 5))){
-      translation = adj[word.substr(0, 5)] + lookup(suff, word.substr(5).c_str());
-     }else{
-      translation = word.substr(0, 5) + lookup(suff, word.substr(5).c_str());
-     }
-  }
-  //same shit 
-  else if(lookup(suff, word.substr(4).c_str())){
-     if(adj.count(word.substr(0, 4))){
-      translation = adj[word.substr(0, 4)] + lookup(suff, word.substr(4).c_str());
-     }else{
-      translation = word.substr(0,4) + lookup(suff, word.substr(4).c_str());
-     }
-  }
-  else if(lookup(suff, word.substr(3).c_str())){
-       if(adj.count(word.substr(0, 3))){
-      translation = adj[word.substr(0, 3)] + word.substr(3).c_str();
-     }else{
-      translation = word.substr(0, 3) + lookup(suff, word.substr(3).c_str());
-     }
-  }
-    else if(lookup(suff, word.substr(2).c_str())){
-    translation = word.substr(0, 2) + lookup(suff, word.substr(2).c_str());
-  }
-    else{
-        translation = "";  
-        word_type = -1;
+
+    for (int len = 6; len >= 2; --len) {
+        if (word.length() >= len) {
+            string ending = word.substr(word.length() - len);
+            const char* mapped = lookup(suff, ending.c_str());
+
+            if (mapped) {
+                string stem = word.substr(0, word.length() - len);
+
+                if (adj.count(stem)) {
+                    translation = adj[stem] + mapped;
+                } else {
+                    translation = stem + mapped;
+                }
+
+                word_type = 2;
+                return {translation, word_type};
+            }
+        }
     }
+
+    return {"", -1}; // fallback
 }
-  return {translation, word_type};
-}
+
 
 pair<string, int> nounLookup(string word){
   // TODO: Creaate hierarchy for word category
@@ -756,7 +805,11 @@ if(!singular_pt.empty()) {
         // if suffix not found, look for prefix
         translation = prefixLookup(word).first;
         word_type = prefixLookup(word).second;
-       }
+       }else if(morphemeLookup(word).first.length() > 0){
+        // if suffix not found, look for prefix
+        translation = morphemeLookup(word).first;
+        word_type = morphemeLookup(word).second;
+      }
   return {translation, word_type};
 }
 
