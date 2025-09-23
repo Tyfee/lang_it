@@ -1,3 +1,5 @@
+require 'set'
+
 book_file       = "./o_pequeno_principe.txt"
 dictionary_file = "./dicionario_pt_usp.txt"
 book_output     = "./result.txt"
@@ -9,22 +11,36 @@ book_lines_translated = 0
 dictionary_lines_translated = 0
 true_positives = 0
 
-# Load English dictionary into a Set for fast lookup
-english_words = Set.new(File.readlines(english_dict).map(&:strip).reject(&:empty?))
+# Safe encoding + strip helper
+def safe_strip(line)
+  return "" if line.nil?
+  # Force UTF-8 and replace invalid/undefined characters
+  line.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+      .strip
+end
+
+# Load English dictionary
+english_words = Set.new(
+  File.readlines(english_dict, encoding: "UTF-8", invalid: :replace, undef: :replace)
+      .map { |l| safe_strip(l) }
+      .reject(&:empty?)
+)
 
 # --- Process book ---
-File.open(book_output, "w") do |out|
+File.open(book_output, "w", encoding: "UTF-8") do |out|
   IO.popen(translate_exe, "r+") do |io|
+    io.set_encoding("UTF-8", "UTF-8")
+
     puts "Translating book..."
-    File.foreach(book_file).with_index(1) do |line, line_index|
-      line.strip!
+    File.foreach(book_file, encoding: "UTF-8", invalid: :replace, undef: :replace).with_index(1) do |line, line_index|
+      line = safe_strip(line)
       next if line.empty?
 
       io.puts line
       io.flush
 
-      translation = io.gets&.strip
-      next unless translation && !translation.empty? && translation != line
+      translation = safe_strip(io.gets)
+      next if translation.empty? || translation == line
 
       out.puts translation
       book_lines_translated += 1
@@ -33,31 +49,32 @@ File.open(book_output, "w") do |out|
     end
   end
 end
-
-# --- Process dictionary ---
-File.open(dict_output, "w") do |out|
+# --- Process dictionary (only true positives) ---
+File.open(dict_output, "w", encoding: "UTF-8") do |out|
   IO.popen(translate_exe, "r+") do |io|
-    puts "Translating dictionary..."
-    bad_tokens = ["e", "es", "ee"]
+    io.set_encoding("UTF-8", "UTF-8")
 
-    File.foreach(dictionary_file).with_index(1) do |line, line_index|
-      line.strip!
+    puts "Translating dictionary..."
+    bad_tokens = ["e", "es", "ee", "ing"]
+
+    File.foreach(dictionary_file, encoding: "UTF-8", invalid: :replace, undef: :replace).with_index(1) do |line, line_index|
+      line = safe_strip(line)
       next if line.empty?
 
       io.puts line
       io.flush
 
-      translation = io.gets&.strip
-      next unless translation && !translation.empty? && translation != line
+      translation = safe_strip(io.gets)
+      next if translation.empty? || translation == line
       next if bad_tokens.include?(translation)
       next unless translation.match?(/[A-Za-zÀ-ÖØ-öø-ÿ]/)
 
-      # Write all translations to output
-      out.puts translation
-      dictionary_lines_translated += 1
-
-      # Check true positives
-      true_positives += 1 if english_words.include?(translation.downcase)
+      # Only write true positives
+      if english_words.include?(translation.downcase)
+        out.puts translation
+        dictionary_lines_translated += 1
+        true_positives += 1
+      end
 
       puts "Processed dictionary line #{line_index}" if line_index % 50 == 0
     end

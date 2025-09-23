@@ -264,8 +264,8 @@ map <string, int> patt_verbs = {
   {"trar", 3}, // contatar = contact // what about encontrar.... (needs more specification)
   
   //surely theres a way to imolement the past tense endings dinamically, will i? who knows
-  {"ptou", 4}, {"ptei", 4},
-  {"odiu", 4}, {"odi", 4},
+  {"ptou", 4}, {"ptei", 4}, {"ptado", 4},
+  {"odiu", 4}, {"odi", 4}, {"dido", 4},
   {"tou", 4}, {"tei", 4}, {"tado", 4},
   {"traiu", 4}, {"traí", 4},
   {"trou", 4}, {"trei", 4},
@@ -295,10 +295,36 @@ constexpr Entry suff[] = {
   {"ária", "ary"},
   {"ral", "ral"},
   {"ador", "ator"},
-  {"etro", "meter"}
+  {"etro", "meter"},
+  {"ência", "ency"},
+  {"êncio", "ence"}
 };
 
 //is it a vowel? 
+  std::string script_adequation(std::string word) {
+    auto replace_all = [&](const std::string& from, const std::string& to) {
+        size_t pos = 0;
+        while ((pos = word.find(from, pos)) != std::string::npos) {
+            word.replace(pos, from.size(), to);
+            pos += to.size();
+        }
+    };
+
+    replace_all("\xC3\xA1", "a"); // á
+    replace_all("\xC3\xA0", "a"); // à
+    replace_all("\xC3\xA3", "a"); // ã
+    replace_all("\xC3\xA2", "a"); // â
+    replace_all("\xC3\xA9", "e"); // é
+    replace_all("\xC3\xAD", "i"); // í
+    replace_all("\xC3\xB3", "o"); // ó
+    replace_all("\xC3\xB4", "o"); // ô
+    replace_all("\xC3\xB5", "o"); // õ
+    replace_all("\xC3\xBA", "u"); // ú
+    replace_all("\xC3\xA7", "c"); // ç
+
+    return word;
+
+}
 bool isVowel(char x)
 {
     if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
@@ -688,7 +714,8 @@ if (result_set.first.empty())
     result_set = pair<string, int>{irr_verbs[word].first, 3};
 
   return result_set;
-}pair<string, int> suffixLookup(const string& word) {
+}
+pair<string, int> suffixLookup(const string& word) {
     string translation;
     int word_type = -1;
 
@@ -713,7 +740,7 @@ if (result_set.first.empty())
                 }
 
                 word_type = 2;
-                return {translation, word_type};
+                return {normalize(translation), word_type};
             }
         }
     }
@@ -844,9 +871,11 @@ if(!singular_pt.empty()) {
         translation = prefixLookup(word).first;
         word_type = prefixLookup(word).second;
        }else if(morphemeLookup(word).first.length() > 0){
-        // if suffix not found, look for prefix
+        // if suffix not found, look for morpheme breakdown
         translation = morphemeLookup(word).first;
         word_type = morphemeLookup(word).second;
+      }else{
+           return {word, -2};
       }
   return {translation, word_type};
 }
@@ -962,6 +991,47 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
     return reordered_arr;
 }
 
+std::vector<std::string> tokenize(const std::string &text) {
+    std::vector<std::string> tokens;
+    std::string current;
+    size_t i = 0;
+
+    while (i < text.size()) {
+        unsigned char c = text[i];
+
+        if ((c & 0x80) == 0) {
+            // ASCII
+            if (std::isalnum(c)) {
+                current += c;
+            } else {
+                if (!current.empty()) {
+                    tokens.push_back(current);
+                    current.clear();
+                }
+                if (!std::isspace(c))
+                    tokens.push_back(std::string(1, c));
+            }
+            ++i;
+        } else {
+            // UTF-8 multibyte
+            size_t len = 0;
+            if ((c & 0xE0) == 0xC0) len = 2;
+            else if ((c & 0xF0) == 0xE0) len = 3;
+            else if ((c & 0xF8) == 0xF0) len = 4;
+            else len = 1; // fallback
+
+            std::string utf8char = text.substr(i, len);
+            current += utf8char;
+            i += len;
+        }
+    }
+
+    if (!current.empty())
+        tokens.push_back(current);
+
+    return tokens;
+}
+
 //ngram groups
 std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
 
@@ -1024,15 +1094,8 @@ std::string trigramLookup(vector<string> array_of_words){
   
     return bigramLookup(tri_array_of_words);
 }
-
-string traduzir_en(string sentence) {
-    vector<string> arr;
-    istringstream iss(sentence);
-    string word;
-    
-    while (iss >> word) {
-        arr.push_back(word);
-    }
-    string translated = trigramLookup(arr);
-    return translated; 
+std::string traduzir_en(std::string sentence) {
+    std::vector<std::string> arr = tokenize(sentence);  
+    std::string translated = trigramLookup(arr);
+    return script_adequation(translated); 
 }
