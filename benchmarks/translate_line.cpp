@@ -1,4 +1,4 @@
-#include "lang_it.h"
+#include "../lang_it.h"
 #include <iostream>
 #include <string>
 
@@ -8,8 +8,6 @@ int main() {
 
     while (std::getline(std::cin, line)) {
         ++line_index;
-
-        // Skip completely empty lines
         if (line.empty()) {
             std::cout << std::endl; 
             continue;

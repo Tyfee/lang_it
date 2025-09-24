@@ -1,11 +1,11 @@
 require 'set'
 
-book_file       = "./o_pequeno_principe.txt"
-dictionary_file = "./dicionario_pt_usp.txt"
-book_output     = "./result.txt"
-dict_output     = "./translated_result.txt"
-english_dict    = "./dictionary_en_david47k.txt"
-translate_exe   = "../translate_line"
+book_file       = "./corpora/o_pequeno_principe.txt"
+dictionary_file = "./dictionaries/dicionario_pt_usp.txt"
+book_output     = "./results/book_result_pt_en.txt"
+dict_output     = "./results/dict_result_pt_en.txt"
+english_dict    = "./dictionaries/dictionary_en_david47k.txt"
+translate_exe   = "./translate_line"
 
 book_lines_translated = 0
 dictionary_lines_translated = 0

@@ -6,7 +6,7 @@
 #include <utility>
 #include <algorithm>
 #include <sstream> 
-#include "lang_it.h"
+#include "../lang_it.h"
 
 using namespace std;
 
@@ -45,6 +45,8 @@ const char* lookup(const Entry (&dict)[N], const char* word) {
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 map<string, string> nouns = {
+  {"olá", "hello"},
+  {"mundo", "world"},
   {"dois", "two"},
   {"três", "three"},
   {"quatro", "four"},
@@ -179,6 +181,7 @@ map<string, string> adj = {
   {"alto", "high"},
   {"correto", "correct"},
   {"sozinho", "alone"}
+  
 };
 
 //adverbs
@@ -329,7 +332,9 @@ constexpr Entry suff[] = {
   {"ndido", "ndid"},
   {"fico", "fic"},
   {"feito", "fect"},
-  {"feita", "fect"}
+  {"feita", "fect"},
+  {"édia", "edy"},
+  {"édio", "edy"}
 };
 
 //is it a vowel? 
