@@ -29,6 +29,7 @@ constexpr Entry fixed_ngrams[] = {
   {"por_favor", "please"},
   {"por_causa", "because of"}
 };
+vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
 template <size_t N>
 const char* lookup(const Entry (&dict)[N], const char* word) {
@@ -59,15 +60,13 @@ map<string, string> nouns = {
   {"melancia", "watermelon"},
   {"areia", "sand"},
   {"chuva", "rain"},
-  {"açucar", "sugar"},
+  {"acucar", "sugar"},
   {"cachorro", "dog"},
   {"agua", "water"},
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
-  {"e", "and"},
   {"porta", "door"},
   {"janela", "window"},
-  {"não", "no"}, // ts is dynamic as well, not before nouns and 'don't' before verbs
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo)
   {"todo", "all"},
   {"comida", "food"},
@@ -84,20 +83,19 @@ map<string, string> nouns = {
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
   {"flor", "flower"},
   {"dinheiro", "money"},
-  {"criança", "kid"},
+  {"crianca", "kid"},
   {"amigo", "friend"},
   {"fome", "hunger"},
   {"frio", "cold"},
   {"dia", "day"},
   {"noite", "night"},
   {"olho", "eye"},
-  {"coração", "heart"},
+  {"coracao", "heart"},
   {"coisa", "thing"},
-  {"principe", "prince"},
   {"estrela", "star"},
   {"livro", "book"},
   {"casa", "house"},
-  {"príncipe", "prince"}
+  {"principe", "prince"} // TODO: irregular feminine noun shifts such as princesa, duquesa, garçonete, etc
 };
 
 map <string, string> art = {
@@ -121,7 +119,9 @@ constexpr Entry pre[] = {
 constexpr Entry pro[] = {
   {"eu", "i"},
   {"você", "you"},
+  {"voce", "you"},
   {"tu", "you"},
+  {"nós",  "we"},
   {"nos",  "we"},
   {"ele",  "he"},
   {"ela",  "she"},
@@ -130,7 +130,9 @@ constexpr Entry pro[] = {
   {"esse", "this"},
   {"essa", "this"},
   {"este", "this"},
-  {"esta", "this"}
+  {"esta", "this"},
+  {"isso", "this"},
+  {"isto", "this"}
 };
 constexpr Entry poss_pro[] = {
   {"seu", "your"},
@@ -147,6 +149,7 @@ map<string, string> obj_pro = {
   {"she", "her"},
   {"he", "him"},
   {"they", "them"},
+  {"you", "you"},
 };
 
 
@@ -180,22 +183,26 @@ map<string, string> adj = {
   {"feliz", "happy"},
   {"alto", "high"},
   {"correto", "correct"},
-  {"sozinho", "alone"}
+  {"sozinho", "alone"},
+  {"facil", "easy"},
+  {"dificil", "hard"}
   
 };
 
 //adverbs
 
 constexpr Entry adv[] = {
+  {"se", "if"},
+  {"talvez", "maybe"},
   {"que", "what"},
   {"mas", "but"},
   {"quando", "when"},
   {"quem", "who"},
-  {"se", "if"},
   {"também", "too"},
   {"porque", "because"},
   {"onde", "where"},
   {"quantos", "how many"},
+  {"e", "and"},
   {"quanto", "how much"},
   {"nunca", "never"},
   {"sempre", "always"},
@@ -203,7 +210,8 @@ constexpr Entry adv[] = {
   {"ali", "there"},
   {"desde", "since"},
   {"ninguém", "nobody"},
-  {"fora", "out"}
+  {"fora", "out"},
+  {"pouco", "bit"}
 };
 
 struct Verb {
@@ -221,6 +229,7 @@ constexpr Verb reg_verbs[]  = {
   {"corr", "run", 1},
   {"abr", "open", 1},
   {"fech", "clos", 0},
+  {"molh", "wet", 1},
   {"pergunt", "ask", 1},
   {"pe", "ask", 1},
   {"precis", "need", 1},
@@ -236,7 +245,8 @@ constexpr Verb reg_verbs[]  = {
   {"brilh", "glow", 1},
   {"possu", "own", 1},
   {"aprend", "learn", 1},
-  {"apag", "eras", 0}
+  {"apag", "eras", 0},
+  {"pint", "paint", 1}
 
 };
 
@@ -279,10 +289,11 @@ map<string, pair<string, int>> irr_verbs = {
   {"dev", {"should", 1}},
   {"pens", {"think", 1}},
   {"v", {"see", 1}},
-  {"t", {"hav", 0}}
+  {"t", {"hav", 0}},
+  {"funcion", {"work", 1}}
 };
 
-// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed
+// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate
 // quick dirty verb guessing
 map <string, int> patt_verbs = {
   {"ptar", 0}, // adaptar = adapt,
@@ -290,7 +301,7 @@ map <string, int> patt_verbs = {
   {"tar", 2}, // contatar = contact
   {"trair", 2}, // extrair = extract
   {"trar", 3}, // contatar = contact // what about encontrar.... (needs more specification)
-  
+  {"icar", 5}, //fabricar = fabricate, falsificar = falsificate 
   //surely theres a way to imolement the past tense endings dinamically, will i? who knows
   {"ptou", 4}, {"ptei", 4}, {"ptado", 4},
   {"odiu", 4}, {"odi", 4}, {"dido", 4},
@@ -337,8 +348,7 @@ constexpr Entry suff[] = {
   {"édio", "edy"}
 };
 
-//is it a vowel? 
-  std::string script_adequation(std::string word) {
+string script_adequation(string word) {
     auto replace_all = [&](const std::string& from, const std::string& to) {
         size_t pos = 0;
         while ((pos = word.find(from, pos)) != std::string::npos) {
@@ -359,10 +369,22 @@ constexpr Entry suff[] = {
     replace_all("\xC3\xB5", "o"); // õ
     replace_all("\xC3\xBA", "u"); // ú
     replace_all("\xC3\xA7", "c"); // ç
-
+replace_all("\xC3\x81", "a"); // Á
+replace_all("\xC3\x80", "a"); // À
+replace_all("\xC3\x83", "a"); // Ã
+replace_all("\xC3\x82", "a"); // Â
+replace_all("\xC3\x89", "e"); // É
+replace_all("\xC3\x8A", "e"); // Ê
+replace_all("\xC3\x8D", "i"); // Í
+replace_all("\xC3\x93", "o"); // Ó
+replace_all("\xC3\x94", "o"); // Ô
+replace_all("\xC3\x95", "o"); // Õ
+replace_all("\xC3\x9A", "u"); // Ú
+replace_all("\xC3\x87", "c"); // Ç
     return word;
 
 }
+
 bool isVowel(char x)
 {
     if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
@@ -373,6 +395,13 @@ bool isVowel(char x)
      return false;
 }
 
+void to_lower(char *s) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] >= 'A' && s[i] <= 'Z') {
+            s[i] = s[i] - 'A' + 'a';
+        }
+    }
+}
 
 //normalization
 //this will turn sets of letters that shift on translation and change them accordingly.
@@ -394,9 +423,44 @@ string normalize(string word) {
         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "icaly") {
             normalized_ = normalized_.substr(0, normalized_.size() - 5) + "ically";
         }
+         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "taly") {
+            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "ctly";
+        }
+          if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 3) == "yly") {
+            normalized_ = normalized_.substr(0, normalized_.size() - 3) + "ily";
+        }
     }
 
     return normalized_;
+}
+
+pair<string, int> createNounFromVerb(string verb){
+   string n = "";
+   int word_type_;
+
+  return pair<string, int>{n, word_type_};
+}
+
+pair<string, int> adjectification(string adj){
+  
+  string a = "";
+  string v;
+  int word_type_;
+
+  if(adj.length() > 4){
+      if(adj.substr(adj.length() - 3) == "ado" && lookupRegVerb(adj.substr(0, adj.length() - 3).c_str())){
+        const Verb* verb = lookupRegVerb(adj.substr(0, adj.length() - 3).c_str()); // fech
+        //clos + ed 
+        a = string(verb->translation) + "ed";
+
+        word_type_ = 1;
+        }
+    }else{
+      a = "";
+      word_type_ = -1;
+    }
+
+  return pair<string, int>{a, word_type_};
 }
 
 // dictionary lookup
@@ -489,7 +553,7 @@ pair<string, int> prefixLookup(string word){
   vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos"};
   vector<string> subjunctive = {"sse", "ssemos"};
   vector<string> conditional = {"aria", "ariamos", "eria"};
-
+  vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
   // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
   // it's a lambda that returns a pair with the match lemma + the vowel/conjugation.
@@ -532,7 +596,9 @@ if (v) {
         while (*used && i + 1 < sizeof(buffer)) buffer[i++] = *used++;
         const char* base = v->translation;
         while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
-        buffer[i++] = 'e'; // final 'e'
+        if (v->type == 0) {
+          buffer[i++] = 'e';
+        }
         buffer[i] = '\0';
     }
     else if(verb_info == 6){
@@ -541,7 +607,9 @@ if (v) {
         while (*would && i + 1 < sizeof(buffer)) buffer[i++] = *would++;
         const char* base = v->translation;
         while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
-        buffer[i++] = 'e'; // final 'e'
+        if (v->type == 0) {
+            buffer[i++] = 'e';
+        }
         buffer[i] = '\0';
     }
     else{
@@ -609,6 +677,7 @@ if (v) {
              ending = "ing";
             break;
              case 6:
+             case 7:
               if(irr_verbs[root].second == 0){
                   ending = "e";
                 }else{
@@ -730,7 +799,8 @@ if (v) {
                 case 2: ending = "ct";   break;
                 case 3: ending = "trate";   break;
                 case 4: ending = "ed";   break;
-            }
+                case 5: ending = "icate";   break;
+              }
             
             translation_ = normalize(stem + ending);
             word_type_ = 3;
@@ -761,6 +831,8 @@ if (result_set.first.empty())
 
 if (result_set.first.empty()) 
     result_set = find_verb(conditional, word, 6);
+if (result_set.first.empty()) 
+    result_set = find_verb(imperative, word, 7);
 
 
 if (result_set.first.empty()) 
@@ -778,19 +850,28 @@ pair<string, int> suffixLookup(const string& word) {
         }
     }
 
+    // this is some lexeme break up shit
+    // TODO: expand to nouns and verbs as well. like abertamente, currently becomes (abertaly -> abertcly).
+    // you should be able to find the adj stem abert from abrir.
+    // not very hard since theres patterns for verb->adjective conversion, such as abrir -> aberto, cobrir -> coberto
+    // this way you can store just the verb stems and no need of storing a bunch of adjectives
     for (int len = 6; len >= 2; --len) {
         if (word.length() >= len) {
-            string ending = word.substr(word.length() - len);
+// like if you find ly, in felizmente -> tristely. you break up [triste] [ly]. 
+          string ending = word.substr(word.length() - len);
             const char* mapped = lookup(suff, ending.c_str());
 
             if (mapped) {
+            // look up [triste] in the adj table, and if theres a match [sad]
                 string stem = word.substr(0, word.length() - len);
 
-                if (adj.count(stem)) {
-                    translation = adj[stem] + mapped;
-                } else {
-                    translation = stem + mapped;
-                }
+               if (adj.count(stem)) {
+            translation = adj[stem] + mapped;
+        } else if (!stem.empty() && adj.count(stem.substr(0, stem.length() -1) + "o")) { 
+            translation = adj[stem.substr(0, stem.length() -1) + "o"] + mapped;
+        } else {
+            translation = stem + mapped;
+        }
 
                 word_type = 2;
                 return {normalize(translation), word_type};
@@ -811,7 +892,12 @@ pair<string, int> nounLookup(string word){
   // rules
    bool plural = ((nouns.count(word.substr(0, word.length() - 1)) || nouns.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
    bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
-   bool diminutive = nouns.count(script_adequation(word).substr(0, word.length() - 4) + "o") ||  nouns.count(script_adequation(word).substr(0, word.length() - 6) + "o") || nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a");
+
+   bool diminutive = nouns.count(script_adequation(word).substr(0, word.length() - 4) + "o") 
+   ||  nouns.count(script_adequation(word).substr(0, word.length() - 6) + "o") 
+   || nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a")
+   ||  nouns.count(script_adequation(word).substr(0, word.length() - 5)) ;
+
    bool adj_plural = ((adj.count(word.substr(0, word.length() - 1)) || adj.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
    bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
    bool article_plural = art.count(word.substr(0, word.length() - 1));
@@ -828,12 +914,12 @@ pair<string, int> nounLookup(string word){
        translation = nouns[script_adequation(word)];
        word_type = 0; 
    }
-   else if(adj.count(word)){
-      translation = adj[word];
+   else if(adj.count(script_adequation(word))){
+      translation = adj[script_adequation(word)];
       word_type = 1;
     }
-    else if(lookup(pro, word.c_str())){
-      translation = lookup(pro, word.c_str());
+    else if(lookup(pro, script_adequation(word).c_str())){
+      translation = lookup(pro, script_adequation(word).c_str());
       word_type = 4;
     } else if(lookup(poss_pro, word.c_str())){
       translation = lookup(poss_pro, word.c_str());
@@ -922,6 +1008,9 @@ if(!singular_pt.empty()) {
            else  if(nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "a")){
              translation = "little " + nouns[script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a"];
 
+         }else  if(nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 5))){
+             translation = "little " + nouns[script_adequation(word).substr(0, script_adequation(word).length() - 5)];
+
          }
             word_type = 0;
         }
@@ -940,6 +1029,11 @@ if(!singular_pt.empty()) {
         // if suffix not found, look for prefix
         translation = prefixLookup(word).first;
         word_type = prefixLookup(word).second;
+       }
+       else if(adjectification(word).first.length() > 0){
+        // if preffix not found, look for prefix
+        translation = adjectification(word).first;
+        word_type = adjectification(word).second;
        }
        
        else{
@@ -1000,11 +1094,12 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
   // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
         // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
-        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
-            reordered_arr.pop_back(); 
-            reordered_arr.push_back(sentence_arr[i - 1]);
-            reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
-        } 
+            else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
+          reordered_arr.pop_back(); 
+          reordered_arr.push_back(sentence_arr[i - 1]);
+          reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
+      }
+
         // ------------------------ CONTINOUS TO BE (IS, ARE, AM)  ----------------- 
         // a set is word1 = pronoun[4] and word2 = "is", use an if to check the first pronoun and change it accordingly 
         // she is, i am, we are
@@ -1051,25 +1146,32 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
          // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PEROSN
     // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
     
-    //doesnt or dont
-           else if (i > 1 && (sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "no")  && sentence_arr[i].second == 3) {
-            string aux_verb;
-            reordered_arr.pop_back();
-            // does the pronoun before negation exist in the th_per_aux vector array? if so you push 'does' in there as result
-                  if (std::find(th_per_aux.begin(), th_per_aux.end(), sentence_arr[i - 2].first) != th_per_aux.end()) {
-                       aux_verb = "does";
-                  }
-                  // does the pronoun before negation exist in the reg_aux vector array? if so you push 'do' in there as result
-                  else if (std::find(reg_aux.begin(), reg_aux.end(), sentence_arr[i - 2].first) != reg_aux.end()) {
-                      aux_verb = "do";
-                }
-                   reordered_arr.push_back(pair<string, int>{aux_verb + "n't", 3});
-                   reordered_arr.push_back(pair<string, int>{sentence_arr[i].first, 3});
-        } 
-        
-        else {
-            reordered_arr.push_back(sentence_arr[i]);
-        }
+   else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "não" && sentence_arr[i].second == 3) {
+    string subj = sentence_arr[i - 2].first;
+    string verb = sentence_arr[i].first;
+
+    while (!reordered_arr.empty() && 
+          (reordered_arr.back().first == subj || reordered_arr.back().first == "não")) {
+        reordered_arr.pop_back();
+    }
+
+    string aux;
+    if (std::find(modals.begin(), modals.end(), verb) != modals.end()) {
+        aux = verb + " not";
+        reordered_arr.push_back({subj, 4});
+        reordered_arr.push_back({aux, 3});
+    } else {
+        aux = (std::find(th_per_aux.begin(), th_per_aux.end(), subj) != th_per_aux.end()) ? "doesn't" : "don't";
+        reordered_arr.push_back({subj, 4});
+        reordered_arr.push_back({aux, 3});
+        reordered_arr.push_back({verb, 3});
+    }
+
+    i++; 
+} else {
+    reordered_arr.push_back(sentence_arr[i]);
+}
+
     }
 
     return reordered_arr;
@@ -1179,6 +1281,7 @@ std::string trigramLookup(vector<string> array_of_words){
     return bigramLookup(tri_array_of_words);
 }
 std::string traduzir_en(std::string sentence) {
+    to_lower(&sentence[0]); 
     std::vector<std::string> arr = tokenize(sentence);  
     std::string translated = trigramLookup(arr);
     
