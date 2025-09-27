@@ -227,7 +227,6 @@ abatiment
 abdica
 abdication
 abdicacoes
-abdicate
 abdicara
 abdicaramos
 abdicarao
@@ -310,6 +309,7 @@ abencoou
 aberration
 aberracoes
 aberctly
+aberture
 abestalha
 abestalhara
 abestalharamos
@@ -355,16 +355,17 @@ abissinia
 abjet
 abjudication
 abjudicacoes
+abjure
 abjura
 abjuration
 abjuracoes
 abjurament
-abjurara
 abjuraramos
 abjurarao
 abjuraras
 abjurareis
-abjurariamos
+used to e
+used to e
 abjurarieis
 abjurasseis
 abjurassemos
@@ -544,6 +545,7 @@ aborticio
 aborticios
 aborted
 abotoa
+abotoadure
 abotoara
 abotoaramos
 abotoarao
@@ -621,6 +623,7 @@ abrandasseis
 abrandassemos
 abrandavamos
 abrandaveis
+open
 abrange
 abrangency
 abrangencias
@@ -661,6 +664,7 @@ abrenharao
 abrenharas
 abrenhareis
 used to e
+used to e
 abrenharieis
 abrenhasseis
 abrenhassemos
@@ -681,10 +685,11 @@ abreviariamos
 abreviarieis
 abreviasseis
 abreviassemos
+abreviature
 abreviavamos
 abreviaveis
 opened
-opened
+used to open
 used to open
 abrico
 abricos
@@ -752,6 +757,7 @@ absolve
 absolverao
 absolveras
 used to e
+used to e
 absolverieis
 absolves
 absolviamos
@@ -789,6 +795,7 @@ abstencoes
 abstens
 absterao
 absteras
+used to e
 used to e
 absterieis
 abstinency
@@ -1362,6 +1369,7 @@ achegarao
 achegaras
 achegareis
 used to e
+used to e
 achegarieis
 achegasseis
 achegassemos
@@ -1392,7 +1400,7 @@ acidented
 acidented
 acidifica
 acidification
-acidificate
+acidify
 acidificara
 acidificaramos
 acidificarao
@@ -1850,6 +1858,7 @@ believ
 acredited
 believe
 believe
+believ
 believe
 acreditara
 believed
@@ -1950,36 +1959,52 @@ sugar
 acucara
 acucara
 acucarada
+acucaradas
 acucarado
+acucarados
 acucarais
 acucaram
+acucaramos
 acucarara
+acucarara
+acucararam
 acucararamos
 acucararao
 acucararas
+acucararas
 acucarardes
+acucararei
 acucarareis
 acucarareis
-acucararemo
+acucararem
 acucararemos
+acucarares
+acucararia
 acucarariam
 acucarariamos
 acucararias
 acucararieis
+acucararmo
 acucararmos
 acucaras
+acucarasse
 acucarasseis
 acucarassem
 acucarassemos
 acucarasses
+acucaraste
 acucarastes
 acucarava
+acucaravam
 acucaravamos
+acucaravas
 acucaraveis
 acucare
+acucareiro
 acucareiros
 acucareis
 acucarem
+acucaremos
 acucares
 acucaro
 acucarou
@@ -2019,6 +2044,7 @@ acumulavamos
 acumulaveis
 acumulo
 acumulos
+acupunture
 acusa
 acusation
 acusacoes
@@ -2160,6 +2186,7 @@ adequarao
 adequaras
 adequareis
 used to e
+used to e
 adequarieis
 adequasseis
 adequassemos
@@ -2170,6 +2197,7 @@ aderency
 aderencias
 aderiamos
 aderieis
+ader
 aderira
 aderiramos
 aderirao
@@ -2324,7 +2352,6 @@ adjetivaveis
 adjudica
 adjudication
 adjudicacoes
-adjudicate
 adjudicara
 adjudicaramos
 adjudicarao
@@ -2451,7 +2478,6 @@ adocavamos
 adocavas
 adocaveis
 adocica
-adocicate
 adocicara
 adocicaramos
 adocicarao
@@ -2681,6 +2707,7 @@ advinheis
 advirao
 adviras
 used to e
+used to e
 advirieis
 advoga
 advogara
@@ -2859,6 +2886,7 @@ aferiamos
 aferition
 afericoes
 aferieis
+afer
 aferira
 aferiramos
 aferirao
@@ -3004,18 +3032,20 @@ afiarao
 afiaras
 afiareis
 used to e
+used to e
 afiarieis
 afiasseis
 afiassemos
 afiavamos
 afiaveis
+afigure
 afigura
-afigurara
 afiguraramos
 afigurarao
 afiguraras
 afigurareis
-afigurariamos
+used to e
+used to e
 afigurarieis
 afigurasseis
 afigurassemos
@@ -3254,7 +3284,8 @@ aformoseassemos
 used to e
 used to e
 aformoseaveis
-the   frica
+used to e
+africa
 afrodisiaco
 afrodisiacos
 afrodite
@@ -3537,13 +3568,14 @@ agonizassemos
 agonizavamos
 agonizaveis
 agostinho
+agoure
 agoura
-agourara
 agouraramos
 agourarao
 agouraras
 agourareis
-agourariamos
+used to e
+used to e
 agourarieis
 agourasseis
 agourassemos
@@ -3658,6 +3690,7 @@ agressoes
 agriao
 agricola
 agricolas
+agriculture
 agrilhoa
 agrilhoara
 agrilhoaramos
@@ -3670,6 +3703,7 @@ agrilhoasseis
 agrilhoassemos
 agrilhoavamos
 agrilhoaveis
+agrimensure
 agroindustria
 agroindustrias
 agronoma
@@ -3699,74 +3733,46 @@ agrupasseis
 agrupassemos
 agrupavamos
 agrupaveis
+agrure
 water
 water
 water
-little water
-little water
-little water
-little water
-little water
-little water
 aguaramos
-little water
-little water
-little water
-little water
-little water
-little water
-little water
-little water
-little water
-little water
+aguarao
+aguaras
+aguarda
+aguardara
 aguardaramos
 aguardarao
 aguardaras
 aguardareis
-used to e
+aguardariamos
 aguardarieis
 aguardasseis
 aguardassemos
-little water
 aguardavamos
 aguardaveis
-little water
-little water
-little water
-little water
-little water
-little water
-little water
-little water
-little water
+aguareis
+used to e
 used to e
 aguarieis
-little water
 s
 aguas
-little water
-little water
-little
+aguasseis
 aguassemos
-little
-little water
-little
-little water
-little water
-little water
-little
+aguavamos
+aguaveis
 aguca
 aguca
-little water
+agucada
 agucadas
-little water
+agucado
 agucados
-little water
+agucais
 agucam
-little water
 agucamos
-little water
-little water
+agucara
+agucara
 agucaram
 agucaramos
 agucarao
@@ -3794,25 +3800,19 @@ agucassemos
 agucasses
 agucaste
 agucastes
-little water
+agucava
 agucavam
 agucavamos
 agucavas
 agucaveis
-little water
-little water
 aguco
 agucou
-little water
 agudissima
 agudissimas
 agudissimo
 agudissimos
-little water
-little water
-little water
-little water
-little water
+aguenta
+aguenta
 aguented
 aguented
 aguenct
@@ -3839,22 +3839,18 @@ aguentavamos
 aguentavamos
 aguentaveis
 aguentaveis
-little water
-little water
 aguented
 aguented
-little water
-little water
 aguented
 aguented
-little water
 aguerriamos
 aguerrieis
+aguerrira
 aguerriramos
 aguerrirao
 aguerriras
 aguerrireis
-used to e
+aguerririamos
 aguerririeis
 aguerrisseis
 aguerrissemos
@@ -3863,9 +3859,6 @@ aguias
 aguilhao
 aguilhoes
 agulha
-little water
-little water
-little water
 agulhara
 agulharamos
 agulharao
@@ -3873,15 +3866,10 @@ agulharas
 agulhareis
 agulhariamos
 agulharieis
-little water
 agulhasseis
 agulhassemos
 agulhavamos
 agulhaveis
-little water
-little water
-little water
-little water
 the
 the
 ai
@@ -4020,6 +4008,7 @@ alagarao
 alagaras
 alagareis
 used to e
+used to e
 alagarieis
 alagasseis
 alagassemos
@@ -4033,6 +4022,7 @@ alardearamos
 alardearao
 alardearas
 alardeareis
+used to e
 used to e
 alardearieis
 alardeasseis
@@ -4415,6 +4405,7 @@ alhearao
 alhearas
 alheareis
 used to e
+used to e
 alhearieis
 alheasseis
 alheassemos
@@ -4541,6 +4532,7 @@ alimentation
 alimented
 feed
 feed
+feeding
 feed
 alimentara
 fed
@@ -4756,13 +4748,14 @@ alopatica
 alopaticas
 alopatico
 alopaticos
+aloure
 aloura
-alourara
 alouraramos
 alourarao
 alouraras
 alourareis
-alourariamos
+used to e
+used to e
 alourarieis
 alourasseis
 alourassemos
@@ -4780,6 +4773,7 @@ altearamos
 altearao
 altearas
 alteareis
+used to e
 used to e
 altearieis
 alteasseis
@@ -4834,6 +4828,7 @@ alternavamos
 alternaveis
 altimmeter
 altimetros
+altiplanure
 altissima
 altissimas
 altissimo
@@ -4848,6 +4843,7 @@ altruistica
 altruisticas
 altruistico
 altruisticos
+alture
 alucina
 alucination
 alucinacoes
@@ -4914,7 +4910,7 @@ aluviao
 alvara
 alvaras
 alvarenga
-the   lvares
+alvares
 alveja
 alvejara
 alvejaramos
@@ -4999,6 +4995,7 @@ alvoroco
 alvorocos
 alvorocou
 alvoroted
+alvure
 loves
 lov
 amability
@@ -5140,6 +5137,7 @@ amancebasseis
 amancebassemos
 amancebavamos
 amancebaveis
+lov
 amanha
 amanheca
 amanhecais
@@ -5220,6 +5218,7 @@ amargasseis
 amargassemos
 amargavamos
 amargaveis
+amargure
 would love
 amariamos
 amarieis
@@ -5464,41 +5463,25 @@ amicissimo
 amicissimos
 friend
 amiga
-little friend
-little friend
 amigao
-little friend
 amigaramos
 amigarao
-little friend
 amigaras
-little friend
-little friend
-little friend
-little friend
-little friend
-little friend
+amigareis
+used to e
 used to e
 amigarieis
-little friend
 friends
-little friend
 amigasseis
 amigassemos
-little friend
-little friend
 amigavamos
-little friend
-little friend
+amigaveis
 amigable
 amigdala
+amigdalas
 friend
-little friend
+amigoes
 friends
-little friend
-little friend
-little friend
-little friend
 amima
 amimara
 amimaramos
@@ -5520,6 +5503,7 @@ amiudaramos
 amiudarao
 amiudaras
 amiudareis
+used to e
 used to e
 amiudarieis
 amiudas
@@ -5770,7 +5754,7 @@ amplidoes
 amplifica
 amplification
 amplificator
-amplificate
+amplify
 amplificara
 amplificaramos
 amplificarao
@@ -5923,6 +5907,8 @@ ancorassemos
 ancoravamos
 ancoraveis
 anda
+andadure
+used to e
 andament
 andanca
 andancas
@@ -6015,12 +6001,12 @@ angariasseis
 angariassemos
 angariavamos
 angariaveis
-the   ngela
+angela
 angelica
 angelicas
 angelico
 angelicos
-the   ngelo
+angelo
 angiography
 angola
 angulo
@@ -6041,6 +6027,7 @@ angustiassemos
 angustiavamos
 angustiaveis
 angustiosaly
+angusture
 anidrido
 anima
 animation
@@ -6182,6 +6169,7 @@ ansiarao
 ansiaras
 ansiareis
 used to e
+used to e
 ansiarieis
 ansias
 ansiasseis
@@ -6262,6 +6250,7 @@ antepoes
 anteporao
 anteporas
 used to e
+used to e
 anteporieis
 antepos
 antepunhamos
@@ -6275,6 +6264,7 @@ anteriorly
 anteve
 anteverao
 anteveras
+used to e
 used to e
 anteverieis
 anteves
@@ -6474,6 +6464,7 @@ erased
 erase
 apagament
 erase
+eras
 erase
 apagara
 erased
@@ -6712,6 +6703,7 @@ apearao
 apearas
 apeareis
 used to e
+used to e
 apearieis
 apeasseis
 apeassemos
@@ -6874,6 +6866,7 @@ aperrearao
 aperrearas
 aperreareis
 used to e
+used to e
 aperrearieis
 aperreasseis
 aperreassemos
@@ -6923,6 +6916,7 @@ apiary
 apiarios
 apice
 apices
+apiculture
 apieda
 apiedara
 apiedaramos
@@ -7033,7 +7027,6 @@ aplaudissemos
 aplica
 aplication
 aplicacoes
-aplicate
 aplicara
 aplicaramos
 aplicarao
@@ -7197,6 +7190,7 @@ apostaras
 apostareis
 apostariamos
 apostarieis
+used to e
 apostasseis
 apostassemos
 apostata
@@ -7326,7 +7320,7 @@ aprendesseis
 aprendessemos
 learned
 learned
-learned
+used to learn
 used to learn
 aprendid
 aprendid
@@ -7526,15 +7520,16 @@ apunhalasseis
 apunhalassemos
 apunhalavamos
 apunhalaveis
+apure
 apura
 apuration
 apuracoes
-apurara
 apuraramos
 apurarao
 apuraras
 apurareis
-apurariamos
+used to e
+used to e
 apurarieis
 apurasseis
 apurassemos
@@ -7886,57 +7881,29 @@ aritmeticos
 arizona
 gun
 gun
-little gun
+armation
 armacoes
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
+armator
+armadure
+armament
+armando
 armaramos
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
-little gun
+armarao
+armaras
+armareis
+used to e
 used to e
 armarieis
-little gun
-little gun
-little gun
+armary
+armarios
 s
-little gun
-little gun
-little
+armasseis
 armassemos
-little
-little gun
-little
-little gun
-little gun
-little gun
-little
-little gun
-little
-little
-little
-little
-little gun
-little
-little gun
+armavamos
+armaveis
+armazem
+armazena
 armazenament
-little
-little gun
-little
 armazenara
 armazenaramos
 armazenarao
@@ -7944,26 +7911,14 @@ armazenaras
 armazenareis
 armazenariamos
 armazenarieis
-little gun
 armazenasseis
 armazenassemos
-little
 armazenavamos
 armazenaveis
-little
-little gun
-little
-little gun
-little
-little gun
-little
-little gun
-little
-little gun
-little gun
-little gun
+armazens
+armenia
+armenio
 armenios
-little gun
 armisticio
 armisticio
 armisticios
@@ -7999,6 +7954,7 @@ arpoassemos
 arpoavamos
 arpoaveis
 arpoes
+arqueadure
 arqueament
 arqueara
 arquearamos
@@ -8013,6 +7969,7 @@ arqueassemos
 used to e
 used to e
 arqueaveis
+used to e
 arqueja
 arquejament
 arquejara
@@ -8063,6 +8020,7 @@ arquitetonicas
 arquitetonico
 arquitetonicos
 arquiteted
+arquiteture
 arquiva
 arquivament
 arquivara
@@ -8101,6 +8059,7 @@ arrancassemos
 arrancavamos
 arrancaveis
 arranha
+arranhadure
 arranhao
 arranhara
 arranharamos
@@ -8174,6 +8133,7 @@ arrearamos
 arrearao
 arrearas
 arreareis
+used to e
 used to e
 arrearieis
 arreasseis
@@ -8684,6 +8644,7 @@ arroxearao
 arroxearas
 arroxeareis
 used to e
+used to e
 arroxearieis
 arroxeasseis
 arroxeassemos
@@ -8740,6 +8701,7 @@ articularamos
 articularao
 articularas
 articulareis
+used to e
 used to e
 articularieis
 articulasseis
@@ -8825,7 +8787,7 @@ asfixiasseis
 asfixiassemos
 asfixiavamos
 asfixiaveis
-the   sia
+asia
 asiatica
 asiaticas
 asiatico
@@ -8878,6 +8840,7 @@ aspirassemos
 aspiravamos
 aspiraveis
 assa
+assadure
 assalaria
 assalariara
 assalariaramos
@@ -8972,18 +8935,20 @@ assediavamos
 assediaveis
 assedy
 assedios
+assegure
 assegura
-assegurara
 asseguraramos
 assegurarao
 asseguraras
 assegurareis
-assegurariamos
+used to e
+used to e
 assegurarieis
 assegurasseis
 assegurassemos
 asseguravamos
 asseguraveis
+used to e
 assemelha
 assemelhara
 assemelharamos
@@ -9001,6 +8966,7 @@ assenhorearamos
 assenhorearao
 assenhorearas
 assenhoreareis
+used to e
 used to e
 assenhorearieis
 assenhoreasseis
@@ -9056,6 +9022,7 @@ assessorassemos
 used to e
 used to e
 assessoraveis
+used to e
 assessory
 assessorias
 assessorio
@@ -9077,6 +9044,7 @@ assiduas
 assiduity
 assiduo
 assiduos
+like this
 assimetrica
 assimetricas
 assimetrico
@@ -9118,6 +9086,7 @@ assinariamos
 assinarieis
 assinasseis
 assinassemos
+assinature
 assinavamos
 assinaveis
 assinable
@@ -9148,6 +9117,7 @@ assistiramos
 assistirao
 assistiras
 assistireis
+used to e
 used to e
 assistirieis
 assistisseis
@@ -9263,6 +9233,7 @@ assorearao
 assorearas
 assoreareis
 used to e
+used to e
 assorearieis
 assoreasseis
 assoreassemos
@@ -9359,6 +9330,7 @@ atacassemos
 atacavamos
 atacaveis
 ated
+atadure
 atalha
 atalhara
 atalharamos
@@ -9445,7 +9417,7 @@ atazanasseis
 atazanassemos
 atazanavamos
 atazanaveis
-ate
+until
 ate
 ateara
 atearamos
@@ -9461,6 +9433,8 @@ used to e
 used to e
 ateaveis
 ated
+used to e
+used to e
 ateismo
 ateista
 ateistas
@@ -9632,7 +9606,7 @@ aticavas
 aticaveis
 atico
 aticou
-the   tila
+atila
 atina
 atinara
 atinaramos
@@ -10027,6 +10001,7 @@ atrofiarao
 atrofiaras
 atrofiareis
 used to e
+used to e
 atrofiarieis
 atrofiasseis
 atrofiassemos
@@ -10090,13 +10065,14 @@ atulhasseis
 atulhassemos
 atulhavamos
 atulhaveis
+ature
 atura
-aturara
 aturaramos
 aturarao
 aturaras
 aturareis
-aturariamos
+used to e
+used to e
 aturarieis
 aturasseis
 aturassemos
@@ -10122,12 +10098,14 @@ audiency
 audiencias
 audiofrequency
 audiofrequencias
+used to e
 auditorio
 auditorios
 audiveis
 audible
 auferiamos
 auferieis
+aufer
 auferira
 auferiramos
 auferirao
@@ -10137,13 +10115,14 @@ aufeririamos
 auferirieis
 auferisseis
 auferissemos
+augure
 augura
-augurara
 auguraramos
 augurarao
 auguraras
 augurareis
-augurariamos
+used to e
+used to e
 augurarieis
 augurasseis
 augurassemos
@@ -10169,6 +10148,7 @@ auly
 aumented
 aument
 aumented
+aure
 aurea
 aureas
 aurelia
@@ -10236,7 +10216,7 @@ auspicios
 austerity
 australia
 australia
-the   ustria
+austria
 austriaca
 austriacas
 austriaco
@@ -10249,7 +10229,6 @@ autentica
 autentica
 autentication
 autenticacoes
-autenticate
 autenticara
 autenticaramos
 autenticarao
@@ -10361,6 +10340,7 @@ autonomearao
 autonomearas
 autonomeareis
 used to e
+used to e
 autonomearieis
 autonomeasseis
 autonomeassemos
@@ -10431,6 +10411,7 @@ avacalhasseis
 avacalhassemos
 avacalhavamos
 avacalhaveis
+used to e
 avalia
 avaliation
 avaliacoes
@@ -10438,6 +10419,7 @@ avaliaramos
 avaliarao
 avaliaras
 avaliareis
+used to e
 used to e
 avaliarieis
 avaliasseis
@@ -10538,6 +10520,7 @@ avassalasseis
 avassalassemos
 avassalavamos
 avassalaveis
+used to e
 avela
 avelas
 avem
@@ -10559,15 +10542,16 @@ aventavamos
 aventaveis
 avented
 avented
+aventure
 aventura
 aventuranca
 aventurancas
-aventurara
 aventuraramos
 aventurarao
 aventuraras
 aventurareis
-aventurariamos
+used to e
+used to e
 aventurarieis
 aventurasseis
 aventurassemos
@@ -10638,6 +10622,7 @@ aviaveis
 avicena
 avicola
 avicolas
+aviculture
 avida
 avidas
 avido
@@ -10647,7 +10632,7 @@ aviereis
 aviesseis
 aviessemos
 avigorament
-the   vila
+avila
 avilta
 avilted
 aviltament
@@ -10673,6 +10658,7 @@ avioezinho
 avioezinhos
 avirao
 aviras
+used to e
 used to e
 avirieis
 avisa
@@ -11087,6 +11073,7 @@ balanceassemos
 used to e
 used to e
 balanceaveis
+used to e
 balanco
 balancos
 balancou
@@ -11133,6 +11120,7 @@ baleassemos
 used to e
 used to e
 baleaveis
+used to e
 baliamos
 balieis
 balira
@@ -11186,6 +11174,7 @@ bambearao
 bambearas
 bambeareis
 used to e
+used to e
 bambearieis
 bambeasseis
 bambeassemos
@@ -11196,6 +11185,7 @@ bambolearamos
 bambolearao
 bambolearas
 bamboleareis
+used to e
 used to e
 bambolearieis
 bamboleasseis
@@ -11237,6 +11227,7 @@ bandearamos
 bandearao
 bandearas
 bandeareis
+used to e
 used to e
 bandearieis
 bandeasseis
@@ -11289,6 +11280,7 @@ banqueteassemos
 used to e
 used to e
 banqueteaveis
+used to e
 baqueara
 baquearamos
 baquearao
@@ -11302,6 +11294,7 @@ baqueassemos
 used to e
 used to e
 baqueaveis
+used to e
 barao
 baratea
 barateament
@@ -11309,6 +11302,7 @@ baratearamos
 baratearao
 baratearas
 barateareis
+used to e
 used to e
 baratearieis
 barateasseis
@@ -11340,6 +11334,7 @@ barbearamos
 barbearao
 barbearas
 barbeareis
+used to e
 used to e
 barbearieis
 barbeasseis
@@ -11392,7 +11387,6 @@ barrassemos
 barravamos
 barraveis
 barrica
-barricate
 barricara
 barricaramos
 barricarao
@@ -11423,6 +11417,7 @@ baseassemos
 used to e
 used to e
 baseaveis
+used to e
 basica
 basically
 basicas
@@ -11471,6 +11466,7 @@ batalhaveis
 batalhoes
 bate
 bated
+used to e
 bateis
 batera
 bateramos
@@ -11525,7 +11521,7 @@ beatifica
 beatifica
 beatification
 beatificacoes
-beatificate
+beatify
 beatificara
 beatificaramos
 beatificarao
@@ -11572,7 +11568,7 @@ bebesseis
 bebessemos
 drank
 drank
-drank
+used to drinke
 used to drinke
 bebieis
 drink
@@ -11658,6 +11654,7 @@ belissimo
 belissimos
 belize
 belzebu
+well
 bention
 bention
 bencaos
@@ -11671,6 +11668,7 @@ bendisseramos
 bendissereis
 bendissesseis
 bendissessemos
+used to e
 used to e
 bendizieis
 benedita
@@ -11713,10 +11711,12 @@ benevolency
 benevolencias
 benevolo
 benevolos
+used to e
 benignity
 benjamim
 bento
 benze
+benzedure
 benzenica
 benzenicas
 benzenico
@@ -11767,7 +11767,7 @@ bestalhao
 bestalhoes
 bestiality
 bestifica
-bestificate
+bestify
 bestificara
 bestificaramos
 bestificarao
@@ -11836,7 +11836,6 @@ biblioteconomico
 biblioteconomicos
 bica
 bicampea
-bicate
 bicara
 bicaramos
 bicarao
@@ -12038,6 +12037,7 @@ bloquearao
 bloquearas
 bloqueareis
 used to e
+used to e
 bloquearieis
 bloqueasseis
 bloqueassemos
@@ -12045,7 +12045,7 @@ bloqueavamos
 bloqueaveis
 blusao
 blusoes
-boaventura
+boaventure
 bobalhao
 bobalhoes
 bobea
@@ -12053,6 +12053,7 @@ bobearamos
 bobearao
 bobearas
 bobeareis
+used to e
 used to e
 bobearieis
 bobeasseis
@@ -12125,25 +12126,31 @@ boie
 boiem
 boies
 boio
+cake
 bola
 bolao
-bolara
 bolaramos
 bolarao
 bolaras
 bolareis
-bolariamos
+used to e
+used to e
 bolarieis
+cakes
 bolasseis
 bolassemos
 bolavamos
 bolaveis
+cake
 bolide
 bolides
 bolido
 bolidos
+little cake
 bolivia
+cake
 bolonha
+cakes
 bombaim
 bombardea
 bombardeament
@@ -12151,6 +12158,7 @@ bombardearamos
 bombardearao
 bombardearas
 bombardeareis
+used to e
 used to e
 bombardearieis
 bombardeasseis
@@ -12167,6 +12175,7 @@ bombearamos
 bombearao
 bombearas
 bombeareis
+used to e
 used to e
 bombearieis
 bombeasseis
@@ -12203,6 +12212,7 @@ borboletearao
 borboletearas
 borboleteareis
 used to e
+used to e
 borboletearieis
 borboleteasseis
 borboleteassemos
@@ -12222,6 +12232,7 @@ borbulhassemos
 borbulhavamos
 borbulhaveis
 borda
+bordadure
 bordao
 bordara
 bordaramos
@@ -12318,6 +12329,7 @@ botoes
 boted
 botsuana
 botswana
+bovinoculture
 boxeator
 boxeara
 boxearamos
@@ -12332,6 +12344,7 @@ boxeassemos
 used to e
 used to e
 boxeaveis
+used to e
 brabante
 braca
 bracada
@@ -12394,6 +12407,7 @@ bramiriamos
 bramirieis
 bramisseis
 bramissemos
+brancure
 brandao
 brandenburgo
 brandiamos
@@ -12409,12 +12423,14 @@ brandiriamos
 brandirieis
 brandisseis
 brandissemos
+brandure
 branquea
 branqueament
 branquearamos
 branquearao
 branquearas
 branqueareis
+used to e
 used to e
 branquearieis
 branqueasseis
@@ -12434,6 +12450,7 @@ bravissima
 bravissimas
 bravissimo
 bravissimos
+bravure
 breca
 brecara
 brecaramos
@@ -12478,6 +12495,7 @@ brigoes
 glows
 glow
 glowed
+glow
 glow
 glow
 glow
@@ -12561,6 +12579,7 @@ brochasseis
 brochassemos
 brochavamos
 brochaveis
+brochure
 bromelia
 bromeliacea
 bromeliaceas
@@ -12570,6 +12589,7 @@ bronquearamos
 bronquearao
 bronquearas
 bronqueareis
+used to e
 used to e
 bronquearieis
 bronqueasseis
@@ -12594,6 +12614,7 @@ bronzeassemos
 used to e
 used to e
 bronzeaveis
+used to e
 broqueara
 broquearamos
 broquearao
@@ -12607,6 +12628,7 @@ broqueassemos
 used to e
 used to e
 broqueaveis
+used to e
 brota
 broted
 broct
@@ -12636,6 +12658,7 @@ bruxulearamos
 bruxulearao
 bruxulearas
 bruxuleareis
+used to e
 used to e
 bruxulearieis
 bruxuleasseis
@@ -12756,6 +12779,7 @@ search
 searched
 search
 search
+search
 buscape
 buscapes
 search
@@ -12814,6 +12838,7 @@ cabecearamos
 cabecearao
 cabecearas
 cabeceareis
+used to e
 used to e
 cabecearieis
 cabeceasseis
@@ -12925,12 +12950,14 @@ caceteassemos
 used to e
 used to e
 caceteaveis
+used to e
 cachaca
 cachea
 cachearamos
 cachearao
 cachearas
 cacheareis
+used to e
 used to e
 cachearieis
 cacheasseis
@@ -12950,9 +12977,7 @@ cachimbassemos
 cachimbavamos
 cachimbaveis
 dog
-little dog
 dogs
-little dog
 little dog
 dog
 dogs
@@ -12964,7 +12989,6 @@ cacoados
 cacoai
 cacoais
 cacoamo
-cacoando
 cacoara
 cacoara
 cacoaramos
@@ -13062,6 +13086,7 @@ caducity
 caes
 caezinhos
 cafe
+cafeiculture
 cafeina
 cafes
 cafeta
@@ -13226,7 +13251,7 @@ calcaveis
 calcifica
 calcification
 calcificacoes
-calcificate
+calcify
 calcificara
 calcificaramos
 calcificarao
@@ -13263,6 +13288,7 @@ calcularao
 calcularas
 calculareis
 used to e
+used to e
 calcularieis
 calculasseis
 calculassemos
@@ -13282,6 +13308,7 @@ calejaramos
 calejarao
 calejaras
 calejareis
+used to e
 used to e
 calejarieis
 calejasseis
@@ -13328,6 +13355,7 @@ caligrafo
 caligrafos
 calmaly
 calorao
+used to e
 calorica
 caloricas
 calorico
@@ -13353,6 +13381,7 @@ caloteassemos
 used to e
 used to e
 caloteaveis
+used to e
 calunia
 calunia
 caluniara
@@ -13382,6 +13411,7 @@ cambalearamos
 cambalearao
 cambalearas
 cambaleareis
+used to e
 used to e
 cambalearieis
 cambaleasseis
@@ -13438,6 +13468,7 @@ campearamos
 campearao
 campearas
 campeareis
+used to e
 used to e
 campearieis
 campeas
@@ -13526,10 +13557,12 @@ candidatavamos
 candidataveis
 candidated
 candidated
+candidature
 candid
 candidos
 candomble
 candombles
+candure
 canet
 canfora
 cangucu
@@ -13579,6 +13612,7 @@ canted
 cantator
 sing
 sing
+singing
 cantao
 sing
 cantara
@@ -13617,6 +13651,7 @@ sing
 cantico
 canticos
 sing
+used to e
 sang
 cao
 caotica
@@ -13713,6 +13748,7 @@ capitanearao
 capitanearas
 capitaneareis
 used to e
+used to e
 capitanearieis
 capitaneasseis
 capitaneassemos
@@ -13789,13 +13825,14 @@ captavamos
 captaveis
 capted
 capted
+capture
 captura
-capturara
 capturaramos
 capturarao
 capturaras
 capturareis
-capturariamos
+used to e
+used to e
 capturarieis
 capturasseis
 capturassemos
@@ -13850,14 +13887,15 @@ carbonizasseis
 carbonizassemos
 carbonizavamos
 carbonizaveis
+carbure
 carbura
 carburation
-carburara
 carburaramos
 carburarao
 carburaras
 carburareis
-carburariamos
+used to e
+used to e
 carburarieis
 carburasseis
 carburassemos
@@ -13905,6 +13943,7 @@ carency
 caret
 cariatide
 cariatides
+caricature
 caricia
 caricias
 carity
@@ -14014,61 +14053,31 @@ carvaozinhos
 carvoes
 house
 house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
+casacao
+casacoes
+casament
 casaramos
-little house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
+casarao
+casaras
+casareis
+used to e
 used to e
 casarieis
-little house
 s
-little house
-little house
-little
+casasseis
 casassemos
-little
-little house
-little
-little house
-little house
-little house
-little
+casavamos
+casaveis
 cascao
-little house
 cascaveis
 little house
-little house
-little house
-little house
-little house
-little house
-little house
-little house
+casorio
 casorios
 caspio
 cassa
 cassation
 cassacoes
-little house
-little house
-little house
-little house
-little house
+cassara
 cassaramos
 cassarao
 cassaras
@@ -14077,43 +14086,34 @@ cassariamos
 cassarieis
 cassasseis
 cassassemos
-little house
 cassavamos
 cassaveis
-little house
-little house
-little house
-little house
-little house
-little house
+castica
 casticais
 castical
 casticas
-little house
+castico
 casticos
 castity
-little house
-little house
+castiga
+castigara
 castigaramos
 castigarao
 castigaras
 castigareis
-used to e
+castigariamos
 castigarieis
 castigasseis
 castigassemos
 castigavamos
 castigaveis
-little house
 castissima
 castissimas
 castissimo
 castissimos
 castra
 castration
-little house
-little house
-little house
+castrate
 castrara
 castraramos
 castrarao
@@ -14121,16 +14121,12 @@ castraras
 castrareis
 castrariamos
 castrarieis
-little house
 castrasseis
 castrassemos
 castravamos
 castraveis
-little house
-little house
-little house
-little house
-little house
+castred
+castred
 casuality
 casuismo
 casuismos
@@ -14140,8 +14136,6 @@ casuistica
 casuisticas
 casuistico
 casuisticos
-little house
-little house
 cata
 catation
 cated
@@ -14301,9 +14295,11 @@ cauterization
 cauterizacoes
 cava
 cavation
+used to e
 cavalarica
 cavalaricas
 cavalga
+cavalgadure
 cavalgara
 cavalgaramos
 cavalgarao
@@ -14371,6 +14367,7 @@ cearamos
 cearao
 cearas
 ceareis
+used to e
 used to e
 cearieis
 ceasseis
@@ -14496,17 +14493,19 @@ cenografas
 cenography
 cenografo
 cenografos
+cenoure
 cenozoica
 cenozoicas
 cenozoico
 cenozoicos
+censure
 censura
-censurara
 censuraramos
 censurarao
 censuraras
 censurareis
-censurariamos
+used to e
+used to e
 censurarieis
 censurasseis
 censurassemos
@@ -14579,7 +14578,6 @@ centroide
 centroides
 centred
 centuplica
-centuplicate
 centuplicara
 centuplicaramos
 centuplicarao
@@ -14653,7 +14651,7 @@ certidoes
 certifica
 certification
 certificacoes
-certificate
+certify
 certificara
 certificaramos
 certificarao
@@ -14735,6 +14733,7 @@ chacotearao
 chacotearas
 chacoteareis
 used to e
+used to e
 chacotearieis
 chacoteasseis
 chacoteassemos
@@ -14795,6 +14794,7 @@ chamuscassemos
 chamuscavamos
 chamuscaveis
 chanfra
+chanfradure
 chanfrara
 chanfraramos
 chanfrarao
@@ -14832,6 +14832,7 @@ charlatanearao
 charlatanearas
 charlataneareis
 used to e
+used to e
 charlatanearieis
 charlataneasseis
 charlataneassemos
@@ -14845,6 +14846,7 @@ chasquearao
 chasquearas
 chasqueareis
 used to e
+used to e
 chasquearieis
 chasqueasseis
 chasqueassemos
@@ -14857,6 +14859,7 @@ chatearamos
 chatearao
 chatearas
 chateareis
+used to e
 used to e
 chatearieis
 chateasseis
@@ -14877,6 +14880,7 @@ chaveassemos
 used to e
 used to e
 chaveaveis
+used to e
 chavena
 chavenas
 checa
@@ -14893,12 +14897,14 @@ checavamos
 checaveis
 chefao
 chefaos
+chefature
 chephy
 chefia
 chefiaramos
 chefiarao
 chefiaras
 chefiareis
+used to e
 used to e
 chefiarieis
 chefiasseis
@@ -14959,6 +14965,7 @@ chicoteassemos
 used to e
 used to e
 chicoteaveis
+used to e
 chifra
 chifrara
 chifraramos
@@ -14977,6 +14984,7 @@ chilrearamos
 chilrearao
 chilrearas
 chilreareis
+used to e
 used to e
 chilrearieis
 chilreasseis
@@ -15067,6 +15075,7 @@ chulearao
 chulearas
 chuleareis
 used to e
+used to e
 chulearieis
 chuleasseis
 chuleassemos
@@ -15117,25 +15126,20 @@ chutaveis
 chuted
 chuted
 rain
-little rain
 s
 little rain
-little rain
-little rain
-little rain
+chuvisca
+chuviscara
 chuviscaramos
 chuviscarao
 chuviscaras
 chuviscareis
-used to e
+chuviscariamos
 chuviscarieis
 chuviscasseis
 chuviscassemos
 chuviscavamos
 chuviscaveis
-little rain
-little rain
-little rain
 cianidrica
 cianidricas
 cianidrico
@@ -15184,7 +15188,6 @@ cidadaos
 cidadas
 town
 towns
-little town
 ciency
 ciencias
 cientifica
@@ -15285,10 +15288,12 @@ cintilasseis
 cintilassemos
 cintilavamos
 cintilaveis
+cinture
 cinturao
 cinturoes
 cinzeis
 cinzelator
+cinzeladure
 cinzelament
 cinzelara
 cinzelaramos
@@ -15330,6 +15335,7 @@ circularamos
 circularao
 circularas
 circulareis
+used to e
 used to e
 circularity
 circularieis
@@ -15495,6 +15501,7 @@ citrica
 citricas
 citrico
 citricos
+citriculture
 ciume
 ciument
 ciumes
@@ -15547,6 +15554,7 @@ clarearao
 clarearas
 clareareis
 used to e
+used to e
 clarearieis
 clareasseis
 clareassemos
@@ -15556,7 +15564,7 @@ clarity
 clarifica
 clarification
 clarificacoes
-clarificate
+clarify
 clarificara
 clarificaramos
 clarificarao
@@ -15584,7 +15592,7 @@ classicos
 classifica
 classification
 classificacoes
-classificate
+classify
 classificara
 classificaramos
 classificarao
@@ -15601,7 +15609,6 @@ claudia
 claudia
 claudica
 claudication
-claudicate
 claudicara
 claudicaramos
 claudicarao
@@ -15617,6 +15624,7 @@ claudio
 claudio
 clausula
 clausulas
+clausure
 clavicle
 claviculas
 clemency
@@ -15631,7 +15639,6 @@ cleptomaniaco
 cleptomaniacos
 clerigo
 clerigos
-clicate
 cliche
 cliches
 climatica
@@ -15656,7 +15663,6 @@ climatologico
 climatologicos
 clinica
 clinica
-clinicate
 clinicara
 clinicaramos
 clinicarao
@@ -15803,6 +15809,7 @@ coaxasseis
 coaxassemos
 coaxavamos
 coaxaveis
+coberture
 cobica
 cobica
 cobicada
@@ -15946,7 +15953,6 @@ cochilaveis
 coco
 cocoras
 cocorica
-cocoricate
 cocoricara
 cocoricaramos
 cocoricarao
@@ -15964,7 +15970,7 @@ codeas
 codifica
 codification
 codificacoes
-codificate
+codify
 codificara
 codificaramos
 codificarao
@@ -16148,6 +16154,7 @@ coletivizasseis
 coletivizassemos
 coletivizavamos
 coletivizaveis
+used to e
 coleted
 colhe
 colhera
@@ -16225,6 +16232,7 @@ colorirao
 coloriras
 colorireis
 used to e
+used to e
 coloririeis
 colorisseis
 colorissemos
@@ -16244,6 +16252,7 @@ comandasseis
 comandassemos
 comandavamos
 comandaveis
+eating
 eats
 combaliamos
 combalieis
@@ -16405,13 +16414,14 @@ comemorassemos
 comemoravamos
 comemoraveis
 eat
+comensure
 comensura
-comensurara
 comensuraramos
 comensurarao
 comensuraras
 comensurareis
-comensurariamos
+used to e
+used to e
 comensurarieis
 comensurasseis
 comensurassemos
@@ -16795,7 +16805,6 @@ complicadissima
 complicadissimas
 complicadissimo
 complicadissimos
-complicate
 complicara
 complicaramos
 complicarao
@@ -16815,6 +16824,7 @@ compoem
 compoes
 comporao
 comporas
+used to e
 used to e
 comporieis
 comporta
@@ -16837,6 +16847,7 @@ comported
 compos
 composition
 composicoes
+composture
 compra
 comprator
 comprara
@@ -16862,6 +16873,7 @@ comprazerieis
 comprazesseis
 comprazessemos
 used to e
+used to e
 comprazieis
 comprehends
 comprehend
@@ -16885,7 +16897,7 @@ compreendesseis
 compreendessemos
 comprehended
 comprehended
-comprehended
+used to comprehend
 used to comprehend
 compreendid
 compreendid
@@ -16999,7 +17011,6 @@ comunica
 comunication
 comunicacoes
 comunicator
-comunicate
 comunicara
 comunicaramos
 comunicarao
@@ -17386,6 +17397,7 @@ condissereis
 condissesseis
 condissessemos
 used to e
+used to e
 condizieis
 condoe
 condoera
@@ -17414,6 +17426,7 @@ condomino
 condominos
 condution
 conducoes
+used to e
 used to e
 conduzieis
 conduzira
@@ -17510,6 +17523,7 @@ conferenciavamos
 conferenciaveis
 conferiamos
 conferieis
+confer
 conferira
 conferiramos
 conferirao
@@ -17541,6 +17555,7 @@ confiarao
 confiaras
 confiareis
 used to e
+used to e
 confiarieis
 confiasseis
 confiassemos
@@ -17561,16 +17576,17 @@ confidenciasseis
 confidenciassemos
 confidenciavamos
 confidenciaveis
+configure
 configura
 configuration
 configuracoes
 configurator
-configurara
 configuraramos
 configurarao
 configuraras
 configurareis
-configurariamos
+used to e
+used to e
 configurarieis
 configurasseis
 configurassemos
@@ -17879,13 +17895,15 @@ conifera
 coniferas
 conivency
 conivencias
+conjecture
+conjeture
 conjetura
-conjeturara
 conjeturaramos
 conjeturarao
 conjeturaras
 conjeturareis
-conjeturariamos
+used to e
+used to e
 conjeturarieis
 conjeturasseis
 conjeturassemos
@@ -17910,14 +17928,16 @@ conjuges
 conjuntion
 conjuncoes
 conjunctly
+conjunture
+conjure
 conjura
 conjuration
-conjurara
 conjuraramos
 conjurarao
 conjuraras
 conjurareis
-conjurariamos
+used to e
+used to e
 conjurarieis
 conjurasseis
 conjurassemos
@@ -18230,6 +18250,7 @@ constituido
 constituidos
 constituieis
 constituimos
+constitute
 constituira
 constituira
 constituiram
@@ -18297,6 +18318,7 @@ construiras
 construireis
 construirem
 construires
+used to e
 used to e
 construirieis
 construis
@@ -18535,6 +18557,7 @@ contested
 contested
 conteudo
 conteudos
+contexture
 contigua
 contiguas
 contiguity
@@ -18654,6 +18677,7 @@ contrabandearao
 contrabandearas
 contrabandeareis
 used to e
+used to e
 contrabandearieis
 contrabandeasseis
 contrabandeassemos
@@ -18681,6 +18705,7 @@ contraditorias
 contraditorio
 contraditorios
 used to e
+used to e
 contradizieis
 contradominio
 contradominios
@@ -18696,6 +18721,7 @@ contrafaras
 contrafariamos
 contrafarieis
 used to e
+used to e
 contrafazieis
 contrafect
 contrafect
@@ -18704,6 +18730,7 @@ contrafizereis
 contrafizesseis
 contrafizessemos
 contrai
+used to e
 contraida
 contraidas
 contraido
@@ -18735,6 +18762,7 @@ contrapoem
 contrapoes
 contraporao
 contraporas
+used to e
 used to e
 contraporieis
 contrapos
@@ -19031,6 +19059,7 @@ convinheis
 convirao
 conviras
 used to e
+used to e
 convirieis
 convive
 convivency
@@ -19220,7 +19249,7 @@ corporeas
 corporeo
 corporeos
 corporifica
-corporificate
+corporify
 corporificara
 corporificaramos
 corporificarao
@@ -19260,6 +19289,7 @@ corredimirieis
 corredimisseis
 corredimissemos
 runer
+used to e
 corrego
 corregos
 runed
@@ -19320,7 +19350,7 @@ corretissimos
 correct
 correct
 runed
-runed
+used to run
 used to run
 corrieis
 corrigiamos
@@ -19418,6 +19448,7 @@ cortes
 cortesa
 cortesaos
 cortesas
+used to e
 cortex
 cortica
 corticas
@@ -19470,13 +19501,14 @@ costumasseis
 costumassemos
 costumavamos
 costumaveis
+costure
 costura
-costurara
 costuraramos
 costurarao
 costuraras
 costurareis
-costurariamos
+used to e
+used to e
 costurarieis
 costurasseis
 costurassemos
@@ -19579,6 +19611,7 @@ covado
 covados
 covardely
 coze
+cozedure
 cozera
 cozeramos
 cozerao
@@ -19721,6 +19754,7 @@ crerao
 creras
 crereis
 used to e
+used to e
 crerieis
 cres
 cresca
@@ -19755,11 +19789,11 @@ criator
 criamos
 kid
 criancada
-little kid
-criancas
+criancadas
+s
 little kid
 criancola
-little kid
+criancolas
 criara
 criaramos
 criarao
@@ -19771,6 +19805,7 @@ criarieis
 criasseis
 criassemos
 criativity
+criature
 used to e
 used to e
 criaveis
@@ -19854,7 +19889,6 @@ criterios
 critica
 critica
 critically
-criticate
 criticara
 criticaramos
 criticarao
@@ -19933,7 +19967,7 @@ cronometred
 cru
 crucifica
 crucification
-crucificate
+crucify
 crucificara
 crucificaramos
 crucificarao
@@ -19992,6 +20026,7 @@ cubico
 cubicos
 cubicle
 cubiculos
+used to e
 cuica
 cuicas
 cuida
@@ -20067,6 +20102,7 @@ cultuasseis
 cultuassemos
 cultuavamos
 cultuaveis
+culture
 cumplice
 cumplices
 cumplicity
@@ -20131,13 +20167,14 @@ cunhaveis
 cupido
 cupula
 cupulas
+cure
 cura
-curara
 curaramos
 curarao
 curaras
 curareis
-curariamos
+used to e
+used to e
 curarieis
 curasseis
 curassemos
@@ -20190,6 +20227,7 @@ curvariamos
 curvarieis
 curvasseis
 curvassemos
+curvature
 curvavamos
 curvaveis
 curvilinea
@@ -20236,6 +20274,7 @@ used to e
 used to e
 custeaveis
 custed
+used to e
 custodia
 custed
 cutanea
@@ -20259,7 +20298,7 @@ cutucassemos
 cutucavamos
 cutucaveis
 cutucoes
-of
+of the
 dacia
 dactilografa
 dactilografas
@@ -20359,7 +20398,7 @@ dancou
 daniel
 danifica
 danification
-danificate
+danify
 danificara
 danificaramos
 danificarao
@@ -20816,7 +20855,7 @@ declinios
 declivity
 decodifica
 decodification
-decodificate
+decodify
 decodificara
 decodificaramos
 decodificarao
@@ -20847,6 +20886,7 @@ decompoem
 decompoes
 decomporao
 decomporas
+used to e
 used to e
 decomporieis
 decompos
@@ -20963,7 +21003,6 @@ decreted
 decreted
 decubito
 decuplica
-decuplicate
 decuplicara
 decuplicaramos
 decuplicarao
@@ -20986,7 +21025,6 @@ dedaos
 dedekind
 dedica
 dedication
-dedicate
 dedicara
 dedicaramos
 dedicarao
@@ -21015,19 +21053,21 @@ dedilhavamos
 dedilhaveis
 dedution
 deducoes
+dedure
 dedura
-dedurara
 deduraramos
 dedurarao
 deduraras
 dedurareis
-dedurariamos
+used to e
+used to e
 dedurarieis
 dedurasseis
 dedurassemos
 deduravamos
 deduraveis
 dedutivaly
+used to e
 used to e
 deduzieis
 deduzira
@@ -21083,11 +21123,13 @@ defendid
 defendieis
 defensaveis
 defensable
+used to e
 deferency
 deferencias
 deferiamos
 deferieis
 deferiment
+defer
 deferira
 deferiramos
 deferirao
@@ -21343,7 +21385,7 @@ degusted
 deity
 deifica
 deification
-deificate
+deify
 deificara
 deificaramos
 deificarao
@@ -21501,6 +21543,7 @@ delinearamos
 delinearao
 delinearas
 delineareis
+used to e
 used to e
 delinearieis
 delineasseis
@@ -21756,7 +21799,7 @@ densaly
 density
 densifica
 densificator
-densificate
+densify
 densificara
 densificaramos
 densificarao
@@ -21770,6 +21813,7 @@ densificavamos
 densificaveis
 densific
 dented
+dentadure
 dentary
 dentarias
 dentary
@@ -21867,13 +21911,14 @@ dependessemos
 dependiamos
 dependid
 dependieis
+dependure
 dependura
-dependurara
 dependuraramos
 dependurarao
 dependuraras
 dependurareis
-dependurariamos
+used to e
+used to e
 dependurarieis
 dependurasseis
 dependurassemos
@@ -21918,6 +21963,7 @@ depoes
 depoiment
 deporao
 deporas
+used to e
 used to e
 deporieis
 deporta
@@ -22024,15 +22070,16 @@ deprimisseis
 deprimissemos
 depunhamos
 depunheis
+depure
 depura
 depuration
 depurator
-depurara
 depuraramos
 depurarao
 depuraras
 depurareis
-depurariamos
+used to e
+used to e
 depurarieis
 depurasseis
 depurassemos
@@ -22304,6 +22351,7 @@ desafiaramos
 desafiarao
 desafiaras
 desafiareis
+used to e
 used to e
 desafiarieis
 desafiasseis
@@ -22708,6 +22756,7 @@ desarticularao
 desarticularas
 desarticulareis
 used to e
+used to e
 desarticularieis
 desarticulasseis
 desarticulassemos
@@ -22800,6 +22849,7 @@ desavinheis
 desavirao
 desaviras
 used to e
+used to e
 desavirieis
 desbarata
 desbarated
@@ -22852,6 +22902,7 @@ desbloquearamos
 desbloquearao
 desbloquearas
 desbloqueareis
+used to e
 used to e
 desbloquearieis
 desbloqueasseis
@@ -23169,7 +23220,6 @@ descomedissemos
 descompactation
 descompactacoes
 descomplica
-descomplicate
 descomplicara
 descomplicaramos
 descomplicarao
@@ -23181,6 +23231,7 @@ descomplicasseis
 descomplicassemos
 descomplicavamos
 descomplicaveis
+descomposture
 descompressao
 descomprimiamos
 descomprimieis
@@ -23235,6 +23286,7 @@ desconfiaramos
 desconfiarao
 desconfiaras
 desconfiareis
+used to e
 used to e
 desconfiarieis
 desconfiasseis
@@ -23342,13 +23394,14 @@ descortinasseis
 descortinassemos
 descortinavamos
 descortinaveis
+descosture
 descostura
-descosturara
 descosturaramos
 descosturarao
 descosturaras
 descosturareis
-descosturariamos
+used to e
+used to e
 descosturarieis
 descosturasseis
 descosturassemos
@@ -23363,6 +23416,7 @@ descreramos
 descrerao
 descreras
 descrereis
+used to e
 used to e
 descrerieis
 descres
@@ -23494,6 +23548,7 @@ desdissereis
 desdissesseis
 desdissessemos
 used to e
+used to e
 desdizieis
 desdobra
 desdobrament
@@ -23509,19 +23564,35 @@ desdobrassemos
 desdobravamos
 desdobraveis
 desedification
-deseja
+wishs
+wish
+wished
+wish
+wish
+wish
+wish
 desejara
+wished
 desejaramos
 desejarao
 desejaras
 desejareis
+would wish
 desejariamos
 desejarieis
+wishs
 desejasseis
 desejassemos
-desejavamos
+used to wish
+used to wish
 desejaveis
 desejable
+wish
+wished
+wish
+wish
+wish
+wished
 deselegancia
 desembainha
 desembainhara
@@ -23596,6 +23667,7 @@ desembarcaveis
 desembargator
 desembested
 desemboca
+desembocadure
 desembocara
 desembocaramos
 desembocarao
@@ -23693,6 +23765,7 @@ desencadearamos
 desencadearao
 desencadearas
 desencadeareis
+used to e
 used to e
 desencadearieis
 desencadeasseis
@@ -23838,6 +23911,7 @@ desenfrearao
 desenfrearas
 desenfreareis
 used to e
+used to e
 desenfrearieis
 desenfreasseis
 desenfreassemos
@@ -23960,13 +24034,14 @@ desengoncavas
 desengoncaveis
 desengonco
 desengoncou
+desengordure
 desengordura
-desengordurara
 desengorduraramos
 desengordurarao
 desengorduraras
 desengordurareis
-desengordurariamos
+used to e
+used to e
 desengordurarieis
 desengordurasseis
 desengordurassemos
@@ -24165,6 +24240,7 @@ desentupiriamos
 desentupirieis
 desentupisseis
 desentupissemos
+desenvolture
 desenvolve
 desenvolvera
 desenvolveramos
@@ -24289,6 +24365,7 @@ desfarieis
 desfavoraveis
 desfavorable
 used to e
+used to e
 desfazieis
 desfecha
 desfechara
@@ -24306,6 +24383,7 @@ desfect
 desfect
 desferiamos
 desferieis
+desfer
 desferira
 desferiramos
 desferirao
@@ -24322,19 +24400,21 @@ desfiarao
 desfiaras
 desfiareis
 used to e
+used to e
 desfiarieis
 desfiasseis
 desfiassemos
 desfiavamos
 desfiaveis
 desfibrator
+desfigure
 desfigura
-desfigurara
 desfiguraramos
 desfigurarao
 desfiguraras
 desfigurareis
-desfigurariamos
+used to e
+used to e
 desfigurarieis
 desfigurasseis
 desfigurassemos
@@ -24583,7 +24663,6 @@ desinteressassemos
 desinteressavamos
 desinteressaveis
 desintoxica
-desintoxicate
 desintoxicara
 desintoxicaramos
 desintoxicarao
@@ -24834,7 +24913,7 @@ desmilitarizassemos
 desmilitarizavamos
 desmilitarizaveis
 desmistifica
-desmistificate
+desmistify
 desmistificara
 desmistificaramos
 desmistificarao
@@ -24955,6 +25034,7 @@ desnortearamos
 desnortearao
 desnortearas
 desnorteareis
+used to e
 used to e
 desnortearieis
 desnorteasseis
@@ -25275,6 +25355,7 @@ despentearamos
 despentearao
 despentearas
 despenteareis
+used to e
 used to e
 despentearieis
 despenteasseis
@@ -25687,6 +25768,7 @@ destituido
 destituidos
 destituieis
 destituimos
+destitute
 destituira
 destituira
 destituiram
@@ -25847,6 +25929,7 @@ destruireis
 destruirem
 destruires
 used to e
+used to e
 destruirieis
 destruis
 destruisseis
@@ -25946,6 +26029,7 @@ desvendasseis
 desvendassemos
 desvendavamos
 desvendaveis
+desventure
 desvia
 desviara
 desviaramos
@@ -25965,6 +26049,7 @@ desvincularamos
 desvincularao
 desvincularas
 desvinculareis
+used to e
 used to e
 desvincularieis
 desvinculasseis
@@ -26021,6 +26106,7 @@ detention
 detens
 deterao
 deteras
+used to e
 used to e
 deterieis
 deteriora
@@ -26138,6 +26224,7 @@ devanearao
 devanearas
 devaneareis
 used to e
+used to e
 devanearieis
 devaneasseis
 devaneassemos
@@ -26241,10 +26328,7 @@ devotaveis
 devoted
 devoted
 ten
-little ten
-little ten
 day
-little day
 diabetica
 diabeticas
 diabetico
@@ -26254,9 +26338,8 @@ diabolically
 diabolicas
 diabolico
 diabolicos
-little day
-little day
-little day
+diabrure
+diacono
 diaconos
 diacritica
 diacriticas
@@ -26266,11 +26349,10 @@ diacronica
 diacronicas
 diacronico
 diacronicos
-little day
+diafano
 diafanos
 diagnostica
 diagnosticator
-diagnosticate
 diagnosticara
 diagnosticaramos
 diagnosticarao
@@ -26284,7 +26366,6 @@ diagnosticavamos
 diagnosticaveis
 diagnostico
 diagnosticos
-little day
 diagonaliza
 diagonalizara
 diagonalizaramos
@@ -26298,14 +26379,14 @@ diagonalizassemos
 diagonalizavamos
 diagonalizaveis
 diagonally
-little day
 diagrama
 diagramation
+diagramara
 diagramaramos
 diagramarao
 diagramaras
 diagramareis
-used to e
+diagramariamos
 diagramarieis
 diagramasseis
 diagramassemos
@@ -26315,19 +26396,14 @@ diagramatico
 diagramaticos
 diagramavamos
 diagramaveis
-little day
-little day
 dialetica
 dialetically
 dialeticas
 dialetico
 dialeticos
-little day
+dialise
 dialises
-little day
-little day
-little day
-little day
+dialoga
 dialogara
 dialogaramos
 dialogarao
@@ -26335,15 +26411,12 @@ dialogaras
 dialogareis
 dialogariamos
 dialogarieis
-little day
 dialogasseis
 dialogassemos
 dialogavamos
 dialogaveis
+dialogo
 dialogos
-little day
-little day
-little day
 diamantifera
 diamantiferas
 diamantifero
@@ -26352,20 +26425,18 @@ diametrally
 diammeter
 diametros
 diana
-little day
 diapasao
 diapasoes
-little day
+diary
 diarialy
-little day
-little day
-little day
+diarias
+diary
+diarios
 s
-little day
+diaspora
 diasporas
-little day
-little
-little day
+diastole
+diction
 dicionary
 dicionarios
 dicotomica
@@ -26378,24 +26449,21 @@ didaticas
 didatico
 didaticos
 ded
-little day
-little day
-little day
+diesel
 diet
-little day
 dietetica
 dieteticas
 dietetico
 dieteticos
-little day
-little day
+difama
 difamation
 difamacoes
+difamara
 difamaramos
 difamarao
 difamaras
 difamareis
-used to e
+difamariamos
 difamarieis
 difamasseis
 difamassemos
@@ -26405,9 +26473,6 @@ difamatorio
 difamatorios
 difamavamos
 difamaveis
-little day
-little day
-little day
 diferenca
 diferencas
 diferencia
@@ -26426,15 +26491,16 @@ diferenciavamos
 diferenciaveis
 diferenciable
 diferentely
-little day
 diferiamos
 diferieis
 diferiment
+difer
+diferira
 diferiramos
 diferirao
 diferiras
 diferireis
-used to e
+difeririamos
 diferirieis
 diferisseis
 diferissemos
@@ -26462,8 +26528,6 @@ dificultavamos
 dificultaveis
 dificulted
 dificulted
-little day
-little day
 difration
 difracoes
 difrata
@@ -26495,59 +26559,59 @@ difundiriamos
 difundirieis
 difundisseis
 difundissemos
-little day
 difusao
-little day
 difusoes
-little day
-little day
-little day
-little day
 digeriamos
 digerieis
+diger
+digerira
 digeriramos
 digerirao
 digeriras
 digerireis
-used to e
+digeririamos
 digeririeis
 digerisseis
 digerissemos
 digeriveis
 digerible
 digestao
-little day
-little day
-little day
-little day
+types
+typ
 digitation
 digited
-digitator
+typer
 digitalization
 digitalizacoes
-digict
+type
+type
+typ
+type
 digitara
+typed
 digitaramos
 digitarao
 digitaras
 digitareis
+would type
 digitariamos
 digitarieis
+types
 digitasseis
 digitassemos
-digitavamos
+used to type
+used to type
 digitaveis
-little day
-digited
-little day
-little day
+typ
+typed
+type
+type
+type
+digito
 digitos
-digited
+typed
 digna
-little day
-little day
 dignaly
-little day
 dignara
 dignaramos
 dignarao
@@ -26555,7 +26619,6 @@ dignaras
 dignareis
 dignariamos
 dignarieis
-little day
 dignasseis
 dignassemos
 dignatary
@@ -26564,13 +26627,10 @@ dignatary
 dignatarios
 dignavamos
 dignaveis
-little day
-little day
-little day
 dignity
 dignifica
 dignification
-dignificate
+dignify
 dignificara
 dignificaramos
 dignificarao
@@ -26585,8 +26645,6 @@ dignificaveis
 dignific
 dignitary
 dignitarios
-little day
-little day
 digressao
 digressoes
 dilation
@@ -26607,8 +26665,7 @@ dilacerassemos
 dilaceravamos
 dilaceraveis
 dilacoes
-little day
-little day
+dilata
 dilatation
 dilatacoes
 dilated
@@ -26626,14 +26683,10 @@ dilatassemos
 dilatavamos
 dilataveis
 dilatable
-little day
 dilated
-little day
 dilated
 diletion
-little day
-little day
-little day
+dilet
 diligencia
 diligency
 diligenciara
@@ -26648,11 +26701,7 @@ diligenciasseis
 diligenciassemos
 diligenciavamos
 diligenciaveis
-little day
-little day
-little day
 dilui
-little day
 diluition
 diluida
 diluidas
@@ -26660,7 +26709,6 @@ diluido
 diluidos
 diluieis
 diluimos
-little day
 diluira
 diluira
 diluiram
@@ -26673,8 +26721,7 @@ diluirem
 diluires
 diluiriamos
 diluirieis
-little day
-little day
+diluis
 diluisse
 diluisseis
 diluissem
@@ -26682,7 +26729,6 @@ diluissemos
 diluisses
 diluiste
 diluistes
-little day
 diluvio
 diluvios
 dimensao
@@ -26769,7 +26815,7 @@ dinamizasseis
 dinamizassemos
 dinamizavamos
 dinamizaveis
-little day
+dinamo
 dinamommeter
 dinamometros
 dinamos
@@ -26782,7 +26828,6 @@ little money
 money
 moneys
 diocleciano
-little day
 diofanto
 diogenes
 dion
@@ -26812,7 +26857,6 @@ diplomatico
 diplomaticos
 diplomavamos
 diplomaveis
-little day
 dira
 dirao
 diras
@@ -26830,25 +26874,20 @@ direcionassemos
 direcionavamos
 direcionaveis
 direcoes
-little day
-little day
-little day
+diret
 directly
 diretissima
 diretissimas
 diretissimo
 diretissimos
-little day
 diretorio
 diretorios
-little day
 diriamos
-little day
 dirieis
-little day
 drive
-little day
+drive
 drove
+used to drive
 used to drive
 dirigieis
 drove
@@ -26865,26 +26904,18 @@ dirigissemos
 drove
 dirigiveis
 dirigible
-little day
-little day
-little day
-little day
-little day
 dirimiamos
 dirimieis
+dirimira
 dirimiramos
 dirimirao
 dirimiras
 dirimireis
-used to e
+dirimiriamos
 dirimirieis
 dirimisseis
 dirimissemos
-little day
 disca
-little day
-little day
-little day
 discara
 discaramos
 discarao
@@ -26892,7 +26923,6 @@ discaras
 discareis
 discariamos
 discarieis
-little day
 discasseis
 discassemos
 discavamos
@@ -26954,8 +26984,6 @@ discorresseis
 discorressemos
 discorriamos
 discorrieis
-little day
-little day
 discrepancia
 discrepancias
 discret
@@ -27065,7 +27093,7 @@ disfarco
 disfarcou
 disfuntion
 disjuntion
-little day
+dispar
 dispara
 disparara
 dispararamos
@@ -27114,7 +27142,7 @@ dispersaveis
 displicency
 displicencias
 dispo
-little day
+dispoe
 dispoem
 dispoes
 disponibility
@@ -27132,18 +27160,16 @@ disponibilizavamos
 disponibilizaveis
 disponiveis
 disponible
-little day
-dispora
 disporao
 disporas
-disporiamos
+used to e
+used to e
 disporieis
-little day
+dispos
 disposition
 disposicoes
 dispunhamos
 dispunheis
-little day
 dispuseramos
 dispusereis
 dispusesseis
@@ -27166,7 +27192,6 @@ disputaveis
 disputable
 disputed
 disputed
-little day
 dissecation
 dissemina
 dissemination
@@ -27184,7 +27209,6 @@ disseminaveis
 dissention
 dissencoes
 dissensao
-little day
 disseramos
 dissereis
 disserta
@@ -27285,8 +27309,6 @@ dissuadisseis
 dissuadissemos
 dista
 disted
-little day
-little day
 distancia
 distancia
 distanciara
@@ -27301,7 +27323,7 @@ distanciasseis
 distanciassemos
 distanciavamos
 distanciaveis
-little day
+disct
 distara
 distaramos
 distarao
@@ -27309,13 +27331,11 @@ distaras
 distareis
 distariamos
 distarieis
-little day
 distasseis
 distassemos
 distavamos
 distaveis
-little day
-little day
+disted
 distende
 distendera
 distenderamos
@@ -27333,7 +27353,6 @@ distendieis
 distensao
 distensaos
 distensoes
-little day
 distintion
 distincoes
 distinguiamos
@@ -27369,7 +27388,7 @@ distorciamos
 distorcieis
 distorco
 distorcoes
-little day
+disted
 distration
 distracoes
 distrai
@@ -27435,15 +27454,11 @@ distrophy
 disturbio
 disturbios
 dita
-little day
-little day
+dited
 ditator
-little day
-little day
-little day
+ditadure
 dict
-little day
-little day
+ditara
 ditaramos
 ditarao
 ditaras
@@ -27452,24 +27467,16 @@ ditariamos
 ditarieis
 ditasseis
 ditassemos
-little day
 ditavamos
 ditaveis
 dited
-little day
-little day
-little day
-little day
 dited
 diuretica
 diureticas
 diuretico
 diureticos
-little day
-little day
 diva
-little day
-little day
+divaga
 divagation
 divagacoes
 divagaramos
@@ -27477,12 +27484,12 @@ divagarao
 divagaras
 divagareis
 used to e
+used to e
 divagarieis
 divagasseis
 divagassemos
 divagavamos
 divagaveis
-little day
 divergency
 divergencias
 divergiamos
@@ -27502,7 +27509,7 @@ diversaos
 diversity
 diversifica
 diversification
-diversificate
+diversify
 diversificara
 diversificaramos
 diversificarao
@@ -27533,24 +27540,20 @@ divertiriamos
 divertirieis
 divertisseis
 divertissemos
-little day
-little day
+divida
 dividas
-little day
-little day
 dividiamos
 divided
 dividieis
+dividira
 dividiramos
 dividirao
 dividiras
 dividireis
-used to e
+dividiriamos
 dividirieis
 dividisseis
 dividissemos
-little day
-little day
 divinty
 divinity
 divinissima
@@ -27571,25 +27574,22 @@ divinizasseis
 divinizassemos
 divinizavamos
 divinizaveis
-little day
-little day
-little day
+divisa
 divisao
+divisara
 divisaramos
 divisarao
 divisaras
 divisareis
-used to e
+divisariamos
 divisarieis
 divisasseis
 divisassemos
 divisavamos
 divisaveis
-little day
 divisibility
 divisiveis
 divisible
-little day
 divisoes
 divisory
 divisorias
@@ -27623,31 +27623,26 @@ divulgasseis
 divulgassemos
 divulgavamos
 divulgaveis
-little day
-little day
-little day
 used to e
-little day
+used to e
 dizieis
-little day
-little day
-little day
+dizima
+dizima
+dizimara
 dizimaramos
 dizimarao
 dizimaras
 dizimareis
-used to e
+dizimariamos
 dizimarieis
 dizimas
 dizimasseis
 dizimassemos
 dizimavamos
 dizimaveis
-little day
-little day
-little day
+dizimo
 dizimos
-of
+of the
 do
 doa
 doation
@@ -27667,6 +27662,7 @@ doaveis
 dobra
 dobradica
 dobradicas
+dobradure
 dobrament
 dobrara
 dobraramos
@@ -27701,7 +27697,7 @@ doculy
 documented
 document
 documented
-docura
+docure
 docuras
 dodecagono
 dodecagonos
@@ -27765,7 +27761,6 @@ domaveis
 domestica
 domestica
 domestication
-domesticate
 domesticara
 domesticaramos
 domesticarao
@@ -27901,15 +27896,16 @@ dotavamos
 dotaveis
 doted
 doted
+doure
 doura
 douration
 dourament
-dourara
 douraramos
 dourarao
 douraras
 dourareis
-dourariamos
+used to e
+used to e
 dourarieis
 dourasseis
 dourassemos
@@ -28070,7 +28066,7 @@ duelassemos
 duelavamos
 duelaveis
 dulcifica
-dulcificate
+dulcify
 dulcificara
 dulcificaramos
 dulcificarao
@@ -28094,7 +28090,6 @@ duplaly
 duplica
 duplication
 duplicacoes
-duplicate
 duplicara
 duplicaramos
 duplicarao
@@ -28106,16 +28101,18 @@ duplicasseis
 duplicassemos
 duplicavamos
 duplicaveis
+dure
 dura
 duration
 duracoes
+duradoure
 duraly
-durara
 duraramos
 durarao
 duraras
 durareis
-durariamos
+used to e
+used to e
 durarieis
 durasseis
 durassemos
@@ -28235,7 +28232,7 @@ edemaciasseis
 edemaciassemos
 edemaciavamos
 edemaciaveis
-and   den
+eden
 edgar
 edition
 edicoes
@@ -28244,7 +28241,7 @@ ediculas
 edifica
 edification
 edificacoes
-edificate
+edify
 edificara
 edificaramos
 edificarao
@@ -28260,7 +28257,7 @@ edificio
 edificios
 edific
 edimburgo
-and   dipo
+edipo
 edita
 edited
 edict
@@ -28347,7 +28344,7 @@ efervescessemos
 efervesciamos
 efervescieis
 efervesco
-and   feso
+efeso
 efetiva
 efetivation
 efetivacoes
@@ -28444,6 +28441,7 @@ ejacularao
 ejacularas
 ejaculareis
 used to e
+used to e
 ejacularieis
 ejaculasseis
 ejaculassemos
@@ -28528,7 +28526,7 @@ eletrico
 eletricos
 eletrifica
 eletrification
-eletrificate
+eletrify
 eletrificara
 eletrificaramos
 eletrificarao
@@ -28927,7 +28925,6 @@ embarrancassemos
 embarrancavamos
 embarrancaveis
 embarrica
-embarricate
 embarricara
 embarricaramos
 embarricarao
@@ -29025,6 +29022,7 @@ emblematicas
 emblematico
 emblematicos
 emboca
+embocadure
 embocara
 embocaramos
 embocarao
@@ -29331,13 +29329,14 @@ emocionassemos
 emocionavamos
 emocionaveis
 emocoes
+emoldure
 emoldura
-emoldurara
 emolduraramos
 emoldurarao
 emolduraras
 emoldurareis
-emoldurariamos
+used to e
+used to e
 emoldurarieis
 emoldurasseis
 emoldurassemos
@@ -29608,6 +29607,7 @@ empestearao
 empestearas
 empesteareis
 used to e
+used to e
 empestearieis
 empesteasseis
 empesteassemos
@@ -29875,6 +29875,7 @@ emprestimo
 emprestimos
 emprested
 empunha
+empunhadure
 empunhara
 empunharamos
 empunharao
@@ -30040,6 +30041,7 @@ encadearamos
 encadearao
 encadearas
 encadeareis
+used to e
 used to e
 encadearieis
 encadeasseis
@@ -30445,13 +30447,14 @@ encimasseis
 encimassemos
 encimavamos
 encimaveis
+enclausure
 enclausura
-enclausurara
 enclausuraramos
 enclausurarao
 enclausuraras
 enclausurareis
-enclausurariamos
+used to e
+used to e
 enclausurarieis
 enclausurasseis
 enclausurassemos
@@ -31058,6 +31061,7 @@ enfiarao
 enfiaras
 enfiareis
 used to e
+used to e
 enfiarieis
 enfiasseis
 enfiassemos
@@ -31435,6 +31439,12 @@ englobavamos
 englobaveis
 engodo
 engodos
+swallows
+swallow
+swallow
+swallows
+swallow
+swallow
 engolfa
 engolfara
 engolfaramos
@@ -31447,8 +31457,12 @@ engolfasseis
 engolfassemos
 engolfavamos
 engolfaveis
-engoliamos
+swallowed
+used to swallow
+used to swallow
 engolieis
+swallowed
+swallow
 engolira
 engoliramos
 engolirao
@@ -31458,6 +31472,8 @@ engoliriamos
 engolirieis
 engolisseis
 engolissemos
+swallowed
+swallow
 engoma
 engomara
 engomaramos
@@ -31470,13 +31486,14 @@ engomasseis
 engomassemos
 engomavamos
 engomaveis
+engordure
 engordura
-engordurara
 engorduraramos
 engordurarao
 engorduraras
 engordurareis
-engordurariamos
+used to e
+used to e
 engordurarieis
 engordurasseis
 engordurassemos
@@ -31741,6 +31758,7 @@ enlamearamos
 enlamearao
 enlamearas
 enlameareis
+used to e
 used to e
 enlamearieis
 enlameasseis
@@ -32195,13 +32213,14 @@ enterrasseis
 enterrassemos
 enterravamos
 enterraveis
+entesoure
 entesoura
-entesourara
 entesouraramos
 entesourarao
 entesouraras
 entesourareis
-entesourariamos
+used to e
+used to e
 entesourarieis
 entesourasseis
 entesourassemos
@@ -32367,6 +32386,7 @@ entregarao
 entregaras
 entregareis
 used to e
+used to e
 entregarieis
 entregasseis
 entregassemos
@@ -32419,6 +32439,7 @@ entrelacavas
 entrelacaveis
 entrelaco
 entrelacou
+used to e
 used to e
 entreluzieis
 entreluzira
@@ -32483,6 +32504,7 @@ entretieis
 entreve
 entreverao
 entreveras
+used to e
 used to e
 entreverieis
 entreves
@@ -32740,6 +32762,7 @@ enveredasseis
 enveredassemos
 enveredavamos
 enveredaveis
+envergadure
 envergonha
 envergonhara
 envergonharamos
@@ -32907,6 +32930,7 @@ enxameassemos
 used to e
 used to e
 enxameaveis
+used to e
 enxerga
 enxergara
 enxergaramos
@@ -33005,7 +33029,7 @@ epileptico
 epilepticos
 epilogo
 epilogos
-and   piro
+epiro
 episodica
 episodicas
 episodico
@@ -33177,7 +33201,7 @@ erguiamos
 erguieis
 erica
 erica
-and   rica
+erica
 ericada
 ericadas
 ericado
@@ -33220,7 +33244,7 @@ ericavamos
 ericavas
 ericaveis
 erico
-and   rico
+erico
 ericou
 erige
 erigem
@@ -33265,7 +33289,6 @@ eroticos
 erra
 erradica
 erradication
-erradicate
 erradicara
 erradicaramos
 erradicarao
@@ -33393,6 +33416,7 @@ esbofetearamos
 esbofetearao
 esbofetearas
 esbofeteareis
+used to e
 used to e
 esbofetearieis
 esbofeteasseis
@@ -33554,6 +33578,7 @@ escamotearao
 escamotearas
 escamoteareis
 used to e
+used to e
 escamotearieis
 escamoteasseis
 escamoteassemos
@@ -33714,6 +33739,7 @@ escassearao
 escassearas
 escasseareis
 used to e
+used to e
 escassearieis
 escasseasseis
 escasseassemos
@@ -33820,14 +33846,15 @@ escondiamos
 escondid
 escondid
 escondieis
+esconjure
 esconjura
 esconjuration
-esconjurara
 esconjuraramos
 esconjurarao
 esconjuraras
 esconjurareis
-esconjurariamos
+used to e
+used to e
 esconjurarieis
 esconjurasseis
 esconjurassemos
@@ -33906,6 +33933,7 @@ escorregarao
 escorregaras
 escorregareis
 used to e
+used to e
 escorregarieis
 escorregasseis
 escorregassemos
@@ -33939,6 +33967,7 @@ escovassemos
 escovavamos
 escovaveis
 escovoes
+escravature
 escravidao
 escravidoes
 escraviza
@@ -33976,20 +34005,21 @@ escrevesseis
 escrevessemos
 wrote
 wrote
-wrote
+used to write
 used to write
 escrevieis
 writ
 escritorio
 escritorios
+escriture
 escritura
 escrituration
-escriturara
 escrituraramos
 escriturarao
 escrituraras
 escriturareis
-escriturariamos
+used to e
+used to e
 escriturarieis
 escriturary
 escriturarios
@@ -34058,6 +34088,8 @@ esculpiriamos
 esculpirieis
 esculpisseis
 esculpissemos
+esculture
+escure
 escureca
 escurecais
 escurecam
@@ -34133,6 +34165,7 @@ esfaquearao
 esfaquearas
 esfaqueareis
 used to e
+used to e
 esfaquearieis
 esfaqueasseis
 esfaqueassemos
@@ -34190,6 +34223,7 @@ esfomearamos
 esfomearao
 esfomearas
 esfomeareis
+used to e
 used to e
 esfomearieis
 esfomeasseis
@@ -34756,7 +34790,7 @@ specification
 especificacoes
 specificator
 specifically
-specificate
+specify
 especificara
 especificaramos
 especificarao
@@ -34783,6 +34817,7 @@ especularamos
 especularao
 especularas
 especulareis
+used to e
 used to e
 especularieis
 especulasseis
@@ -34841,6 +34876,7 @@ espernearao
 espernearas
 esperneareis
 used to e
+used to e
 espernearieis
 esperneasseis
 esperneassemos
@@ -34849,6 +34885,7 @@ esperneaveis
 espertalhao
 espertalhoes
 spessament
+spessure
 spet
 espeta
 spetacle
@@ -34857,6 +34894,7 @@ espetacularamos
 espetacularao
 espetacularas
 espetaculareis
+used to e
 used to e
 espetacularieis
 espetaculasseis
@@ -35039,6 +35077,7 @@ esporeassemos
 used to e
 used to e
 esporeaveis
+used to e
 esporoes
 esportula
 esportulas
@@ -35257,8 +35296,12 @@ used to e
 esquiaveis
 esquimo
 esquimos
+weird
 esquisitao
+weird
+weird
 esquisitoes
+weird
 esquiva
 esquivara
 esquivaramos
@@ -35461,6 +35504,7 @@ estaras
 estardalhaco
 estardalhacos
 used to e
+used to e
 estarieis
 estarreciment
 estas
@@ -35504,6 +35548,7 @@ estatuary
 estatuarios
 estatuas
 estatuet
+estature
 estatutary
 estatutarias
 estatutary
@@ -35605,7 +35650,6 @@ estevao
 estevao
 estica
 esticao
-esticate
 esticara
 esticaramos
 esticarao
@@ -35809,6 +35853,7 @@ estontearao
 estontearas
 estonteareis
 used to e
+used to e
 estontearieis
 estonteasseis
 estonteassemos
@@ -35841,13 +35886,14 @@ estorvassemos
 estorvavamos
 estorvaveis
 am
+estoure
 estoura
-estourara
 estouraramos
 estourarao
 estouraras
 estourareis
-estourariamos
+used to e
+used to e
 estourarieis
 estourasseis
 estourassemos
@@ -35943,19 +35989,25 @@ estrangulasseis
 estrangulassemos
 estrangulavamos
 estrangulaveis
+weird
 estranha
-estranhaly
-estranhara
+weirdly
 estranharamos
 estranharao
 estranharas
 estranhareis
-estranhariamos
+used to e
+used to e
 estranharieis
+weird
 estranhasseis
 estranhassemos
 estranhavamos
 estranhaveis
+weird
+weird
+weird
+weird
 estrasburgo
 estrategia
 estrategias
@@ -35979,6 +36031,7 @@ estrearamos
 estrearao
 estrearas
 estreareis
+used to e
 used to e
 estrearieis
 estreasseis
@@ -36022,36 +36075,18 @@ estreito
 estreited
 star
 star
-little star
-little star
-little star
-little star
-little star
 estrelaramos
-little star
-little star
-little star
-little star
-little star
-little star
-little star
-little star
+estrelarao
+estrelaras
+estrelareis
+used to e
 used to e
 estrelarieis
-little star
 s
-little star
-little star
-little
+estrelasseis
 estrelassemos
-little
-little star
-little
-little star
-little star
-little star
-little
-little star
+estrelavamos
+estrelaveis
 little star
 estremeca
 estremecais
@@ -36149,6 +36184,7 @@ estrondearao
 estrondearas
 estrondeareis
 used to e
+used to e
 estrondearieis
 estrondeasseis
 estrondeassemos
@@ -36166,14 +36202,15 @@ estropiasseis
 estropiassemos
 estropiavamos
 estropiaveis
+estruture
 estrutura
 estruturally
-estruturara
 estruturaramos
 estruturarao
 estruturaras
 estruturareis
-estruturariamos
+used to e
+used to e
 estruturarieis
 estruturasseis
 estruturassemos
@@ -36212,7 +36249,7 @@ estupida
 estupidaly
 estupidas
 estupidifica
-estupidificate
+estupidify
 estupidificara
 estupidificaramos
 estupidificarao
@@ -36241,7 +36278,6 @@ estuprassemos
 estupravamos
 estupraveis
 esturrica
-esturricate
 esturricara
 esturricaramos
 esturricarao
@@ -36640,7 +36676,7 @@ evolvesseis
 evolvessemos
 evolviamos
 evolvieis
-and   vora
+evora
 exacerba
 exacerbation
 exacerbacoes
@@ -36881,13 +36917,14 @@ excomungassemos
 excomungavamos
 excomungaveis
 excomunhao
+exconjure
 exconjura
-exconjurara
 exconjuraramos
 exconjurarao
 exconjuraras
 exconjurareis
-exconjurariamos
+used to e
+used to e
 exconjurarieis
 exconjurasseis
 exconjurassemos
@@ -36984,7 +37021,7 @@ exemplaveis
 exemplifica
 exemplification
 exemplificacoes
-exemplificate
+exemplify
 exemplificara
 exemplificaramos
 exemplificarao
@@ -37334,7 +37371,6 @@ explanacoes
 explica
 explication
 explicacoes
-explicate
 explicara
 explicaramos
 explicarao
@@ -37414,6 +37450,7 @@ expoes
 exponencially
 exporao
 exporas
+used to e
 used to e
 exporieis
 exporta
@@ -37664,6 +37701,7 @@ extraditaveis
 extradited
 extradited
 extrai
+used to e
 extraida
 extraidas
 extraido
@@ -37807,7 +37845,6 @@ fabio
 fabrica
 fabrica
 fabrication
-fabricate
 fabricara
 fabricaramos
 fabricarao
@@ -37825,11 +37862,11 @@ fabula
 fabulas
 knife
 knife
-little knife
 facais
 facam
-little knife
-little knife
+facamos
+facanha
+facanhas
 facanhuda
 facanhudas
 facanhudo
@@ -37838,15 +37875,10 @@ facao
 s
 facas
 faction
-little knife
-little knife
-little knife
+faccoes
 faceis
 facet
 faceted
-little knife
-little knife
-little knife
 easy
 facility
 facilima
@@ -37882,8 +37914,7 @@ facoes
 factiveis
 factible
 faculty
-little knife
-little knife
+faculta
 faculted
 faculct
 facultara
@@ -37897,9 +37928,7 @@ facultasseis
 facultassemos
 facultavamos
 facultaveis
-little knife
 faculted
-little knife
 faculted
 fagocito
 fagocitos
@@ -37929,6 +37958,7 @@ falacoes
 falator
 speak
 speak
+speaking
 speak
 falara
 falaramos
@@ -38014,6 +38044,7 @@ falsearao
 falsearas
 falseareis
 used to e
+used to e
 falsearieis
 falseasseis
 falseassemos
@@ -38023,7 +38054,7 @@ falsity
 falsifica
 falsification
 falsificacoes
-falsificate
+falsify
 falsificara
 falsificaramos
 falsificarao
@@ -38106,6 +38137,7 @@ fanfarrearamos
 fanfarrearao
 fanfarrearas
 fanfarreareis
+used to e
 used to e
 fanfarrearieis
 fanfarreasseis
@@ -38198,6 +38230,7 @@ farrearao
 farrearas
 farreareis
 used to e
+used to e
 farrearieis
 farreasseis
 farreassemos
@@ -38220,6 +38253,7 @@ fartavamos
 fartaveis
 farted
 farted
+farture
 fas
 fascicle
 fasciculos
@@ -38286,13 +38320,14 @@ fatoravamos
 fatoraveis
 fatuo
 fatuos
+fature
 fatura
-faturara
 faturaramos
 faturarao
 faturaras
 faturareis
-faturariamos
+used to e
+used to e
 faturarieis
 faturasseis
 faturassemos
@@ -38326,6 +38361,7 @@ fazendarias
 fazendary
 fazendarios
 used to e
+used to e
 fazieis
 fe
 fealty
@@ -38335,9 +38371,11 @@ clos
 fechadao
 closed
 fechadoes
+fechadure
 close
 fechament
 close
+clos
 close
 fechara
 closed
@@ -38409,6 +38447,8 @@ feiticarias
 feitico
 feiticos
 fect
+feiture
+feiure
 felicity
 felicissima
 felicissimas
@@ -38477,6 +38517,7 @@ feriamos
 ferias
 ferieis
 feriment
+fer
 ferira
 feriramos
 ferirao
@@ -38516,6 +38557,7 @@ ferocissimo
 ferocissimos
 ferozly
 ferra
+ferradure
 ferrao
 ferrara
 ferraramos
@@ -38576,6 +38618,7 @@ fervilhasseis
 fervilhassemos
 fervilhavamos
 fervilhaveis
+fervure
 festanca
 festancas
 festao
@@ -38607,13 +38650,13 @@ fiarao
 fiaras
 fiareis
 used to e
+used to e
 fiarieis
 fiasseis
 fiassemos
 fiavamos
 fiaveis
 fica
-ficate
 ficara
 ficaramos
 ficarao
@@ -38663,16 +38706,17 @@ fieis
 fielly
 figado
 figados
+figure
 figura
 figuration
 figuracoes
 figurao
-figurara
 figuraramos
 figurarao
 figuraras
 figurareis
-figurariamos
+used to e
+used to e
 figurarieis
 figurasseis
 figurassemos
@@ -38867,6 +38911,7 @@ fintavamos
 fintaveis
 finted
 finted
+finure
 firma
 firmament
 firmara
@@ -38925,6 +38970,7 @@ fisioterapicas
 fisioterapico
 fisioterapicos
 fissao
+fissure
 fita
 fited
 fict
@@ -39011,6 +39057,7 @@ flautearao
 flautearas
 flauteareis
 used to e
+used to e
 flautearieis
 flauteasseis
 flauteassemos
@@ -39066,39 +39113,26 @@ flexoes
 flower
 floration
 florea
-little flower
-little flower
-little flower
 florearamos
 florearao
-little flower
 florearas
-little flower
 floreareis
-little flower
-little flower
-little flower
+used to e
 used to e
 florearieis
-little flower
-little flower
 floreasseis
 floreassemos
-little flower
-little flower
 floreavamos
-little flower
 floreaveis
-little flower
+florenca
+floresca
 florescais
 florescam
 florescamos
 florescas
-little flower
-little flower
+floresce
 florescency
 florescencias
-little flower
 florescera
 floresceramos
 florescerao
@@ -39106,19 +39140,16 @@ floresceras
 florescereis
 floresceriamos
 florescerieis
-little flower
 florescesseis
 florescessemos
-little flower
-little flower
 floresciamos
 florescieis
 floresciment
-little flower
-little flower
 floriamos
 floriano
 florianopolis
+floriculture
+florieis
 florifera
 floriferas
 florifero
@@ -39127,22 +39158,13 @@ florilegio
 florilegios
 florira
 floriramos
-little flower
-little flower
+florirao
+floriras
 florireis
-little flower
-little flower
 floririamos
-little flower
 floririeis
-little flower
 florisseis
-little flower
 florissemos
-little flower
-little flower
-little flower
-little flower
 fluency
 flui
 fluido
@@ -39251,43 +39273,26 @@ folgaza
 folgazas
 folgazoes
 leaf
-little leaf
 s
 folhea
-little leaf
-little leaf
-little leaf
-little leaf
-little leaf
-little leaf
 folhearamos
 folhearao
 folhearas
 folheareis
 used to e
+used to e
 folhearieis
 folheasseis
 folheassemos
-little leaf
 folheavamos
 folheaveis
-little leaf
-little leaf
-little leaf
-little leaf
-little leaf
-little leaf
-little leaf
 little leaf
 foliao
 hunger
 fomenta
 fomentation
-little hunger
-little hunger
-little hunger
+fomented
 fomenct
-little hunger
 fomentara
 fomentaramos
 fomentarao
@@ -39297,13 +39302,10 @@ fomentariamos
 fomentarieis
 fomentasseis
 fomentassemos
-little hunger
 fomentavamos
 fomentaveis
 foly
 fomented
-little hunger
-little hunger
 foment
 fomented
 hungers
@@ -39459,6 +39461,7 @@ formatavamos
 formataveis
 formated
 formated
+formature
 formavamos
 formaveis
 formica
@@ -39484,6 +39487,7 @@ formosissima
 formosissimas
 formosissimo
 formosissimos
+formosure
 formula
 formula
 formulation
@@ -39502,6 +39506,7 @@ formulasseis
 formulassemos
 formulavamos
 formulaveis
+formusure
 forneca
 fornecais
 fornecam
@@ -39523,7 +39528,6 @@ forneciment
 forneco
 fornica
 fornication
-fornicate
 fornicara
 fornicaramos
 fornicarao
@@ -39541,6 +39545,7 @@ forragearamos
 forragearao
 forragearas
 forrageareis
+used to e
 used to e
 forragearieis
 forrageasseis
@@ -39584,7 +39589,7 @@ strong
 fortifica
 fortification
 fortificacoes
-fortificate
+fortify
 fortificara
 fortificaramos
 fortificarao
@@ -39768,6 +39773,7 @@ franquearao
 franquearas
 franqueareis
 used to e
+used to e
 franquearieis
 franqueasseis
 franqueassemos
@@ -39809,6 +39815,7 @@ fraseassemos
 used to e
 used to e
 fraseaveis
+used to e
 fraseologica
 fraseologicas
 fraseologico
@@ -39817,13 +39824,14 @@ fraternity
 fraternization
 fratricidio
 fratricidios
+frature
 fratura
-fraturara
 fraturaramos
 fraturarao
 fraturaras
 fraturareis
-fraturariamos
+used to e
+used to e
 fraturarieis
 fraturasseis
 fraturassemos
@@ -39850,6 +39858,7 @@ frearamos
 frearao
 frearas
 freareis
+used to e
 used to e
 frearieis
 freasseis
@@ -39924,6 +39933,7 @@ fresassemos
 fresavamos
 fresaveis
 frescalhao
+frescure
 fret
 freta
 freted
@@ -39943,137 +39953,90 @@ fretaveis
 freted
 freted
 cold
-little cold
-little cold
+frialy
 colds
-little cold
-little cold
+friction
 fricciona
+friccionara
 friccionaramos
 friccionarao
 friccionaras
 friccionareis
-used to e
+friccionariamos
 friccionarieis
 friccionasseis
 friccionassemos
 friccionavamos
 friccionaveis
-little cold
-little cold
-little cold
 frige
-little cold
+frigem
+friges
+frigia
 frigiamos
-little cold
 frigias
 frigida
+frigidas
 frigidissima
 frigidissimas
 frigidissimo
 frigidissimos
-little cold
 frigido
-little cold
-little cold
+frigidos
+frigieis
+frigio
 frigios
-little cold
 frigira
 frigiramos
-little cold
-little cold
-little cold
-little cold
+frigirao
+frigiras
 frigireis
-little cold
-little cold
 frigiriamos
-little cold
 frigirieis
-little cold
 frigisseis
-little cold
 frigissemos
-little cold
-little cold
 frigorific
 frigorificos
 friissima
 friissimas
 friissimo
 friissimos
-little cold
-little cold
 cold
 colds
-little cold
 frisa
-little cold
 frisator
-little cold
-little cold
-little cold
-little cold
-little cold
 frisara
 frisaramos
-little cold
-little cold
-little cold
-little cold
+frisarao
+frisaras
 frisareis
-little cold
-little cold
 frisariamos
-little cold
 frisarieis
-little cold
 frisasseis
-little cold
 frisassemos
-little cold
-little cold
-little cold
 frisavamos
 frisaveis
-little cold
-little cold
 frita
-little cold
-little cold
-little cold
-little cold
+frited
 frict
-little cold
 fritara
 fritaramos
-little cold
-little cold
-little cold
-little cold
+fritarao
+fritaras
 fritareis
-little cold
-little cold
 fritariamos
-little cold
 fritarieis
-little cold
 fritasseis
-little cold
 fritassemos
-little cold
-little cold
-little cold
 fritavamos
 fritaveis
 frited
-little cold
-little cold
 frited
-little cold
+friture
 frivola
+frivolas
 frivolity
 frivolo
+frivolos
 frontally
 frontao
 fronteirico
@@ -40124,13 +40087,14 @@ frustravamos
 frustraveis
 frustred
 frustred
+fruticulture
 frutifera
 frutiferas
 frutifero
 frutiferos
 frutifica
 frutification
-frutificate
+frutify
 frutificara
 frutificaramos
 frutificarao
@@ -40223,15 +40187,16 @@ fulgiriamos
 fulgirieis
 fulgisseis
 fulgissemos
+fulgure
 fulgura
 fulguration
 fulguracoes
-fulgurara
 fulguraramos
 fulgurarao
 fulguraras
 fulgurareis
-fulgurariamos
+used to e
+used to e
 fulgurarieis
 fulgurasseis
 fulgurassemos
@@ -40271,30 +40236,43 @@ fumegarao
 fumegaras
 fumegareis
 used to e
+used to e
 fumegarieis
 fumegasseis
 fumegassemos
 fumegavamos
 fumegaveis
 funtion
-funciona
+works
+work
 funcionality
+work
 funcionament
+work
+working
+work
 funcionara
 funcionaramos
 funcionarao
 funcionaras
 funcionareis
+would work
 funcionary
 funcionariamos
 funcionarias
 funcionarieis
 funcionary
 funcionarios
+works
 funcionasseis
 funcionassemos
-funcionavamos
+used to worke
+used to worke
 funcionaveis
+work
+work
+work
+work
 funcoes
 funda
 fundation
@@ -40347,6 +40325,7 @@ fundeassemos
 used to e
 used to e
 fundeaveis
+used to e
 fundiamos
 fundiary
 fundiarias
@@ -40366,6 +40345,7 @@ fundiriamos
 fundirieis
 fundisseis
 fundissemos
+fundure
 funebre
 funebres
 funerary
@@ -40389,6 +40369,7 @@ fungassemos
 fungavamos
 fungaveis
 would e
+fure
 fura
 furacao
 furation
@@ -40396,12 +40377,12 @@ furacoes
 furacoes
 furator
 furao
-furara
 furaramos
 furarao
 furaras
 furareis
-furariamos
+used to e
+used to e
 furarieis
 furasseis
 furassemos
@@ -40451,12 +40432,12 @@ futebolisticos
 futeis
 futil
 futility
+future
 futurologa
 futurologas
 futurologo
 futurologos
 fuxica
-fuxicate
 fuxicara
 fuxicaramos
 fuxicarao
@@ -40538,6 +40519,7 @@ galanteassemos
 used to e
 used to e
 galanteaveis
+used to e
 galardao
 galata
 galatas
@@ -40564,6 +40546,7 @@ galhardearamos
 galhardearao
 galhardearas
 galhardeareis
+used to e
 used to e
 galhardearieis
 galhardeasseis
@@ -40651,6 +40634,7 @@ win
 ganhator
 win
 win
+wining
 win
 ganhara
 ganharamos
@@ -40768,7 +40752,7 @@ garrafao
 gas
 gaseifica
 gaseification
-gaseificate
+gaseify
 gaseificara
 gaseificaramos
 gaseificarao
@@ -40814,12 +40798,8 @@ gastronomos
 cat
 cats
 little cat
-little cat
-little cat
 cat
 cats
-little cat
-little cat
 gaucha
 gauchas
 gaucho
@@ -40837,6 +40817,7 @@ gazetearao
 gazetearas
 gazeteareis
 used to e
+used to e
 gazetearieis
 gazeteasseis
 gazeteassemos
@@ -40847,6 +40828,7 @@ gearamos
 gearao
 gearas
 geareis
+used to e
 used to e
 gearieis
 geasseis
@@ -40865,6 +40847,7 @@ gelasseis
 gelassemos
 gelavamos
 gelaveis
+used to e
 gelida
 gelidas
 gelido
@@ -41040,6 +41023,7 @@ geriatricos
 gerieis
 geringonca
 geringoncas
+ger
 gerira
 geriramos
 gerirao
@@ -41085,6 +41069,7 @@ gesticularamos
 gesticularao
 gesticularas
 gesticulareis
+used to e
 used to e
 gesticularieis
 gesticulasseis
@@ -41156,7 +41141,7 @@ glorias
 glorifica
 glorification
 glorificacoes
-glorificate
+glorify
 glorificara
 glorificaramos
 glorificarao
@@ -41204,6 +41189,7 @@ golearao
 golearas
 goleareis
 used to e
+used to e
 golearieis
 goleasseis
 goleassemos
@@ -41225,6 +41211,7 @@ golpeassemos
 used to e
 used to e
 golpeaveis
+used to e
 goncalves
 goncalves
 gondola
@@ -41244,11 +41231,13 @@ goravamos
 goraveis
 gordalhao
 gordalhoes
+gordure
 gorjea
 gorjearamos
 gorjearao
 gorjearas
 gorjeareis
+used to e
 used to e
 gorjearieis
 gorjeasseis
@@ -41262,6 +41251,7 @@ lik
 gosted
 like
 like
+lik
 like
 gostara
 liked
@@ -41287,6 +41277,7 @@ gostosissima
 gostosissimas
 gostosissimo
 gostosissimos
+gostosure
 liked
 goteja
 gotejament
@@ -41405,6 +41396,7 @@ grampearao
 grampearas
 grampeareis
 used to e
+used to e
 grampearieis
 grampeasseis
 grampeassemos
@@ -41428,6 +41420,7 @@ granjearamos
 granjearao
 granjearas
 granjeareis
+used to e
 used to e
 granjearieis
 granjeasseis
@@ -41504,6 +41497,7 @@ gravitavamos
 gravitaveis
 gravited
 gravited
+gravure
 grecia
 grecia
 gregary
@@ -41558,6 +41552,7 @@ grited
 scream
 scream
 scream
+scream
 gritara
 screamed
 gritaramos
@@ -41581,6 +41576,7 @@ scream
 screamed
 groenlandia
 groenlandia
+grossure
 grotao
 grotescaly
 grotoes
@@ -41652,6 +41648,7 @@ guerrearamos
 guerrearao
 guerrearas
 guerreareis
+used to e
 used to e
 guerrearieis
 guerreasseis
@@ -41761,6 +41758,7 @@ habituasseis
 habituassemos
 habituavamos
 habituaveis
+hachure
 hagiografa
 hagiografas
 hagiography
@@ -41814,6 +41812,7 @@ hasteassemos
 used to e
 used to e
 hasteaveis
+used to e
 hauriamos
 haurieis
 haurira
@@ -41828,6 +41827,7 @@ haurissemos
 have
 haverao
 haveras
+used to e
 used to e
 haverieis
 haviamos
@@ -42196,6 +42196,7 @@ homenagearao
 homenagearas
 homenageareis
 used to e
+used to e
 homenagearieis
 homenageasseis
 homenageassemos
@@ -42266,7 +42267,7 @@ honorary
 honorarios
 honorifica
 honorifica
-honorificate
+honorify
 honorificara
 honorificaramos
 honorificarao
@@ -42338,6 +42339,7 @@ hortela
 hortelaos
 hortensia
 hortensias
+horticulture
 hospeda
 hospedara
 hospedaramos
@@ -42516,6 +42518,7 @@ idealizassemos
 idealizavamos
 idealizaveis
 ideally
+used to e
 identica
 identically
 identicas
@@ -42526,7 +42529,7 @@ identifica
 identification
 identificacoes
 identificator
-identificate
+identify
 identificara
 identificaramos
 identificarao
@@ -42683,6 +42686,7 @@ iluminasseis
 iluminassemos
 iluminavamos
 iluminaveis
+iluminure
 ilusao
 ilusoes
 ilusory
@@ -42749,6 +42753,7 @@ imantaveis
 imanted
 imanted
 imas
+imature
 imbecility
 imbeciliza
 imbecilizara
@@ -42856,6 +42861,7 @@ imolasseis
 imolassemos
 imolavamos
 imolaveis
+imorredoure
 imortality
 imortaliza
 imortalizara
@@ -43081,7 +43087,6 @@ implication
 implicacoes
 implicancia
 implicancias
-implicate
 implicara
 implicaramos
 implicarao
@@ -43119,6 +43124,7 @@ imponency
 imponencias
 imporao
 imporas
+used to e
 used to e
 imporieis
 importa
@@ -43330,6 +43336,7 @@ impunely
 impunhamos
 impunheis
 impunity
+impure
 impuseramos
 impusereis
 impusesseis
@@ -43456,16 +43463,17 @@ unatacable
 inatingiveis
 unatingible
 unativity
+unaugure
 inaugura
-untion
+unauguration
 inauguracoes
 unaugural
-inaugurara
 inauguraramos
 inaugurarao
 inauguraras
 inaugurareis
-inaugurariamos
+used to e
+used to e
 inaugurarieis
 inaugurasseis
 inaugurassemos
@@ -43485,6 +43493,7 @@ incendiaramos
 incendiarao
 incendiaras
 incendiareis
+used to e
 uncendiary
 used to e
 incendiarias
@@ -43905,6 +43914,7 @@ undefectible
 indeferiamos
 indeferieis
 unment
+indefer
 indeferira
 indeferiramos
 indeferirao
@@ -43988,13 +43998,12 @@ indexassemos
 indexavamos
 indexaveis
 india
-i   ndia
+india
 indias
 indica
 untion
 indicacoes
 undicator
-indicate
 indicara
 indicaramos
 indicarao
@@ -44066,6 +44075,7 @@ indisponiveis
 undisponible
 indisporao
 indisporas
+used to e
 used to e
 indisporieis
 indispos
@@ -44153,6 +44163,7 @@ industrializavamos
 industrializaveis
 industrias
 indutancia
+used to e
 used to e
 induzieis
 induzira
@@ -44299,6 +44310,7 @@ inferiamos
 inferieis
 unferiority
 unferiorly
+infer
 inferira
 inferiramos
 inferirao
@@ -44501,6 +44513,7 @@ infortunio
 infortunios
 unfration
 infracoes
+unfraestruture
 infringe
 infringem
 infringes
@@ -44545,6 +44558,7 @@ ungerency
 ingerencias
 ingeriamos
 ingerieis
+inger
 ingerira
 ingeriramos
 ingerirao
@@ -44713,6 +44727,7 @@ inocularao
 inocularas
 inoculareis
 used to e
+used to e
 inocularieis
 inoculasseis
 inoculassemos
@@ -44751,6 +44766,7 @@ inquebraveis
 unbreakable
 inqueriamos
 inquerieis
+inquer
 inquerira
 inqueriramos
 inquerirao
@@ -44820,6 +44836,7 @@ inscreviamos
 inscrevieis
 unscrition
 inscricoes
+unsegure
 inseguranca
 insegurancas
 insemina
@@ -44846,6 +44863,7 @@ unsertion
 insercoes
 inseriamos
 inserieis
+inser
 inserira
 inseriramos
 inserirao
@@ -44934,6 +44952,7 @@ inspecionassemos
 inspecionavamos
 inspecionaveis
 inspecoes
+used to e
 inspira
 inspirara
 inspiraramos
@@ -44984,14 +45003,15 @@ instariamos
 instarieis
 instasseis
 instassemos
+unstaure
 instaura
 unstauration
-instaurara
 instauraramos
 instaurarao
 instauraras
 instaurareis
-instaurariamos
+used to e
+used to e
 instaurarieis
 instaurasseis
 instaurassemos
@@ -45025,6 +45045,7 @@ instituido
 instituidos
 instituieis
 instituimos
+institute
 instituira
 instituira
 instituiram
@@ -45258,7 +45279,7 @@ untensity
 intensifica
 untensification
 intensificacoes
-intensificate
+intensify
 intensificara
 intensificaramos
 intensificarao
@@ -45399,6 +45420,7 @@ unterferency
 interferencias
 interferiamos
 interferieis
+interfer
 interferira
 interferiramos
 interferirao
@@ -45447,6 +45469,7 @@ intermearamos
 intermearao
 intermearas
 intermeareis
+used to e
 used to e
 intermearieis
 intermeasseis
@@ -45612,6 +45635,7 @@ intervinheis
 intervirao
 interviras
 used to e
+used to e
 intervirieis
 intima
 intima
@@ -45657,7 +45681,6 @@ untorcible
 intoxica
 untoxication
 intoxicacoes
-intoxicate
 intoxicara
 intoxicaramos
 intoxicarao
@@ -45703,6 +45726,7 @@ untrodutory
 introdutorias
 introdutorio
 introdutorios
+used to e
 used to e
 introduzieis
 introduzira
@@ -45926,6 +45950,7 @@ invertiveis
 unvertible
 inves
 investiamos
+unvestidure
 investieis
 investiga
 unvestigation
@@ -45935,6 +45960,7 @@ investigaramos
 investigarao
 investigaras
 investigareis
+used to e
 used to e
 investigarieis
 investigasseis
@@ -46004,11 +46030,11 @@ ionizavamos
 ionizaveis
 iorque
 ira
-ira
 iras
 irasciveis
 irascible
-iriamos
+used to e
+used to e
 irieis
 iris
 irlanda
@@ -46227,7 +46253,9 @@ isovolumetricas
 isovolumetrico
 isovolumetricos
 israel
+this
 istambul
+this
 italia
 italia
 italianization
@@ -46310,6 +46338,7 @@ jazerieis
 jazesseis
 jazessemos
 used to e
+used to e
 jazieis
 jean
 jeitao
@@ -46358,41 +46387,21 @@ joeiravamos
 joeiraveis
 game
 joga
-little game
-little game
-little game
-little game
-little game
-little game
-little game
-little game
+jogator
 jogaramos
 jogarao
-little game
 jogaras
-little game
-little game
-little game
-little game
-little game
-little game
+jogareis
+used to e
 used to e
 jogarieis
-little game
 games
-little game
 jogasseis
 jogassemos
-little game
-little game
-little game
 jogavamos
-little game
-little game
+jogaveis
 game
 games
-little game
-little game
 jonica
 jonicas
 jonico
@@ -46447,6 +46456,7 @@ judiasseis
 judiassemos
 judiavamos
 judiaveis
+judicature
 judicially
 judiciary
 judiciarias
@@ -46495,15 +46505,16 @@ juntaveis
 junted
 junted
 jupiter
+jure
 jura
 juramented
 jurament
-jurara
 juraramos
 jurarao
 juraras
 jurareis
-jurariamos
+used to e
+used to e
 jurarieis
 jurasseis
 jurassemos
@@ -46535,7 +46546,7 @@ justifica
 justification
 justificacoes
 justificadaly
-justificate
+justify
 justificara
 justificaramos
 justificarao
@@ -46608,6 +46619,7 @@ laca
 lacada
 lacadas
 laced
+used to e
 lacais
 lacam
 lacamos
@@ -46655,6 +46667,7 @@ laconicos
 lacos
 lacou
 lacra
+used to e
 lacrara
 lacraramos
 lacrarao
@@ -46889,9 +46902,7 @@ laponia
 laqueation
 laqueacoes
 orange
-little orange
 s
-little orange
 larapia
 larapias
 larapio
@@ -46909,6 +46920,7 @@ largasseis
 largassemos
 largavamos
 largaveis
+largure
 las
 lasca
 lascara
@@ -46945,6 +46957,7 @@ lastrearamos
 lastrearao
 lastrearas
 lastreareis
+used to e
 used to e
 lastrearieis
 lastreasseis
@@ -46984,6 +46997,7 @@ latirao
 latiras
 latireis
 used to e
+used to e
 latirieis
 latisseis
 latissemos
@@ -46991,12 +47005,13 @@ latoes
 latrao
 latrocinio
 latrocinios
-laura
+laure
 laurea
 laurearamos
 laurearao
 laurearas
 laureareis
+used to e
 used to e
 laurearieis
 laureasseis
@@ -47020,6 +47035,7 @@ lavatorio
 lavatorios
 lavavamos
 lavaveis
+lavoure
 lavra
 lavrator
 lavrara
@@ -47109,6 +47125,7 @@ legislariamos
 legislarieis
 legislasseis
 legislassemos
+legislature
 legislavamos
 legislaveis
 legitima
@@ -47150,6 +47167,7 @@ leiloaveis
 leiloes
 leitao
 leitoes
+leiture
 lembra
 lembranca
 lembrancas
@@ -47174,8 +47192,14 @@ lendary
 lendarios
 lenhator
 lenin
-lenctly
+slow
+slowly
+slow
+slow
+slow
 lentidao
+slow
+slow
 leoes
 lepida
 lepidas
@@ -47187,6 +47211,7 @@ leramos
 lerao
 leras
 lereis
+used to e
 used to e
 lerieis
 les
@@ -47256,6 +47281,7 @@ levassemos
 levavamos
 levaveis
 levedo
+levedure
 levely
 levissima
 levissimas
@@ -47361,6 +47387,7 @@ licenciariamos
 licenciarieis
 licenciasseis
 licenciassemos
+licenciature
 licenciavamos
 licenciaveis
 licita
@@ -47418,11 +47445,13 @@ lieis
 liga
 ligation
 ligacoes
+ligadure
 ligament
 ligaramos
 ligarao
 ligaras
 ligareis
+used to e
 used to e
 ligarieis
 ligasseis
@@ -47576,6 +47605,7 @@ liquefaras
 liquefariamos
 liquefarieis
 used to e
+used to e
 liquefazieis
 liquefect
 liquefizeramos
@@ -47618,6 +47648,7 @@ lisonjearao
 lisonjearas
 lisonjeareis
 used to e
+used to e
 lisonjearieis
 lisonjeasseis
 lisonjeassemos
@@ -47641,11 +47672,13 @@ listavamos
 listaveis
 listed
 listed
+lisure
 literally
 literary
 literarias
 literary
 literarios
+literature
 litiga
 litigara
 litigaramos
@@ -47684,38 +47717,20 @@ livido
 lividos
 book
 livra
-little book
-little book
-little book
 livraramos
 livrarao
-little book
 livraras
-little book
-little book
-little book
-little book
-little book
-little book
+livrareis
+used to e
 used to e
 livrarieis
-little book
 books
-little book
 livrasseis
 livrassemos
-little book
-little book
 livravamos
-little book
-little book
+livraveis
 book
-little book
-little book
-little book
-little book
-little book
-little book
+livrely
 little book
 book
 books
@@ -47820,6 +47835,7 @@ longuissima
 longuissimas
 longuissimo
 longuissimos
+lonjure
 lota
 lotation
 lotacoes
@@ -47851,6 +47867,7 @@ used to e
 used to e
 loteaveis
 loted
+used to e
 loterica
 lotericas
 loterico
@@ -47863,6 +47880,8 @@ loucaly
 loucania
 loution
 loucas
+loucure
+loure
 louva
 louvation
 louvacoes
@@ -47880,7 +47899,7 @@ louvaveis
 louvable
 lubrifica
 lubrification
-lubrificate
+lubrify
 lubrificara
 lubrificaramos
 lubrificarao
@@ -47966,6 +47985,7 @@ luted
 lutator
 fight
 fight
+fighting
 fight
 lutara
 lutaramos
@@ -47988,6 +48008,7 @@ fight
 luxation
 luxacoes
 luxuria
+used to e
 used to e
 luzieis
 luzira
@@ -48029,6 +48050,7 @@ maceio
 maceration
 maceracoes
 machuca
+machucadure
 machucara
 machucaramos
 machucarao
@@ -48067,6 +48089,7 @@ macularao
 macularas
 maculareis
 used to e
+used to e
 macularieis
 maculas
 maculasseis
@@ -48089,14 +48112,15 @@ madrugasseis
 madrugassemos
 madrugavamos
 madrugaveis
+madure
 madura
 maduraly
-madurara
 maduraramos
 madurarao
 maduraras
 madurareis
-madurariamos
+used to e
+used to e
 madurarieis
 madurasseis
 madurassemos
@@ -48113,6 +48137,7 @@ magic
 magicos
 magistery
 magisterios
+magistrature
 magnanima
 magnanimas
 magnanimity
@@ -48162,6 +48187,7 @@ magrissima
 magrissimas
 magrissimo
 magrissimos
+used to e
 maiority
 more
 maiuscle
@@ -48206,6 +48232,7 @@ malavinheis
 malavirao
 malaviras
 used to e
+used to e
 malavirieis
 malba
 malbarata
@@ -48238,6 +48265,7 @@ maldisseramos
 maldissereis
 maldissesseis
 maldissessemos
+used to e
 used to e
 maldizieis
 maledicency
@@ -48381,6 +48409,7 @@ manearao
 manearas
 maneareis
 used to e
+used to e
 manearieis
 maneasseis
 maneassemos
@@ -48483,6 +48512,7 @@ manjasseis
 manjassemos
 manjavamos
 manjaveis
+manjedoure
 manjericao
 manobra
 manobrara
@@ -48508,6 +48538,7 @@ mantens
 manterao
 manteras
 used to e
+used to e
 manterieis
 mantiment
 mantinhamos
@@ -48518,13 +48549,14 @@ mantivesseis
 mantivessemos
 manually
 manuel
+manufature
 manufatura
-manufaturara
 manufaturaramos
 manufaturarao
 manufaturaras
 manufaturareis
-manufaturariamos
+used to e
+used to e
 manufaturarieis
 manufaturasseis
 manufaturassemos
@@ -48536,6 +48568,7 @@ manusearamos
 manusearao
 manusearas
 manuseareis
+used to e
 used to e
 manusearieis
 manuseasseis
@@ -48553,6 +48586,7 @@ mapearamos
 mapearao
 mapearas
 mapeareis
+used to e
 used to e
 mapearieis
 mapeasseis
@@ -48689,6 +48723,7 @@ marejassemos
 marejavamos
 marejaveis
 mares
+used to e
 margarete
 margarida
 margarido
@@ -48818,6 +48853,7 @@ massagearao
 massagearas
 massageareis
 used to e
+used to e
 massagearieis
 massageasseis
 massageassemos
@@ -48827,7 +48863,7 @@ massape
 massapes
 massifica
 massification
-massificate
+massify
 massificara
 massificaramos
 massificarao
@@ -48840,19 +48876,31 @@ massificassemos
 massificavamos
 massificaveis
 massific
-mastiga
+chews
+chew
 mastigation
+chewed
+chew
+chew
+chew
+chew
 mastigara
+chewed
 mastigaramos
 mastigarao
 mastigaras
 mastigareis
+would chew
 mastigariamos
 mastigarieis
+chews
 mastigasseis
 mastigassemos
-mastigavamos
+used to chew
+used to chew
 mastigaveis
+chew
+chewed
 masturbation
 masturbacoes
 mata
@@ -48904,6 +48952,7 @@ matricularao
 matricularas
 matriculareis
 used to e
+used to e
 matricularieis
 matriculas
 matriculasseis
@@ -48915,15 +48964,16 @@ matrimoniais
 matrimonial
 matrimonio
 matrimonios
+mature
 matura
 maturation
 maturacoes
-maturara
 maturaramos
 maturarao
 maturaras
 maturareis
-maturariamos
+used to e
+used to e
 maturarieis
 maturasseis
 maturassemos
@@ -48990,6 +49040,7 @@ mecas
 meco
 medalhao
 medalhoes
+used to e
 medeiros
 medy
 medy
@@ -49035,7 +49086,6 @@ medicamented
 medicament
 medicamented
 medition
-medicate
 medicara
 medicaramos
 medicarao
@@ -49118,8 +49168,12 @@ megalomaniaco
 megalomaniacos
 megalomano
 megalomanos
+middle
 meiao
+middles
+middle
 meioes
+middles
 melaco
 watermelon
 s
@@ -49142,19 +49196,19 @@ melassemos
 used to e
 used to e
 melaveis
+better
+melhora
 melhorament
 melhorara
 melhoraramos
 melhorarao
 melhoraras
 melhorareis
-would e
 melhorariamos
 melhorarieis
 melhorasseis
 melhorassemos
-used to e
-used to e
+melhoravamos
 melhoraveis
 melindra
 melindrara
@@ -49229,6 +49283,7 @@ menearao
 menearas
 meneareis
 used to e
+used to e
 menearieis
 meneasseis
 meneassemos
@@ -49256,13 +49311,14 @@ menosprezible
 mensally
 menstruation
 menstruacoes
+mensure
 mensura
-mensurara
 mensuraramos
 mensurarao
 mensuraras
 mensurareis
-mensurariamos
+used to e
+used to e
 mensurarieis
 mensurasseis
 mensurassemos
@@ -49406,6 +49462,8 @@ metabolica
 metabolicas
 metabolico
 metabolicos
+half
+halves
 metafisica
 metafisicas
 metafisico
@@ -49441,6 +49499,7 @@ metamorfoseassemos
 used to e
 used to e
 metamorfoseaveis
+used to e
 mete
 meted
 meteorica
@@ -49486,6 +49545,7 @@ metroviary
 metroviarias
 metroviary
 metroviarios
+my
 my
 mexe
 mexera
@@ -49647,6 +49707,7 @@ mimosearao
 mimosearas
 mimoseareis
 used to e
+used to e
 mimosearieis
 mimoseasseis
 mimoseassemos
@@ -49676,6 +49737,8 @@ minerio
 minerios
 mingua
 my
+my
+miniature
 minicomputator
 minifundio
 minifundios
@@ -49793,7 +49856,7 @@ misticos
 mistifica
 mistification
 mistificacoes
-mistificate
+mistify
 mistificara
 mistificaramos
 mistificarao
@@ -49806,13 +49869,14 @@ mistificassemos
 mistificavamos
 mistificaveis
 mistific
+misture
 mistura
-misturara
 misturaramos
 misturarao
 misturaras
 misturareis
-misturariamos
+used to e
+used to e
 misturarieis
 misturasseis
 misturassemos
@@ -49823,7 +49887,7 @@ miticas
 mitico
 miticos
 mitifica
-mitificate
+mitify
 mitificara
 mitificaramos
 mitificarao
@@ -49970,7 +50034,7 @@ modifica
 modification
 modificacoes
 modificator
-modificate
+modify
 modificara
 modificaramos
 modificarao
@@ -50044,6 +50108,7 @@ moldasseis
 moldassemos
 moldavamos
 moldaveis
+moldure
 molecle
 moleculas
 moleirao
@@ -50066,6 +50131,7 @@ molestia
 molestias
 molested
 wets
+wet
 wet
 wet
 wet
@@ -50144,6 +50210,7 @@ monitorassemos
 used to e
 used to e
 monitoraveis
+used to e
 monocromatica
 monocromaticas
 monocromatico
@@ -50250,6 +50317,7 @@ moralizaveis
 morally
 live
 live
+liv
 live
 morara
 lived
@@ -50323,7 +50391,7 @@ morresseis
 morressemos
 died
 lived
-died
+used to die
 used to die
 morrieis
 die
@@ -50342,7 +50410,7 @@ mortiferos
 mortifica
 mortification
 mortificacoes
-mortificate
+mortify
 mortificara
 mortificaramos
 mortificarao
@@ -50403,25 +50471,39 @@ motivassemos
 motivavamos
 motivaveis
 motocicle
+moure
 mourao
 mouroes
+moves
 move
+move
+moves
+mov
+moves
 movedica
 movedicas
 movedico
 movedicos
+moved
 moveis
 movel
+move
+move
+move
 movera
 moveramos
 moverao
 moveras
 movereis
+would move
 moveriamos
 moverieis
 movesseis
 movessemos
-moviamos
+moved
+moved
+used to move
+used to move
 movieis
 movimenta
 movimentation
@@ -50443,6 +50525,7 @@ movily
 movimented
 moviment
 movimented
+move
 muculmana
 muculmanas
 muculmano
@@ -50476,10 +50559,9 @@ muitissima
 muitissimas
 muitissimo
 muitissimos
+very
 mulet
 woman
-little woman
-little woman
 multa
 multed
 mulct
@@ -50512,7 +50594,6 @@ multiplica
 multiplication
 multiplicacoes
 multiplicator
-multiplicate
 multiplicara
 multiplicaramos
 multiplicarao
@@ -50545,7 +50626,7 @@ mumia
 mumias
 mumifica
 mumification
-mumificate
+mumify
 mumificara
 mumificaramos
 mumificarao
@@ -50558,10 +50639,6 @@ mumificassemos
 mumificavamos
 mumificaveis
 mumific
-little world
-little world
-little world
-little world
 mundially
 world
 worlds
@@ -50593,14 +50670,15 @@ muniriamos
 munirieis
 munisseis
 munissemos
+mure
 mura
 murament
-murara
 muraramos
 murarao
 muraras
 murareis
-murariamos
+used to e
+used to e
 murarieis
 murasseis
 murassemos
@@ -50619,15 +50697,16 @@ murchassemos
 murchavamos
 murchaveis
 muret
+murmure
 murmura
 murmuration
 murmuracoes
-murmurara
 murmuraramos
 murmurarao
 murmuraras
 murmurareis
-murmurariamos
+used to e
+used to e
 murmurarieis
 murmurasseis
 murmurassemos
@@ -50636,12 +50715,12 @@ murmuraveis
 murmurio
 murmurios
 musculation
+musculature
 muscle
 musculos
 musica
 musica
 musicality
-musicate
 musicara
 musicaramos
 musicarao
@@ -50690,6 +50769,7 @@ mutuarios
 mutuas
 mutuo
 mutuos
+in the
 nation
 nacionality
 nacionaliza
@@ -50712,6 +50792,7 @@ swims
 swim
 swim
 swim
+swiming
 swim
 nadara
 nadaramos
@@ -50733,6 +50814,7 @@ nadegas
 swim
 swim
 swim
+nair
 namora
 namorara
 namoraramos
@@ -50858,6 +50940,7 @@ navegarao
 navegaras
 navegareis
 used to e
+used to e
 navegarieis
 navegasseis
 navegassemos
@@ -50969,6 +51052,7 @@ neoliticos
 neonio
 neri
 nervosaly
+nervure
 nescia
 nescias
 nescio
@@ -51089,6 +51173,7 @@ nivelasseis
 nivelassemos
 nivelavamos
 nivelaveis
+in the
 no
 nobel
 nobiliarquica
@@ -51108,6 +51193,7 @@ nocautearamos
 nocautearao
 nocautearas
 nocauteareis
+used to e
 used to e
 nocautearieis
 nocauteasseis
@@ -51151,6 +51237,8 @@ nomeassemos
 used to e
 used to e
 nomeaveis
+used to e
+nomenclature
 nominally
 nonagenary
 nonagenarias
@@ -51206,6 +51294,7 @@ norteassemos
 used to e
 used to e
 norteaveis
+used to e
 noruega
 noruegues
 we
@@ -51271,7 +51360,7 @@ noticiaveis
 notifica
 notification
 notificacoes
-notificate
+notify
 notificara
 notificaramos
 notificarao
@@ -51503,6 +51592,7 @@ obrigatorio
 obrigatorios
 obrigavamos
 obrigaveis
+obscure
 obscuraly
 obscureca
 obscurecais
@@ -51660,6 +51750,7 @@ obtens
 obterao
 obteras
 used to e
+used to e
 obterieis
 obtinhamos
 obtinheis
@@ -51667,16 +51758,17 @@ obtiveramos
 obtivereis
 obtivesseis
 obtivessemos
+obture
 obtura
 obturation
 obturacoes
 obturator
-obturara
 obturaramos
 obturarao
 obturaras
 obturareis
-obturariamos
+used to e
+used to e
 obturarieis
 obturasseis
 obturassemos
@@ -51789,11 +51881,13 @@ ocupasseis
 ocupassemos
 ocupavamos
 ocupaveis
+used to e
 odia
 odiaramos
 odiarao
 odiaras
 odiareis
+used to e
 used to e
 odiarieis
 odiasseis
@@ -51927,8 +52021,6 @@ the
 ohm
 the
 oitao
-little eight
-little eight
 eight
 oklahoma
 hello
@@ -51937,39 +52029,19 @@ oleo
 oleos
 eye
 olha
-little eye
-little eye
-little eye
-little eye
-little eye
-little eye
-little eye
 olharamos
 olharao
-little eye
 olharas
-little eye
-little eye
-little eye
-little eye
-little eye
-little eye
+olhareis
+used to e
 used to e
 olharieis
-little eye
 eyes
-little eye
 olhasseis
 olhassemos
-little eye
-little eye
 olhavamos
-little eye
-little eye
+olhaveis
 eye
-little eye
-little eye
-little eye
 eye
 eyes
 oligarquica
@@ -52003,6 +52075,7 @@ ombrearao
 ombrearas
 ombreareis
 used to e
+used to e
 ombrearieis
 ombreasseis
 ombreassemos
@@ -52029,6 +52102,7 @@ ondearamos
 ondearao
 ondearas
 ondeareis
+used to e
 used to e
 ondearieis
 ondeasseis
@@ -52132,6 +52206,7 @@ opoem
 opoes
 oporao
 oporas
+used to e
 used to e
 oporieis
 oportunaly
@@ -52379,7 +52454,7 @@ originasseis
 originassemos
 originavamos
 originaveis
-the   rion
+orion
 orla
 orlara
 orlaramos
@@ -52524,6 +52599,7 @@ oscularao
 oscularas
 osculareis
 used to e
+used to e
 oscularieis
 osculasseis
 osculassemos
@@ -52537,6 +52613,7 @@ osmoticas
 osmotico
 osmoticos
 osorio
+ossature
 ossea
 osseas
 osseo
@@ -52591,7 +52668,7 @@ otimizavamos
 otimizaveis
 otimo
 otimos
-the
+or
 ouca
 oucais
 oucam
@@ -52655,6 +52732,7 @@ ovacionaveis
 ovacoes
 ovary
 ovarios
+ovinoculture
 oviparo
 oviparos
 ovulation
@@ -52691,7 +52769,7 @@ pacifica
 pacifica
 pacification
 pacifically
-pacificate
+pacify
 pacificara
 pacificaramos
 pacificarao
@@ -52833,6 +52911,7 @@ pajearao
 pajearas
 pajeareis
 used to e
+used to e
 pajearieis
 pajeasseis
 pajeassemos
@@ -52848,6 +52927,7 @@ palavrearamos
 palavrearao
 palavrearas
 palavreareis
+used to e
 used to e
 palavrearieis
 palavreasseis
@@ -52982,11 +53062,13 @@ papaguearao
 papaguearas
 papagueareis
 used to e
+used to e
 papaguearieis
 papagueasseis
 papagueassemos
 papagueavamos
 papagueaveis
+used to e
 papao
 papara
 paparamos
@@ -52995,7 +53077,6 @@ paparas
 papareis
 papariamos
 paparica
-paparicate
 paparicara
 paparicaramos
 paparicarao
@@ -53062,6 +53143,7 @@ parafrasearamos
 parafrasearao
 parafrasearas
 parafraseareis
+used to e
 used to e
 parafrasearieis
 parafraseasseis
@@ -53212,6 +53294,7 @@ parearao
 parearas
 pareareis
 used to e
+used to e
 parearieis
 pareasseis
 pareassemos
@@ -53241,6 +53324,7 @@ parentese
 parenteses
 pareo
 pareos
+used to e
 used to e
 parity
 parieis
@@ -53364,9 +53448,11 @@ partirao
 partiras
 partireis
 used to e
+used to e
 partirieis
 partisseis
 partissemos
+partiture
 pas
 pascal
 pascoa
@@ -53414,6 +53500,7 @@ passeassemos
 used to e
 used to e
 passeaveis
+used to e
 passiveis
 passible
 passivity
@@ -53454,6 +53541,7 @@ pastorearao
 pastorearas
 pastoreareis
 used to e
+used to e
 pastorearieis
 pastoreasseis
 pastoreassemos
@@ -53474,6 +53562,7 @@ patenteassemos
 used to e
 used to e
 patenteaveis
+used to e
 paternity
 patet
 patetica
@@ -53615,6 +53704,7 @@ pavonearao
 pavonearas
 pavoneareis
 used to e
+used to e
 pavonearieis
 pavoneasseis
 pavoneassemos
@@ -53716,6 +53806,7 @@ pegaramos
 pegarao
 pegaras
 pegareis
+used to e
 used to e
 pegarieis
 pegasseis
@@ -53838,13 +53929,14 @@ ask
 asker
 pendulo
 pendulos
+pendure
 pendura
-pendurara
 penduraramos
 pendurarao
 penduraras
 pendurareis
-pendurariamos
+used to e
+used to e
 pendurarieis
 pendurasseis
 pendurassemos
@@ -53926,6 +54018,7 @@ pensator
 think
 pensament
 think
+thinking
 pensao
 think
 pensara
@@ -53966,6 +54059,7 @@ used to e
 used to e
 penteaveis
 pentecostes
+used to e
 penultima
 penultimas
 penultimo
@@ -54081,13 +54175,14 @@ perdulary
 perdularias
 perdulary
 perdularios
+perdure
 perdura
-perdurara
 perduraramos
 perdurarao
 perduraras
 perdurareis
-perdurariamos
+used to e
+used to e
 perdurarieis
 perdurasseis
 perdurassemos
@@ -54155,6 +54250,7 @@ perfaras
 perfariamos
 perfarieis
 used to e
+used to e
 perfazieis
 perfeition
 perfeicoes
@@ -54199,15 +54295,16 @@ perfumasseis
 perfumassemos
 perfumavamos
 perfumaveis
+perfure
 perfura
 perfuration
 perfuracoes
-perfurara
 perfuraramos
 perfurarao
 perfuraras
 perfurareis
-perfurariamos
+used to e
+used to e
 perfurarieis
 perfurasseis
 perfurassemos
@@ -54216,6 +54313,7 @@ perfuraveis
 asks
 ask
 pergunted
+ask
 ask
 ask
 ask
@@ -54502,7 +54600,7 @@ personalizaveis
 personifica
 personification
 personificacoes
-personificate
+personify
 personificara
 personificaramos
 personificarao
@@ -54687,7 +54785,7 @@ petiscavamos
 petiscaveis
 petrifica
 petrification
-petrificate
+petrify
 petrificara
 petrificaramos
 petrificarao
@@ -54727,7 +54825,6 @@ piavamos
 piaveis
 pica
 picao
-picate
 picara
 picaramos
 picarao
@@ -54789,6 +54886,7 @@ pigarrearamos
 pigarrearao
 pigarrearas
 pigarreareis
+used to e
 used to e
 pigarrearieis
 pigarreasseis
@@ -54942,6 +55040,7 @@ pingucas
 pinguco
 pingucos
 pinhao
+used to e
 pinoteara
 pinotearamos
 pinotearao
@@ -54955,22 +55054,37 @@ pinoteassemos
 used to e
 used to e
 pinoteaveis
-pinta
+used to e
+paints
+paint
 pinted
-pinct
+paint
+paint
+paint
+paint
 pintara
+painted
 pintaramos
 pintarao
 pintaras
 pintareis
+would paint
 pintariamos
 pintarieis
+paints
 pintasseis
 pintassemos
-pintavamos
+used to paint
+used to paint
 pintaveis
-pinted
-pinted
+paint
+painted
+paint
+paint
+paint
+painted
+pinture
+worse
 piora
 piorara
 pioraramos
@@ -55000,6 +55114,7 @@ piramide
 piramides
 pirao
 pirineus
+pirogravure
 pirotecnica
 pirotecnicas
 pirotecnico
@@ -55031,11 +55146,13 @@ piscasseis
 piscassemos
 piscavamos
 piscaveis
+pisciculture
 pisotea
 pisotearamos
 pisotearao
 pisotearas
 pisoteareis
+used to e
 used to e
 pisotearieis
 pisoteasseis
@@ -55109,7 +55226,7 @@ planicie
 planicies
 planifica
 planification
-planificate
+planify
 planificara
 planificaramos
 planificarao
@@ -55146,6 +55263,7 @@ plantaveis
 planted
 plantoes
 planted
+planure
 plaquet
 plasma
 plasmara
@@ -55169,7 +55287,7 @@ plasticity
 plastico
 plasticos
 plastifica
-plastificate
+plastify
 plastificara
 plastificaramos
 plastificarao
@@ -55189,6 +55307,7 @@ platonicas
 platonico
 platonicos
 platos
+used to e
 plebiscitary
 plebiscitarias
 plebiscitary
@@ -55198,6 +55317,7 @@ pleitearamos
 pleitearao
 pleitearas
 pleiteareis
+used to e
 used to e
 pleitearieis
 pleiteasseis
@@ -55276,6 +55396,7 @@ cans
 can
 can
 can
+caning
 can
 podara
 podaramos
@@ -55303,6 +55424,7 @@ poderas
 could
 poderiamos
 poderieis
+used to cane
 used to cane
 poded
 podieis
@@ -55497,7 +55619,7 @@ poneis
 pontape
 pontapes
 pontifica
-pontificate
+pontify
 pontificara
 pontificaramos
 pontificarao
@@ -55564,11 +55686,13 @@ porfiarao
 porfiaras
 porfiareis
 used to e
+used to e
 porfiarieis
 porfiasseis
 porfiassemos
 porfiavamos
 porfiaveis
+used to e
 used to e
 porieis
 pormenoriza
@@ -55595,65 +55719,43 @@ door
 door
 portability
 ported
-little door
-little door
-little door
-little door
-little door
-little door
+portator
 portao
 porct
 portara
-little door
 portaramos
-little door
-little door
-little door
-little door
-little door
-little door
-little door
-little door
+portarao
+portaras
+portareis
 portariamos
 portarieis
-little door
 s
-little door
-little door
-little
+portasseis
 portassemos
-little
-little door
-little
-little
-little door
-little door
-little door
-little door
-little
-little door
+portateis
+portatil
+portavamos
+portaveis
+portable
 ported
-little door
-little door
-little door
-little door
 portico
-little door
+porticos
 portoes
 ported
 portuary
 portuarias
 portuary
 portuarios
-little door
-little door
+portugal
 portugues
+porventure
 pos
 pos
 cans
 can
 can
 can
+caning
 can
 posara
 posaramos
@@ -55696,6 +55798,7 @@ pospoem
 pospoes
 posporao
 posporas
+used to e
 used to e
 posporieis
 pospos
@@ -55818,6 +55921,7 @@ postuma
 postumas
 postumo
 postumos
+posture
 potassio
 potaveis
 potable
@@ -55894,12 +55998,14 @@ praguejasseis
 praguejassemos
 praguejavamos
 praguejaveis
+used to e
 pranchet
 prantea
 prantearamos
 prantearao
 prantearas
 pranteareis
+used to e
 used to e
 prantearieis
 pranteasseis
@@ -55910,7 +56016,6 @@ pratica
 pratica
 praticability
 pratically
-praticate
 praticara
 praticaramos
 praticarao
@@ -55944,6 +56049,7 @@ precaveramos
 precaverao
 precaveras
 precavereis
+used to e
 used to e
 precaverieis
 precavesseis
@@ -56009,6 +56115,7 @@ needed
 need
 precisaly
 need
+need
 precisao
 need
 precisara
@@ -56072,7 +56179,6 @@ predica
 predication
 predicacoes
 predition
-predicate
 predicara
 predicaramos
 predicarao
@@ -56103,6 +56209,7 @@ predispoes
 predisporao
 predisporas
 used to e
+used to e
 predisporieis
 predispos
 predisposition
@@ -56117,6 +56224,7 @@ predisseramos
 predissereis
 predissesseis
 predissessemos
+used to e
 used to e
 predizieis
 predomina
@@ -56184,11 +56292,13 @@ prefacio
 prefacios
 prefect
 prefect
+prefeiture
 preferency
 preferencially
 preferencias
 preferiamos
 preferieis
+prefer
 preferira
 preferiramos
 preferirao
@@ -56200,14 +56310,15 @@ preferisseis
 preferissemos
 preferiveis
 preferible
+prefigure
 prefigura
 prefiguration
-prefigurara
 prefiguraramos
 prefigurarao
 prefiguraras
 prefigurareis
-prefigurariamos
+used to e
+used to e
 prefigurarieis
 prefigurasseis
 prefigurassemos
@@ -56255,6 +56366,7 @@ pregueassemos
 used to e
 used to e
 pregueaveis
+used to e
 preguica
 preguica
 preguicado
@@ -56301,7 +56413,6 @@ preguicosas
 preguicosos
 preguicou
 prejudica
-prejudicate
 prejudicara
 prejudicaramos
 prejudicarao
@@ -56326,6 +56437,7 @@ prelecoes
 preliminarly
 preludio
 preludios
+premature
 premeditation
 premedited
 premency
@@ -56454,6 +56566,7 @@ preponderaveis
 preporao
 preporas
 used to e
+used to e
 preporieis
 prepos
 preposition
@@ -56537,6 +56650,7 @@ presenteassemos
 used to e
 used to e
 presenteaveis
+used to e
 presentely
 presepio
 presepios
@@ -56620,6 +56734,7 @@ pressupoem
 pressupoes
 pressuporao
 pressuporas
+used to e
 used to e
 pressuporieis
 pressupos
@@ -56718,6 +56833,7 @@ pretensoes
 preteriamos
 preterieis
 preteriment
+preter
 preterira
 preteriramos
 preterirao
@@ -56770,7 +56886,6 @@ prevalency
 prevarica
 prevarication
 prevaricacoes
-prevaricate
 prevaricara
 prevaricaramos
 prevaricarao
@@ -56798,6 +56913,7 @@ prevenisseis
 prevenissemos
 preverao
 preveras
+used to e
 used to e
 preverieis
 preves
@@ -56860,6 +56976,7 @@ primicias
 primitivaly
 primogenito
 primogenitos
+primogeniture
 primordially
 primordio
 primordios
@@ -57041,6 +57158,7 @@ procriacoes
 procriator
 breed
 breed
+breeding
 breed
 procriara
 bred
@@ -57063,16 +57181,17 @@ breed
 breed
 breed
 bred
+procure
 procura
 procuration
 procuracoes
 procurator
-procurara
 procuraramos
 procurarao
 procuraras
 procurareis
-procurariamos
+used to e
+used to e
 procurarieis
 procurasseis
 procurassemos
@@ -57099,6 +57218,7 @@ prodigos
 prodution
 producoes
 produtivity
+used to e
 used to e
 produzieis
 produzira
@@ -57128,6 +57248,7 @@ profanavamos
 profanaveis
 proferiamos
 proferieis
+profer
 proferira
 proferiramos
 proferirao
@@ -57189,7 +57310,6 @@ profusaly
 profusao
 profusoes
 prognostica
-prognosticate
 prognosticara
 prognosticaramos
 prognosticarao
@@ -57381,7 +57501,7 @@ promulgaveis
 pronctly
 prontidao
 prontifica
-prontificate
+prontify
 prontificara
 prontificaramos
 prontificarao
@@ -57482,6 +57602,7 @@ proporcionavamos
 proporcionaveis
 proporcoes
 used to e
+used to e
 proporieis
 propos
 proposition
@@ -57492,14 +57613,14 @@ propositally
 proposito
 propositos
 propria
-proprialy
+ownly
 proprias
-propriety
+ownty
 proprietary
 proprietarias
 proprietary
 proprietarios
-proprio
+own
 proprios
 propugna
 propugnara
@@ -57632,6 +57753,7 @@ prostituido
 prostituidos
 prostituieis
 prostituimos
+prostitute
 prostituira
 prostituira
 prostituiram
@@ -57744,6 +57866,7 @@ provaveis
 provable
 provavelly
 prove
+used to e
 provem
 used to e
 proveniency
@@ -57894,7 +58017,6 @@ publica
 publica
 publication
 publicacoes
-publicate
 publicara
 publicaramos
 publicarao
@@ -57920,6 +58042,7 @@ pudesseis
 pudessemos
 pudicicia
 puericia
+puericulture
 pujanca
 pula
 pulara
@@ -57967,6 +58090,7 @@ pulseassemos
 used to e
 used to e
 pulseaveis
+used to e
 pulula
 pululara
 pulularamos
@@ -58009,6 +58133,7 @@ puniriamos
 punirieis
 punisseis
 punissemos
+pure
 puraly
 pure
 purga
@@ -58029,7 +58154,7 @@ purgaveis
 purifica
 purification
 purificacoes
-purificate
+purify
 purificara
 purificaramos
 purificarao
@@ -58046,7 +58171,7 @@ purissima
 purissimas
 purissimo
 purissimos
-purpura
+purpure
 purpurea
 purpureas
 purpureo
@@ -58082,6 +58207,7 @@ quadratica
 quadraticas
 quadratico
 quadraticos
+quadrature
 quadrica
 quadricas
 quadricle
@@ -58090,6 +58216,7 @@ quadricularamos
 quadricularao
 quadricularas
 quadriculareis
+used to e
 used to e
 quadricularieis
 quadriculasseis
@@ -58106,7 +58233,6 @@ quadrivium
 quadrupla
 quadruplas
 quadruplica
-quadruplicate
 quadruplicara
 quadruplicaramos
 quadruplicarao
@@ -58124,7 +58250,7 @@ quality
 qualifica
 qualification
 qualificacoes
-qualificate
+qualify
 qualificara
 qualificaramos
 qualificarao
@@ -58140,7 +58266,7 @@ qualific
 when
 quantity
 quantifica
-quantificate
+quantify
 quantificara
 quantificaramos
 quantificarao
@@ -58169,7 +58295,7 @@ quaternary
 quaternarios
 quaternio
 quaternios
-little four
+quatrilhao
 quatrilhoes
 four
 what
@@ -58181,6 +58307,7 @@ quebradico
 quebradicos
 break
 break
+breaking
 break
 quebrara
 quebraramos
@@ -58215,6 +58342,7 @@ quedaveis
 queima
 queimation
 queimacoes
+queimadure
 queimara
 queimaramos
 queimarao
@@ -58242,6 +58370,7 @@ queixaveis
 who
 quenia
 quentao
+quenture
 wants
 wanted
 want
@@ -58253,7 +58382,7 @@ quereras
 would want
 quereriamos
 quererieis
-wanted
+used to want
 used to want
 querieis
 want
@@ -58305,7 +58434,6 @@ quinquenios
 quintilhao
 quintilhoes
 quintuplica
-quintuplicate
 quintuplicara
 quintuplicaramos
 quintuplicarao
@@ -58373,6 +58501,7 @@ raca
 ration
 racas
 racha
+rachadure
 rachara
 racharamos
 racharao
@@ -58455,7 +58584,6 @@ radicalizasseis
 radicalizassemos
 radicalizavamos
 radicalizaveis
-radicate
 radicara
 radicaramos
 radicarao
@@ -58564,7 +58692,7 @@ ralhaveis
 ramifica
 ramification
 ramificacoes
-ramificate
+ramify
 ramificara
 ramificaramos
 ramificarao
@@ -58595,7 +58723,9 @@ rangessemos
 rangiamos
 rangieis
 ranhet
+ranhure
 rapa
+rapadure
 rapagao
 rapagoes
 rapara
@@ -58650,6 +58780,7 @@ rarearao
 rarearas
 rareareis
 used to e
+used to e
 rarearieis
 rareasseis
 rareassemos
@@ -58666,6 +58797,7 @@ rarefarao
 rarefaras
 rarefariamos
 rarefarieis
+used to e
 used to e
 rarefazieis
 rarefect
@@ -58735,18 +58867,20 @@ rastrearao
 rastrearas
 rastreareis
 used to e
+used to e
 rastrearieis
 rastreasseis
 rastreassemos
 rastreavamos
 rastreaveis
+rasure
 rasura
-rasurara
 rasuraramos
 rasurarao
 rasuraras
 rasurareis
-rasurariamos
+used to e
+used to e
 rasurarieis
 rasurasseis
 rasurassemos
@@ -58758,6 +58892,7 @@ ratearao
 ratearas
 rateareis
 used to e
+used to e
 ratearieis
 rateasseis
 rateassemos
@@ -58766,7 +58901,7 @@ rateaveis
 ratifica
 ratification
 ratificacoes
-ratificate
+ratify
 ratificara
 ratificaramos
 ratificarao
@@ -58802,6 +58937,7 @@ reabasteciamos
 reabastecieis
 reabasteciment
 reabasteco
+reaberture
 reabilita
 reabilitation
 reabilitacoes
@@ -59089,6 +59225,7 @@ reave
 reaverao
 reaveras
 used to e
+used to e
 reaverieis
 reaviamos
 reavieis
@@ -59304,6 +59441,7 @@ recalcularao
 recalcularas
 recalculareis
 used to e
+used to e
 recalcularieis
 recalculasseis
 recalculassemos
@@ -59312,13 +59450,14 @@ recalculaveis
 recalcle
 recapitulation
 recapitulacoes
+recapture
 recaptura
-recapturara
 recapturaramos
 recapturarao
 recapturaras
 recapturareis
-recapturariamos
+used to e
+used to e
 recapturarieis
 recapturasseis
 recapturassemos
@@ -59343,6 +59482,7 @@ recearamos
 recearao
 recearas
 receareis
+used to e
 used to e
 recearieis
 receasseis
@@ -59387,6 +59527,7 @@ recensearamos
 recensearao
 recensearas
 recenseareis
+used to e
 used to e
 recensearieis
 recenseasseis
@@ -59483,6 +59624,7 @@ rechearao
 rechearas
 recheareis
 used to e
+used to e
 rechearieis
 recheasseis
 recheassemos
@@ -59528,7 +59670,7 @@ reclamassemos
 reclamavamos
 reclamaveis
 reclassifica
-reclassificate
+reclassify
 reclassificara
 reclassificaramos
 reclassificarao
@@ -59718,6 +59860,7 @@ recondution
 reconducaos
 reconducoes
 used to e
+used to e
 reconduzieis
 reconduzira
 reconduziramos
@@ -59744,15 +59887,16 @@ reconectavamos
 reconectaveis
 reconected
 reconected
+reconfigure
 reconfigura
 reconfiguration
 reconfiguracoes
-reconfigurara
 reconfiguraramos
 reconfigurarao
 reconfiguraras
 reconfigurareis
-reconfigurariamos
+used to e
+used to e
 reconfigurarieis
 reconfigurasseis
 reconfigurassemos
@@ -59829,6 +59973,7 @@ reconstitui
 reconstituido
 reconstituieis
 reconstituimos
+reconstitute
 reconstituira
 reconstituira
 reconstituiram
@@ -59867,6 +60012,7 @@ reconstruiras
 reconstruireis
 reconstruirem
 reconstruires
+used to e
 used to e
 reconstruirieis
 reconstruis
@@ -59941,6 +60087,7 @@ recrearamos
 recrearao
 recrearas
 recreareis
+used to e
 used to e
 recrearieis
 recreasseis
@@ -60137,6 +60284,7 @@ redesenharao
 redesenharas
 redesenhareis
 used to e
+used to e
 redesenharieis
 redesenhasseis
 redesenhassemos
@@ -60288,7 +60436,6 @@ redundassemos
 redundavamos
 redundaveis
 reduplica
-reduplicate
 reduplicara
 reduplicaramos
 reduplicarao
@@ -60302,6 +60449,7 @@ reduplicavamos
 reduplicaveis
 redutiveis
 redutible
+used to e
 used to e
 reduzidissima
 reduzidissimas
@@ -60434,7 +60582,7 @@ reescrevessemos
 reescreviamos
 reescrevieis
 reespecifica
-reespecificate
+reespecify
 reespecificara
 reespecificaramos
 reespecificarao
@@ -60447,15 +60595,16 @@ reespecificassemos
 reespecificavamos
 reespecificaveis
 reespecific
+reestruture
 reestrutura
 reestruturation
 reestruturacoes
-reestruturara
 reestruturaramos
 reestruturarao
 reestruturaras
 reestruturareis
-reestruturariamos
+used to e
+used to e
 reestruturarieis
 reestruturasseis
 reestruturassemos
@@ -60503,6 +60652,7 @@ refaras
 refariamos
 refarieis
 used to e
+used to e
 refazieis
 refeition
 refeicoes
@@ -60540,6 +60690,7 @@ referendavamos
 referendaveis
 referiamos
 referieis
+refer
 referira
 referiramos
 referirao
@@ -60778,6 +60929,7 @@ refrearao
 refrearas
 refreareis
 used to e
+used to e
 refrearieis
 refreasseis
 refreassemos
@@ -60885,6 +61037,7 @@ regatearamos
 regatearao
 regatearas
 regateareis
+used to e
 used to e
 regatearieis
 regateasseis
@@ -61227,10 +61380,10 @@ reiterasseis
 reiterassemos
 reiteravamos
 reiteraveis
+used to e
 reivindica
 reivindication
 reivindicacoes
-reivindicate
 reivindicara
 reivindicaramos
 reivindicarao
@@ -61423,6 +61576,7 @@ relerao
 releras
 relereis
 used to e
+used to e
 relerieis
 reles
 relesseis
@@ -61437,6 +61591,7 @@ religaramos
 religarao
 religaras
 religareis
+used to e
 used to e
 religarieis
 religasseis
@@ -61580,6 +61735,7 @@ remediaramos
 remediarao
 remediaras
 remediareis
+used to e
 used to e
 remediarieis
 remediasseis
@@ -61884,6 +62040,7 @@ renomeassemos
 used to e
 used to e
 renomeaveis
+used to e
 renova
 renovation
 renovacoes
@@ -62081,7 +62238,6 @@ repetirieis
 repetisseis
 repetissemos
 repica
-repicate
 repicara
 repicaramos
 repicarao
@@ -62098,7 +62254,6 @@ replica
 replica
 replication
 replicacoes
-replicate
 replicara
 replicaramos
 replicarao
@@ -62133,6 +62288,7 @@ reponted
 reponted
 reporao
 reporas
+used to e
 used to e
 reporieis
 reporta
@@ -62273,6 +62429,7 @@ reprocessassemos
 reprocessavamos
 reprocessaveis
 reprodution
+used to e
 used to e
 reproduzieis
 reproduzira
@@ -62438,6 +62595,7 @@ requereras
 would e
 requereriamos
 requererieis
+used to e
 used to e
 requerieis
 requeriment
@@ -62700,21 +62858,35 @@ resplandecessemos
 resplandeciamos
 resplandecieis
 resplandeco
+answers
+answer
+answer
 respondao
-responde
+answers
+answer
+answers
+answered
+answer
+answer
+answer
 respondera
 responderamos
 responderao
 responderas
 respondereis
+would answer
 responderiamos
 responderieis
 respondesseis
 respondessemos
-respondiamos
+answered
+answered
+used to answer
+used to answer
 respondid
 respondid
 respondieis
+answer
 responsability
 responsabiliza
 responsabilizara
@@ -62774,13 +62946,14 @@ ressarciriamos
 ressarcirieis
 ressarcisseis
 ressarcissemos
+ressegure
 ressegura
-ressegurara
 resseguraramos
 ressegurarao
 resseguraras
 ressegurareis
-ressegurariamos
+used to e
+used to e
 ressegurarieis
 ressegurasseis
 ressegurassemos
@@ -62885,16 +63058,17 @@ restariamos
 restarieis
 restasseis
 restassemos
+restaure
 restaura
 restauration
 restauracoes
 restaurator
-restaurara
 restauraramos
 restaurarao
 restauraras
 restaurareis
-restaurariamos
+used to e
+used to e
 restaurarieis
 restaurasseis
 restaurassemos
@@ -62912,6 +63086,7 @@ restituido
 restituidos
 restituieis
 restituimos
+restitute
 restituira
 restituira
 restituiram
@@ -63044,6 +63219,7 @@ retens
 reterao
 reteras
 used to e
+used to e
 reterieis
 retesa
 retesament
@@ -63070,7 +63246,7 @@ retifica
 retification
 retificacoes
 retificator
-retificate
+retify
 retificara
 retificaramos
 retificarao
@@ -63383,7 +63559,7 @@ reuniamos
 reuniao
 reunieis
 reunifica
-reunificate
+reunify
 reunificara
 reunificaramos
 reunificarao
@@ -63483,6 +63659,7 @@ reverenciavamos
 reverenciaveis
 reverendissimo
 reverendissimos
+used to e
 used to e
 reverieis
 reversao
@@ -63742,6 +63919,7 @@ ricocheteassemos
 used to e
 used to e
 ricocheteaveis
+used to e
 ridicle
 ridiculariza
 ridicularizara
@@ -63841,6 +64019,7 @@ rivalizasseis
 rivalizassemos
 rivalizavamos
 rivalizaveis
+riziculture
 rizotonica
 rizotonicas
 roberio
@@ -63944,6 +64123,7 @@ rodeassemos
 used to e
 used to e
 rodeaveis
+used to e
 rodesia
 rodizio
 rodizios
@@ -64035,6 +64215,7 @@ romanceassemos
 used to e
 used to e
 romanceaveis
+used to e
 romanica
 romanicas
 romanico
@@ -64164,6 +64345,7 @@ rotearao
 rotearas
 roteareis
 used to e
+used to e
 rotearieis
 roteasseis
 roteassemos
@@ -64186,6 +64368,7 @@ rotulavamos
 rotulaveis
 rotulo
 rotulos
+roture
 rouba
 roubara
 roubaramos
@@ -64230,7 +64413,6 @@ ruborizassemos
 ruborizavamos
 ruborizaveis
 rubrica
-rubricate
 rubricara
 rubricaramos
 rubricarao
@@ -64324,6 +64506,7 @@ ruminasseis
 ruminassemos
 ruminavamos
 ruminaveis
+rupture
 russia
 russia
 rustica
@@ -64384,6 +64567,7 @@ saborearamos
 saborearao
 saborearas
 saboreareis
+used to e
 used to e
 saborearieis
 saboreasseis
@@ -64459,7 +64643,7 @@ sacratissimas
 sacratissimo
 sacratissimos
 sacrifica
-sacrificate
+sacrify
 sacrificara
 sacrificaramos
 sacrificarao
@@ -64581,6 +64765,7 @@ salgarao
 salgaras
 salgareis
 used to e
+used to e
 salgarieis
 salgasseis
 salgassemos
@@ -64631,11 +64816,11 @@ salmodiassemos
 salmodiavamos
 salmodiaveis
 salmoes
+salmoure
 saloes
 salomao
 salomao
 salpica
-salpicate
 salpicara
 salpicaramos
 salpicarao
@@ -64693,6 +64878,7 @@ used to e
 used to e
 salteaveis
 salted
+used to e
 saltery
 salterias
 saltery
@@ -64808,10 +64994,12 @@ saneassemos
 used to e
 used to e
 saneaveis
+used to e
 bleeds
 bleed
 bleed
 bleed
+bleeding
 bleed
 sangrara
 bled
@@ -64832,7 +65020,7 @@ bleed
 bled
 bleed
 bleed
-bled
+used to bleede
 bleed
 bled
 sanguinary
@@ -64864,7 +65052,7 @@ santity
 santifica
 santification
 santificacoes
-santificate
+santify
 santificara
 santificaramos
 santificarao
@@ -64911,12 +65099,14 @@ saqueassemos
 used to e
 used to e
 saqueaveis
+used to e
 sara
 saracotea
 saracotearamos
 saracotearao
 saracotearas
 saracoteareis
+used to e
 used to e
 saracotearieis
 saracoteasseis
@@ -64994,6 +65184,7 @@ satisfatorias
 satisfatorio
 satisfatorios
 used to e
+used to e
 satisfazieis
 satisfect
 satisfect
@@ -65002,14 +65193,15 @@ satisfizereis
 satisfizesseis
 satisfizessemos
 sativa
+sature
 satura
 saturation
-saturara
 saturaramos
 saturarao
 saturaras
 saturareis
-saturariamos
+used to e
+used to e
 saturarieis
 saturasseis
 saturassemos
@@ -65025,6 +65217,7 @@ saudaramos
 saudarao
 saudaras
 saudareis
+used to e
 used to e
 saudarieis
 saudas
@@ -65074,6 +65267,7 @@ secaramos
 secarao
 secaras
 secareis
+used to e
 used to e
 secarieis
 dry
@@ -65143,6 +65337,7 @@ secundasseis
 secundassemos
 secundavamos
 secundaveis
+secure
 sedentary
 sedentarias
 sedentary
@@ -65186,6 +65381,7 @@ sediment
 sedimented
 sedution
 seducoes
+used to e
 used to e
 seduzieis
 seduzira
@@ -65255,16 +65451,17 @@ seguiriamos
 seguirieis
 seguisseis
 seguissemos
+segure
 segura
 segurator
 seguranca
 segurancas
-segurara
 seguraramos
 segurarao
 seguraras
 segurareis
-segurariamos
+used to e
+used to e
 segurarieis
 segurasseis
 segurassemos
@@ -65318,10 +65515,12 @@ semanticas
 semantico
 semanticos
 semea
+semeadure
 semearamos
 semearao
 semearas
 semeareis
+used to e
 used to e
 semearieis
 semeasseis
@@ -65377,6 +65576,7 @@ always
 senator
 senao
 senegal
+used to e
 senoes
 sensation
 sensacoes
@@ -65483,6 +65683,7 @@ sepultavamos
 sepultaveis
 sepulted
 sepulted
+sepulture
 sequencia
 sequency
 sequencially
@@ -65544,6 +65745,7 @@ serenizavamos
 serenizaveis
 sergio
 sergipe
+used to e
 seria
 seria
 used to e
@@ -65551,6 +65753,7 @@ seriaramos
 seriarao
 seriaras
 seriareis
+used to e
 used to e
 seriarieis
 serias
@@ -65571,6 +65774,7 @@ serpearamos
 serpearao
 serpearas
 serpeareis
+used to e
 used to e
 serpearieis
 serpeasseis
@@ -65726,7 +65930,7 @@ signatarios
 significa
 signification
 significacoes
-significate
+signify
 significara
 significaramos
 significarao
@@ -65783,6 +65987,7 @@ silvavamos
 silvaveis
 silvicola
 silvicolas
+silviculture
 silvio
 simao
 simbolica
@@ -65839,7 +66044,7 @@ simplicissimos
 simplifica
 simplification
 simplificacoes
-simplificate
+simplify
 simplificara
 simplificaramos
 simplificarao
@@ -66120,6 +66325,7 @@ sobrancearao
 sobrancearas
 sobranceareis
 used to e
+used to e
 sobrancearieis
 sobranceasseis
 sobranceassemos
@@ -66190,6 +66396,7 @@ sobrepoem
 sobrepoes
 sobreporao
 sobreporas
+used to e
 used to e
 sobreporieis
 sobrepos
@@ -66293,6 +66500,7 @@ sobrevinhamos
 sobrevinheis
 sobrevirao
 sobreviras
+used to e
 used to e
 sobrevirieis
 sobrevive
@@ -66451,7 +66659,6 @@ sofistica
 sofistica
 sofistication
 sofisticacoes
-sofisticate
 sofisticara
 sofisticaramos
 sofisticarao
@@ -66582,7 +66789,7 @@ solidarios
 solidas
 solidifica
 solidification
-solidificate
+solidify
 solidificara
 solidificaramos
 solidificarao
@@ -66623,6 +66830,7 @@ solted
 solteirao
 solteiroes
 solted
+solture
 solubility
 soluca
 soluca
@@ -66710,6 +66918,7 @@ sombrearao
 sombrearas
 sombreareis
 used to e
+used to e
 sombrearieis
 sombreasseis
 sombreassemos
@@ -66748,6 +66957,7 @@ dreams
 dream
 dreamed
 dreamer
+dream
 dream
 dream
 dream
@@ -66844,6 +67054,7 @@ sorteassemos
 used to e
 used to e
 sorteaveis
+used to e
 sortiamos
 sortieis
 sortilegio
@@ -66870,6 +67081,7 @@ sorvessemos
 sorviamos
 sorvieis
 sos
+used to e
 sosias
 sossega
 sossegara
@@ -67030,6 +67242,7 @@ subestimavamos
 subestimaveis
 subformation
 subformacoes
+used to e
 used to e
 subieis
 subira
@@ -67237,6 +67450,7 @@ substituido
 substituidos
 substituieis
 substituimos
+substitute
 substituira
 substituira
 substituiram
@@ -67336,111 +67550,61 @@ subvertesseis
 subvertessemos
 subvertiamos
 subvertieis
-little juice
 sucatea
-little juice
-little juice
-little juice
-little juice
 sucatearamos
 sucatearao
 sucatearas
 sucateareis
 used to e
+used to e
 sucatearieis
 sucateasseis
 sucateassemos
-little juice
 sucateavamos
 sucateaveis
-little juice
-little juice
-little juice
-little juice
-little juice
-little juice
 suction
-little juice
-little juice
 sucedanea
 sucedaneas
 sucedaneo
 sucedaneos
-little juice
-little juice
-little juice
-little juice
-little juice
-little juice
-little juice
-little juice
+sucede
+sucedera
 sucederamos
 sucederao
-little juice
 sucederas
-little juice
 sucedereis
-little juice
-little juice
-little juice
 sucederiamos
 sucederieis
-little juice
-little juice
-little juice
 sucedesseis
 sucedessemos
-little juice
-little juice
-little juice
 sucediamos
 suceded
 sucedieis
-little juice
-little juice
+sucessao
 sucessivaly
-little juice
-little juice
 sucessoes
-little juice
 sucessory
 sucessorias
 sucessorio
 sucessorios
-little juice
 sucinctly
-little juice
 juice
 juices
 sucuarana
 sucuaranas
-little juice
-little juice
-little juice
-little juice
-little juice
-little juice
 sucumbency
 sucumbencias
-little juice
-little juice
 sucumbiamos
-little juice
-little juice
-little juice
 sucumbieis
-little juice
-little juice
+sucumbira
 sucumbiramos
 sucumbirao
 sucumbiras
 sucumbireis
-used to e
+sucumbiriamos
 sucumbirieis
 sucumbisseis
 sucumbissemos
-little juice
-little juice
 sudao
 sudary
 sudarios
@@ -67510,6 +67674,7 @@ sugavamos
 sugaveis
 sugeriamos
 sugerieis
+suger
 sugerira
 sugeriramos
 sugerirao
@@ -67554,6 +67719,7 @@ suicos
 suina
 suinas
 suino
+suinoculture
 suinos
 suja
 sujara
@@ -67691,6 +67857,7 @@ superestimasseis
 superestimassemos
 superestimavamos
 superestimaveis
+superestruture
 superexcited
 superficie
 superficies
@@ -67738,6 +67905,7 @@ superpoes
 superpopulation
 superporao
 superporas
+used to e
 used to e
 superporieis
 superpos
@@ -67831,7 +67999,6 @@ suplica
 suplica
 suplication
 suplicacoes
-suplicate
 suplicara
 suplicaramos
 suplicarao
@@ -67864,6 +68031,7 @@ supoem
 supoes
 suporao
 suporas
+used to e
 used to e
 suporieis
 suporta
@@ -67915,13 +68083,14 @@ suprisseis
 suprissemos
 supunhamos
 supunheis
+supure
 supura
-supurara
 supuraramos
 supurarao
 supuraras
 supurareis
-supurariamos
+used to e
+used to e
 supurarieis
 supurasseis
 supurassemos
@@ -67983,6 +68152,7 @@ surrupiassemos
 surrupiavamos
 surrupiaveis
 surtirao
+used to e
 suscetiveis
 suscetible
 suscita
@@ -68114,13 +68284,14 @@ sutilissima
 sutilissimas
 sutilissimo
 sutilissimos
+suture
 sutura
-suturara
 suturaramos
 suturarao
 suturaras
 suturareis
-suturariamos
+used to e
+used to e
 suturarieis
 suturasseis
 suturassemos
@@ -68253,6 +68424,7 @@ tampasseis
 tampassemos
 tampavamos
 tampaveis
+tanajure
 tange
 tangencia
 tangency
@@ -68316,6 +68488,7 @@ used to e
 tapeaveis
 tapecaria
 tapecarias
+used to e
 taquigrafa
 taquigrafara
 taquigrafaramos
@@ -68370,6 +68543,7 @@ tartamudearao
 tartamudearas
 tartamudeareis
 used to e
+used to e
 tartamudearieis
 tartamudeasseis
 tartamudeassemos
@@ -68386,6 +68560,7 @@ tatearamos
 tatearao
 tatearas
 tateareis
+used to e
 used to e
 tatearieis
 tateasseis
@@ -68489,6 +68664,7 @@ tectonico
 tectonicos
 tedy
 tedios
+used to havee
 teima
 teimara
 teimaramos
@@ -68615,6 +68791,7 @@ temperarieis
 temperas
 temperasseis
 temperassemos
+temperature
 temperavamos
 temperaveis
 tempestea
@@ -68622,6 +68799,7 @@ tempestearamos
 tempestearao
 tempestearas
 tempesteareis
+used to e
 used to e
 tempestearieis
 tempesteasseis
@@ -68696,6 +68874,7 @@ tryer
 try
 try
 try
+try
 tentara
 tryed
 tentaramos
@@ -68736,6 +68915,7 @@ teoretica
 teoreticas
 teoretico
 teoreticos
+used to e
 teorica
 teorically
 teoricas
@@ -68835,6 +69015,7 @@ ternary
 ternarias
 ternary
 ternarios
+ternure
 terra
 terracos
 terraquea
@@ -68856,6 +69037,7 @@ terrible
 terrivelly
 tesao
 have
+tesoure
 testa
 tested
 testamentary
@@ -68891,7 +69073,7 @@ testemunhaveis
 testicle
 testiculos
 testifica
-testificate
+testify
 testificara
 testificaramos
 testificarao
@@ -68924,6 +69106,7 @@ tetricas
 tetrico
 tetricos
 texas
+texture
 tibete
 tibia
 tibias
@@ -68995,6 +69178,7 @@ tiniriamos
 tinirieis
 tinisseis
 tinissemos
+tinture
 tipica
 tipically
 tipicas
@@ -69007,6 +69191,7 @@ tipografic
 tipograficos
 tipografo
 tipografos
+used to e
 tira
 tiranica
 tiranicas
@@ -69074,6 +69259,7 @@ titubearao
 titubearas
 titubeareis
 used to e
+used to e
 titubearieis
 titubeasseis
 titubeassemos
@@ -69092,11 +69278,13 @@ toboga
 tobogas
 toca
 tocator
+used to e
 tocaia
 tocaiaramos
 tocaiarao
 tocaiaras
 tocaiareis
+used to e
 used to e
 tocaiarieis
 tocaiasseis
@@ -69117,7 +69305,6 @@ tocavamos
 tocaveis
 all
 alls
-little all
 all
 alls
 tolera
@@ -69186,7 +69373,7 @@ tonico
 tonicos
 tonifica
 tonificator
-tonificate
+tonify
 tonificara
 tonificaramos
 tonificarao
@@ -69199,18 +69386,20 @@ tonificassemos
 tonificavamos
 tonificaveis
 tonific
+tonsure
 tonsura
-tonsurara
 tonsuraramos
 tonsurarao
 tonsuraras
 tonsurareis
-tonsurariamos
+used to e
+used to e
 tonsurarieis
 tonsurasseis
 tonsurassemos
 tonsuravamos
 tonsuraveis
+tonture
 topa
 topara
 toparamos
@@ -69291,6 +69480,7 @@ torneassemos
 used to e
 used to e
 torneaveis
+used to e
 toronto
 torpedea
 torpedeament
@@ -69298,6 +69488,7 @@ torpedearamos
 torpedearao
 torpedearas
 torpedeareis
+used to e
 used to e
 torpedearieis
 torpedeasseis
@@ -69326,13 +69517,14 @@ torrido
 torridos
 torroes
 tortuosaly
+torture
 tortura
-torturara
 torturaramos
 torturarao
 torturaras
 torturareis
-torturariamos
+used to e
+used to e
 torturarieis
 torturasseis
 torturassemos
@@ -69418,6 +69610,7 @@ tourearao
 tourearas
 toureareis
 used to e
+used to e
 tourearieis
 toureasseis
 toureassemos
@@ -69427,20 +69620,36 @@ toxica
 toxicas
 toxico
 toxicos
-trabalha
-trabalhator
+works
+work
+worked
+worker
+work
+work
+work
 trabalhao
+work
 trabalhara
+worked
 trabalharamos
 trabalharao
 trabalharas
 trabalhareis
+would work
 trabalhariamos
 trabalharieis
+works
 trabalhasseis
 trabalhassemos
-trabalhavamos
+used to work
+used to work
 trabalhaveis
+work
+worked
+work
+work
+work
+worked
 traca
 traca
 tracada
@@ -69517,8 +69726,18 @@ tradicionally
 tradicoes
 tradution
 traducoes
-used to e
+translates
+translate
+translate
+translates
+translat
+translate
+translated
+used to translate
+used to translate
 traduzieis
+translated
+translate
 traduzira
 traduziramos
 traduzirao
@@ -69528,6 +69747,8 @@ traduziriamos
 traduzirieis
 traduzisseis
 traduzissemos
+translated
+translate
 trafega
 trafegara
 trafegaramos
@@ -69542,7 +69763,6 @@ trafegavamos
 trafegaveis
 trafego
 trafica
-traficate
 traficara
 traficaramos
 traficarao
@@ -69797,6 +70017,7 @@ transferency
 transferencias
 transferiamos
 transferieis
+transfer
 transferira
 transferiramos
 transferirao
@@ -69808,15 +70029,16 @@ transferisseis
 transferissemos
 transferiveis
 transferible
+transfigure
 transfigura
 transfiguration
 transfiguracoes
-transfigurara
 transfiguraramos
 transfigurarao
 transfiguraras
 transfigurareis
-transfigurariamos
+used to e
+used to e
 transfigurarieis
 transfigurasseis
 transfigurassemos
@@ -70046,6 +70268,7 @@ transpoes
 transporao
 transporas
 used to e
+used to e
 transporieis
 transporta
 transported
@@ -70188,6 +70411,8 @@ travavamos
 travaveis
 travessao
 travessoes
+travessure
+used to e
 used to e
 trazieis
 trefila
@@ -70230,6 +70455,7 @@ tremerieis
 tremesseis
 tremessemos
 used to e
+used to e
 tremieis
 tremula
 tremulas
@@ -70259,6 +70485,7 @@ tresleramos
 treslerao
 tresleras
 treslereis
+used to e
 used to e
 treslerieis
 tresles
@@ -70382,7 +70609,6 @@ triparticoes
 triplica
 triplication
 triplicacoes
-triplicate
 triplicara
 triplicaramos
 triplicarao
@@ -70431,15 +70657,16 @@ tristissima
 tristissimas
 tristissimo
 tristissimos
+triture
 tritura
 trituration
 trituracoes
-triturara
 trituraramos
 triturarao
 trituraras
 triturareis
-triturariamos
+used to e
+used to e
 triturarieis
 triturasseis
 triturassemos
@@ -70536,6 +70763,7 @@ trombetearao
 trombetearas
 trombeteareis
 used to e
+used to e
 trombetearieis
 trombeteasseis
 trombeteassemos
@@ -70620,6 +70848,7 @@ used to e
 used to e
 troteaveis
 troted
+used to e
 troted
 trotsky
 trouxeramos
@@ -70913,7 +71142,7 @@ unifica
 unification
 unificacoes
 unificator
-unificate
+unify
 unificara
 unificaramos
 unificarao
@@ -71026,6 +71255,7 @@ urbanizavamos
 urbanizaveis
 urdiamos
 urded
+urdidure
 urdieis
 urdira
 urdiramos
@@ -71140,6 +71370,7 @@ usufruissemos
 usufruisses
 usufruiste
 usufruistes
+usure
 usurary
 usurarias
 usurary
@@ -71236,6 +71467,7 @@ vadearao
 vadearas
 vadeareis
 used to e
+used to e
 vadearieis
 vadeasseis
 vadeassemos
@@ -71259,6 +71491,7 @@ vagabundearamos
 vagabundearao
 vagabundearas
 vagabundeareis
+used to e
 used to e
 vagabundearieis
 vagabundeasseis
@@ -71305,6 +71538,7 @@ vagueassemos
 used to e
 used to e
 vagueaveis
+used to e
 vaiara
 vaiaramos
 vaiarao
@@ -71459,6 +71693,7 @@ variarao
 variaras
 variareis
 used to e
+used to e
 variarieis
 varias
 variasseis
@@ -71474,6 +71709,7 @@ varios
 varoes
 varonilly
 varre
+varredure
 varrera
 varreramos
 varrerao
@@ -71504,13 +71740,14 @@ vasculhasseis
 vasculhassemos
 vasculhavamos
 vasculhaveis
+vassoure
 vassoura
-vassourara
 vassouraramos
 vassourarao
 vassouraras
 vassourareis
-vassourariamos
+used to e
+used to e
 vassourarieis
 vassourasseis
 vassourassemos
@@ -71596,6 +71833,7 @@ veicularamos
 veicularao
 veicularas
 veiculareis
+used to e
 used to e
 veicularieis
 veiculasseis
@@ -71757,6 +71995,7 @@ ventricle
 ventriculos
 ventriloquo
 ventriloquos
+venture
 venus
 see
 vera
@@ -71770,6 +72009,7 @@ veranearamos
 veranearao
 veranearas
 veraneareis
+used to e
 used to e
 veranearieis
 veraneasseis
@@ -71799,6 +72039,7 @@ verdissima
 verdissimas
 verdissimo
 verdissimos
+verdure
 vereator
 vergalhao
 vergasta
@@ -71829,7 +72070,7 @@ verifica
 verification
 verificacoes
 verificator
-verificate
+verify
 verificara
 verificaramos
 verificarao
@@ -71910,6 +72151,7 @@ vestiary
 vestiarios
 vestibulo
 vestibulos
+vestidure
 vestieis
 vestigio
 vestigios
@@ -72011,6 +72253,7 @@ viarias
 viary
 viarios
 vias
+viature
 viaveis
 viable
 vibora
@@ -72068,24 +72311,17 @@ vicosos
 victor
 life
 s
-little life
 vidency
-little life
 video
 videoconferency
 videoconferencias
 videos
 vidra
-little life
+vidraca
 vidracaria
 vidracarias
 vidracas
-little life
-little life
-little life
-little life
-little life
-little life
+vidrara
 vidraramos
 vidrarao
 vidraras
@@ -72094,11 +72330,8 @@ vidrariamos
 vidrarieis
 vidrasseis
 vidrassemos
-little life
 vidravamos
 vidraveis
-little life
-little life
 vieis
 viena
 vieramos
@@ -72168,6 +72401,7 @@ vincularao
 vincularas
 vinculareis
 used to e
+used to e
 vincularieis
 vinculasseis
 vinculassemos
@@ -72179,7 +72413,6 @@ vinculos
 vindica
 vindication
 vindicacoes
-vindicate
 vindicara
 vindicaramos
 vindicarao
@@ -72191,6 +72424,7 @@ vindicasseis
 vindicassemos
 vindicavamos
 vindicaveis
+vindoure
 vinga
 vingator
 vinganca
@@ -72211,6 +72445,7 @@ vinheis
 vinhet
 vinicola
 vinicolas
+viniculture
 vintem
 vintens
 vioes
@@ -72427,7 +72662,7 @@ vitreas
 vitreo
 vitreos
 vitrifica
-vitrificate
+vitrify
 vitrificara
 vitrificaramos
 vitrificarao
@@ -72497,7 +72732,7 @@ vivesseis
 vivessemos
 lived
 lived
-lived
+used to live
 used to live
 vivida
 vividas
@@ -72505,7 +72740,7 @@ vivido
 vividos
 vivieis
 vivifica
-vivificate
+vivify
 vivificara
 vivificaramos
 vivificarao
@@ -72598,6 +72833,7 @@ go back
 volted
 go back
 go back
+go backing
 go back
 voltara
 voltaramos
@@ -72798,6 +73034,7 @@ xerox
 xicara
 xicaras
 xilography
+xilogravure
 xinga
 xingation
 xingacoes
@@ -72905,6 +73142,7 @@ ziguezagueassemos
 used to e
 used to e
 ziguezagueaveis
+used to e
 ziper
 ziperes
 zodiaco
