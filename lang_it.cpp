@@ -4,7 +4,8 @@
 
 int main() {
     std::string original_sentence;
-    std::cout << traduzir_en("olá mundo! O tradutor funciona normalmente.") << std::endl;
+    std::cout << "Olá mundo! O tradutor funciona normalmente. -> ";
+    std::cout << traduzir_en("Olá mundo! O tradutor funciona normalmente.") << std::endl;
     std::cout << "O que deseja traduzir (pt-en)?\n";
     std::cout << "Digite 'sair' para encerrar.\n";
 
