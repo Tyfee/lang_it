@@ -1361,7 +1361,6 @@ else {
           unsigned char c = text[i];
 
           if ((c & 0x80) == 0) {
-              // ASCII
               if (std::isalnum(c)) {
                   current += c;
               } else {
@@ -1374,12 +1373,11 @@ else {
               }
               ++i;
           } else {
-              // UTF-8 multibyte
               size_t len = 0;
               if ((c & 0xE0) == 0xC0) len = 2;
               else if ((c & 0xF0) == 0xE0) len = 3;
               else if ((c & 0xF8) == 0xF0) len = 4;
-              else len = 1; // fallback
+              else len = 1;
 
               std::string utf8char = text.substr(i, len);
               current += utf8char;
