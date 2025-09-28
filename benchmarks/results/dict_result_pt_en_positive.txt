@@ -70,7 +70,6 @@ highly
 high
 alteration
 high
-high
 loves
 loved
 lover
@@ -179,7 +178,6 @@ bones
 beautiful
 beautiful
 beautiful
-beautiful
 bonus
 glow
 glow
@@ -234,7 +232,11 @@ s
 caution
 cavity
 celebration
+certain
+certainly
+certain
 certification
+certain
 chile
 china
 rain
@@ -347,7 +349,6 @@ correct
 correctly
 correct
 correct
-correct
 run
 corruption
 cortex
@@ -409,6 +410,17 @@ wish
 wish
 wish
 wished
+draws
+draw
+draw
+draw
+drawing
+draw
+draws
+draw
+draw
+draw
+draw
 deserted
 deserted
 deserted
@@ -474,6 +486,7 @@ documentary
 documented
 document
 documented
+sick
 two
 domination
 duration
@@ -527,8 +540,9 @@ splendid
 this
 this
 this
-this
+is
 are
+was
 this
 am
 star
@@ -618,10 +632,8 @@ formulation
 formulas
 strong
 strongly
-strong
 forum
 fossil
-weak
 weak
 weak
 weak
@@ -679,7 +691,6 @@ like
 like
 liked
 gradually
-big
 big
 big
 gravity
@@ -746,7 +757,7 @@ israel
 this
 this
 item
-ja
+already
 jamaica
 window
 s
@@ -779,7 +790,6 @@ legislature
 lenin
 slow
 slowly
-slow
 slow
 slow
 slow
@@ -883,7 +893,6 @@ wet
 wet
 wet
 wet
-wet
 moment
 monetary
 monetary
@@ -965,7 +974,6 @@ night
 nights
 normally
 we
-we
 our
 notation
 noted
@@ -977,7 +985,6 @@ new
 newly
 new
 nine
-new
 new
 never
 nutrition
@@ -994,10 +1001,21 @@ eight
 oklahoma
 hello
 eye
+look
+looked
+look
+look
+look
+look
+looked
 eyes
 eye
+looked
+look
+look
 eye
 eyes
+looked
 where
 option
 opera
@@ -1049,7 +1067,6 @@ think
 think
 think
 think
-little
 little
 little
 little
@@ -1328,7 +1345,6 @@ se
 dry
 dry
 dry
-dry
 secretion
 secretary
 secretary
@@ -1344,7 +1360,11 @@ sensation
 sensible
 sentiment
 separation
-series
+serious
+serious
+serious
+serious
+serious
 set
 your
 severity
@@ -1355,6 +1375,11 @@ similarity
 similarly
 simplicity
 simulation
+feels
+feel
+feel
+feels
+feel
 situation
 so
 socialization
@@ -1381,7 +1406,6 @@ dream
 dream
 dreamed
 am
-alone
 alone
 alone
 alone
@@ -1476,7 +1500,6 @@ tract
 three
 sad
 sadly
-sad
 you
 tv
 a
@@ -1521,9 +1544,9 @@ red
 red
 red
 red
-red
 versa
 sees
+time
 via
 viable
 vibration

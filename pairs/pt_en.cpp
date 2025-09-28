@@ -103,7 +103,11 @@ map<string, string> nouns = {
   {"tradutor", "translator"},
   {"metade", "half"},
   {"meio", "middle"},
-  {"bolo", "cake"}
+  {"bolo", "cake"},
+  {"vez", "time"},
+  {"algo", "something"},
+  {"biblioteca", "library"},
+  {"detalhe", "detail"}
 };
 
 map <string, string> art = {
@@ -122,7 +126,9 @@ constexpr Entry pre[] = {
   {"ou", "or"},
   {"em", "in"},
   {"no", "in the"},
-  {"na", "in the"}
+  {"na", "in the"},
+  {"nos", "in the"},
+  {"nas", "in the"}
 };
 
 // nominative/personal pronouns
@@ -132,7 +138,6 @@ constexpr Entry pro[] = {
   {"voce", "you"},
   {"tu", "you"},
   {"nós",  "we"},
-  {"nos",  "we"},
   {"ele",  "he"},
   {"ela",  "she"},
   {"elas",  "they"},
@@ -205,8 +210,10 @@ map<string, string> adj = {
   {"estranho", "weird"},
   {"esquisito", "weird"},
   {"lento", "slow"},
-  {"proprio", "own"}
-  
+  {"proprio", "own"},
+  {"sério", "serious"},
+  {"doente", "sick"},
+  {"certo", "certain"}
 };
 
 //adverbs
@@ -234,7 +241,13 @@ constexpr Entry adv[] = {
   {"pouco", "bit"},
   {"até", "until"},
   {"muito", "very"},
-  {"assim", "like this"}
+  {"assim", "like this"},
+  {"já", "already"},
+  {"dentro", "inside"},
+  {"fora", "outside"},
+  {"hoje", "today"},
+  {"ontem", "yesterday"},
+  {"amanhã", "tomorrow"}
 };
 
 struct Verb {
@@ -278,7 +291,8 @@ constexpr Verb reg_verbs[]  = {
   {"trabalh", "work", 1},
   {"mov", "mov", 0},
   {"digit", "typ", 0},
-  
+  {"olh", "look", 1},
+  {"sint", "feel", 1}
 };
 
 const Verb* lookupRegVerb(const char* root) {
@@ -321,7 +335,8 @@ map<string, pair<string, int>> irr_verbs = {
   {"pens", {"think", 1}},
   {"v", {"see", 1}},
   {"t", {"hav", 0}},
-  {"funcion", {"work", 1}}
+  {"funcion", {"work", 1}},
+  {"desenh", {"draw", 1}}
 };
 
 // 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er
@@ -529,6 +544,7 @@ pair<string, int> morphemeLookup(string word){
   int word_type_;
   
   if(word.length() > 3){
+            
        // this will lookup the basic adjective negation (?), whats even the name of this linguistically, idk
        // but like, if you find the preffix (un) and the rest of the word is an adjective
        // you just put them together: incorreto -> [in] + [correct]
@@ -675,6 +691,8 @@ if (v) {
           // estou == am estamos == are está == is estão == are
           if (word.substr(3, word.length()) == "ou"){
            translation_ = "am";
+          }else if (word.substr(3, word.length()) == "ava"){
+           translation_ = "was";
           }
           else if(word.substr(3, word.length()) == "amos" || word.substr(3, word.length()) == "ão"){
             translation_ = "are";
@@ -887,7 +905,7 @@ if (result_set.first.empty())
   return result_set;
 }
 pair<string, int> suffixLookup(const string& word) {
-    string translation;
+  string translation;
     int word_type = -1;
 
     if (word.size() > 4) {
@@ -993,11 +1011,13 @@ bool diminutive = false;
        word_type = 0; 
    }
    else if(adj.count(script_adequation(word))){
+    
       translation = adj[script_adequation(word)];
       word_type = 1;
+
     }
-    else if(lookup(pro, script_adequation(word).c_str())){
-      translation = lookup(pro, script_adequation(word).c_str());
+    else if(lookup(pro, word.c_str())){
+      translation = lookup(pro, word.c_str());
       word_type = 4;
     } else if(lookup(poss_pro, word.c_str())){
       translation = lookup(poss_pro, word.c_str());
@@ -1054,8 +1074,11 @@ if(!singular_pt.empty()) {
 }
     // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
       else if(adj_plural){
+
         if(adj.count(word.substr(0, word.length() - 1))){
          translation = adj[word.substr(0, word.length() - 1)];
+         
+              cout << "reacyed";
 
         }else if(adj.count(word.substr(0, word.length() - 2) + "o")){
              translation = adj[word.substr(0, word.length() - 2) + "o"];
@@ -1072,7 +1095,7 @@ if(!singular_pt.empty()) {
         
     // same as above for adjectives. e.g pequena -> (pequena - a) + o -> pequeno
     else if(adj_gender_shift){
-          
+
          translation = adj[word.substr(0, word.length() - 1) + "o"];
          word_type = 1;
         }
@@ -1164,12 +1187,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
           reordered_arr.push_back(sentence_arr[0]);
           return reordered_arr;
       }
-        else if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
-                      reordered_arr.pop_back(); 
-                      reordered_arr.push_back(sentence_arr[i]);  
-                      reordered_arr.push_back(sentence_arr[i - 1]);
-                  } 
-
+       
 
     // ------------------------ ADJECTIVE ORDER  -----------------
     // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
@@ -1177,7 +1195,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]);
-        } 
+        }
 
           // ------------------------ ARTICLE TWEAKS  --------------------
         // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
@@ -1197,13 +1215,15 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
           // ------------------------ SUPERLATIVE  --------------------
         // a set is word1 = 'o/a' and word2 = 'mais' and word3 = adj[1], we eliminate the 'mais', so that 'o mais forte[2]' -> 'the strongest'
         else if (i > 1 && sentence_arr[i - 2].second == 9  && sentence_arr[i - 1].first == "more" && sentence_arr[i].second == 1) {
-            reordered_arr.pop_back(); 
+           
+          reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "est", 20});  
         } 
         // ------------------------ COMPARATIVE  ----------------- TODO: exceptions such as beautiful[er], good[er], badd[er], might be better as bigrams
         // a set is word1 = 'mais' and word2 = adj[1], we eliminate the first 'mais' and append 'er' to word2, so that mais forte[2] -> stronger
         else if (i > 0 && sentence_arr[i - 1].first == "more" && sentence_arr[i].second == 1) {
-            reordered_arr.pop_back(); 
+     
+          reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "er", 20});  
         } 
       // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
@@ -1306,7 +1326,24 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
     }
 
     i++; 
-} else {
+} 
+ // ------------------------ é: is or it is? ----------------- 
+    // So this seems like the easiest prononun plug so i'll get it out of the way
+    // we just gotta check if is is preceded or not by a pronoun: in this case it should stay 'is'
+    // e.g she is, he is, it is, should stay the same
+    // if theres no pronoun before it, we have to plug the it. the other pronounc forms will be handle ona a different function 
+         else if (sentence_arr[i].first == "is") {
+            bool preceded_by_pronoun = (i > 0 && sentence_arr[i - 1].second == 4);
+
+            if (preceded_by_pronoun) {
+                reordered_arr.push_back({"is", sentence_arr[i].second});
+            } else {
+                reordered_arr.push_back({"it", 4});
+                reordered_arr.push_back({"is", sentence_arr[i].second});
+            }
+}
+
+else {
     reordered_arr.push_back(sentence_arr[i]);
 }
 
@@ -1382,7 +1419,8 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
 
     char firstChar = token.empty() ? '\0' : token[0];
     bool isPunctuation = (firstChar == '?' || firstChar == '!' || 
-                          firstChar == '.' || firstChar == ',');
+                          firstChar == '.' || firstChar == ','
+                          || firstChar == '-');
 
     if (!sentence.empty() && !isPunctuation) {
         sentence += " ";

@@ -4834,7 +4834,7 @@ altissimas
 altissimo
 altissimos
 high
-high
+reacyedhigh
 altruismo
 altruismos
 altruista
@@ -12200,7 +12200,7 @@ bonissimos
 beautiful
 beautiful
 beautiful
-beautiful
+reacyedbeautiful
 bonus
 boqueirao
 boqueiroes
@@ -14645,7 +14645,9 @@ cerrasseis
 cerrassemos
 cerravamos
 cerraveis
-cerctly
+certain
+certainly
+certain
 certidao
 certidoes
 certifica
@@ -14663,11 +14665,13 @@ certificasseis
 certificassemos
 certificavamos
 certificaveis
-certific
+certainfic
 certissima
 certissimas
 certissimo
 certissimos
+certain
+reacyedcertain
 cesar
 cesar
 cesareia
@@ -19348,7 +19352,7 @@ corretissimas
 corretissimo
 corretissimos
 correct
-correct
+reacyedcorrect
 runed
 used to run
 used to run
@@ -24101,18 +24105,30 @@ desenguicavas
 desenguicaveis
 desenguico
 desenguicou
-desenha
+draws
+draw
+draw
+draw
+drawing
+draw
 desenhara
 desenharamos
 desenharao
 desenharas
 desenhareis
+would draw
 desenhariamos
 desenharieis
+draws
 desenhasseis
 desenhassemos
-desenhavamos
+used to drawe
+used to drawe
 desenhaveis
+draw
+draw
+draw
+draw
 desenraiza
 desenraizara
 desenraizaramos
@@ -27704,6 +27720,8 @@ dodecagonos
 doe
 doenca
 doencas
+sick
+reacyedsick
 doera
 doeramos
 doerao
@@ -35301,7 +35319,7 @@ esquisitao
 weird
 weird
 esquisitoes
-weird
+reacyedweird
 esquiva
 esquivara
 esquivaramos
@@ -35325,7 +35343,7 @@ essenciality
 essencially
 essencias
 this
-this
+is
 estabeleca
 estabelecais
 estabelecam
@@ -35553,6 +35571,7 @@ estatutary
 estatutarias
 estatutary
 estatutarios
+was
 estavamos
 estaveis
 estable
@@ -36007,7 +36026,7 @@ estranhaveis
 weird
 weird
 weird
-weird
+reacyedweird
 estrasburgo
 estrategia
 estrategias
@@ -39585,7 +39604,7 @@ fortaleco
 fortaleza
 strong
 strongly
-strong
+reacyedstrong
 fortifica
 fortification
 fortificacoes
@@ -39723,7 +39742,7 @@ fracionavamos
 fracionaveis
 weak
 fracoes
-weak
+reacyedweak
 frageis
 fragil
 fragility
@@ -41404,7 +41423,7 @@ grampeavamos
 grampeaveis
 big
 big
-big
+reacyedbig
 grandiloquency
 grandissima
 grandissimas
@@ -43530,6 +43549,7 @@ incentivasseis
 incentivassemos
 incentivavamos
 incentivaveis
+incertain
 incha
 unchation
 inchacoes
@@ -46288,7 +46308,7 @@ itinerary
 itinerarios
 iugoslavia
 iugoslavia
-ja
+already
 jacaranda
 jacarandas
 jacare
@@ -47199,7 +47219,7 @@ slow
 slow
 lentidao
 slow
-slow
+reacyedslow
 leoes
 lepida
 lepidas
@@ -49585,8 +49605,8 @@ microbiologicos
 microbios
 microcomputator
 micrommeter
-micro - onda
-micro - ondas
+micro- onda
+micro- ondas
 microprocessator
 microrregiao
 microrregiaos
@@ -50135,7 +50155,7 @@ wet
 wet
 wet
 wet
-wet
+reacyedwet
 wet
 wet
 wet
@@ -50877,6 +50897,7 @@ narrasseis
 narrassemos
 narravamos
 narraveis
+in the
 nasca
 nascais
 nascam
@@ -50896,6 +50917,7 @@ nascessemos
 nasciamos
 nascieis
 nasciment
+nasco
 natation
 natal
 natalicia
@@ -51297,7 +51319,7 @@ norteaveis
 used to e
 noruega
 noruegues
-we
+in the
 we
 our
 nostalgica
@@ -51410,7 +51432,7 @@ novissimo
 novissimos
 new
 novocaina
-new
+reacyednew
 nu
 nualy
 nucleica
@@ -52028,22 +52050,34 @@ olegary
 oleo
 oleos
 eye
-olha
+look
+looked
+look
+look
+look
+look
+olhara
+looked
 olharamos
 olharao
 olharas
 olhareis
-used to e
-used to e
+would look
+olhariamos
 olharieis
 eyes
 olhasseis
 olhassemos
-olhavamos
+used to look
+used to look
 olhaveis
 eye
+looked
+look
+look
 eye
 eyes
+looked
 oligarquica
 oligarquicas
 oligarquico
@@ -54078,7 +54112,7 @@ pequenissimas
 pequenissimo
 pequenissimos
 little
-little
+reacyedlittle
 pequim
 ask
 perambula
@@ -65277,7 +65311,7 @@ secavamos
 secaveis
 dry
 secoes
-dry
+reacyeddry
 secretion
 secrecoes
 dryet
@@ -65747,7 +65781,7 @@ sergio
 sergipe
 used to e
 seria
-seria
+serious
 used to e
 seriaramos
 seriarao
@@ -65756,17 +65790,17 @@ seriareis
 used to e
 used to e
 seriarieis
-serias
+serious
 seriasseis
 seriassemos
 seriavamos
 seriaveis
-serie
+serious
 seriety
 serieis
-series
-serio
-serios
+serious
+serious
+reacyedserious
 sermao
 sermoes
 serpea
@@ -66188,6 +66222,10 @@ sinonimia
 sinonimias
 sinonimo
 sinonimos
+feels
+feel
+feel
+feels
 sintatica
 sintaticas
 sintatico
@@ -66210,6 +66248,7 @@ sintetizasseis
 sintetizassemos
 sintetizavamos
 sintetizaveis
+feel
 sintomatica
 sintomaticas
 sintomatico
@@ -67136,7 +67175,7 @@ sovieticos
 alone
 alone
 alone
-alone
+reacyedalone
 spinosa
 stalin
 stokes
@@ -70652,7 +70691,7 @@ trissection
 tristao
 sad
 sadly
-sad
+reacyedsad
 tristissima
 tristissimas
 tristissimo
@@ -72093,7 +72132,7 @@ vermelhissimo
 vermelhissimos
 red
 red
-red
+reacyedred
 vernacle
 veroes
 veronicas
@@ -72219,6 +72258,7 @@ vexatorio
 vexatorios
 vexavamos
 vexaveis
+time
 via
 viability
 viabiliza
