@@ -1352,46 +1352,46 @@ else {
     return reordered_arr;
 }
 
-std::vector<std::string> tokenize(const std::string &text) {
-    std::vector<std::string> tokens;
-    std::string current;
-    size_t i = 0;
+  vector<string> tokenize(const string &text) {
+      std::vector<std::string> tokens;
+      std::string current;
+      size_t i = 0;
 
-    while (i < text.size()) {
-        unsigned char c = text[i];
+      while (i < text.size()) {
+          unsigned char c = text[i];
 
-        if ((c & 0x80) == 0) {
-            // ASCII
-            if (std::isalnum(c)) {
-                current += c;
-            } else {
-                if (!current.empty()) {
-                    tokens.push_back(current);
-                    current.clear();
-                }
-                if (!std::isspace(c))
-                    tokens.push_back(std::string(1, c));
-            }
-            ++i;
-        } else {
-            // UTF-8 multibyte
-            size_t len = 0;
-            if ((c & 0xE0) == 0xC0) len = 2;
-            else if ((c & 0xF0) == 0xE0) len = 3;
-            else if ((c & 0xF8) == 0xF0) len = 4;
-            else len = 1; // fallback
+          if ((c & 0x80) == 0) {
+              // ASCII
+              if (std::isalnum(c)) {
+                  current += c;
+              } else {
+                  if (!current.empty()) {
+                      tokens.push_back(current);
+                      current.clear();
+                  }
+                  if (!std::isspace(c))
+                      tokens.push_back(std::string(1, c));
+              }
+              ++i;
+          } else {
+              // UTF-8 multibyte
+              size_t len = 0;
+              if ((c & 0xE0) == 0xC0) len = 2;
+              else if ((c & 0xF0) == 0xE0) len = 3;
+              else if ((c & 0xF8) == 0xF0) len = 4;
+              else len = 1; // fallback
 
-            std::string utf8char = text.substr(i, len);
-            current += utf8char;
-            i += len;
-        }
-    }
+              std::string utf8char = text.substr(i, len);
+              current += utf8char;
+              i += len;
+          }
+      }
 
-    if (!current.empty())
-        tokens.push_back(current);
+      if (!current.empty())
+          tokens.push_back(current);
 
-    return tokens;
-}
+      return tokens;
+  }
 
 //ngram groups
 std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
@@ -1466,7 +1466,7 @@ std::string trigramLookup(vector<string> array_of_words){
   
     return bigramLookup(tri_array_of_words);
 }
-std::string traduzir_en(std::string sentence) {
+std::string traduzir_en(string sentence) {
     to_lower(&sentence[0]); 
     std::vector<std::string> arr = tokenize(sentence);  
     std::string translated = trigramLookup(arr);

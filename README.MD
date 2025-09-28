@@ -38,6 +38,17 @@ cd results # open results folder
 ls 
 ```
 
+### Run the webserver
+
+```sh
+cd test_server # open server folder
+g++ -o server server.cpp ../pairs/*.cpp # generate binary 
+./server # run server 
+```
+
+!["HTML page"](/test_server/display.gif)
+
+--------------------
 
 ### Use the library
 
