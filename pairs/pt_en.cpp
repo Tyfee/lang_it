@@ -1152,187 +1152,180 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
 
     // interrogative
     if(sentence_arr.size() > 0){
-      string last = sentence_arr[sentence_arr.size() - 1].first;
-         //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
-         
-         // 
-         if(last == "?"){
-          // look for a pronoun
-          string pronoun_ = "";
-          for (auto &p : sentence_arr) {
-              if (p.second == 4) {
-                  pronoun_ = p.first; 
-                  break;                
-              }
-          }
-          if (!pronoun_.empty()) {
-            // is this pronoun in the third person vector?
-          string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
-          
-          cout << aux;
-          }
+        string last = sentence_arr[sentence_arr.size() - 1].first;
+        //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
+        if(last == "?"){
+            // look for a pronoun
+            string pronoun_ = "";
+            for (auto &p : sentence_arr) {
+                if (p.second == 4) {
+                    pronoun_ = p.first; 
+                    break;                
+                }
+            }
+            if (!pronoun_.empty()) {
+                // is this pronoun in the third person vector?
+                string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
+                cout << aux;
+            }
         }
     }
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
-      
-    // ------------------------ PRONOUN ASSIGNING  -----------------
-      // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
-      // cause 'they' (3rd plural) falls with 1st. e.g she loves, he loves, you love, i love, we love, they love 
-      // point being a portuguese pronoun can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS.
 
-      // a single verb can define person: vejo -> I see
-     if (sentence_arr.size() == 1 && sentence_arr[0].second == 3) {
-          reordered_arr.clear(); 
-          reordered_arr.push_back(sentence_arr[0]);
-          return reordered_arr;
-      }
-       
+        // ------------------------ PRONOUN ASSIGNING  -----------------
+        // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
+        // cause 'they' (3rd plural) falls with 1st. e.g she loves, he loves, you love, i love, we love, they love 
+        // point being a portuguese pronoun can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS.
 
-    // ------------------------ ADJECTIVE ORDER  -----------------
-    // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-      if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
+        // a single verb can define person: vejo -> I see
+        if (sentence_arr.size() == 1 && sentence_arr[0].second == 3) {
+            reordered_arr.clear(); 
+            reordered_arr.push_back(sentence_arr[0]);
+            return reordered_arr;
+        }
+
+        // ------------------------ ADJECTIVE ORDER  -----------------
+        // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
+        if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]);
         }
 
-          // ------------------------ ARTICLE TWEAKS  --------------------
+        // ------------------------ ARTICLE TWEAKS  --------------------
         // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
         else if (i > 0 && sentence_arr[i - 1].second == 9 && isVowel(sentence_arr[i].first[0])) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + "n", 9});
             reordered_arr.push_back(sentence_arr[i]);  
         } 
-       // ------------------------ OBLIQUE PRONOUNS  -----------------
-       // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
+
+        // ------------------------ OBLIQUE PRONOUNS  -----------------
+        // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
         else if (i > 0 && sentence_arr[i - 1].second == 11 && sentence_arr[i].second == 3) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]);
         } 
 
-          // ------------------------ SUPERLATIVE  --------------------
+        // ------------------------ SUPERLATIVE  --------------------
         // a set is word1 = 'o/a' and word2 = 'mais' and word3 = adj[1], we eliminate the 'mais', so that 'o mais forte[2]' -> 'the strongest'
         else if (i > 1 && sentence_arr[i - 2].second == 9  && sentence_arr[i - 1].first == "more" && sentence_arr[i].second == 1) {
-           
-          reordered_arr.pop_back(); 
+            reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "est", 20});  
         } 
-        // ------------------------ COMPARATIVE  ----------------- TODO: exceptions such as beautiful[er], good[er], badd[er], might be better as bigrams
+
+        // ------------------------ COMPARATIVE  -----------------
         // a set is word1 = 'mais' and word2 = adj[1], we eliminate the first 'mais' and append 'er' to word2, so that mais forte[2] -> stronger
         else if (i > 0 && sentence_arr[i - 1].first == "more" && sentence_arr[i].second == 1) {
-     
-          reordered_arr.pop_back(); 
+            reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "er", 20});  
         } 
-      // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
+
+        // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
         // a set is word1 = verb[3] and word2 = 'de', we eliminate the preposition 'de', so that gosto[1] de  -> stronger
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].first == "of") {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);  
         } 
-  // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
+
+        // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
         // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
-            else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
-          reordered_arr.pop_back(); 
-          reordered_arr.push_back(sentence_arr[i - 1]);
-          reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
-      }
+        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(sentence_arr[i - 1]);
+            reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
+        }
 
-        // ------------------------ CONTINOUS TO BE (IS, ARE, AM)  ----------------- 
+        // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
         // a set is word1 = pronoun[4] and word2 = "is", use an if to check the first pronoun and change it accordingly 
         // she is, i am, we are
         else if (i > 0 && sentence_arr[i - 1].second == 4 && sentence_arr[i].first == "is") {
             string corr_pro = "is";
             reordered_arr.pop_back(); 
             if(sentence_arr[i - 1].first == "she" || sentence_arr[i - 1].first == "he"){
-                    corr_pro = "is";
+                corr_pro = "is";
             } else if(sentence_arr[i - 1].first == "we" || sentence_arr[i - 1].first == "they" || sentence_arr[i - 1].first == "you"){
-                    corr_pro = "are";
-            }else if(sentence_arr[i - 1].first == "i"){
-                    corr_pro = "am";
+                corr_pro = "are";
+            } else if(sentence_arr[i - 1].first == "i"){
+                corr_pro = "am";
             };
-            
             reordered_arr.push_back(sentence_arr[i - 1]);   
             reordered_arr.push_back(pair<string, int>{corr_pro, 4});
         } 
 
-
-    // ------------------------ DOUBLE VERBS ----------------- TODO: figure out if verb1 verb[2]-ing is needed at some case
-    // a set is verb[3] and verb[3], we add 'to' between them, so that amo[3] correr[3] -> love[3] *to* run[3]
+        // ------------------------ DOUBLE VERBS ----------------- 
+        // a set is verb[3] and verb[3], we add 'to' between them, so that amo[3] correr[3] -> love[3] *to* run[3]
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 3) {
+            if (sentence_arr[i - 1].first == "don't" || sentence_arr[i - 1].first == "doesn't") {
+                reordered_arr.push_back(sentence_arr[i]);
+                continue;
+            }
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);  
-            
-              if (std::find(modals.begin(), modals.end(), sentence_arr[i - 1].first) == modals.end()) {
-                      reordered_arr.push_back(pair<string, int>{"to", -1});  
-              }
+            if (std::find(modals.begin(), modals.end(), sentence_arr[i - 1].first) == modals.end()) {
+                reordered_arr.push_back(pair<string, int>{"to", -1});  
+            }
             reordered_arr.push_back(sentence_arr[i]);
         } 
-         // same thing but when the verbs are connected by 'que' (e.g: tenho QUE ver)
-        else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "what" 
-      && sentence_arr[i].second == 3) 
-{
-    reordered_arr.pop_back(); 
-    reordered_arr.push_back(pair<string, int>{"to", -1});  
-    reordered_arr.push_back(sentence_arr[i]); 
-}
-         else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 3) {
+
+        // same thing but when the verbs are connected by 'que' (e.g: tenho QUE ver)
+        else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "what"  && sentence_arr[i].second == 3) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(pair<string, int>{"to", -1});  
+            reordered_arr.push_back(sentence_arr[i]); 
+        }
+
+        else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 3) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 2]);  
             reordered_arr.push_back(pair<string, int>{"to", -1});  
             reordered_arr.push_back(sentence_arr[i]);
         } 
-        
-    // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
-    // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
-           else if (i > 1 && sentence_arr[i - 2].second == 0  && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 0) {
+
+        // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
+        // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
+        else if (i > 1 && sentence_arr[i - 2].second == 0  && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 0) {
             reordered_arr.pop_back();
             reordered_arr.pop_back();   
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 2]);
         } 
-   // -------------------- KIND OF MEIO [ADJ] -----------------------------------------
-         else if (i > 0 && sentence_arr[i - 1].first == "meio" && sentence_arr[i].second == 1) {
+
+        // -------------------- KIND OF MEIO [ADJ] -----------------------------------------
+        else if (i > 0 && sentence_arr[i - 1].first == "meio" && sentence_arr[i].second == 1) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{"kind of", -1});  
             reordered_arr.push_back(sentence_arr[i]);
         } 
-         // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
-         // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PEROSN
-    // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
-    
-   else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "não" && sentence_arr[i].second == 3) {
-    string subj = sentence_arr[i - 2].first;
-    string verb = sentence_arr[i].first;
 
-    while (!reordered_arr.empty() && 
-          (reordered_arr.back().first == subj || reordered_arr.back().first == "não")) {
-        reordered_arr.pop_back();
-    }
+        // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
+        // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PERSON
+        // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
+        else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "não" && sentence_arr[i].second == 3) {
+            string subj = sentence_arr[i - 2].first;
+            string verb = sentence_arr[i].first;
 
-    string aux;
-    if (std::find(modals.begin(), modals.end(), verb) != modals.end()) {
-        aux = verb + " not";
-        reordered_arr.push_back({subj, 4});
-        reordered_arr.push_back({aux, 3});
-    } else {
-        aux = (std::find(th_per_aux.begin(), th_per_aux.end(), subj) != th_per_aux.end()) ? "doesn't" : "don't";
-        reordered_arr.push_back({subj, 4});
-        reordered_arr.push_back({aux, 3});
-        reordered_arr.push_back({verb, 3});
-    }
+            while (!reordered_arr.empty() && (reordered_arr.back().first == subj || reordered_arr.back().first == "não")) {
+                reordered_arr.pop_back();
+            }
 
-    i++; 
-} 
- // ------------------------ é: is or it is? ----------------- 
-    // So this seems like the easiest prononun plug so i'll get it out of the way
-    // we just gotta check if is is preceded or not by a pronoun: in this case it should stay 'is'
-    // e.g she is, he is, it is, should stay the same
-    // if theres no pronoun before it, we have to plug the it. the other pronounc forms will be handle ona a different function 
-         else if (sentence_arr[i].first == "is") {
+            string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), subj) != th_per_aux.end()) ? "doesn't" : "don't";
+            reordered_arr.push_back({subj, 4});
+            reordered_arr.push_back({aux, 3});
+            reordered_arr.push_back({verb, 3});
+
+            i++; 
+        } 
+
+        // ------------------------ é: is or it is? ----------------- 
+        // So this seems like the easiest pronoun plug so i'll get it out of the way
+        // we just gotta check if is is preceded or not by a pronoun: in this case it should stay 'is'
+        // e.g she is, he is, it is, should stay the same
+        // if theres no pronoun before it, we have to plug the it. the other pronoun forms will be handled on a different function 
+        else if (sentence_arr[i].first == "is") {
             bool preceded_by_pronoun = (i > 0 && sentence_arr[i - 1].second == 4);
 
             if (preceded_by_pronoun) {
@@ -1341,16 +1334,16 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
                 reordered_arr.push_back({"it", 4});
                 reordered_arr.push_back({"is", sentence_arr[i].second});
             }
-}
+        }
 
-else {
-    reordered_arr.push_back(sentence_arr[i]);
-}
-
+        else {
+            reordered_arr.push_back(sentence_arr[i]);
+        }
     }
 
     return reordered_arr;
 }
+
 
   vector<string> tokenize(const string &text) {
       std::vector<std::string> tokens;
@@ -1361,6 +1354,7 @@ else {
           unsigned char c = text[i];
 
           if ((c & 0x80) == 0) {
+              // ASCII
               if (std::isalnum(c)) {
                   current += c;
               } else {
