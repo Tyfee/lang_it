@@ -47,7 +47,7 @@ const char* lookup(const Entry (&dict)[N], const char* word) {
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
-map<string, string> nouns = {
+constexpr Entry nouns[] = {
   {"olá", "hello"},
   {"mundo", "world"},
   {"dois", "two"},
@@ -110,7 +110,7 @@ map<string, string> nouns = {
   {"detalhe", "detail"}
 };
 
-map <string, string> art = {
+constexpr Entry art[] = {
   {"o", "the"},
   {"a", "the"},
   {"um", "a"},
@@ -162,7 +162,7 @@ constexpr Entry poss_pro[] = {
 
 //object pronoun match (in english)
 
-map<string, string> obj_pro = {
+constexpr Entry obj_pro[] = {
   {"she", "her"},
   {"he", "him"},
   {"they", "them"},
@@ -175,13 +175,13 @@ vector<string> th_per_aux = {"she", "he", "it"};
 vector<string> reg_aux = {"i", "you", "we", "they"};
 
 // oblique pronouns
-map<string, string> obl_pro = {
+constexpr Entry obl_pro[] = {
   {"te", "you"},
   {"me", "me"},
 };
 
 // adjectives
-map<string, string> adj = {
+constexpr Entry adj[] = {
   {"azul", "blue"},
   {"vermelho", "red"},
   {"bonito", "beautiful"},
@@ -213,7 +213,8 @@ map<string, string> adj = {
   {"proprio", "own"},
   {"sério", "serious"},
   {"doente", "sick"},
-  {"certo", "certain"}
+  {"certo", "certain"},
+  {"outro", "other"}
 };
 
 //adverbs
@@ -548,10 +549,10 @@ pair<string, int> morphemeLookup(string word){
        // this will lookup the basic adjective negation (?), whats even the name of this linguistically, idk
        // but like, if you find the preffix (un) and the rest of the word is an adjective
        // you just put them together: incorreto -> [in] + [correct]
-        if(word.substr(0, 2) == "in" && adj.count(word.substr(2, word.length()))){
+        if(word.substr(0, 2) == "in" && lookup(adj, (word.substr(2, word.length()).c_str()))){
          
              p = "in";
-             m = adj[word.substr(2, word.length())];
+             m = lookup(adj, (word.substr(2, word.length()).c_str()));
              translation_ = p + m;
              word_type_ = 1;
           }
@@ -929,10 +930,10 @@ pair<string, int> suffixLookup(const string& word) {
             // look up [triste] in the adj table, and if theres a match [sad]
                 string stem = word.substr(0, word.length() - len);
                
-               if (adj.count(stem)) {
-            translation = adj[stem] + mapped;
-        } else if (!stem.empty() && adj.count(stem.substr(0, stem.length() -1) + "o")) { 
-            translation = adj[stem.substr(0, stem.length() -1) + "o"] + mapped;
+               if (lookup(adj,stem.c_str())) {
+            translation = string(lookup(adj, stem.c_str())) + mapped;
+        } else if (!stem.empty() && lookup(adj,(stem.substr(0, stem.length() -1) + "o").c_str())) { 
+            translation = string(lookup(adj, (stem.substr(0, stem.length() -1) + "o").c_str())) + mapped;
         } else {
             translation = stem + mapped;
         }
@@ -965,54 +966,54 @@ pair<string, int> nounLookup(string word){
   
   
   // rules
-   bool plural = ((nouns.count(word.substr(0, word.length() - 1)) || nouns.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
-   bool gender_shift = nouns.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for nouns only
+   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
+   bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
 
 bool diminutive = false;
     if (isDiminutive(word, "inho")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 4) + "o"));
+        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "o").c_str()));
     }
     else if (isDiminutive(word, "inha")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 4) + "a"));
+      diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "a").c_str()));
     }
     else if (isDiminutive(word, "inhos")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 5) + "o"));
+        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
     }
     else if (isDiminutive(word, "inhas")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 5) + "a"));
+        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
     }
     else if (isDiminutive(word, "zinho")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 5) + "o"));
+        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
     }
     else if (isDiminutive(word, "zinha")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 5) + "a"));
+         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
     }
     else if (isDiminutive(word, "zinhos")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 6) + "o"));
+      diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "o").c_str()));
     }
     else if (isDiminutive(word, "zinhas")) {
-        diminutive = nouns.count(script_adequation(word.substr(0, word.size() - 6) + "a"));
+         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "a").c_str()));
     }
 
-   bool adj_plural = ((adj.count(word.substr(0, word.length() - 1)) || adj.count(word.substr(0, word.length() - 2) + "o")) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
-   bool adj_gender_shift = adj.count(word.substr(0, word.length() - 1)  + "o"); // this is gender shift for adjectives only
-   bool article_plural = art.count(word.substr(0, word.length() - 1));
+   bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
+   bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
+   bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
   
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  if(nouns.count(word)){
-   translation = nouns[word];
+  if(lookup(nouns, word.c_str())){
+   translation = lookup(nouns, word.c_str());
    word_type = 0;
    }
    //then without accentuation (helpful in plural)
-   else if(nouns.count(script_adequation(word))){
-       translation = nouns[script_adequation(word)];
+   else if(lookup(nouns, script_adequation(word).c_str())){
+       translation = lookup(nouns, script_adequation(word).c_str());
        word_type = 0; 
    }
-   else if(adj.count(script_adequation(word))){
+   else if(lookup(adj, (script_adequation(word)).c_str())){
     
-      translation = adj[script_adequation(word)];
+      translation = lookup(adj, script_adequation(word).c_str());
       word_type = 1;
 
     }
@@ -1024,8 +1025,8 @@ bool diminutive = false;
       word_type = 4;
     }
   
-    else if(obl_pro.count(word)){
-      translation = obl_pro[word];
+    else if(lookup(obl_pro, word.c_str())){
+      translation = lookup(obl_pro, word.c_str());
       word_type = 11;
     }
 
@@ -1033,12 +1034,12 @@ bool diminutive = false;
       translation = lookup(pre, word.c_str());
       word_type = 8;
     }
-     else if(art.count(word)){
-      translation = art[word];
+     else if(lookup(art, word.c_str())){
+      translation = lookup(art, word.c_str());
       word_type = 9;
     }
      else if(article_plural){
-      translation = art[word.substr(0, word.length() - 1)];
+      translation = lookup(art, (word.substr(0, word.length() - 1).c_str()));
       word_type = 9;
     }
     
@@ -1051,18 +1052,18 @@ bool diminutive = false;
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
-if (word.size() > 2 && word.substr(word.size() - 2) == "os" && nouns.count(word.substr(0, word.size() - 2) + "o")) {
+if (word.size() > 2 && word.substr(word.size() - 2) == "os" && lookup(nouns, (word.substr(0, word.size() - 2) + "o").c_str())) {
     singular_pt = word.substr(0, word.size() - 2); // "gatos" -> "gato"
-} else if (word.size() > 2 && word.substr(word.size() - 2) == "as" && nouns.count(word.substr(0, word.size() - 2) + "o")) {
+} else if (word.size() > 2 && word.substr(word.size() - 2) == "as" && lookup(nouns, (word.substr(0, word.size() - 2) + "o").c_str())) {
     singular_pt = word.substr(0, word.size() - 2); // "gatas" -> "gato"
-} else if (word.size() > 1 && word.substr(word.size() - 1) == "s" && nouns.count(word.substr(0, word.size() - 1))) {
+} else if (word.size() > 1 && word.substr(word.size() - 1) == "s" && lookup(nouns, (word.substr(0, word.size() - 1).c_str()))) {
     singular_pt = word.substr(0, word.size() - 1); // "casas" -> "casa"
 } else {
     singular_pt = ""; // não é plural conhecido
 }
 
 if(!singular_pt.empty()) {
-    string singular_en = nouns[script_adequation(singular_pt) + (word.substr(word.size()-2)=="as" || word.substr(word.size()-2)=="os" ? "o" : "")];
+    string singular_en = string(lookup(nouns, script_adequation(singular_pt).c_str())) + (word.substr(word.size()-2)=="as" || word.substr(word.size()-2)=="os" ? "o" : "");
     translation = (!singular_en.empty() && singular_en.size() >= 2 && singular_en.substr(singular_en.size()-2) == "fe")
         ? singular_en.substr(0, singular_en.size()-2) + "ves"
         : (singular_en.back() == 'f'
@@ -1075,13 +1076,11 @@ if(!singular_pt.empty()) {
     // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
       else if(adj_plural){
 
-        if(adj.count(word.substr(0, word.length() - 1))){
-         translation = adj[word.substr(0, word.length() - 1)];
-         
-              cout << "reacyed";
+        if(lookup(adj, (word.substr(0, word.length() - 1).c_str()))){
+         translation = lookup(adj, (word.substr(0, word.length() - 1).c_str()));
 
-        }else if(adj.count(word.substr(0, word.length() - 2) + "o")){
-             translation = adj[word.substr(0, word.length() - 2) + "o"];
+        }else if(lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str())){
+             translation = lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str());
           }
 
       word_type = 1;
@@ -1089,28 +1088,28 @@ if(!singular_pt.empty()) {
     // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
    else if(gender_shift){
           
-         translation = nouns[word.substr(0, word.length() - 1) + "o"];
+         translation = lookup(nouns, (word.substr(0, word.length() - 1) + "o").c_str());
          word_type = 0;
         }
         
     // same as above for adjectives. e.g pequena -> (pequena - a) + o -> pequeno
     else if(adj_gender_shift){
 
-         translation = adj[word.substr(0, word.length() - 1) + "o"];
+         translation = lookup(adj,(word.substr(0, word.length() - 1) + "o").c_str());
          word_type = 1;
         }
          else if(diminutive){
-         if(nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "o")){
-             translation = "little " + nouns[script_adequation(word).substr(0, script_adequation(word).length() - 4) + "o"];
+         if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "o").c_str())){
+             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "o").c_str()));
 
-         }else if(nouns.count(word.substr(0, word.length() - 6) + "o") ){
-             translation = "little " + nouns[word.substr(0, word.length() - 6) + "o"];
+         }else if(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()) ){
+             translation = "little " + string(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()));
          }
-           else  if(nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "a")){
-             translation = "little " + nouns[script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a"];
+           else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "a").c_str())){
+             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a").c_str()));
 
-         }else  if(nouns.count(script_adequation(word).substr(0, script_adequation(word).length() - 5))){
-             translation = "little " + nouns[script_adequation(word).substr(0, script_adequation(word).length() - 5)];
+         }else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5)).c_str())){
+             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5).c_str())));
 
          }
             word_type = 0;
@@ -1197,7 +1196,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
         else if (i > 0 && sentence_arr[i - 1].second == 9 && isVowel(sentence_arr[i].first[0])) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + "n", 9});
+            reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + (sentence_arr[i - 1].first != "the" ? "n" : ""), 9});
             reordered_arr.push_back(sentence_arr[i]);  
         } 
 
@@ -1236,7 +1235,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);
-            reordered_arr.push_back(pair<string, int>{obj_pro[sentence_arr[i].first], 10});  
+            reordered_arr.push_back(pair<string, int>{lookup(obj_pro, (sentence_arr[i].first).c_str()), 10});  
         }
 
         // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
@@ -1326,7 +1325,8 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // e.g she is, he is, it is, should stay the same
         // if theres no pronoun before it, we have to plug the it. the other pronoun forms will be handled on a different function 
         else if (sentence_arr[i].first == "is") {
-            bool preceded_by_pronoun = (i > 0 && sentence_arr[i - 1].second == 4);
+          // actualy noun and pronoun lol
+            bool preceded_by_pronoun = (i > 0 && sentence_arr[i - 1].second == 4) || (i > 0 && sentence_arr[i - 1].second == 0) ;
 
             if (preceded_by_pronoun) {
                 reordered_arr.push_back({"is", sentence_arr[i].second});

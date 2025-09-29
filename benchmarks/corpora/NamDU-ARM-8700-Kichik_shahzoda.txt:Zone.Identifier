@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://cloudconvert.com/
+HostUrl=https://eu-central.storage.cloudconvert.com/tasks/881f3c47-5ab3-4b9a-975e-52c441d8a4e8/NamDU-ARM-8700-Kichik_shahzoda.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cloudconvert-production%2F20250928%2Ffra%2Fs3%2Faws4_request&X-Amz-Date=20250928T232402Z&X-Amz-Expires=86400&X-Amz-Signature=049892a67d6d6f80aa89b6dd90ea004e919abb68eaee9d8a8a0361144b2cad41&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3D%22NamDU-ARM-8700-Kichik_shahzoda.txt%22&response-content-type=text%2Fplain&x-id=GetObject
