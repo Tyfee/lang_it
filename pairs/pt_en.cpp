@@ -107,7 +107,10 @@ constexpr Entry nouns[] = {
   {"vez", "time"},
   {"algo", "something"},
   {"biblioteca", "library"},
-  {"detalhe", "detail"}
+  {"detalhe", "detail"},
+  {"estação", "season"},
+  {"mesa", "table"},
+  {"cadeira", "chair"}
 };
 
 constexpr Entry art[] = {
@@ -1052,24 +1055,28 @@ bool diminutive = false;
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
-if (word.size() > 2 && word.substr(word.size() - 2) == "os" && lookup(nouns, (word.substr(0, word.size() - 2) + "o").c_str())) {
-    singular_pt = word.substr(0, word.size() - 2); // "gatos" -> "gato"
-} else if (word.size() > 2 && word.substr(word.size() - 2) == "as" && lookup(nouns, (word.substr(0, word.size() - 2) + "o").c_str())) {
-    singular_pt = word.substr(0, word.size() - 2); // "gatas" -> "gato"
-} else if (word.size() > 1 && word.substr(word.size() - 1) == "s" && lookup(nouns, (word.substr(0, word.size() - 1).c_str()))) {
-    singular_pt = word.substr(0, word.size() - 1); // "casas" -> "casa"
-} else {
+if (word.size() > 2 && word.substr(word.size() - 2) == "os") {
+    singular_pt = word.substr(0, word.size() - 2) + "o"; // gatos -> gato, cachorros -> cachorro
+} else if (word.size() > 2 && word.substr(word.size() - 2) == "as") {
+    singular_pt = word.substr(0, word.size() - 2) + "a"; // casas -> casa, cachorras -> cachorra
+} else if (word.size() > 1 && word.substr(word.size() - 1) == "s") {
+    singular_pt = word.substr(0, word.size() - 1);       // flores -> flore (fallback)
+}else {
     singular_pt = ""; // não é plural conhecido
 }
 
-if(!singular_pt.empty()) {
-    string singular_en = string(lookup(nouns, script_adequation(singular_pt).c_str())) + (word.substr(word.size()-2)=="as" || word.substr(word.size()-2)=="os" ? "o" : "");
-    translation = (!singular_en.empty() && singular_en.size() >= 2 && singular_en.substr(singular_en.size()-2) == "fe")
-        ? singular_en.substr(0, singular_en.size()-2) + "ves"
-        : (singular_en.back() == 'f'
-            ? singular_en.substr(0, singular_en.size()-1) + "ves"
-            : singular_en + "s");
-    word_type = 0;
+if (lookup(nouns, singular_pt.c_str())) {
+    string singular_en = lookup(nouns, script_adequation(singular_pt).c_str());
+    if (!singular_en.empty()) {
+        if (singular_en.size() >= 2 && singular_en.substr(singular_en.size()-2) == "fe") {
+            translation = singular_en.substr(0, singular_en.size()-2) + "ves";
+        } else if (singular_en.back() == 'f') {
+            translation = singular_en.substr(0, singular_en.size()-1) + "ves";
+        } else {
+            translation = singular_en + "s";
+        }
+        word_type = 0;
+    }
 }
 
 }
@@ -1235,7 +1242,12 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);
-            reordered_arr.push_back(pair<string, int>{lookup(obj_pro, (sentence_arr[i].first).c_str()), 10});  
+            reordered_arr.push_back({
+              lookup(obj_pro, sentence_arr[i].first.c_str()) 
+                  ? string(lookup(obj_pro, sentence_arr[i].first.c_str())) 
+                  : sentence_arr[i].first,
+              10
+          });
         }
 
         // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
