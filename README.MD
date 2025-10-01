@@ -21,10 +21,11 @@ At first, My goal is to introduce the following translations, and then pivot the
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- | --------------- |     
 | Portuguese    | English       |  ⚠️    | 181kb |       ?? %        |                      |  1663 |       188       |   
 | English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                 |   
-| English       | Portuguese    |  ⚠️    |       |       ?? %        |                      |       |                 |   
-| English       | French        |  ⚠️    |       |       ?? %        |                      |       |                 |   
-| Spanish       | Portuguese    |  ⚠️    |       |       ?? %        |                      |       |                 |   
-| Swedish       | English       |  ⚠️    |       |       ?? %        |                      |       |                 |   
+| French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
+| English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
+| English       | French        |  ❌    |       |       ?? %        |                      |       |                 |   
+| Spanish       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
+| Swedish       | English       |  ❌    |       |       ?? %        |                      |       |                 |   
 
 ## How to
 

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
 #include <stdint.h>
 
 using namespace std;
@@ -16,7 +15,7 @@ struct Verb {
     const char* w;
     const uint8_t* t;
     size_t len;
-    int type;
+    uint8_t type;
 };
 
 enum Kana : uint8_t {

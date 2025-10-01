@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <utility>
 #include <algorithm>
-#include <sstream> 
 #include "../lang_it.h"
 
 using namespace std;
@@ -29,8 +26,10 @@ constexpr Entry fixed_ngrams[] = {
   {"por_causa", "because of"},
   {"o_pior", "the worst"},
   {"o_melhor", "the best"},
+  {"até_mesmo", "even"},
+  {"por_enquanto", "for now"},
   {"hoje_em_dia", "nowadays"},
-  {"até_mesmo", "even"}
+  {"de_vez_em_quando", "sometimes"}
 };
 vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
@@ -50,6 +49,7 @@ const char* lookup(const Entry (&dict)[N], const char* word) {
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 constexpr Entry nouns[] = {
   {"olá", "hello"},
+  {"inglês", "english"},
   {"mundo", "world"},
   {"dois", "two"},
   {"três", "three"},
@@ -62,10 +62,10 @@ constexpr Entry nouns[] = {
   {"dez", "ten"},
   {"melancia", "watermelon"},
   {"areia", "sand"},
-  {"chuva", "rain"},
+  {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
   {"cachorro", "dog"},
-  {"agua", "water"},
+  {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
   {"porta", "door"},
@@ -112,21 +112,22 @@ constexpr Entry nouns[] = {
   {"estação", "season"},
   {"mesa", "table"},
   {"cadeira", "chair"},
-  {"tudo", "all"}
+  {"tudo", "all"},
+  {"perdao", "forgiveness"}
 };
 
 constexpr Entry art[] = {
   {"o", "the"},
   {"a", "the"},
   {"um", "a"},
-  {"uma", "a"},
+  {"uma", "a"}
 };
 
 constexpr Entry pre[] = { 
   {"do", "of the"},
   {"da", "of the"},
   {"de", "of"},
-  {"com", "with"}, // have to differentiate this from 'como' as in 'like' 
+  {"com", "with"}, // have to differentiate this from 'como' as in 'like', how tho......... ominous
   {"sem", "without"},
   {"ou", "or"},
   {"em", "in"},
@@ -153,6 +154,7 @@ constexpr Entry pro[] = {
   {"esta", "this"},
   {"isso", "this"},
   {"isto", "this"}
+  
 };
 constexpr Entry poss_pro[] = {
   {"seu", "your"},
@@ -220,7 +222,10 @@ constexpr Entry adj[] = {
   {"doente", "sick"},
   {"certo", "certain"},
   {"outro", "other"},
-  {"sobre", "about"}
+  {"sobre", "about"},
+  {"gratis", "free"},
+  {"livre", "free"},
+  {"ultimo", "last"}
 };
 
 //adverbs
@@ -228,7 +233,7 @@ constexpr Entry adj[] = {
 constexpr Entry adv[] = {
   {"se", "if"},
   {"talvez", "maybe"},
-  {"que", "what"},
+  {"que", "that"},
   {"mas", "but"},
   {"quando", "when"},
   {"quem", "who"},
@@ -258,13 +263,20 @@ constexpr Entry adv[] = {
   {"agora", "now"},
   {"antes", "before"},
   {"depois", "after"},
-  {"para", "for"}
+  {"para", "to"},
+  {"pra", "to"},
+  {"por", "for"},
+  {"ainda", "still"},
+  {"somente", "only"},
+  {"só", "only"},
+  {"apenas", "just"}
 };
 
 struct Verb {
     const char* root;       
     const char* translation; 
     int type;      
+    bool intransitive;
 };
 struct VerbEnding {
     const char* ending;
@@ -272,44 +284,45 @@ struct VerbEnding {
 };
 
 // verb prefixes where 0 = regular, 1 = irregular conjugation
+// is it intransitive?
 constexpr Verb reg_verbs[]  = {
-  {"am", "lov", 0},
-  {"gost", "lik", 0},
-  {"qu", "want", 1},
-  {"corr", "run", 1},
-  {"abr", "open", 1},
-  {"fech", "clos", 0},
-  {"molh", "wet", 1},
-  {"pergunt", "ask", 1},
-  {"pe", "ask", 1},
-  {"precis", "need", 1},
-  {"morr", "di", 0},
-  {"sonh", "dream", 1},
-  {"grit", "scream", 1},
-  {"acredit","believ", 0},
-  {"viv", "liv", 0},
-  {"mor", "liv", 0},
-  {"tent", "try", 1},
-  {"compreend", "comprehend", 1},
-  {"busc", "search", 1},
-  {"brilh", "glow", 1},
-  {"possu", "own", 1},
-  {"aprend", "learn", 1},
-  {"apag", "eras", 0},
-  {"pint", "paint", 1},
-  {"traduz", "translat", 0},
-  {"mastig", "chew", 1},
-  {"engol", "swallow", 1},
-  {"respond", "answer", 1},
-  {"desej", "wish", 1},
-  {"trabalh", "work", 1},
-  {"mov", "mov", 0},
-  {"digit", "typ", 0},
-  {"olh", "look", 1},
-  {"sint", "feel", 1},
-  {"mat", "kill", 1},
-  {"prefer", "prefer", 1},
-  {"prefir", "prefer", 1}
+  {"am", "lov", 0, false},
+  {"gost", "lik", 0, false},
+  {"qu", "want", 1, false},
+  {"corr", "run", 1, true},
+  {"abr", "open", 1, false},
+  {"fech", "clos", 0, true},
+  {"molh", "wet", 1, false},
+  {"pergunt", "ask", 1, true},
+  {"pe", "ask", 1, false},
+  {"precis", "need", 1, false},
+  {"morr", "di", 0, true},
+  {"sonh", "dream", 1, true},
+  {"grit", "scream", 1, true},
+  {"acredit","believ", 0, true},
+  {"viv", "liv", 0, true},
+  {"mor", "liv", 0, false},
+  {"tent", "try", 1, true},
+  {"compreend", "comprehend", 1, false},
+  {"busc", "search", 1, false},
+  {"brilh", "glow", 1, true}, // a lot of these verbs can be inferred from their nouns: brilho -> brilhar, glow -> glow
+  {"possu", "own", 1, false}, // remind to implement that, me;
+  {"aprend", "learn", 1, false},
+  {"apag", "eras", 0, false},
+  {"pint", "paint", 1, true},
+  {"traduz", "translat", 0, true},
+  {"mastig", "chew", 1, false},
+  {"engol", "swallow", 1, false},
+  {"respond", "answer", 1, false},
+  {"desej", "wish", 1, true},
+  {"trabalh", "work", 1, true},
+  {"mov", "mov", 0, false},
+  {"digit", "typ", 0, false},
+  {"olh", "look", 1, true}, //olho -> olhar even 
+  {"sint", "feel", 1, false},
+  {"mat", "kill", 1, false},
+  {"prefer", "prefer", 1, false},
+  {"prefir", "prefer", 1, false}
   
 };
 
@@ -325,37 +338,37 @@ const Verb* lookupRegVerb(const char* root) {
 
 
 constexpr Verb irr_verbs[] = {
-  {"fal", "speak", 1},
-  {"beb", "drink", 1},
-  {"sangr", "bleed", 1},
-  {"procri", "breed", 1},
-  {"aliment", "feed", 1},
-  {"nad", "swim", 1},
-  {"quebr", "break", 1},
-  {"escrev", "writ", 1},
-  {"dirig", "driv", 0},
-  {"dirij", "driv", 0},
-  {"est","%", 1}, // % is a flag for the 'to be' verb, i don't want to figure out a clever way to do that right now, so i'll simply mark it with a flag
+  {"fal", "speak", 1, false},
+  {"beb", "drink", 1, false},
+  {"sangr", "bleed", 1, true},
+  {"procri", "breed", 1, true},
+  {"aliment", "feed", 1, false},
+  {"nad", "swim", 1, true},
+  {"quebr", "break", 1, false},
+  {"escrev", "writ", 1, true},
+  {"dirig", "driv", 0, true},
+  {"dirij", "driv", 0, true},
+  {"est","%", 1, true}, // % is a flag for the 'to be' verb, i don't want to figure out a clever way to do that right now, so i'll simply mark it with a flag
                     // and deal with conjugation based on what's goin on around it (i - 1) and (i + 1), since it could match:
                     // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
 
-  {"cant", "sing", 1},
-  {"ganh", "win", 1},
-  {"é", "is", 1},
-  {"são", "are", 1},
-  {"sou", "am", 1},
-  {"volt", "go back", 1},
-  {"te", "have", 1},
-  {"com", "eat", 1},
-  {"lut", "fight", 1},
-  {"pod", "can", 1},
-  {"pos", "can", 1},
-  {"dev", "should", 1},
-  {"pens", "think", 1},
-  {"v", "see", 1},
-  {"t", "hav", 0},
-  {"funcion", "work", 1},
-  {"desenh", "draw", 1}
+  {"cant", "sing", 1, true},
+  {"ganh", "win", 1, true},
+  {"é", "is", 1, true},
+  {"são", "are", 1, true},
+  {"sou", "am", 1, true},
+  {"volt", "go back", 1, true},
+  {"te", "have", 1, false},
+  {"com", "eat", 1, false},
+  {"lut", "fight", 1, true},
+  {"pod", "can", 1, false},
+  {"pos", "can", 1, false},
+  {"dev", "should", 1, true},
+  {"pens", "think", 1, true},
+  {"v", "see", 1, false},
+  {"t", "hav", 0, false},
+  {"funcion", "work", 1, true},
+  {"desenh", "draw", 1, true}
 };
 
 const Verb* lookupIrrVerb(const char* root) {
@@ -452,7 +465,8 @@ constexpr Entry suff[] = {
   {"feita", "fect"},
   {"édia", "edy"},
   {"édio", "edy"},
-  {"ura", "ure"}
+  {"ura", "ure"},
+  {"ês", "ese"}
 };
 
 string script_adequation(string word) {
@@ -699,6 +713,7 @@ pair<string, int> prefixLookup(string word){
             int word_type_;
             int verb_type;
             bool aux = false;
+            bool intransitiveness;
             string ending;
 
             size_t match = word.rfind(format[i]);
@@ -728,6 +743,18 @@ pair<string, int> prefixLookup(string word){
                         if (v->type == 0) buffer[i++] = 'e';
                         buffer[i] = '\0';
                     }
+                   else if (verb_info == 5) {
+                          size_t i = 0;
+                          const char* base = v->translation;
+                          while (*base && i + 1 < sizeof(buffer)) {
+                              buffer[i++] = *base++;
+                          }
+                          const char* ending = "ing";
+                         
+                           while (*ending && i + 3 < sizeof(buffer)) buffer[i++] = *ending++;
+
+                          buffer[i] = '\0';
+                      }
                     else if(verb_info == 6){
                         const char* would = "would ";
                         size_t i = 0;
@@ -746,7 +773,12 @@ pair<string, int> prefixLookup(string word){
                         buffer[i] = '\0';
                     }
 
-                    word_type_ = 3;
+                    intransitiveness = v->intransitive;
+                    if(intransitiveness == true){
+                        word_type_ = 3;
+                    }else{
+                       word_type_ = 36;
+                    }
                     verb_type = v->type;
                     return pair<string, int>{string(buffer), word_type_};
 
@@ -791,9 +823,13 @@ pair<string, int> prefixLookup(string word){
                         translation_ = string(v_irr->translation) + ending;
                     }
 
-                    word_type_ = !aux ? 3 : 33;
+                    intransitiveness = v_irr->intransitive;
+                    if(intransitiveness == true){
+                        word_type_ = !aux ? 3 : 33;
+                    }else{
+                       word_type_ = 36;
+                    }
                     verb_type = v_irr->type;
-
                     return pair<string, int>{translation_, word_type_};
                 }
             }
@@ -1129,12 +1165,16 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             if (!pronoun_.empty()) {
                 // is this pronoun in the third person vector?
                 string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
-                cout << aux;
+    
             }
         }
     }
+ 
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
+
+
+ 
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
@@ -1142,19 +1182,21 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // point being a portuguese pronoun can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS.
 
         // a single verb can define person: vejo -> I see
-        if (sentence_arr.size() == 1 && sentence_arr[0].second == 3) {
+        if (sentence_arr.size() == 1 && (sentence_arr[0].second == 3 || sentence_arr[0].second == 36 )) {
             reordered_arr.clear(); 
             reordered_arr.push_back(sentence_arr[0]);
             return reordered_arr;
         }
 
+     
+
         // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
         if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
-            reordered_arr.pop_back(); 
+            reordered_arr.pop_back();   
+
             reordered_arr.push_back(sentence_arr[i]);  
-            reordered_arr.push_back(sentence_arr[i - 1]);
-        }
+            reordered_arr.push_back(sentence_arr[i - 1]); }
 
         // ------------------------ ARTICLE TWEAKS  --------------------
         // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
@@ -1162,11 +1204,28 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + (sentence_arr[i - 1].first != "the" ? "n" : ""), 9});
             reordered_arr.push_back(sentence_arr[i]);  
-        } 
+        }      // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
+    // but i'm not doing allat now.
+    // so if 'eu[2] amo[36]' => 'i[2] (love it[36])]!  
+        else  if (sentence_arr[i].second == 36) { 
+                bool add_it = true;
+
+                if (i + 1 < sentence_arr.size()) {
+                    int next_type = sentence_arr[i + 1].second;
+                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == -2 || next_type == 9) {
+                        add_it = false; 
+                    }
+                }
+                reordered_arr.push_back(sentence_arr[i]);
+
+                if (add_it) {
+                    reordered_arr.push_back(pair<string, int>{"it", -1});
+                }
+            }
 
         // ------------------------ OBLIQUE PRONOUNS  -----------------
         // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
-        else if (i > 0 && sentence_arr[i - 1].second == 11 && sentence_arr[i].second == 3) {
+        else if (i > 0 && sentence_arr[i - 1].second == 11 && (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]);
@@ -1188,7 +1247,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
 
         // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
         // a set is word1 = verb[3] and word2 = 'de', we eliminate the preposition 'de', so that gosto[1] de  -> stronger
-        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].first == "of") {
+        else if (i > 0 && (sentence_arr[i - 1].second == 3 || sentence_arr[i - 1].second == 36) && sentence_arr[i].first == "of") {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);  
         } 
@@ -1196,7 +1255,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
         // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
-        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 4) {
+        else if (i > 0 && (sentence_arr[i - 1].second == 3 || sentence_arr[i - 1].second == 36) && sentence_arr[i].second == 4) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 1]);
             reordered_arr.push_back({
@@ -1226,7 +1285,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
 
         // ------------------------ DOUBLE VERBS ----------------- 
         // a set is verb[3] and verb[3], we add 'to' between them, so that amo[3] correr[3] -> love[3] *to* run[3]
-        else if (i > 0 && sentence_arr[i - 1].second == 3 && sentence_arr[i].second == 3) {
+        else if (i > 0 && (sentence_arr[i - 1].second == 3 || sentence_arr[i - 1].second == 36) && (sentence_arr[i].second == 3 || sentence_arr[i].second == 3)) {
             if (sentence_arr[i - 1].first == "don't" || sentence_arr[i - 1].first == "doesn't") {
                 reordered_arr.push_back(sentence_arr[i]);
                 continue;
@@ -1240,13 +1299,13 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         } 
 
         // same thing but when the verbs are connected by 'que' (e.g: tenho QUE ver)
-        else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "what"  && sentence_arr[i].second == 3) {
+        else if (i > 1 && (sentence_arr[i - 2].second == 3 || sentence_arr[i - 2].second == 36) && sentence_arr[i - 1].first == "what"  && (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{"to", -1});  
             reordered_arr.push_back(sentence_arr[i]); 
         }
 
-        else if (i > 1 && sentence_arr[i - 2].second == 3 && sentence_arr[i - 1].first == "of" && sentence_arr[i].second == 3) {
+        else if (i > 1 && (sentence_arr[i - 2].second == 3 || sentence_arr[i - 2].second == 3) && sentence_arr[i - 1].first == "of" && (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(sentence_arr[i - 2]);  
             reordered_arr.push_back(pair<string, int>{"to", -1});  
@@ -1272,7 +1331,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
         // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PERSON
         // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
-        else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "não" && sentence_arr[i].second == 3) {
+        else if (i > 1 && sentence_arr[i - 2].second == 4 && sentence_arr[i - 1].first == "não" && (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
             string subj = sentence_arr[i - 2].first;
             string verb = sentence_arr[i].first;
 
