@@ -134,7 +134,10 @@ constexpr Entry pre[] = {
   {"no", "in the"},
   {"na", "in the"},
   {"nos", "in the"},
-  {"nas", "in the"}
+  {"nas", "in the"},
+  {"à", "to"},
+  {"às", "to the"},
+  {"ao", "to the"}
 };
 
 // nominative/personal pronouns
@@ -390,6 +393,7 @@ constexpr VerbEnding patt_verbs[] = {
   {"trair", 2}, // extrair = extract
   {"trar", 3}, // contatar = contact // what about encontrar.... (needs more specification)
   {"ificar", 6},
+  {"icar", 5},
   {"ituir", 7},
   {"erir", 8},
   {"itar", 9},
@@ -430,6 +434,17 @@ const VerbEnding* lookupEnding(const char* word) {
     }
     return nullptr;
 }
+
+vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir"};
+vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero"};
+vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em"};
+vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is"};
+vector<string> present_continuous = {"ndo", "ndo", "ando"};
+vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
+vector<string> subjunctive = {"sse", "ssemos"};
+vector<string> conditional_ = {"aria", "ariamos", "eria"};
+vector<string> imperative = {"e", "a", "eja", "enha", "á"};
+
 // common suffixes with traceable trnaslation pattern
 constexpr Entry suff[] = {
   {"dade", "ty"},
@@ -466,7 +481,8 @@ constexpr Entry suff[] = {
   {"édia", "edy"},
   {"édio", "edy"},
   {"ura", "ure"},
-  {"ês", "ese"}
+  {"ês", "ese"},
+  {"ança", "ance"}
 };
 
 string script_adequation(string word) {
@@ -695,15 +711,6 @@ pair<string, int> prefixLookup(string word){
     string translation = word; 
     int word_type;
 
-    vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir"};
-    vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero"};
-    vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em"};
-    vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is"};
-    vector<string> present_continuous = {"ndo", "ndo", "ando"};
-    vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
-    vector<string> subjunctive = {"sse", "ssemos"};
-    vector<string> conditional = {"aria", "ariamos", "eria"};
-    vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
     // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
     // it's a lambda that returns a pair with the match lemma + the vowel/conjugation.
@@ -860,7 +867,7 @@ pair<string, int> prefixLookup(string word){
     result = find_verb(subjunctive, word, 2);
     if(result.second != -1) return result;
 
-    result = find_verb(conditional, word, 6);
+    result = find_verb(conditional_, word, 6);
     if(result.second != -1) return result;
 
     result = find_verb(imperative, word, 7);
@@ -1179,32 +1186,61 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
         // cause 'they' (3rd plural) falls with 1st. e.g she loves, he loves, you love, i love, we love, they love 
-        // point being a portuguese pronoun can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS.
+        // point being a portuguese verb can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS than an english one.
 
         // a single verb can define person: vejo -> I see
-        if (sentence_arr.size() == 1 && (sentence_arr[0].second == 3 || sentence_arr[0].second == 36 )) {
+     /*   if (sentence_arr.size() == 1 && (sentence_arr[0].second == 3 || sentence_arr[0].second == 36 )) {
             reordered_arr.clear(); 
             reordered_arr.push_back(sentence_arr[0]);
             return reordered_arr;
-        }
+        }*/
 
-     
+     // ------------------------ FOR + VERB? IS THAT A NAME FOR THAT  --------------------
+        // the construction for + verb[3 || 36], only shows up as the present continuous:
+        // (for sending* me and invitation, for selling* yourself pardons)
+        // (what is this food for? it's for selling*)
+    if (i > 0 && sentence_arr[i - 1].first == "for" &&
+    (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
+      reordered_arr.pop_back();   
+    string fixed_verb = sentence_arr[i].first.back() == 'e'
+        ? sentence_arr[i].first.substr(0, sentence_arr[i].first.length() - 1) + "ing"
+        : sentence_arr[i].first + "ing";
+
+    reordered_arr.push_back(pair<string,int>{sentence_arr[i - 1].first, -1}); // "for"
+    reordered_arr.push_back(pair<string,int>{fixed_verb, sentence_arr[i].second});
+
+    sentence_arr[i].second = -1;  
+    continue;
+}
+
+ 
 
         // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-        if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
+        else if (i > 0 && sentence_arr[i - 1].second == 0 && sentence_arr[i].second == 1) {
             reordered_arr.pop_back();   
 
             reordered_arr.push_back(sentence_arr[i]);  
             reordered_arr.push_back(sentence_arr[i - 1]); }
-
+  // ------------------------ ARTICLE VS PREPOSITION (e.g A VS À) COMPETITION  --------------------
+        // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
+        // since it defaults to 'the' i dont think i need a fallback 
+        else if (i > 0 && sentence_arr[i - 1].first == "the" && (sentence_arr[i].second == 4 || sentence_arr[i].second == 9)) {
+          reordered_arr.pop_back(); 
+            reordered_arr.push_back(pair<string, int>{"to", 20});
+            reordered_arr.push_back(sentence_arr[i]);  
+        } 
         // ------------------------ ARTICLE TWEAKS  --------------------
-        // does the next translation start in a vowel? if so the article should be an. a apple -> an apple
+        // does the next translation start in a vowel? if so the article[9] should be an. a apple -> an apple
         else if (i > 0 && sentence_arr[i - 1].second == 9 && isVowel(sentence_arr[i].first[0])) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i - 1].first + (sentence_arr[i - 1].first != "the" ? "n" : ""), 9});
             reordered_arr.push_back(sentence_arr[i]);  
-        }      // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
+        }    
+        
+           
+        
+        // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.
     // so if 'eu[2] amo[36]' => 'i[2] (love it[36])]!  
         else  if (sentence_arr[i].second == 36) { 
@@ -1212,7 +1248,7 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
 
                 if (i + 1 < sentence_arr.size()) {
                     int next_type = sentence_arr[i + 1].second;
-                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == -2 || next_type == 9) {
+                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == -2 || next_type == 9  || next_type == 8) {
                         add_it = false; 
                     }
                 }
@@ -1365,8 +1401,9 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
         }
 
         else {
-            reordered_arr.push_back(sentence_arr[i]);
-        }
+    if (sentence_arr[i].second != -1)  // only push if not processed
+        reordered_arr.push_back(sentence_arr[i]);
+}
     }
 
     return reordered_arr;
