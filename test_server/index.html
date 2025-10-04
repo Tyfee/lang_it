@@ -47,25 +47,30 @@ select, textarea {
     </select>
     <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
     <div id="output"></div>
+    <div id="output_json"></div>
 </div>
 <script>
 let timeout;
 const inputEl = document.getElementById('inputText');
 const langEl = document.getElementById('langSelect');
-const outputEl = document.getElementById('output');
+const outputEl = document.getElementById('output_json');
 
-async function translate(){
+const output = document.getElementById('output');
+async function translate() {
     const text = inputEl.value;
     if(!text) {
         outputEl.textContent = '';
         return;
     }
+
     const response = await fetch(`http://127.0.0.1:8080/translate/${langEl.value}`,{
         method:'POST',
         body:text
     });
-    const result = await response.text();
-    outputEl.textContent = result;
+    const result = await response.json(); 
+    outputEl.textContent = `Result brought in: ${result.time_ms} ms`;
+    
+    output.textContent = result.translation;
 }
 
 inputEl.addEventListener('input', ()=>{
