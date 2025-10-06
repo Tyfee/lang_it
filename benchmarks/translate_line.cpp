@@ -14,7 +14,7 @@ int main() {
         }
 
         try {
-            std::string translation = traduzir_en(line);
+            std::string translation = traduzir_en(line.c_str());
             std::cout << translation << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Error on line " << line_index << ": " << e.what() << std::endl;

@@ -11,7 +11,7 @@ svr.Post("/translate/pt_en", [](const httplib::Request &req, httplib::Response &
     auto start = std::chrono::high_resolution_clock::now();
 
     std::string input_text = req.body;
-    std::string translation = traduzir_en(input_text);
+    std::string translation = traduzir_en(input_text.c_str());
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration_us = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();

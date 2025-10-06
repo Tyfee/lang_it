@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 #include "../lang_it.h"
 
 using namespace std;
@@ -27,6 +28,13 @@ typedef struct
   const char* t;
 } Entry;
 
+typedef struct {
+   const char* word;
+   const char* translation;
+   int type;
+} Word;
+
+
 // constexpr struct test, eventually i want this bitch to be embedded-friendly; so i'll try to eliminate
 // maps, then vectors, then strings (highly doubt i'm capable but eh)
 // any set of (n)words in portuguese that can't be translated separately
@@ -37,6 +45,9 @@ constexpr Entry fixed_ngrams[] = {
   {"por_que", "why"},
   {"do_que", "than"},
   {"por_favor", "please"},
+  {"o_seu", "yours"},
+  {"o_meu", "mine"},
+  {"o_dele", "his"},
   {"por_causa", "because of"},
   {"o_pior", "the worst"},
   {"o_melhor", "the best"},
@@ -67,6 +78,7 @@ constexpr Entry nouns[] = {
   {"olá", "hello"},
   {"inglês", "english"},
   {"mundo", "world"},
+
   {"dois", "two"},
   {"três", "three"},
   {"quatro", "four"},
@@ -76,6 +88,15 @@ constexpr Entry nouns[] = {
   {"oito", "eight"},
   {"nove", "nine"},
   {"dez", "ten"},
+  {"cem", "a hundred"},
+  {"mil", "a thousand"},
+  {"primeiro", "first"},
+  {"segundo", "second"},
+  {"terceiro", "third"},
+  {"quarto", "fourth"},
+
+  {"morte", "death"},
+  
   {"melancia", "watermelon"},
   {"areia", "sand"},
   {"chuva", "rain"}, // this is a verbifiable
@@ -129,11 +150,15 @@ constexpr Entry nouns[] = {
   {"mesa", "table"},
   {"cadeira", "chair"},
   {"tudo", "all"},
-  {"perdao", "forgiveness"},
+  {"perdão", "forgiveness"},
   {"desculpa", "apology"},
+  {"chapéu", "hat"},
+  {"lápis", "pencil"},
+  {"caneta", "pen"},
+  {"bolso", "pocket"},
 
-  
   {"pessoas", "people"},
+  {"gente", "people"},
   {"nao", "not"},
   {"sim", "yes"},
   {"eis", "here's"}
@@ -161,8 +186,13 @@ constexpr Entry pre[] = {
   {"à", "to"},
   {"às", "to the"},
   {"ao", "to the"},
+   // these verbs are grounded here for misbehaving until second order  
   {"é", "is"},
+  {"são", "are"},
+  {"foram", "were"},
+  {"fomos", "were"},
   {"era", "was"},
+
   {"num", "in a"}
 };
 
@@ -399,7 +429,9 @@ constexpr Verb irr_verbs[] = {
   {"v", "see", 1, false},
   {"t", "hav", 0, false},
   {"funcion", "work", 1, true},
-  {"desenh", "draw", 1, true}
+  {"desenh", "draw", 1, true},
+  {"dorm", "sleep", 1, true},
+  {"durm", "sleep", 1, true}
 };
 
 const Verb* lookupIrrVerb(const char* root) {
@@ -541,7 +573,7 @@ replace_all("\xC3\x81", "a"); // Á
 replace_all("\xC3\x80", "a"); // À
 replace_all("\xC3\x83", "a"); // Ã
 replace_all("\xC3\x82", "a"); // Â
-replace_all("\xC3\x89", "e"); // É
+replace_all("\xC3\x89", "é"); // É
 replace_all("\xC3\x8A", "e"); // Ê
 replace_all("\xC3\x8D", "i"); // Í
 replace_all("\xC3\x93", "o"); // Ó
@@ -659,6 +691,8 @@ string normalize(string word) {
     return normalized_;
 }
 
+
+
 pair<string, int> createNounFromVerb(string verb){
    string n = "";
    int word_type_;
@@ -666,9 +700,9 @@ pair<string, int> createNounFromVerb(string verb){
   return pair<string, int>{n, word_type_};
 }
 
-pair<string, int> adjectification(string adj){
+Word adjectification(string adj){
   
-  string a = "";
+  char* a;
   string v;
   int word_type_;
 
@@ -676,16 +710,20 @@ pair<string, int> adjectification(string adj){
       if(adj.substr(adj.length() - 3) == "ado" && lookupRegVerb(adj.substr(0, adj.length() - 3).c_str())){
         const Verb* verb = lookupRegVerb(adj.substr(0, adj.length() - 3).c_str()); // fech
         //clos + ed 
-        a = string(verb->translation) + "ed";
-
+        char buffer[20];
+        strcpy(buffer, verb->translation);
+        strcat(buffer, "ed");
+        a = buffer;
         word_type_ = 1;
         }
     }else{
       a = "";
       word_type_ = -1;
     }
-
-  return pair<string, int>{a, word_type_};
+  
+  
+ 
+  return Word{a, adj.c_str(), word_type_};
 }
 
 // dictionary lookup
@@ -1153,7 +1191,7 @@ bool diminutive = false;
       word_type = 4;
     } else if(lookup(poss_pro, word.c_str())){
       translation = lookup(poss_pro, word.c_str());
-      word_type = 4;
+      word_type = 40;
     }
   
     else if(lookup(obl_pro, word.c_str())){
@@ -1271,11 +1309,11 @@ if (lookup(nouns, singular_pt.c_str())) {
         translation = prefixLookup(word).first;
         word_type = prefixLookup(word).second;
        }
-       else if(adjectification(word).first.length() > 0){
+       else if(strlen(adjectification(word).translation) > 0){
         // if preffix not found, look for prefix
 
-        translation = adjectification(word).first;
-        word_type = adjectification(word).second;
+        translation = adjectification(word).translation;
+        word_type = adjectification(word).type;
        }
        
        else{
@@ -1331,11 +1369,11 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             return reordered_arr;
         }*/
 
-     // ------------------------ FOR + VERB? IS THAT A NAME FOR THAT  --------------------
+     // ------------------------ FOR/WITHOUT + VERB? IS THAT A NAME FOR THAT  --------------------
         // the construction for + verb[3 || 36], only shows up as the present continuous:
         // (for sending* me and invitation, for selling* yourself pardons)
         // (what is this food for? it's for selling*)
-    if (i > 0 && sentence_arr[i - 1].first == "for" &&
+    if (i > 0 && (sentence_arr[i - 1].first == "for" || sentence_arr[i - 1].first == "without") &&
     (sentence_arr[i].second == 3 || sentence_arr[i].second == 36)) {
       reordered_arr.pop_back();   
     string fixed_verb = sentence_arr[i].first.back() == 'e'
@@ -1453,6 +1491,15 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
             reordered_arr.pop_back(); 
             reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "est", 20});  
         } 
+
+        
+        // ------------------------ POSSESSIVE PRONOUNS  --------------------
+        // a set is word1 = 'o/a' and word2 = 'mais' and word3 = adj[1], we eliminate the 'mais', so that 'o mais forte[2]' -> 'the strongest'
+        else if (i > 1 && sentence_arr[i - 2].second == 9  && sentence_arr[i - 1].first == "more" && sentence_arr[i].second == 1) {
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(pair<string, int>{sentence_arr[i].first + "est", 20});  
+        } 
+
 
         // ------------------------ COMPARATIVE  -----------------
         // a set is word1 = 'mais' and word2 = adj[1], we eliminate the first 'mais' and append 'er' to word2, so that mais forte[2] -> stronger
@@ -1636,52 +1683,47 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
 }
   return sentence;
 }
-std::string bigramLookup(const std::vector<std::string>& array_of_words, std::vector<int>& ignore_flags) {
+
+std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>& ignore_flags) {
     std::vector<std::string> mended_array_of_words;
+    std::vector<int> new_ignore_flags;
 
-    size_t i = 1;
-    while (i < array_of_words.size()) {
-        if (ignore_flags[i-1] != 0) {  // skip already translated word
-            mended_array_of_words.push_back(array_of_words[i-1]);
-            ignore_flags.push_back(ignore_flags[i-1]);
-            i++;
-            continue;
+    size_t i = 0;
+    while (i < words.size()) {
+        if (i + 1 < words.size() && ignore_flags[i] == 0 && ignore_flags[i + 1] == 0) {
+            std::string bigram = words[i] + "_" + words[i + 1];
+            const char* bigram_translation = lookup(fixed_ngrams, bigram.c_str());
+            
+            if (bigram_translation) {
+                mended_array_of_words.push_back(bigram_translation);
+                new_ignore_flags.push_back(1);  
+                i += 2;  
+                continue;
+            }
         }
-
-        std::string bigram = array_of_words[i-1] + "_" + array_of_words[i];
-        const char* bigram_translation = lookup(fixed_ngrams, bigram.c_str());
-        if (bigram_translation) {
-            mended_array_of_words.push_back(bigram_translation);
-            ignore_flags.push_back(1);  
-            i += 2;
-        } else {
-            mended_array_of_words.push_back(array_of_words[i-1]);
-            ignore_flags.push_back(0);
-            i++;
-        }
+        
+        mended_array_of_words.push_back(words[i]);
+        new_ignore_flags.push_back(ignore_flags[i]);
+        i++;
     }
 
-    if (i == array_of_words.size()) {
-        mended_array_of_words.push_back(array_of_words.back());
-        ignore_flags.push_back(ignore_flags.back());
-    }
-
-    return unigramLookup(mended_array_of_words, ignore_flags);
+    return unigramLookup(mended_array_of_words, new_ignore_flags);
 }
 
 std::string trigramLookup(const std::vector<std::string>& words) {
     std::vector<std::string> mended;
-    std::vector<int> ignore_flags;
+    std::vector<int> ignore_flags(words.size(), 0);
 
     size_t i = 0;
     while (i < words.size()) {
         if (i + 2 < words.size()) {
-            std::string trigram = words[i] + "_" + words[i+1] + "_" + words[i+2];
-            const char* t = lookup(fixed_ngrams, trigram.c_str());
-            if (t) {
-                mended.push_back(t);
-                ignore_flags.push_back(1);
-                i += 3;
+            std::string trigram = words[i] + "_" + words[i + 1] + "_" + words[i + 2];
+            const char* trigram_translation = lookup(fixed_ngrams, trigram.c_str());
+            
+            if (trigram_translation) {
+                mended.push_back(trigram_translation);
+                ignore_flags.push_back(1);  
+                i += 3;  
                 continue;
             }
         }
@@ -1690,12 +1732,16 @@ std::string trigramLookup(const std::vector<std::string>& words) {
         i++;
     }
 
+    // Then process bigrams on the result
     return bigramLookup(mended, ignore_flags);
+}
 
-    }
-std::string traduzir_en(string sentence) {
-    to_lower(&sentence[0]); 
-    std::vector<std::string> arr = tokenize(sentence);  
+std::string traduzir_en(const char* sentence) {
+    char buffer[250];
+    strncpy(buffer, sentence, sizeof(buffer));
+    buffer[sizeof(buffer) - 1] = '\0';
+    to_lower(buffer);
+    vector<string> arr = tokenize(string(buffer));  
     std::string translated = trigramLookup(arr);
     
     return script_adequation(translated); 
