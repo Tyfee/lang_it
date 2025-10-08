@@ -1,10 +1,11 @@
-["lang_it running on a local esp32 server"](./esp32_lang_it.jpg)
+!["lang_it running on a local esp32 server"](./esp32_lang_it.jpg)
 *short sentence takes 4ms to translate.*
 
 * HOW TO: 
 
-- You have to move the header file (lang_it.h) and the pairs you want (e.g: pt_en.cpp) to this folder along with your .ino file;
-["project folder"](./filetree.png)
+- You have to move the header file (lang_it.h) and the pairs you want (e.g: pt_en.cpp) to this folder along with your .ino file:
+
+!["project folder"](./filetree.png)
 
 - Install the needed libraries: Wifi, WebServer and ArduinoJson
 
