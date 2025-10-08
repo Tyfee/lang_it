@@ -1,3 +1,5 @@
+#ifdef PT_EN
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -1615,7 +1617,6 @@ vector<pair<string, int>> reorder_helpers(vector<pair<string, int>> sentence_arr
           unsigned char c = text[i];
 
           if ((c & 0x80) == 0) {
-              // ASCII
               if (std::isalnum(c)) {
                   current += c;
               } else {
@@ -1746,3 +1747,5 @@ std::string traduzir_en(const char* sentence) {
     
     return script_adequation(translated); 
 }
+
+#endif
