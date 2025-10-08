@@ -1,3 +1,6 @@
+#define EN_JA
+#include "../lang_it.h"
+
 #ifdef EN_JA
 
 

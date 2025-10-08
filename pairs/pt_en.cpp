@@ -1,3 +1,6 @@
+#define PT_EN
+#include "../lang_it.h"
+
 #ifdef PT_EN
 
 #include <iostream>
@@ -5,7 +8,6 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
-#include "../lang_it.h"
 
 using namespace std;
 

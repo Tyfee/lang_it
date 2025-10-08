@@ -1,7 +1,8 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <ArduinoJson.h>
-#include "lang_it.h"  // wherever it is
+#define PT_EN
+#include "lang_it.h" 
 
 const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASSWORD";
