@@ -46,10 +46,11 @@ typedef struct {
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
   {"o_que", "what"},
+  {"qual_é", "what is"},
   {"por_que", "why"},
   {"do_que", "than"},
   {"por_favor", "please"},
-  {"o_seu", "yours"},
+  {"o_seu", "your"},
   {"o_meu", "mine"},
   {"o_dele", "his"},
   {"por_causa", "because of"},
@@ -82,6 +83,7 @@ constexpr Entry nouns[] = {
   {"olá", "hello"},
   {"inglês", "english"},
   {"mundo", "world"},
+  {"nome", "name"},
 
   {"dois", "two"},
   {"três", "three"},
@@ -100,6 +102,10 @@ constexpr Entry nouns[] = {
   {"quarto", "fourth"},
 
   {"morte", "death"},
+  
+  {"banheiro", "bathroom"},
+  {"cozinha", "kitchen"},
+  {"sala", "room"},
   
   {"melancia", "watermelon"},
   {"areia", "sand"},
@@ -131,6 +137,8 @@ constexpr Entry nouns[] = {
   {"amigo", "friend"},
   {"fome", "hunger"},
   {"frio", "cold"},
+  {"gelado", "cold"},
+  {"quente", "hot"},
   {"dia", "day"},
   {"noite", "night"},
   {"olho", "eye"},
@@ -288,7 +296,10 @@ constexpr Entry adj[] = {
   {"sobre", "about"},
   {"gratis", "free"},
   {"livre", "free"},
-  {"ultimo", "last"}
+  {"ultimo", "last"},
+  {"doce", "sweet"},
+  {"azedo", "sour"},
+  {"amargo", "bitter"}
 };
 
 //adverbs
@@ -354,6 +365,7 @@ constexpr Verb reg_verbs[]  = {
   {"gost", "lik", 0, false},
   {"qu", "want", 1, false},
   {"corr", "run", 1, true},
+  {"jog", "play", 1, true},
   {"abr", "open", 1, false},
   {"fech", "clos", 0, true},
   {"molh", "wet", 1, false},
@@ -370,7 +382,7 @@ constexpr Verb reg_verbs[]  = {
   {"compreend", "comprehend", 1, false},
   {"busc", "search", 1, false},
   {"brilh", "glow", 1, true}, // a lot of these verbs can be inferred from their nouns: brilho -> brilhar, glow -> glow
-  {"possu", "own", 1, false}, // remind to implement that, me;
+  {"possu", "have", 1, false}, // remind to implement that, me;
   {"aprend", "learn", 1, false},
   {"apag", "eras", 0, false},
   {"pint", "paint", 1, true},
@@ -1309,28 +1321,6 @@ bool diminutive = false;
 vector<pair<string, int>> reorder_helpers(vector<Word> sentence_arr) {
     vector<pair<string, int>> reordered_arr;
 
-    // interrogative
-    if(sentence_arr.size() > 0){
-        string last = sentence_arr[sentence_arr.size() - 1].word;
-        //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
-        if(last == "?"){
-            // look for a pronoun
-            string pronoun_ = "";
-            for (auto &p : sentence_arr) {
-                if (p.type == 4) {
-                    pronoun_ = p.word; 
-                    break;                
-                }
-            }
-            if (!pronoun_.empty()) {
-                // is this pronoun in the third person vector?
-                string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
-    
-            }
-        }
-    }
- 
-
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
@@ -1484,6 +1474,32 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
             }
             reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
         } 
+
+          // ------------------------ ADJ + VERBS ----------------- 
+        // yk like, muito fácil correr -> very easy run. you cant have an adjective and a verb without the connector "to"
+        else if (i > 0 &&sentence_arr[i - 1].type == 1  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+            if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
+                reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+                continue;
+            }
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back({sentence_arr[i - 1].translation, sentence_arr[i].type});
+            reordered_arr.push_back(pair<string, int>{"to", -1}); 
+            reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+        }
+   // ------------------------ ADJ + VERBS ----------------- 
+        // yk like, díficil de jogar -> very hard of to play . you cant have an adjective and a verb with a broken connector (8)
+            else if (i > 0 && sentence_arr[i - 2].type == 1 && sentence_arr[i - 1].type == 8  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+            if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
+                reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+                continue;
+            }
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back({sentence_arr[i - 1].translation, sentence_arr[i].type});
+            reordered_arr.push_back(pair<string, int>{"to", -1}); 
+            reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+    
+    } 
         
     // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.
@@ -1603,8 +1619,8 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
         // e.g she is, he is, it is, should stay the same
         // if theres no pronoun before it, we have to plug the it. the other pronoun forms will be handled on a different function 
         else if (sentence_arr[i].translation == "is") {
-          // actualy noun and pronoun lol
-            bool preceded_by_pronoun = (i > 0 && sentence_arr[i - 1].type == 4) || (i > 0 && sentence_arr[i - 1].type == 0) ;
+          // actualy noun and pronoun lol // AND ADVERB TF
+            bool preceded_by_pronoun = (i > 0 && (sentence_arr[i - 1].type == 4 || sentence_arr[i - 1].type == 0 || sentence_arr[i - 1].type == 13 )) ;
 
             if (preceded_by_pronoun) {
                 reordered_arr.push_back({"is", sentence_arr[i].type});
@@ -1619,6 +1635,59 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
                 reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
         }
     }
+
+// interrogative
+if(sentence_arr.size() > 0){
+    string last = sentence_arr[sentence_arr.size() - 1].word;
+    //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
+    if(last == "?"  && sentence_arr[0].type != 13){
+        cout << sentence_arr[0].type;
+        reordered_arr.clear();  // clear previously added elements
+
+        // look for a pronoun
+        // nouns should do this as well, and always have the pronoun being "does"
+        string pronoun_ = "";
+        int pronoun_index = -1;
+        int word_type;
+        for (size_t i = 0; i < sentence_arr.size(); ++i) {
+            if (sentence_arr[i].type == 4 || sentence_arr[i].type == 0) {
+                pronoun_ = sentence_arr[i].translation; 
+                pronoun_index = i;
+                word_type = sentence_arr[i].type;
+                break;                
+            }
+            
+        }
+        if (!pronoun_.empty() && pronoun_index >= 0) {
+            // is this pronoun in the third person vector?
+            string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
+            if(word_type == 0) aux = "does";
+
+            // push everything before the pronoun as is
+            for(int i = 0; i < pronoun_index; ++i){
+                reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+            }
+
+            // push pronoun + verb together
+            string question_phrase = aux + " " + sentence_arr[pronoun_index].translation;
+            if (pronoun_index + 1 < sentence_arr.size() - 1) {
+                if ((sentence_arr[pronoun_index + 1].type == 3 || sentence_arr[pronoun_index + 1].type == 36) && sentence_arr[pronoun_index + 1].translation.back() != 's') {
+                    question_phrase += " " + sentence_arr[pronoun_index + 1].translation;
+                }else{
+                      question_phrase += " " + (sentence_arr[pronoun_index + 1].translation.substr(0, sentence_arr[pronoun_index + 1].translation.length() - 1));
+                }
+            }
+            reordered_arr.push_back({question_phrase, sentence_arr[pronoun_index].type});
+
+            // push remaining words (like "?") after that
+            for(int i = pronoun_index + 2; i < sentence_arr.size(); ++i){
+                reordered_arr.push_back({sentence_arr[i].translation, sentence_arr[i].type});
+            }
+        }
+    }
+}
+
+
 
     return reordered_arr;
 }
