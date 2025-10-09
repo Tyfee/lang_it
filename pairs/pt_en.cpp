@@ -33,8 +33,8 @@ typedef struct
 } Entry;
 
 typedef struct {
-   const char* word;
-   const char* translation;
+   char* word;
+   char* translation;
    int type;
 } Word;
 
@@ -127,8 +127,6 @@ constexpr Entry nouns[] = {
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
   {"flor", "flower"},
   {"dinheiro", "money"},
-  
-  {"crianca", "kid"},
   {"criança", "kid"},
   {"amigo", "friend"},
   {"fome", "hunger"},
@@ -274,6 +272,8 @@ constexpr Entry adj[] = {
   {"facil", "easy"},
   {"dificil", "hard"},
   {"bem", "well"},
+  {"bom", "good"},
+  {"ruim", "bad"},
   {"humido", "humid"},
   {"melhor", "better"},
   {"pior", "worse"},
@@ -288,8 +288,7 @@ constexpr Entry adj[] = {
   {"sobre", "about"},
   {"gratis", "free"},
   {"livre", "free"},
-  {"ultimo", "last"},
-  {"então", "then"}
+  {"ultimo", "last"}
 };
 
 //adverbs
@@ -333,7 +332,8 @@ constexpr Entry adv[] = {
   {"ainda", "still"},
   {"somente", "only"},
   {"só", "only"},
-  {"apenas", "just"}
+  {"apenas", "just"},
+  {"então", "then"}
 };
 
 struct Verb {
@@ -540,7 +540,7 @@ constexpr Entry suff[] = {
   {"ndida", "ndid"},
   {"ndido", "ndid"},
   {"fico", "fic"},
-  {"feito", "fect"},
+  {"eito", "ect"},
   {"feita", "fect"},
   {"édia", "edy"},
   {"édio", "edy"},
@@ -704,31 +704,30 @@ pair<string, int> createNounFromVerb(string verb){
   return pair<string, int>{n, word_type_};
 }
 
-Word adjectification(string adj){
-  
-  char* a;
-  string v;
-  int word_type_;
+Word adjectification(string adj) {
+    string a;
+    int word_type_;
 
-  if(adj.length() > 4){
-      if(adj.substr(adj.length() - 3) == "ado" && lookupRegVerb(adj.substr(0, adj.length() - 3).c_str())){
-        const Verb* verb = lookupRegVerb(adj.substr(0, adj.length() - 3).c_str()); // fech
-        //clos + ed 
-        char buffer[20];
-        strcpy(buffer, verb->translation);
-        strcat(buffer, "ed");
-        a = buffer;
-        word_type_ = 1;
+    if (adj.length() > 4) {
+        if (adj.substr(adj.length() - 3) == "ado" && lookupRegVerb(adj.substr(0, adj.length() - 3).c_str())) {
+            const Verb* verb = lookupRegVerb(adj.substr(0, adj.length() - 3).c_str()); // fech
+            a = std::string(verb->translation) + "ed";
+            word_type_ = 1;
+        } else {
+            a = adj;
+            word_type_ = -1;
         }
-    }else{
-      a = "";
-      word_type_ = -1;
+    } else {
+        a = adj;
+        word_type_ = -1;
     }
-  
-  
- 
-  return Word{a, adj.c_str(), word_type_};
+
+    char* word_copy = strdup(a.c_str());
+    char* translation_copy = strdup(adj.c_str());
+
+    return Word{word_copy, translation_copy, word_type_};
 }
+
 
 // dictionary lookup
 
@@ -1077,7 +1076,7 @@ pair<string, int> prefixLookup(string word){
 
 pair<string, int> suffixLookup(const string& word) {
   string translation;
-    int word_type = -1;
+    int word_type = 0;
 
     if (word.size() > 4) {
         if (word.substr(0, 2) == "in" && lookup(suff, word.substr(word.size() - 4).c_str())) {
@@ -1133,7 +1132,7 @@ pair<string, int> nounLookup(string word){
   // TODO: Creaate hierarchy for word category
   string translation;
   // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
-  int word_type;
+  int word_type = -1;
 
 
   
@@ -1277,21 +1276,21 @@ if (lookup(nouns, singular_pt.c_str())) {
          word_type = 1;
         }
          else if(diminutive){
-         if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "o").c_str())){
-             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "o").c_str()));
+            if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "o").c_str())){
+                translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "o").c_str()));
 
-         }else if(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()) ){
-             translation = "little " + string(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()));
-         }
-           else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "a").c_str())){
-             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a").c_str()));
+            }else if(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()) ){
+                translation = "little " + string(lookup(nouns, (word.substr(0, word.length() - 6) + "o").c_str()));
+            }
+            else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4)  + "a").c_str())){
+                translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 4) + "a").c_str()));
 
-         }else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5)).c_str())){
-             translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5).c_str())));
+            }else  if(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5)).c_str())){
+                translation = "little " + string(lookup(nouns, (script_adequation(word).substr(0, script_adequation(word).length() - 5).c_str())));
 
-         }
-            word_type = 0;
-        }
+            }
+                word_type = 0;
+            }
          // if not found morpheme
         else if(morphemeLookup(word).first.length() > 0){
         // if suffix not found, look for morpheme breakdown
@@ -1300,9 +1299,11 @@ if (lookup(nouns, singular_pt.c_str())) {
       }
 
        // if not found suffix match
-        else if(suffixLookup(word).first.length() > 0){ 
-         translation = suffixLookup(word).first;
-          word_type = suffixLookup(word).second;
+        else if(suffixLookup(word).first.length() > 0 || suffixLookup(word.substr(0, word.length() - 1)).first.length() > 0){ 
+        string look = suffixLookup(word).first.length() > 0 ? suffixLookup(word).first : suffixLookup(word.substr(0, word.length() - 1)).first + "s";
+        translation = look;
+        word_type = suffixLookup(word).first.length() > 0 ? suffixLookup(word).second : suffixLookup(word.substr(0, word.length() - 1)).second;
+       
        }
       
        
@@ -1315,13 +1316,11 @@ if (lookup(nouns, singular_pt.c_str())) {
        }
        else if(strlen(adjectification(word).translation) > 0){
         // if preffix not found, look for prefix
-
         translation = adjectification(word).translation;
         word_type = adjectification(word).type;
        }
-       
        else{
-           return {word, -2};
+           return {word, -1};
       }
   return {translation, word_type};
 }
@@ -1654,22 +1653,26 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
 
   vector<pair<string, int>> sentence_arr;
 
+  int match_type;
   string sentence;
   for(size_t i = 0; i < array_of_words.size(); ++i){
     pair<string, int> match = nounLookup(array_of_words[i]);
     switch (ignore_flags[i])
     {
     case 0:
-    sentence_arr.push_back({match.first, match.second});
-      break;
+    match_type = match.second;
+    if(match.second == -1) match_type = 0;
+        sentence_arr.push_back({match.first, match_type});
+        break;
     case 1:
-    sentence_arr.push_back({array_of_words[i], 0});
-      break;
+       sentence_arr.push_back({array_of_words[i], 0});
+       break;
     default:
       break;
     }
   }
   sentence_arr = reorder_helpers(sentence_arr);
+  
  for (size_t i = 0; i < sentence_arr.size(); ++i) {
     const std::string& token = sentence_arr[i].first;
 

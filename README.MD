@@ -17,15 +17,15 @@ My benchmarks will be:
 
 At first, My goal is to introduce the following translations, and then pivot them between each other, so that any can be translated to any other:
 
-| FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | Dictionary Size |
-| ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- | --------------- |     
-| Portuguese    | English       |  ⚠️    | 202kb |      0.1 %        |                      |  1430 |       188       |   
-| English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                 |   
-| French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
-| English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
-| English       | French        |  ❌    |       |       ?? %        |                      |       |                 |   
-| Spanish       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                 |   
-| Swedish       | English       |  ❌    |       |       ?? %        |                      |       |                 |   
+| FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
+| ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
+| Portuguese    | English       |  ⚠️    | 202kb |      0.1 %        |                      |  1430 | ≈ 0.68 ms/word |
+| English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                |
+| French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
+| English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |  
+| English       | French        |  ❌    |       |       ?? %        |                      |       |                |
+| Spanish       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
+| Swedish       | English       |  ❌    |       |       ?? %        |                      |       |                |
 
 ## How to
 
