@@ -19,7 +19,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
-| Portuguese    | English       |  ⚠️    | 202kb |      0.1 %        |                      |  1430 | ≈ 0.68 ms/word |
+| Portuguese    | English       |  ⚠️    | 202kb |      0.1 %        |                      |  1128 | ≈ 0.68 ms/word |
 | English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                |
 | French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
 | English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |  
