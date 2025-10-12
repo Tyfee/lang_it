@@ -5,3 +5,4 @@ benchmarks/translate_line
 benchmarks/results/*.txt
 test_server/server
 *.Identifier
+.vscode

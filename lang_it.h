@@ -5,11 +5,11 @@
 
 // pairs
 
-#ifdef PT_EN
+#if defined(PT_EN) || defined(ALL)
 std::string traduzir_en(const char* sentence);
 #endif
 
-#ifdef EN_JA
+#if defined(EN_JA) || defined(ALL)
 std::string translate_ja(const char* sentence);
 #endif
 
@@ -26,12 +26,12 @@ inline std::string detect_language(const char* sentence){
 
 inline std::string translate(const char* sentence, const char* from, const char* to){
     std::string f(from), t(to);
-    #ifdef PT_EN
+    #if defined(PT_EN) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "en" || t == "EN")) {
             return traduzir_en(sentence);
         }
     #endif
-    #ifdef EN_JA
+    #if defined(EN_JA) || defined(ALL)
         if ((f == "en" || f == "EN") && (t == "ja" || t == "JA")) {
             return translate_ja(sentence);
         }

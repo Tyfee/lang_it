@@ -74,11 +74,18 @@ async function translate() {
     output.textContent = result.translation;
 }
 
+function clear(){
+    console.log('what');
+    inputEl.value = "";
+    outputEl.textContent = "";
+    output.textContent = "";
+}
+
 inputEl.addEventListener('input', ()=>{
     clearTimeout(timeout);
     timeout = setTimeout(translate, 300);
 });
-langEl.addEventListener('change', translate);
+langEl.addEventListener('change', clear);
 </script>
 </body>
 </html>

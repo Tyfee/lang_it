@@ -17,9 +17,15 @@ My benchmarks will be:
 
 At first, My goal is to introduce the following translations, and then pivot them between each other, so that any can be translated to any other:
 
+✅ = ACCURATE, PASSED BENCHMARKS
+🆗 = FUNCTIONAL, BUT CAN'T BE TRUSTED
+➿ = IMPLEMENTED, ONLY BY PIVOT
+⚠️ = IMPLEMENTED, BUT ISN'T FUNCTIONAL
+❌ = NOT IMPLEMENTED, 
+
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
-| Portuguese    | English       |  ⚠️    | 202kb |      0.1 %        |                      |  1128 | ≈ 0.68 ms/word |
+| Portuguese    | English       |  🆗    | 256kb |      0.2 %        |                      |  1128 | ≈ 0.68 ms/word |
 | English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                |
 | French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
 | English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |  
@@ -29,21 +35,12 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 ## How to
 
-### Run benchmarks
-
-```sh
-cd benchmarks # open benchmark folder
-g++ -o ./translate_line ./translate_line.cpp ../pairs/*.cpp # generate binary 
-ruby benchmark.rb # run ruby script
-cd results # open results folder
-ls 
-```
 
 ### Run the webserver
 
 ```sh
 cd test_server # open server folder
-g++ -o server server.cpp ../pairs/*.cpp # generate binary 
+g++ -o server server.cpp lang_it.h -DALL pairs/*.cpp  # generate binary 
 ./server # run server 
 ```
 
@@ -59,10 +56,32 @@ Simply import the header file
 #include "path/to/lang_it.h"
 ```
 
+
 Then call the function corresponding to your desired pair, passing a string:
 
 ```cpp
 string texto = "teste";
 string traducao = traduzir_en(test);
 cout << traducao;
+```
+
+Docs coming soon, maybe.
+
+And compile against it with the pairs you want (using flags, `-DALL` for every language and FROM_TO for any others e.g `-DPT_EN`):
+
+```sh
+g++ -o main main.cpp lang_it.h -DALL pairs/*.cpp # generate binary 
+```
+
+
+
+
+### Run benchmarks
+
+```sh
+cd benchmarks # open benchmark folder
+g++ -o ./translate_line ./translate_line.cpp ../pairs/*.cpp # generate binary 
+ruby benchmark.rb # run ruby script
+cd results # open results folder
+ls 
 ```
