@@ -18,9 +18,13 @@ My benchmarks will be:
 At first, My goal is to introduce the following translations, and then pivot them between each other, so that any can be translated to any other:
 
 ✅ = ACCURATE, PASSED BENCHMARKS
+
 🆗 = FUNCTIONAL, BUT CAN'T BE TRUSTED
+
 ➿ = IMPLEMENTED, ONLY BY PIVOT
+
 ⚠️ = IMPLEMENTED, BUT ISN'T FUNCTIONAL
+
 ❌ = NOT IMPLEMENTED, 
 
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |

@@ -1331,6 +1331,10 @@ bool diminutive = false;
         singular_pt = word.substr(0, word.size() - 2) + "o"; // gatos -> gato, cachorros -> cachorro
     } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "as") {
         singular_pt = word.substr(0, word.size() - 2) + "a"; // casas -> casa, cachorras -> cachorra, crianças -> criança
+               std::string key = singular_pt.substr(0, singular_pt.size() - 1) + "o";
+                    if(lookup(nouns, key.c_str())){
+                        singular_pt = key; 
+                    }
     } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "es") {
         singular_pt = word.substr(0, word.size() - 2);       // flores -> flor
     } else if (word_normalized.size() > 1 && word_normalized.back() == 's') {
@@ -1361,7 +1365,9 @@ bool diminutive = false;
         if(lookup(adj, (word.substr(0, word.length() - 1).c_str()))){
          translation = lookup(adj, (word.substr(0, word.length() - 1).c_str()));
 
-        }else if(lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str())){
+        }
+        
+        else if(lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str())){
              translation = lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str());
           }
 
