@@ -66,11 +66,89 @@ vector<FrequencyTable> table = {
 // like manga would definitely be a fruit if followed by verbs like "comer" ou "colher", or even shit like "de", cause suco de manga, doce de manga
 // where as you cant make juice out of sleeves, and the prefere preposition would be "da" manga,
 // so i think checking i-1, i-2, i, i+1, i+2 seems fine
-typedef struct{
-     string word;
-     vector<int> ngram;
-     float frequency;
-} HomonymFix;
+
+
+struct Outcome {
+    const char* word;
+    float score;
+};
+
+struct Homonym {
+    const char* word;
+    const Outcome* outcomes;
+    size_t num_outcomes;
+    const char** tokens;
+    size_t num_tokens;
+};
+
+
+static const Outcome manga_outcomes[] = {
+    {"mango", 0.0f}, {"sleeve", 0.0f}
+};
+static const char* manga_tokens[] = {
+    "eat", "taste", "pick", "juice", "sweet", "candy", "$",
+    "sew", "ripped", "rip", "shirt", "button", "tight"
+};
+
+
+static const Outcome banco_outcomes[] = {
+    {"bank", 0.0f}, {"bench", 0.0f}
+};
+static const char* banco_tokens[] = {
+    "pay", "money", "loan", "$", "sit", "beautiful", "outside"
+};
+
+
+static const Homonym homonyms[] = {
+    {"manga", manga_outcomes, 2, manga_tokens, 13},
+    {"banco", banco_outcomes, 2, banco_tokens, 7}
+};
+
+
+string semantics(const vector<string>& sentence, size_t index) {
+    if (index >= sentence.size()) return ""; 
+
+    const string& w = sentence[index];
+    size_t n = sizeof(homonyms) / sizeof(homonyms[0]);
+
+    for (size_t i = 0; i < n; i++) {
+        if (strcmp(homonyms[i].word, w.c_str()) == 0) {
+
+            for (size_t j = 0; j < homonyms[i].num_outcomes; j++)
+                const_cast<Outcome&>(homonyms[i].outcomes[j]).score = 0.0f;
+
+           
+            size_t currentOutcome = 0;
+            for (size_t k = 0; k < homonyms[i].num_tokens; k++) {
+                string token = homonyms[i].tokens[k];
+                if (token == "$") { currentOutcome++; continue; }
+                if ((index > 0 && sentence[index - 1] == token) ||
+                    (index + 1 < sentence.size() && sentence[index + 1] == token)) {
+                    auto& o = const_cast<Outcome&>(homonyms[i].outcomes[currentOutcome]);
+                    o.score += 1.0f;
+                }
+            }
+            float bestScore = -1.0f;
+            string bestWord = w;
+            for (size_t j = 0; j < homonyms[i].num_outcomes; j++) {
+                auto& o = homonyms[i].outcomes[j];
+                if (o.score > bestScore) {
+                    bestScore = o.score;
+                    bestWord = o.word;
+                }
+            }
+
+            return bestWord;
+        }
+    }
+
+    return w;
+}
+
+
+
+
+
 
 // any set of (n)words in portuguese that can't be translated separately
 
@@ -82,6 +160,7 @@ constexpr Entry fixed_ngrams[] = {
   {"do_que", "than"},
   {"por_favor", "please"},
   {"o_seu", "your"},
+  {"ao_redor", "around"},
   {"perto_de", "close to"},
   {"as_vezes", "sometimes"},
   {"o_meu", "mine"},
@@ -141,12 +220,17 @@ constexpr Entry nouns[] = {
   {"dia", "day"},
   {"semana", "week"},
   {"hora", "hour"},
+  {"leite", "milk"},
+
+  {"terra", "dirt"}, //dirt, earth, land 
+  {"praia", "beach"},
 
   {"escola", "school"},
   {"loja", "store"},
   
 
   {"morte", "death"},
+  {"vida", "life"},
   
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
@@ -156,7 +240,18 @@ constexpr Entry nouns[] = {
   {"areia", "sand"},
   {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
+
   {"cachorro", "dog"},
+  
+  {"pássaro", "bird"},
+  {"baleia", "whale"},
+  {"tubarão", "shark"},
+  {"gato", "cat"},
+  {"macaco", "monkey"},
+  {"cavalo", "horse"},
+  {"burro", "donkey"},
+  {"porco", "pig"},
+
   {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
@@ -170,7 +265,6 @@ constexpr Entry nouns[] = {
   {"vida", "life"},
   {"folha", "leaf"},
   {"faca", "knife"},
-  {"gato", "cat"},
   {"mulher", "woman"},
   {"homem", "man"},
   {"pessoa", "person"},
@@ -386,6 +480,7 @@ constexpr Entry adv[] = {
   {"também", "too"},
   {"porque", "because"},
   {"onde", "where"},
+  {"qual", "what is"},
   {"quantos", "how many"},
   {"e", "and"},
   {"quanto", "how much"},
@@ -524,7 +619,11 @@ constexpr Verb irr_verbs[] = {
   {"durm", "sleep", 1, true},
   {"congel", "freeze", 1, true},
   {"compr", "buy", 1, true},
-  {"continu", "keep", 1, true}
+  {"continu", "keep", 1, true},
+  {"sa", "know", 1, true},
+  {"sab", "know", 1, true},
+  {"s", "know", 1, true},
+  {"fa", "do", 1, false}
 };
 
 const Verb* lookupIrrVerb(const char* root) {
@@ -588,10 +687,10 @@ const VerbEnding* lookupEnding(const char* word) {
     return nullptr;
 }
 
-vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir"};
-vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero"};
-vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em"};
-vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is"};
+vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
+vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "ei", "z"};
+vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
+vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia"};
 vector<string> present_continuous = {"ndo", "ndo", "ando"};
 vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
 vector<string> subjunctive = {"sse", "ssemos"};
@@ -621,6 +720,7 @@ constexpr Entry suff[] = {
   {"ário", "ary"},
   {"ária", "ary"},
   {"ral", "ral"},
+  {"ais", "als"},
   {"ador", "ator"},
   {"etro", "meter"},
   {"ência", "ency"},
@@ -642,7 +742,8 @@ constexpr Entry suff[] = {
   {"opia", "opy"},
   {"ismo", "ism"},
   {"ópico", "opic"},
-  {"ópica", "opic"}
+  {"ópica", "opic"},
+  {"arra", "ar"}
 };
 
 string script_adequation(string word) {
@@ -1643,14 +1744,11 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
                 // reordered_arr.push_back(Word{"to", -1});  
                 // i believe +ing is better than verb [to] verb here. 'i love running' vs 'i love to run'
                 // we also need consonant duplication, runing => running
-                Word result = Word{
-                    sentence_arr[i].word, 
-                    sentence_arr[i].translation +                     // this check is to avoid reduplication of continous verbs ending in ing
-                    (!isVowel(sentence_arr[i].translation.back()) && sentence_arr[i].translation.back() != 'g' ? string(1, sentence_arr[i].translation.back()) : "") + 
-                    (sentence_arr[i].translation.substr(sentence_arr[i].translation.length() - 3) != "ing" ? "ing" : ""), 
+               reordered_arr.push_back(Word{"to", "to", -1});
+                reordered_arr.push_back( Word{sentence_arr[i].word,
+                    sentence_arr[i].translation,    
                     sentence_arr[i].type
-                };
-                reordered_arr.push_back(result);
+                });
                 }
             }
    
