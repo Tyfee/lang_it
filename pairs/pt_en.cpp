@@ -612,6 +612,7 @@ constexpr Entry suff[] = {
   {"ágico", "agic"},
   {"ágica", "agic"},
   {"ção", "tion"},
+  {"ções", "tions"},
   {"culo", "cle"},
   {"cula", "cle"},
   {"cleta", "cle"},
@@ -639,7 +640,9 @@ constexpr Entry suff[] = {
   {"ão", "on"},
   {"ópia", "opy"},
   {"opia", "opy"},
-  {"ismo", "ism"}
+  {"ismo", "ism"},
+  {"ópico", "opic"},
+  {"ópica", "opic"}
 };
 
 string script_adequation(string word) {
