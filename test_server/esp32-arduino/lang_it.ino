@@ -1,11 +1,12 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <ArduinoJson.h>
-#define PT_EN
+#define ALL
 #include "lang_it.h" 
 
 const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASSWORD";
+
 
 const char indexPage[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
