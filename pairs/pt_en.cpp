@@ -33,6 +33,15 @@ typedef struct
   const char* t;
 } Entry;
 
+typedef struct
+{
+  const char* w;
+  const char* t;
+  int type;
+  int plural;
+} Suffix;
+
+
 typedef struct {
    string word;
    string translation;
@@ -75,79 +84,108 @@ struct Outcome {
 
 struct Homonym {
     const char* word;
-    const Outcome* outcomes;
+    Outcome* outcomes; 
     size_t num_outcomes;
     const char** tokens;
     size_t num_tokens;
 };
 
 
-static const Outcome manga_outcomes[] = {
+
+static Outcome manga_outcomes[] = {
     {"mango", 0.0f}, {"sleeve", 0.0f}
 };
 static const char* manga_tokens[] = {
     "eat", "taste", "pick", "juice", "sweet", "candy", "$",
-    "sew", "ripped", "rip", "shirt", "button", "tight"
+    "blusa", "shirt", "camisa", "com", "sew", "ripped", "rip", "button", "tight"
 };
 
 
-static const Outcome banco_outcomes[] = {
+static Outcome banco_outcomes[] = {
     {"bank", 0.0f}, {"bench", 0.0f}
 };
 static const char* banco_tokens[] = {
-    "pay", "money", "loan", "$", "sit", "beautiful", "outside"
+    "pay", "money", "loan", "work","$",
+     "sit", "beautiful", "outside"
+};
+
+static Outcome pena_outcomes[] = {
+    {"feather", 0.0f}, {"pity", 0.0f}
+};
+static const char* pena_tokens[] = {
+    "bird", "animal", "$",
+     "feel", "what", "for"
 };
 
 
-static const Homonym homonyms[] = {
+
+static Homonym homonyms[] = {
     {"manga", manga_outcomes, 2, manga_tokens, 13},
-    {"banco", banco_outcomes, 2, banco_tokens, 7}
+    {"banco", banco_outcomes, 2, banco_tokens, 7},
+    {"pena", pena_outcomes, 2, pena_tokens, 6}
 };
-
-
 string semantics(const vector<string>& sentence, size_t index) {
-    if (index >= sentence.size()) return ""; 
+    if (index >= sentence.size()) return sentence[index];
 
     const string& w = sentence[index];
-    size_t n = sizeof(homonyms) / sizeof(homonyms[0]);
+    for (size_t h = 0; h < sizeof(homonyms)/sizeof(homonyms[0]); ++h) {
+        Homonym& hom = homonyms[h];
+        if (!hom.word) continue;
+        if (string(hom.word) != w) continue;
 
-    for (size_t i = 0; i < n; i++) {
-        if (strcmp(homonyms[i].word, w.c_str()) == 0) {
+        // Reset outcome scores
+        for (size_t j = 0; j < hom.num_outcomes; ++j) {
+            if (hom.outcomes && j < hom.num_outcomes) {
+                hom.outcomes[j].score = 0.0f;
+            }
+        }
 
-            for (size_t j = 0; j < homonyms[i].num_outcomes; j++)
-                const_cast<Outcome&>(homonyms[i].outcomes[j]).score = 0.0f;
+        // Check context words
+        int offsets[] = {-2, -1, 1, 2};
+        for (int o : offsets) {
+            int nearbyIdx = static_cast<int>(index) + o;
+            if (nearbyIdx < 0 || nearbyIdx >= static_cast<int>(sentence.size())) continue;
 
-           
+            const string& nearby = sentence[nearbyIdx];
+
             size_t currentOutcome = 0;
-            for (size_t k = 0; k < homonyms[i].num_tokens; k++) {
-                string token = homonyms[i].tokens[k];
-                if (token == "$") { currentOutcome++; continue; }
-                if ((index > 0 && sentence[index - 1] == token) ||
-                    (index + 1 < sentence.size() && sentence[index + 1] == token)) {
-                    auto& o = const_cast<Outcome&>(homonyms[i].outcomes[currentOutcome]);
-                    o.score += 1.0f;
+            if (!hom.tokens) continue;
+
+            for (size_t tidx = 0; tidx < hom.num_tokens && currentOutcome < hom.num_outcomes; ++tidx) {
+                string token = hom.tokens[tidx];
+     
+                if (token == "$") { 
+                    ++currentOutcome; 
+                    continue; 
+                }
+
+                if (nearby == token) {
+                    if (hom.outcomes && currentOutcome < hom.num_outcomes) {
+                        hom.outcomes[currentOutcome].score += 1.0f;
+                    
+                    }
+                    break;
                 }
             }
-            float bestScore = -1.0f;
-            string bestWord = w;
-            for (size_t j = 0; j < homonyms[i].num_outcomes; j++) {
-                auto& o = homonyms[i].outcomes[j];
+        }
+
+        // Pick best outcome
+        float bestScore = -1.0f;
+        string bestWord = w;
+        for (size_t j = 0; j < hom.num_outcomes; ++j) {
+            if (hom.outcomes && j < hom.num_outcomes) {
+                Outcome& o = hom.outcomes[j];
                 if (o.score > bestScore) {
                     bestScore = o.score;
-                    bestWord = o.word;
+                    bestWord = o.word ? string(o.word) : w;
                 }
             }
-
-            return bestWord;
         }
+        return bestWord;
     }
 
     return w;
 }
-
-
-
-
 
 
 // any set of (n)words in portuguese that can't be translated separately
@@ -188,7 +226,19 @@ const char* lookup(const Entry (&dict)[N], const char* word) {
     }
     return nullptr;
 }
+template <size_t N>
+Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].w;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
 
+        if (*p == *q) {
+            return dict[i];
+        }
+    }
+    return Suffix{nullptr, nullptr, -1, -1};
+}
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -221,6 +271,9 @@ constexpr Entry nouns[] = {
   {"semana", "week"},
   {"hora", "hour"},
   {"leite", "milk"},
+  {"roda", "wheel"},
+  {"blusa", "shirt"},
+  {"dinheiro", "money"},
 
   {"terra", "dirt"}, //dirt, earth, land 
   {"praia", "beach"},
@@ -240,6 +293,7 @@ constexpr Entry nouns[] = {
   {"areia", "sand"},
   {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
+  {"sal", "salt"},
 
   {"cachorro", "dog"},
   
@@ -286,6 +340,8 @@ constexpr Entry nouns[] = {
   {"estrela", "star"},
   {"livro", "book"},
   {"casa", "house"},
+
+  {"manga", "mango"},
   
   {"mão", "hand"},
   {"pé", "foot"},
@@ -568,7 +624,9 @@ constexpr Verb reg_verbs[]  = {
   {"prefer", "prefer", 1, false},
   {"prefir", "prefer", 1, false},
   {"lembr", "remember", 1, false},
-  {"par", "stop", 1, true}
+  {"par", "stop", 1, true},
+  {"chor", "cry", 1, true},
+  {"cur", "cure", 1, true}
   
 };
 
@@ -608,11 +666,14 @@ constexpr Verb irr_verbs[] = {
   {"com", "eat", 1, false},
   {"lut", "fight", 1, true},
   {"pod", "can", 1, false},
+  {"consegu", "can", 1, false},
+  {"consig", "can", 1, false},
   {"pos", "can", 1, false},
   {"dev", "should", 1, true},
   {"pens", "think", 1, true},
   {"v", "see", 1, false},
   {"t", "hav", 0, false},
+  {"ti", "hav", 0, false},
   {"funcion", "work", 1, true},
   {"desenh", "draw", 1, true},
   {"dorm", "sleep", 1, true},
@@ -623,7 +684,9 @@ constexpr Verb irr_verbs[] = {
   {"sa", "know", 1, true},
   {"sab", "know", 1, true},
   {"s", "know", 1, true},
-  {"fa", "do", 1, false}
+  {"fa", "do", 1, false},
+  {"pag", "pay", 1, true},
+  {"sent", "sit", 1, true}
 };
 
 const Verb* lookupIrrVerb(const char* root) {
@@ -636,7 +699,7 @@ const Verb* lookupIrrVerb(const char* root) {
     return nullptr;
 }
 
-// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it
+// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it 10 = ize
 // quick dirty verb guessing
 constexpr VerbEnding patt_verbs[] = {
   {"ptar", 0}, // adaptar = adapt,
@@ -649,6 +712,7 @@ constexpr VerbEnding patt_verbs[] = {
   {"ituir", 7},
   {"erir", 8},
   {"itar", 9},
+  {"izar", 20},
 
   //surely theres a way to imolement the past tense endings dinamically, will i? who knows
   {"ptou", 4}, {"ptei", 4}, {"ptado", 4},
@@ -656,17 +720,26 @@ constexpr VerbEnding patt_verbs[] = {
   {"tou", 4}, {"tei", 4}, {"tado", 4},
   {"traiu", 4}, {"traí", 4},
   {"trou", 4}, {"trei", 4},
+  {"izou", 4}, {"izei", 4},
 
   //imperative ig, just adding 10 to the original
-  {"pte", 10},
-  {"oda", 11}, 
-  {"ate", 12},
-  {"traia", 12},
-  {"tre", 13}, 
-  {"ifique", 14},
+  {"pte", 10}, // adaptar = adapt,
+  {"ode", 11}, // explodir = explode 
+  {"ate", 12}, // contatar = contact
+  {"traia", 12}, // extrair = extract
+  {"tre", 13}, // contatar = contact // what about encontrar.... (needs more specification)
+  {"ifique", 16},
+  {"ique", 15},
   {"itua", 17},
-  {"ira", 18},
-  {"ite", 19}
+  {"ite", 19},
+  {"ize", 30},
+// first person, add 20
+  {"pto", 0}, {"oda", 1},
+  {"ato", 2}, {"traio", 2},
+  {"tro", 3}, {"ifico", 6},
+  {"ico", 5}, {"ituo", 7},
+  {"ito", 9}, {"izo", 20},
+
 };
 
 const VerbEnding* lookupEnding(const char* word) {
@@ -690,7 +763,7 @@ const VerbEnding* lookupEnding(const char* word) {
 vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
 vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "ei", "z"};
 vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
-vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia"};
+vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia", "nha"};
 vector<string> present_continuous = {"ndo", "ndo", "ando"};
 vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
 vector<string> subjunctive = {"sse", "ssemos"};
@@ -698,52 +771,52 @@ vector<string> conditional_ = {"aria", "ariamos", "eria"};
 vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
 // common suffixes with traceable trnaslation pattern
-constexpr Entry suff[] = {
-  {"dade", "ty"},
-  {"mente", "ly"},
-  {"mento", "ment"},
-  {"ável", "able"},
-  {"ível", "ible"},
-  {"ória", "ory"},
-  {"ência", "ency"},
-  {"cidade", "city"},
-  {"açado", "aced"},
-  {"ágico", "agic"},
-  {"ágica", "agic"},
-  {"ção", "tion"},
-  {"ções", "tions"},
-  {"culo", "cle"},
-  {"cula", "cle"},
-  {"cleta", "cle"},
-  {"tério", "tery"},
-  {"téria", "tery"},
-  {"ário", "ary"},
-  {"ária", "ary"},
-  {"ral", "ral"},
-  {"ais", "als"},
-  {"ador", "ator"},
-  {"etro", "meter"},
-  {"ência", "ency"},
-  {"êncio", "ence"},
-  {"fia", "phy"},
-  {"eta", "et"},
-  {"ndida", "ndid"},
-  {"ndido", "ndid"},
-  {"fico", "fic"},
-  {"eito", "ect"},
-  {"feita", "fect"},
-  {"édia", "edy"},
-  {"édio", "edy"},
-  {"ura", "ure"},
-  {"ês", "ese"},
-  {"ança", "ance"},
-  {"ão", "on"},
-  {"ópia", "opy"},
-  {"opia", "opy"},
-  {"ismo", "ism"},
-  {"ópico", "opic"},
-  {"ópica", "opic"},
-  {"arra", "ar"}
+constexpr Suffix suff[] = {
+  {"dade", "ty", 0, 0},
+  {"mente", "ly", 4, 0},
+  {"mento", "ment", 0, 0},
+  {"ável", "able", 1, 0},
+  {"ível", "ible", 1, 0},
+  {"ória", "ory", 0, 0},
+  {"ência", "ency", 0, 0},
+  {"cidade", "city", 0, 0},
+  {"açado", "aced", 1, 0},
+  {"ágico", "agic", 1, 0},
+  {"ágica", "agic", 1, 0},
+  {"ção", "tion", 0, 0},
+  {"ções", "tions", 0, 1},
+  {"culo", "cle", 0, 0},
+  {"cula", "cle", 0, 0},
+  {"cleta", "cle", 0,0},
+  {"tério", "tery",0,0},
+  {"téria", "tery", 0,0},
+  {"ário", "ary",0,0},
+  {"ária", "ary",0,0},
+  {"ral", "ral", 0,0},
+  {"ais", "als", 0, 1},
+  {"ador", "ator", 0, 0},
+  {"etro", "meter", 0,0},
+  {"ência", "ency", 0,0},
+  {"êncio", "ence", 0,0},
+  {"fia", "phy", 0,0},
+  {"eta", "et", 0,0},
+  {"ndida", "ndid", 1,0},
+  {"ndido", "ndid", 0, 0},
+  {"fico", "fic",0,0},
+  {"eito", "ect", 1,0},
+  {"feita", "fect", 1,0},
+  {"édia", "edy", 0,0},
+  {"édio", "edy", 0, 0},
+  {"ura", "ure", 0, 0},
+  {"ês", "ese", 0, 0},
+  {"ança", "ance", 0,0},
+  {"ão", "on", 0,0},
+  {"ópia", "opy", 0,0},
+  {"opia", "opy", 0,0},
+  {"ismo", "ism",0,0},
+  {"ópico", "opic", 1,0},
+  {"ópica", "opic", 1,0},
+  {"arra", "ar", 0, 0}
 };
 
 string script_adequation(string word) {
@@ -867,12 +940,26 @@ string normalize(string word) {
 }
 
 
-
+//so this will get the stem of a found verb
+// like chor, add o, and form it into a noun -> to cry -> a cry to cure -> a cure
+// WAIT I DONT EVEN NEED THE PT?? but what about exceptions? 
+// in pt its usually NOUN_FORM == 1st pers. sing. English is literally just the infinitive.
+// call this when the verb comes after an article !
 Word createNounFromVerb(string verb){
    string n = "";
-   int word_type_;
 
-  return Word{n, verb, word_type_};
+  return Word{n, verb, 0};
+}
+
+//maybe adjectives as well? but idk, like bless[3] -> blessed[1], curse -> cursed, (that lowk might be easier)
+//does it work in pt tho?
+// abençoar -> abençoado, amaldiçoar -> amaldiçoado, curar -> curado
+// bless -> blessed, curse -> cursed, cure -> cured
+// seems like it does
+
+Word createAdjectiveFromVerb(string verb){
+  string n = "";
+  return Word{n, verb, 0};
 }
 
 Word adjectification(string adj) {
@@ -1261,6 +1348,7 @@ Word prefixLookup(string word){
               case 7: case 17: ending="itute"; break; 
               case 8: case 18: ending="er"; break; 
               case 9: case 19: ending="it"; break; 
+              case 20: case 30: ending="ize"; break; 
           } 
           if(stem.length() > 2) { 
               return {stem, normalize(stem + ending), 3}; 
@@ -1273,48 +1361,53 @@ Word prefixLookup(string word){
 
     return {word, "", -1};
 }
-
-Word suffixLookup(const string& word) {
-  string translation;
+Word suffixLookup(const std::string& word) {
+    std::string translation;
     int word_type = 0;
 
+    // example: in- prefix detection
     if (word.size() > 4) {
-        if (word.substr(0, 2) == "in" && lookup(suff, word.substr(word.size() - 4).c_str())) {
-            return {word, "",-1};
+        if (word.substr(0, 2) == "in" &&
+            lookupSuff(suff, word.substr(word.size() - 4).c_str()).t) {
+            return {word, "", -1};
         }
     }
 
-    // this is some lexeme break up shit
-    // TODO: expand to nouns and verbs as well. like abertamente, currently becomes (abertaly -> abertcly).
-    // you should be able to find the adj stem abert from abrir.
-    // not very hard since theres patterns for verb->adjective conversion, such as abrir -> aberto, cobrir -> coberto
-    // this way you can store just the verb stems and no need of storing a bunch of adjectives
-    for (int len = 6; len >= 2; --len) {
-        if (word.length() >= len) {
-// like if you find ly, in felizmente -> tristely. you break up [triste] [ly]. 
-          string ending = word.substr(word.length() - len);
-            const char* mapped = lookup(suff, ending.c_str());
+    // check suffix patterns
+   for (int len = 6; len >= 2; --len) {
+    if (word.length() >= static_cast<size_t>(len)) {
 
-            if (mapped) {
-            // look up [triste] in the adj table, and if theres a match [sad]
-                string stem = word.substr(0, word.length() - len);
-               
-               if (lookup(adj,stem.c_str())) {
-            translation = string(lookup(adj, stem.c_str())) + mapped;
-        } else if (!stem.empty() && lookup(adj,(stem.substr(0, stem.length() -1) + "o").c_str())) { 
-            translation = string(lookup(adj, (stem.substr(0, stem.length() -1) + "o").c_str())) + mapped;
-        } else {
-            
-            translation = stem + mapped;
-        }
+        std::string ending = word.substr(word.length() - len);
+        Suffix suffResult = lookupSuff(suff, ending.c_str());
 
-                word_type = 2;
-                return {word, normalize(script_adequation(translation)), word_type};
+        if (suffResult.t) {
+            const char* mapped = suffResult.t;
+            std::string stem = word.substr(0, word.length() - len);
+            word_type = suffResult.type;
+            const char* adjResult = lookup(adj, stem.c_str());
+            if (adjResult) {
+                translation = std::string(adjResult) + mapped;
+            word_type = 1;
             }
+            else if (!stem.empty()) {
+                std::string altStem = stem.substr(0, stem.length() - 1) + "o";
+                const char* altAdj = lookup(adj, altStem.c_str());
+                if (altAdj)
+                    translation = std::string(altAdj) + mapped;
+                else
+                    translation = stem + mapped;
+            }
+            else {
+                translation = stem + mapped;
+            }
+
+            return {word, normalize(script_adequation(translation)), word_type};
         }
     }
+}
 
-    return {word, word,-1}; // fallback
+
+    return {word, word, -1}; // fallback: unchanged
 }
 
 bool isDiminutive(const std::string& s, const char* suffix) {
@@ -1542,7 +1635,10 @@ bool diminutive = false;
 // this is actually various manipulations (Take Off The Blindfold REFERENCE????)
 //not only word order, but i'm not changing the name at this point
 vector<Word> reorder_helpers(vector<Word> sentence_arr) {
+    
     vector<Word> reordered_arr;
+for (size_t j = 0; j < sentence_arr.size(); ++j) {
+}
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
 
@@ -1573,6 +1669,7 @@ vector<Word> reorder_helpers(vector<Word> sentence_arr) {
             return reordered_arr;
         }
 
+
         // ------------------------ ADJ + VERBS ----------------- 
         // yk like, díficil de jogar -> very hard of to play . you cant have an adjective and a verb with a broken connector (8)
             else if (i > 0 && sentence_arr[i - 2].type == 1 && sentence_arr[i - 1].type == 8  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
@@ -1588,6 +1685,19 @@ vector<Word> reorder_helpers(vector<Word> sentence_arr) {
           
     
     } 
+
+    //what are the pronouns called? the ones that are like, themself, itslef, myself.
+    // lmk if anybody knows that, like..................
+   else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "-"  && sentence_arr[i].word == "se") {
+    // ame-se        
+    
+            reordered_arr.pop_back(); 
+            reordered_arr.pop_back(); 
+            // verb
+            reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr[i-2].translation, sentence_arr[i].type}); 
+            // yourself
+            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr[i].type}); 
+        }
 
          // ------------------------ FOR/WITHOUT + VERB? IS THAT A NAME FOR THAT  --------------------
         // the construction for + verb[3 || 36], only shows up as the present continuous:
@@ -1672,10 +1782,11 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
 
             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, 1});  
             reordered_arr.push_back(Word{sentence_arr[i- 1].word, sentence_arr[i - 1].translation, 0}); 
-        
+            
         }
 
       
+
        
   // ------------------------ ARTICLE VS PREPOSITION (e.g A VS À) COMPETITION  --------------------
         // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
@@ -1755,6 +1866,11 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
           // ------------------------ ADJ + VERBS ----------------- 
         // yk like, muito fácil correr -> very easy run. you cant have an adjective and a verb without the connector "to"
         else if (i > 0 &&sentence_arr[i - 1].type == 1  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+                if (i > 1 && sentence_arr[i - 2].type == 0 && sentence_arr[i - 1].type == 1) {
+        // This is actually part of a noun-adjective-verb sequence, skip this rule
+        reordered_arr.push_back(sentence_arr[i]);
+        continue;
+    }
             if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
                 reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
                 continue;
@@ -1784,7 +1900,7 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
 
                 if (i + 1 < sentence_arr.size()) {
                     int next_type = sentence_arr[i + 1].type;
-                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == -2 || next_type == 9  || next_type == 8) {
+                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == 2 || next_type == 9  || next_type == 8 || next_type == 13) {
                         add_it = false; 
                     }
                 }
@@ -1819,6 +1935,16 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});  
         } 
+          // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
+        // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
+       else if (i > 1 && sentence_arr[i - 2].type == 0  && sentence_arr[i - 1].translation == "of" && sentence_arr[i].type == 0) {
+    reordered_arr.pop_back();
+    reordered_arr.pop_back();   
+    reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
+    reordered_arr.push_back(Word{ sentence_arr[i - 2].word, sentence_arr[i - 2].translation, sentence_arr[i - 2].type});
+    continue;  // IMPORTANT: skip other rules
+}
+
 
         // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
@@ -1866,15 +1992,6 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
             reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
         } 
 
-        // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
-        // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
-        else if (i > 1 && sentence_arr[i - 2].type == 0  && sentence_arr[i - 1].translation == "of" && sentence_arr[i].type == 0) {
-            reordered_arr.pop_back();
-            reordered_arr.pop_back();   
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
-            reordered_arr.push_back(Word{ sentence_arr[i - 2].word, sentence_arr[i - 2].translation, sentence_arr[i - 2].type});
-        } 
-
       
 
         else {
@@ -1907,6 +2024,7 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
             reordered_arr[i - 1].translation = article; 
 
 }
+
 
 }
 
@@ -1968,8 +2086,38 @@ if(sentence_arr.size() > 0){
 }
 
 
+//statistics layer
+vector<Word> final_arr;
+for (size_t i = 0; i < reordered_arr.size(); ++i) {
+    final_arr.push_back(reordered_arr[i]);
+}
+//homonym mediation
+for (size_t i = 0; i < final_arr.size(); ++i) {
+    if (final_arr[i].word == "manga" || final_arr[i].word == "banco" || final_arr[i].word == "pena") {
+        
+        int start = max(0, static_cast<int>(i) - 2);
+        int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);
 
-    return reordered_arr;
+        vector<string> context;
+        for (int j = start; j <= end; ++j) {
+            context.push_back(final_arr[j].translation);
+        }
+
+        // But pass the PORTUGUESE word to semantics for homonym lookup
+        size_t contextIndex = static_cast<size_t>(i - start);
+        
+        // Create a temporary context with the Portuguese word at the target position
+        vector<string> portuguese_context = context;
+        portuguese_context[contextIndex] = final_arr[i].word;  // Use Portuguese word for lookup
+        
+        string resolved_word = semantics(portuguese_context, contextIndex);
+
+        final_arr[i].translation = resolved_word;
+    }
+}
+
+
+    return final_arr;
 }
 
 
@@ -2044,6 +2192,7 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
     }
   }
   sentence_arr = reorder_helpers(word_arr);
+
   
  for (size_t i = 0; i < sentence_arr.size(); ++i) {
     const std::string& token = sentence_arr[i].translation;
