@@ -92,7 +92,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
         }
     #endif
     #if defined(PT_ES) || defined(ALL)
-        if ((f == "pt" || f == "ES") && (t == "pt" || t == "ES")) {
+        if ((f == "pt" || f == "PT") && (t == "es" || t == "ES")) {
             return traduzir_es(sentence);
         }
     #endif
