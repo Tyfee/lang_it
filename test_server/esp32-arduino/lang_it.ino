@@ -28,7 +28,7 @@ body{
   min-height:100vh;
 }
 header{
-  background:#0078d7;
+  background:teal;
   color:#fff;
   width:100%;
   text-align:center;
@@ -67,6 +67,7 @@ select,textarea{
   header{font-size:16px;}
   textarea{font-size:15px;}
 }
+strong{color: teal};
 </style>
 </head>
 <body>
@@ -80,6 +81,7 @@ select,textarea{
   </select>
   <textarea id="txt" rows="4" placeholder="Enter text..."></textarea>
   <div id="output"></div>
+<strong id="ms">Process time: </strong>
 </div>
 <script>
 let t;
@@ -96,6 +98,7 @@ async function translateNow(){
     });
     const j=await r.json();
     out.textContent=j.translation||'(no result)';
+    ms.textContent=j.time_ms + "ms"||'(N/A)';
   }catch(e){
     out.textContent='Error: '+e.message;
   }
@@ -137,45 +140,19 @@ void handleRoot() {
   server.send(200, "text/html", html);
 }
 
-void handlePtEn() {
+void handleTranslate(std::string from, std::string to) {
   if (!server.hasArg("plain")) {
     server.send(400, "application/json", "{\"error\":\"no body\"}");
     return;
   }
 
   unsigned long start = micros();
-  std::string translation = translate(server.arg("plain").c_str(), "pt", "en");
+  std::string translation = translate(server.arg("plain").c_str(), from, to);
   unsigned long end = micros();
 
   sendJsonResponse(translation, (end - start) / 1000.0);
 }
 
-void handleEnJa() {
-  if (!server.hasArg("plain")) {
-    server.send(400, "application/json", "{\"error\":\"no body\"}");
-    return;
-  }
-
-  unsigned long start = micros();
-  std::string translation = translate(server.arg("plain").c_str(), "en", "ja");
-  unsigned long end = micros();
-
-  sendJsonResponse(translation, (end - start) / 1000.0);
-}
-
-void handlePtJa() {
-  if (!server.hasArg("plain")) {
-    server.send(400, "application/json", "{\"error\":\"no body\"}");
-    return;
-  }
-
-  unsigned long start = micros();
-  std::string temp = translate(server.arg("plain").c_str(), "pt", "en");
-  std::string translation = translate(temp.c_str(), "en", "ja");
-  unsigned long end = micros();
-
-  sendJsonResponse(translation, (end - start) / 1000.0);
-}
 
 
 void setup() {
@@ -190,13 +167,16 @@ void setup() {
   Serial.println("\nWiFi connected");
   Serial.println("IP address: " + WiFi.localIP().toString());
 
-  server.on("/translate/pt_en", HTTP_POST, handlePtEn);
+  server.on("/translate/pt_en", HTTP_POST, handleTranslate("pt", "en"));
   server.on("/translate/pt_en", HTTP_OPTIONS, handleOptions);
 
-  server.on("/translate/en_ja", HTTP_POST, handleEnJa);
+  server.on("/translate/pt_es", HTTP_POST, handleTranslate("pt", "es"));
+  server.on("/translate/pt_es", HTTP_OPTIONS, handleOptions);
+
+  server.on("/translate/en_ja", HTTP_POST, handleTranslate("en", "ja"));
   server.on("/translate/en_ja", HTTP_OPTIONS, handleOptions);
 
-  server.on("/translate/pt_ja", HTTP_POST, handlePtJa);
+  server.on("/translate/pt_ja", HTTP_POST, handleTranslate("pt", "ja"));
   server.on("/translate/pt_ja", HTTP_OPTIONS, handleOptions);
 
   server.on("/", handleRoot);

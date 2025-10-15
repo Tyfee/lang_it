@@ -370,6 +370,10 @@ static string normalize(string word) {
         if (word.substr(0, 2) == "ch") {
             normalized_ = "ll" + normalized_.substr(2);
         }
+        if (word.substr(0, 2) == "qu") {
+            normalized_ = "cu" + normalized_.substr(2);
+        }
+
 
         if (normalized_.size() >= 3 && (normalized_.substr(normalized_.size() - 2) == "ém" || normalized_.substr(normalized_.size() - 2) == "em")) {
             normalized_ = normalized_.substr(0, normalized_.size() - 2) + "ién";
