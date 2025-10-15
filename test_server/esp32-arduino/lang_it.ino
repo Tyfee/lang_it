@@ -6,8 +6,6 @@
 
 const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASSWORD";
-
-
 const char indexPage[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="en">
@@ -81,7 +79,7 @@ strong{color: teal};
   </select>
   <textarea id="txt" rows="4" placeholder="Enter text..."></textarea>
   <div id="output"></div>
-<strong id="ms">Process time: </strong>
+<strong id="ms"></strong>
 </div>
 <script>
 let t;
@@ -98,7 +96,7 @@ async function translateNow(){
     });
     const j=await r.json();
     out.textContent=j.translation||'(no result)';
-    ms.textContent=j.time_ms + "ms"||'(N/A)';
+    ms.textContent="Processed in: "+j.time_ms + "ms"||'(N/A)';
   }catch(e){
     out.textContent='Error: '+e.message;
   }
@@ -110,6 +108,7 @@ lang.addEventListener('change',translateNow);
 </body>
 </html>
 )rawliteral";
+
 
 
 WebServer server(80);
@@ -140,19 +139,59 @@ void handleRoot() {
   server.send(200, "text/html", html);
 }
 
-void handleTranslate(std::string from, std::string to) {
+void handlePtEn() {
   if (!server.hasArg("plain")) {
     server.send(400, "application/json", "{\"error\":\"no body\"}");
     return;
   }
 
   unsigned long start = micros();
-  std::string translation = translate(server.arg("plain").c_str(), from, to);
+  std::string translation = translate(server.arg("plain").c_str(), "pt", "en");
   unsigned long end = micros();
 
   sendJsonResponse(translation, (end - start) / 1000.0);
 }
 
+void handlePtEs() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"no body\"}");
+    return;
+  }
+
+  unsigned long start = micros();
+  std::string translation = translate(server.arg("plain").c_str(), "pt", "es");
+  unsigned long end = micros();
+
+  sendJsonResponse(translation, (end - start) / 1000.0);
+}
+
+void handleEnJa() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"no body\"}");
+    return;
+  }
+
+  unsigned long start = micros();
+  std::string translation = translate(server.arg("plain").c_str(), "en", "ja");
+  unsigned long end = micros();
+
+  sendJsonResponse(translation, (end - start) / 1000.0);
+}
+
+void handlePtJa() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"no body\"}");
+    return;
+  }
+
+  unsigned long start = micros();
+  
+  std::string temp = translate(server.arg("plain").c_str(), "pt", "en");
+  std::string translation = translate(temp.c_str(), "en", "ja");
+  unsigned long end = micros();
+
+  sendJsonResponse(translation, (end - start) / 1000.0);
+}
 
 
 void setup() {
@@ -167,16 +206,18 @@ void setup() {
   Serial.println("\nWiFi connected");
   Serial.println("IP address: " + WiFi.localIP().toString());
 
-  server.on("/translate/pt_en", HTTP_POST, handleTranslate("pt", "en"));
+  server.on("/translate/pt_en", HTTP_POST, handlePtEn);
   server.on("/translate/pt_en", HTTP_OPTIONS, handleOptions);
 
-  server.on("/translate/pt_es", HTTP_POST, handleTranslate("pt", "es"));
+  
+  server.on("/translate/pt_es", HTTP_POST, handlePtEs);
   server.on("/translate/pt_es", HTTP_OPTIONS, handleOptions);
 
-  server.on("/translate/en_ja", HTTP_POST, handleTranslate("en", "ja"));
+
+  server.on("/translate/en_ja", HTTP_POST, handleEnJa);
   server.on("/translate/en_ja", HTTP_OPTIONS, handleOptions);
 
-  server.on("/translate/pt_ja", HTTP_POST, handleTranslate("pt", "ja"));
+  server.on("/translate/pt_ja", HTTP_POST, handlePtJa);
   server.on("/translate/pt_ja", HTTP_OPTIONS, handleOptions);
 
   server.on("/", handleRoot);
