@@ -31,12 +31,6 @@ typedef struct
 {
   const char* w;
   const char* t;
-} Entry;
-
-typedef struct
-{
-  const char* w;
-  const char* t;
   int type;
   int plural;
 } Suffix;
@@ -77,28 +71,27 @@ vector<FrequencyTable> table = {
 // so i think checking i-1, i-2, i, i+1, i+2 seems fine
 
 
-struct Outcome {
-    const char* word;
-    float score;
-};
-
-struct Homonym {
-    const char* word;
-    Outcome* outcomes; 
-    size_t num_outcomes;
-    const char** tokens;
-    size_t num_tokens;
-};
 
 
+
+// homonyms in portuguese
 
 static Outcome manga_outcomes[] = {
     {"mango", 0.0f}, {"sleeve", 0.0f}
 };
 static const char* manga_tokens[] = {
-    "eat", "taste", "pick", "juice", "sweet", "candy", "$",
-    "blusa", "shirt", "camisa", "com", "sew", "ripped", "rip", "button", "tight"
+    "eat", "taste", "pick", "juice", "sweet", "candy", "dessert", "flavor","taste","ripe","$",
+    "shirt", "sew", "ripped", "rip", "button", "tight", "loose"
 };
+
+static Outcome sede_outcomes[] = {
+    {"thirst", 0.0f}, {"headquarters", 0.0f}
+};
+static const char* sede_tokens[] = {
+    "drink", "water", "feel","$",
+    "company", "location", "building"
+};
+
 
 
 static Outcome banco_outcomes[] = {
@@ -118,75 +111,28 @@ static const char* pena_tokens[] = {
 };
 
 
+static Outcome bateria_outcomes[] = {
+    {"battery", 0.0f}, {"drums", 0.0f}, {"would hit", 0.0f}
+};
+static const char* bateria_tokens[] = {
+    "phone", "charge","percentage","computer","laptop","$",
+    "play", "music", "sound","loud", "$",
+    "i","you"
+};
 
-static Homonym homonyms[] = {
+
+
+
+
+Homonym homonyms[] = {
     {"manga", manga_outcomes, 2, manga_tokens, 13},
     {"banco", banco_outcomes, 2, banco_tokens, 7},
-    {"pena", pena_outcomes, 2, pena_tokens, 6}
+    {"pena", pena_outcomes, 2, pena_tokens, 6},
+    {"sede", sede_outcomes, 2, sede_tokens, 7},
+    {"bateria", sede_outcomes, 3, sede_tokens, 7}
 };
-string semantics(const vector<string>& sentence, size_t index) {
-    if (index >= sentence.size()) return sentence[index];
 
-    const string& w = sentence[index];
-    for (size_t h = 0; h < sizeof(homonyms)/sizeof(homonyms[0]); ++h) {
-        Homonym& hom = homonyms[h];
-        if (!hom.word) continue;
-        if (string(hom.word) != w) continue;
-
-        // Reset outcome scores
-        for (size_t j = 0; j < hom.num_outcomes; ++j) {
-            if (hom.outcomes && j < hom.num_outcomes) {
-                hom.outcomes[j].score = 0.0f;
-            }
-        }
-
-        // Check context words
-        int offsets[] = {-2, -1, 1, 2};
-        for (int o : offsets) {
-            int nearbyIdx = static_cast<int>(index) + o;
-            if (nearbyIdx < 0 || nearbyIdx >= static_cast<int>(sentence.size())) continue;
-
-            const string& nearby = sentence[nearbyIdx];
-
-            size_t currentOutcome = 0;
-            if (!hom.tokens) continue;
-
-            for (size_t tidx = 0; tidx < hom.num_tokens && currentOutcome < hom.num_outcomes; ++tidx) {
-                string token = hom.tokens[tidx];
-     
-                if (token == "$") { 
-                    ++currentOutcome; 
-                    continue; 
-                }
-
-                if (nearby == token) {
-                    if (hom.outcomes && currentOutcome < hom.num_outcomes) {
-                        hom.outcomes[currentOutcome].score += 1.0f;
-                    
-                    }
-                    break;
-                }
-            }
-        }
-
-        // Pick best outcome
-        float bestScore = -1.0f;
-        string bestWord = w;
-        for (size_t j = 0; j < hom.num_outcomes; ++j) {
-            if (hom.outcomes && j < hom.num_outcomes) {
-                Outcome& o = hom.outcomes[j];
-                if (o.score > bestScore) {
-                    bestScore = o.score;
-                    bestWord = o.word ? string(o.word) : w;
-                }
-            }
-        }
-        return bestWord;
-    }
-
-    return w;
-}
-
+const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 
 // any set of (n)words in portuguese that can't be translated separately
 
@@ -216,16 +162,8 @@ constexpr Entry fixed_ngrams[] = {
 };
 vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
-template <size_t N>
-const char* lookup(const Entry (&dict)[N], const char* word) {
-    for (size_t i = 0; i < N; ++i) {
-        const char* p = dict[i].w;
-        const char* q = word;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-        if (*p == *q) return dict[i].t;
-    }
-    return nullptr;
-}
+
+
 template <size_t N>
 Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
     for (size_t i = 0; i < N; ++i) {
@@ -329,6 +267,7 @@ constexpr Entry nouns[] = {
   {"criança", "kid"},
   {"amigo", "friend"},
   {"fome", "hunger"},
+  {"sede", "thirst"},
   {"frio", "cold"},
   {"gelado", "cold"},
   {"quente", "hot"},
@@ -340,6 +279,8 @@ constexpr Entry nouns[] = {
   {"estrela", "star"},
   {"livro", "book"},
   {"casa", "house"},
+  {"compania", "company"},
+  {"empresa", "company"},
 
   {"manga", "mango"},
   
@@ -431,6 +372,8 @@ constexpr Entry pro[] = {
   {"eles", "they"},
   {"esse", "this"},
   {"essa", "this"},
+  {"esses", "these"},
+  {"essas", "these"},
   {"este", "this"},
   {"esta", "this"},
   {"isso", "this"},
@@ -567,7 +510,8 @@ constexpr Entry adv[] = {
   {"somente", "only"},
   {"só", "only"},
   {"apenas", "just"},
-  {"então", "then"}
+  {"então", "then"},
+  {"tão", "so"}
 };
 
 struct Verb {
@@ -630,7 +574,7 @@ constexpr Verb reg_verbs[]  = {
   
 };
 
-const Verb* lookupRegVerb(const char* root) {
+static const Verb* lookupRegVerb(const char* root) {
     for (const auto& v : reg_verbs) {
         const char* p = v.root;
         const char* q = root;
@@ -689,7 +633,7 @@ constexpr Verb irr_verbs[] = {
   {"sent", "sit", 1, true}
 };
 
-const Verb* lookupIrrVerb(const char* root) {
+static const Verb* lookupIrrVerb(const char* root) {
     for (const auto& v : irr_verbs) {
         const char* p = v.root;
         const char* q = root;
@@ -819,7 +763,7 @@ constexpr Suffix suff[] = {
   {"arra", "ar", 0, 0}
 };
 
-string script_adequation(string word) {
+inline string script_adequation(string word) {
     auto replace_all = [&](const std::string& from, const std::string& to) {
         size_t pos = 0;
         while ((pos = word.find(from, pos)) != std::string::npos) {
@@ -856,48 +800,11 @@ replace_all("\xC3\x87", "c"); // Ç
 
 }
 
-bool isVowel(char x)
-{
-    if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
-        || x == 'u' || x == 'y' || x == 'A' || x == 'E' || x == 'I'
-        || x == 'O' || x == 'U' || x == 'Y')
-    return true;
-    else
-     return false;
-}
-
-void to_lower(char *s) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] >= 'A' && s[i] <= 'Z') {
-            s[i] = s[i] - 'A' + 'a';
-        }
-    }
-}
-
-//is the word visibly not imported from a different language? 
-// had to do this since stuff like 'website' is conflicting with verb ending match 'ite',
-// but if we infer wether or not the word is an import, we can stop that
-bool isPortuguese(const string& word){
-
-  bool isIt = true;
-
-  for(int i = 0; i < word.length(); ++i){
-    char letter = word[i];
-    // out of the way we know that there arent native portuguese words with w,y or k. so........  
-        if(letter == 'w' || letter == 'y' || letter == 'k'){
-             return false;
-      }
-      // there must be other syllables that could fit here to extract this info to but i'll do that another day :p
-
-    }
-    return isIt;
-
-}
 
 //normalization
 //this will turn sets of letters that shift on translation and change them accordingly.
 // stuff such as aceitar -> aceipt -> accept
-string normalize(string word) {
+static string normalize(string word) {
     string normalized_ = word;
 
     if (word.length() > 3) {
@@ -999,7 +906,7 @@ Word adjectification(string adj) {
 // like a bunch of starting with r adjectives like real, will take ir, such as irrational, irresponsible 
 // but what about exceptions such as unreal? unrequited?
 // without
-Word morphemeLookup(string word){
+static Word morphemeLookup(string word){
   string translation_; 
   string p;
   string m;
@@ -1634,7 +1541,7 @@ bool diminutive = false;
 // when words need to switch order
 // this is actually various manipulations (Take Off The Blindfold REFERENCE????)
 //not only word order, but i'm not changing the name at this point
-vector<Word> reorder_helpers(vector<Word> sentence_arr) {
+static vector<Word> reorder_helpers(vector<Word> sentence_arr) {
     
     vector<Word> reordered_arr;
 for (size_t j = 0; j < sentence_arr.size(); ++j) {
@@ -2110,7 +2017,7 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
         vector<string> portuguese_context = context;
         portuguese_context[contextIndex] = final_arr[i].word;  // Use Portuguese word for lookup
         
-        string resolved_word = semantics(portuguese_context, contextIndex);
+        string resolved_word = semantics(portuguese_context, contextIndex, homonyms, homonymCount);
 
         final_arr[i].translation = resolved_word;
     }
@@ -2120,49 +2027,8 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
     return final_arr;
 }
 
-
-
-  vector<string> tokenize(const string &text) {
-      std::vector<std::string> tokens;
-      std::string current;
-      size_t i = 0;
-
-      while (i < text.size()) {
-          unsigned char c = text[i];
-
-          if ((c & 0x80) == 0) {
-              if (std::isalnum(c)) {
-                  current += c;
-              } else {
-                  if (!current.empty()) {
-                      tokens.push_back(current);
-                      current.clear();
-                  }
-                  if (!std::isspace(c))
-                      tokens.push_back(std::string(1, c));
-              }
-              ++i;
-          } else {
-              size_t len = 0;
-              if ((c & 0xE0) == 0xC0) len = 2;
-              else if ((c & 0xF0) == 0xE0) len = 3;
-              else if ((c & 0xF8) == 0xF0) len = 4;
-              else len = 1;
-
-              std::string utf8char = text.substr(i, len);
-              current += utf8char;
-              i += len;
-          }
-      }
-
-      if (!current.empty())
-          tokens.push_back(current);
-
-      return tokens;
-  }
-
 //ngram groups
-std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
+static std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
 
   vector<Word> sentence_arr;
   vector<Word> word_arr;
@@ -2211,7 +2077,7 @@ std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flag
   return sentence;
 }
 
-std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>& ignore_flags) {
+static std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>& ignore_flags) {
     std::vector<std::string> mended_array_of_words;
     std::vector<int> new_ignore_flags;
 
@@ -2237,7 +2103,7 @@ std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>
     return unigramLookup(mended_array_of_words, new_ignore_flags);
 }
 
-std::string trigramLookup(const std::vector<std::string>& words) {
+static std::string trigramLookup(const std::vector<std::string>& words) {
     std::vector<std::string> mended;
     std::vector<int> ignore_flags(words.size(), 0);
 

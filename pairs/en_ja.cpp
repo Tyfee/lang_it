@@ -11,7 +11,7 @@
 using namespace std;
 typedef const int Word;
 
-struct Entry {
+struct EntryJ {
     const char* w;
     const int* t;
     size_t len;
@@ -104,7 +104,7 @@ Word _important[] = {DA, I, JI};
 Word _yes[] = {HA, I};
 Word _ie[] = {I, E};
 Word _kh[] = {KO, NBS, HI, NBS};
-constexpr Entry dict[] = { 
+constexpr EntryJ dict[] = { 
     {"am", _is, 1},
     {"are", _is, 1},
     {"is", _is, 1},
@@ -125,7 +125,7 @@ Word _they[] = {A, NA, TA, TA, CHI};
 Word _antn[] = {A, NA, TA, NO};
 Word _wtsn[] = {WA, TA, SI, NO};
 
-constexpr Entry pro[] = { 
+constexpr EntryJ pro[] = { 
     {"i", _i, 3},
     {"you", _you, 3},
     {"we", _we, 5},
@@ -138,7 +138,7 @@ constexpr Entry pro[] = {
 
 
 
-constexpr Entry fixed_ngrams[] = { 
+constexpr EntryJ fixed_ngrams[] = { 
     {"thank_you", _thank, 5} 
 };
 
@@ -337,8 +337,8 @@ static Result findVerb(string &word) {
 static Result nounLookup(string &word) {
     string translation;
     int word_type;
-    const Entry* e = lookup(dict, word.c_str());
-    const Entry* p = lookup(pro, word.c_str());
+    const EntryJ* e = lookup(dict, word.c_str());
+    const EntryJ* p = lookup(pro, word.c_str());
     const Adjective* a = lookup(adj, word.c_str());
     Result vres = findVerb(word);
 

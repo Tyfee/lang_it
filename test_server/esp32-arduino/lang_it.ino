@@ -74,6 +74,7 @@ select,textarea{
 <div id="container">
   <select id="lang">
     <option value="pt_en">PT→EN</option>
+    <option value="pt_es">PT→ES</option>
     <option value="en_ja">EN→JA</option>
     <option value="pt_ja">PT→JA</option>
   </select>
