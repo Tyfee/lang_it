@@ -1,5 +1,8 @@
-#define EN_JA
 #include "../lang_it.h"
+
+#if defined(ALL)
+#define EN_JA
+#endif
 
 #ifdef EN_JA
 
@@ -15,8 +18,10 @@ struct EntryJ {
     const char* w;
     const int* t;
     size_t len;
-};
-
+    int kanji[4]; // this will store the offset from the first unicode of CJK (U+4E00), and the server api will spit out the numbers,
+    int kanjiCount;
+};             // whatever frontend being used (preferablly web-javascript) will simply calculate the resulf offset and display the kanji  
+               // no kanji will simply send it as it is. the actual hiragana, and will be stored as -1
 struct Adjective {
     const char* w;
     const int* t;
@@ -99,20 +104,51 @@ Word _thank[] = {A, RI, GA, TO, U};
 Word _taberu[] = {TA, BE, RU};
 Word _tukuru[] = {TU, KU, RU};
 Word _egk[] = {E, GA, KU};
+Word _tmg[] = {TA, MA, GO};
 
 Word _important[] = {DA, I, JI};
 Word _yes[] = {HA, I};
 Word _ie[] = {I, E};
 Word _kh[] = {KO, NBS, HI, NBS};
 constexpr EntryJ dict[] = { 
-    {"am", _is, 1},
-    {"are", _is, 1},
-    {"is", _is, 1},
-    {"important", _important, 3},
-    {"yes", _yes, 2},
-    {"thanks", _thank, 3},
-    {"house", _ie, 2},
-    {"coffee", _kh, 4}
+    {"am", _is, 1, {-1}, 0},
+    {"are", _is, 1,{-1}, 0},
+    {"is", _is, 1,{-1}, 0},     // this will be the example of what i'm cooking
+                                // pay ATTENTION MATE. an Entry is composed of its 'original_word (important)', 'translation_kana (DA, I, JI)' 
+                                // 'size (3)', kanji_offsets {2855, 139}, 'number_of_kanji (2)'
+                                // how do you get this shit??? you find the unicode hex value of the kanji you need, and substract the first
+                               // character from the CJK ideograms block (4E00), e.g: important => 大事
+                               // the hex values are 大 = 5927 and　事 = 4E8B, so we subtract the first char value 
+                               // and we get two offsets = B27 and 8B.
+                               // then you convert the offset back to decimal and you will get the offset integers (2855, 139)
+                               // then your front end needs to make the steps backwards to retrieve the kanji!
+                               // DO WHAT???????
+                               // if theres no kanji associated: the offset is an array with {-1} and the length is 0!.
+
+                               /* heres some js code to find the kanji with the offset
+                                <p id='result'></p>
+
+                                <script>
+                                const result = document.getElementById('result');
+
+                                function getKanji(offset){
+                                let base = 0x4E00;
+                                var kanji =  String.fromCodePoint(base + offset);
+
+                                result.innerText = kanji;
+                                }
+                                getKanji(1397);
+
+                                </script>
+                               
+                               
+                               */
+    {"important", _important, 3, {2855, 139},  2},
+    {"egg", _tmg, 3, {1397},  1},
+    {"yes", _yes, 2, {-1}, 0},
+    {"thanks", _thank, 5, {-1}, 0},
+    {"house", _ie, 2, {3510}, 1},
+    {"coffee", _kh, 4, {-1}, 0}
 };
 
 
@@ -126,20 +162,20 @@ Word _antn[] = {A, NA, TA, NO};
 Word _wtsn[] = {WA, TA, SI, NO};
 
 constexpr EntryJ pro[] = { 
-    {"i", _i, 3},
-    {"you", _you, 3},
-    {"we", _we, 5},
-    {"he", _he, 2},
-    {"she", _she, 3},
-    {"they", _they, 5},
-    {"my", _wtsn, 4},
-    {"your", _antn, 4}
+    {"i", _i, 3, {-1}, 0},
+    {"you", _you, 3, {-1}, 0},
+    {"we", _we, 5, {-1}, 0},
+    {"he", _he, 2, {-1}, 0},
+    {"she", _she, 3, {-1}, 0},
+    {"they", _they, 5, {-1}, 0},
+    {"my", _wtsn, 4, {-1}, 0},
+    {"your", _antn, 4, {-1}, 0}
 };
 
 
 
 constexpr EntryJ fixed_ngrams[] = { 
-    {"thank_you", _thank, 5} 
+    {"thank_you", _thank, 5, {-1}, 0} 
 };
 
 constexpr Verb verbs[] = { 
@@ -343,9 +379,19 @@ static Result nounLookup(string &word) {
     Result vres = findVerb(word);
 
 
+    // we can now decide which one to receive O_0
+    // i'll just have to impleemnt romaji and kanji as query params and function params or whatever
     string out;
+    string romaji;
+    string kanji;
     if (e) {
         for (size_t i = 0; i < e->len; ++i) out += HIRAGANA[e->t[i]];
+        if(e->kanjiCount > 0) {
+            for(int i = 0; i < e->kanjiCount; ++i){
+                kanji =+ e->kanji[i];
+            };
+        };
+        for (size_t i = 0; i < e->len; ++i) romaji += ROMAJI[e->t[i] - 1];
         translation = out;
         word_type = 0;
          

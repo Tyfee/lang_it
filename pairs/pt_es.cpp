@@ -1,6 +1,9 @@
 // VERY EARLY, dont use this shi 
-#define PT_ES
 #include "../lang_it.h"
+
+#if defined(ALL)
+#define PT_ES
+#endif
 
 #ifdef PT_ES
 
@@ -47,7 +50,7 @@ vector<FrequencyTable> tabela = {
 
 
 static Outcome manga_outcomes[] = {
-    {"mango", 0.0f}, {"sleeve", 0.0f}
+    {"mango", 0.0f,0}, {"sleeve", 0.0f,0}
 };
 static const char* manga_tokens[] = {
     "eat", "taste", "pick", "juice", "sweet", "candy", "$",
@@ -122,7 +125,9 @@ constexpr Entry nouns[] = {
   {"melancia", "sandía"},
   {"acucar", "sugar"},
   {"sal", "salt"},
-  {"cadeira", "silla"}
+  {"cadeira", "silla"},
+  {"mãe", "madre"},
+  {"pai", "padre"}
 };
 
 constexpr Entry art[] = {
@@ -311,7 +316,7 @@ constexpr Suffix suff[] = {
   {"ória", "ory", 0, 0},
   {"cidade", "cidad", 0, 0},
   {"ções", "tions", 0, 1},
-  {"ral", "ral", 0,0},
+  {"tor", "ctor", 0,0},
   {"ais", "ales", 0, 1},
   {"eito", "ecto", 1,0},
   {"ês", "és", 0, 0},
@@ -384,79 +389,12 @@ static string normalize(string word) {
 }
 
 
-// dictionary lookup
-
-// this is about to be nuts, maybe
-// we'll do basic fragmentation, using the list of preffixes, and try to find a match
-// i want this to be separate from prefixLookup() cause this will be >=3 and i need to lookup more than one table
-//e.g inquebrável -> unbreakable. 
-// we need to match the preffix "in" to "un", remove the last vowel and check if the root exists, (quebrá -> quebr -> break).
-// and get the suffix and map it "ável" -> able
-// putting this all together we get unbreakable.
-// preffixes that are highly productive, [in -> un], [des -> de]
-//yeah i'll need to make up rules like crazy here. theres no pattern at all
-// you have un, in, ir and they just work by vibes i guess, unreal, incorrect, uncanny
-// like a bunch of starting with r adjectives like real, will take ir, such as irrational, irresponsible 
-// but what about exceptions such as unreal? unrequited?
-// without
 static Word morphemeLookup(string word){
   string translation_; 
   string p;
   string m;
   string s;
   int word_type_;
-  
-if(word.length() > 5 && word.substr(word.length() - 5) != "ção" && word.substr(word.length() - 3) != "cao"){
-       // this will lookup the basic adjective negation (?), whats even the name of this linguistically, idk
-       // but like, if you find the preffix (un) and the rest of the word is an adjective
-       // you just put them together: incorreto -> [in] + [correct]
-        if(word.substr(0, 2) == "in" && lookup(adj, (word.substr(2, word.length()).c_str()))){
-         
-             p = "in";
-             m = lookup(adj, (word.substr(2, word.length()).c_str()));
-             translation_ = p + m;
-             word_type_ = 1;
-          }
-          else if (word.substr(0, 2) == "in") {
-    string stem = word.substr(2);  
-
-
-    for (auto &entry : suff) {
-        const string &suffix = entry.w;
-
-        if (stem.size() >= suffix.size() &&
-            stem.compare(stem.size() - suffix.size(), suffix.size(), suffix) == 0) {
-            
-            string base = stem.substr(0, stem.size() - suffix.size());
-            p = "un";
-
-            string m;
-            if (lookupIrrVerb(base.c_str())) {
-                m = lookupIrrVerb(base.c_str())->translation;  
-            } else {
-                const Verb* v = lookupRegVerb(base.c_str());
-                m = v ? v->root : base; 
-            }
-            s = m + entry.t;               
-            translation_ = p + s;          
-            word_type_ = 1;
-            break;
-        }
-    }
-}else if(word.substr(word.length() - 3) == "dor" && lookupRegVerb(word.substr(0, word.length() - 4).c_str())){
-  
-  const Verb* v = lookupRegVerb(word.substr(0, word.length() - 4).c_str());
-  translation_ =  string(v->translation) + "er";
-  word_type_ = 0;
-}
-else{
-             translation_ = "";
-             word_type_ = -1;
-          }
-  }else{
-    return {word, "", -1};
-  };
-  
 
   return Word{word, translation_, word_type_};
 };
@@ -924,12 +862,21 @@ else if (i > 0 && (sentence_arr[i - 1].type == 8 || sentence_arr[i - 1].type == 
 
 // interrogative
 if(sentence_arr.size() > 0){
+    string to_push;
     string last = sentence_arr[sentence_arr.size() - 1].word;
     //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
-    if(last == "?"  && sentence_arr[0].type != 13){
-        
+    if(last == "?"){
+        to_push = "¿";
+    }else if(last == "!"){
+        to_push = "¡";
     }
-}
+        reordered_arr.clear();
+        reordered_arr.push_back(Word{to_push, to_push, -2});
+        for(int i = 0; i < sentence_arr.size(); ++i){
+              reordered_arr.push_back(sentence_arr[i]);
+        }
+    }
+
 
 
 //statistics layer

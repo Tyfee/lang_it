@@ -1,5 +1,8 @@
-#define PT_EN
 #include "../lang_it.h"
+
+#if defined(ALL)
+#define PT_EN
+#endif
 
 #ifdef PT_EN
 
@@ -77,7 +80,7 @@ vector<FrequencyTable> table = {
 // homonyms in portuguese
 
 static Outcome manga_outcomes[] = {
-    {"mango", 0.0f}, {"sleeve", 0.0f}
+    {"mango", 0.0f, 0}, {"sleeve", 0.0f, 0}
 };
 static const char* manga_tokens[] = {
     "eat", "taste", "pick", "juice", "sweet", "candy", "dessert", "flavor","taste","ripe","$",
@@ -85,7 +88,7 @@ static const char* manga_tokens[] = {
 };
 
 static Outcome sede_outcomes[] = {
-    {"thirst", 0.0f}, {"headquarters", 0.0f}
+    {"thirst", 0.0f, 0}, {"headquarters", 0.0f, 0}
 };
 static const char* sede_tokens[] = {
     "drink", "water", "feel","$",
@@ -95,7 +98,7 @@ static const char* sede_tokens[] = {
 
 
 static Outcome banco_outcomes[] = {
-    {"bank", 0.0f}, {"bench", 0.0f}
+    {"bank", 0.0f, 0}, {"bench", 0.0f, 0}
 };
 static const char* banco_tokens[] = {
     "pay", "money", "loan", "work","$",
@@ -103,7 +106,7 @@ static const char* banco_tokens[] = {
 };
 
 static Outcome pena_outcomes[] = {
-    {"feather", 0.0f}, {"pity", 0.0f}
+    {"feather", 0.0f, 0}, {"pity", 0.0f, 0}
 };
 static const char* pena_tokens[] = {
     "bird", "animal", "$",
@@ -112,7 +115,7 @@ static const char* pena_tokens[] = {
 
 
 static Outcome bateria_outcomes[] = {
-    {"battery", 0.0f}, {"drums", 0.0f}, {"would hit", 0.0f}
+    {"battery", 0.0f, 0}, {"drums", 0.0f, 0}, {"would hit", 0.0f, 3}
 };
 static const char* bateria_tokens[] = {
     "phone", "charge","percentage","computer","laptop","$",
@@ -570,7 +573,8 @@ constexpr Verb reg_verbs[]  = {
   {"lembr", "remember", 1, false},
   {"par", "stop", 1, true},
   {"chor", "cry", 1, true},
-  {"cur", "cure", 1, true}
+  {"cur", "cure", 1, true},
+  {"fing", "pretend", 1, false}
   
 };
 
@@ -630,7 +634,8 @@ constexpr Verb irr_verbs[] = {
   {"s", "know", 1, true},
   {"fa", "do", 1, false},
   {"pag", "pay", 1, true},
-  {"sent", "sit", 1, true}
+  {"sent", "sit", 1, true},
+  {"levant", "stand_up", 1, true}
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -738,12 +743,14 @@ constexpr Suffix suff[] = {
   {"ária", "ary",0,0},
   {"ral", "ral", 0,0},
   {"ais", "als", 0, 1},
+  {"oria", "ory", 0, 0},
   {"ador", "ator", 0, 0},
   {"etro", "meter", 0,0},
   {"ência", "ency", 0,0},
   {"êncio", "ence", 0,0},
   {"fia", "phy", 0,0},
   {"eta", "et", 0,0},
+  {"ema", "em", 0,0},
   {"ndida", "ndid", 1,0},
   {"ndido", "ndid", 0, 0},
   {"fico", "fic",0,0},
@@ -816,6 +823,9 @@ static string normalize(string word) {
 
         if (word.substr(0, 3) == "esp") {
             normalized_ = normalized_.substr(1);  
+        }
+         if (word.substr(0, 3) == "teo") {
+              normalized_ = "theo" + normalized_.substr(3);
         }
 
         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "icaly") {
@@ -1341,14 +1351,22 @@ Word nounLookup(string word){
    bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
    bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
 
+   // adjectives need diminutive as well
 bool diminutive = false;
     if (isDiminutive(word, "inho")) {
+        
+         word_type = 0; 
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "o").c_str()));
     }
+    
     else if (isDiminutive(word, "inha")) {
-      diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "a").c_str()));
+     
+        word_type = 0; 
+        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "a").c_str()));
     }
     else if (isDiminutive(word, "inhos")) {
+        
+        word_type = 0; 
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
     }
     else if (isDiminutive(word, "inhas")) {
@@ -1366,7 +1384,6 @@ bool diminutive = false;
     else if (isDiminutive(word, "zinhas")) {
          diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "a").c_str()));
     }
-
    bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
    bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
    bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
@@ -1533,7 +1550,7 @@ bool diminutive = false;
        else{
            return {word, word, -1};
       }
-  return {word, translation, word_type};
+  return {word, normalize(translation), word_type};
 }
 
 
@@ -1697,8 +1714,8 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
        
   // ------------------------ ARTICLE VS PREPOSITION (e.g A VS À) COMPETITION  --------------------
         // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
-        // since it defaults to 'the' i dont think i need a fallback 
-        else if (i > 0 && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 4 || sentence_arr[i].type == 9)) {
+        // since it defaults to 'the' i dont think i need a fallback                                                            // this is problably wrong, but ideally -1 should be proper nouns SOMEHOW.
+        else if (i > 0 && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 4 || sentence_arr[i].type == 9 || sentence_arr[i].type == -1)) {
           reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"à","to", 20});
             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
@@ -1759,11 +1776,18 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
                 reordered_arr.pop_back(); 
                 reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});  
                 if (std::find(modals.begin(), modals.end(), sentence_arr[i - 1].translation) == modals.end()) {
+                    
                 // reordered_arr.push_back(Word{"to", -1});  
                 // i believe +ing is better than verb [to] verb here. 'i love running' vs 'i love to run'
                 // we also need consonant duplication, runing => running
                reordered_arr.push_back(Word{"to", "to", -1});
                 reordered_arr.push_back( Word{sentence_arr[i].word,
+                    sentence_arr[i].translation,    
+                    sentence_arr[i].type
+                });
+                
+                }else{
+                     reordered_arr.push_back( Word{sentence_arr[i].word,
                     sentence_arr[i].translation,    
                     sentence_arr[i].type
                 });
