@@ -14,7 +14,7 @@ std::string traduzir_es(const char* sentence);
 #endif
 
 #if defined(EN_JA) || defined(ALL)
-std::string translate_ja(const char* sentence);
+std::string translate_ja(const char* sentence, bool kanji);
 #endif
 
 
@@ -98,7 +98,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
     #endif
     #if defined(EN_JA) || defined(ALL)
         if ((f == "en" || f == "EN") && (t == "ja" || t == "JA")) {
-            return translate_ja(sentence);
+            return translate_ja(sentence, true);
         }
     #endif
 

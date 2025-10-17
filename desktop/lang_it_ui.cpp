@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <string>
 #include "../lang_it.h"
+#include <pango/pango.h>
+
 
 static void on_translate(GtkWidget *widget, gpointer data) {
     GtkEntry* entry = GTK_ENTRY(((GtkWidget**)data)[0]);
@@ -58,12 +60,27 @@ static void on_choose(GtkComboBoxText *combo, gpointer data) {
     g_free((gchar*)from_lang);
 }
 
+
+std::string getKanji(int offset) {
+    gunichar base = 0x4E00;
+    gunichar ch = base + offset;
+
+    gchar utf8[6];
+    gint len = g_unichar_to_utf8(ch, utf8);
+    utf8[len] = '\0';
+
+    return std::string(utf8);
+}
 int main(int argc, char *argv[]) {
+
+ 
+
+
     gtk_init(&argc, &argv);
 
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "lang_it gtk");
-    gtk_window_set_default_size(GTK_WINDOW(window), 600, 200);
+    gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
@@ -82,7 +99,11 @@ int main(int argc, char *argv[]) {
     gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Enter text");
 
     GtkWidget *button = gtk_button_new_with_label("Translate");
-    GtkWidget *label  = gtk_label_new("");
+    GtkWidget *label = gtk_label_new(getKanji(123).c_str());
+    PangoFontDescription *font_desc = pango_font_description_from_string("Sans 20");
+    gtk_widget_override_font(label, font_desc);
+    gtk_widget_override_font(entry, font_desc);
+    pango_font_description_free(font_desc);
 
     gtk_box_pack_start(GTK_BOX(hbox), from, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), to, FALSE, FALSE, 5);
@@ -91,6 +112,7 @@ int main(int argc, char *argv[]) {
     gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(vbox), button, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 5);
+    
 
     gtk_container_add(GTK_CONTAINER(window), vbox);
 

@@ -95,6 +95,15 @@ static const char* sede_tokens[] = {
     "company", "location", "building"
 };
 
+static Outcome novo_outcomes[] = {
+    {"new", 0.0f, 0}, {"young", 0.0f, 0}
+};
+// once i implament bit flags for person/non-person. implement it too
+static const char* novo_tokens[] = {
+    "buy", "brand", "product", "$",
+    "very", "person", "she", "he", "i",
+};
+
 
 
 static Outcome banco_outcomes[] = {
@@ -132,7 +141,9 @@ Homonym homonyms[] = {
     {"banco", banco_outcomes, 2, banco_tokens, 7},
     {"pena", pena_outcomes, 2, pena_tokens, 6},
     {"sede", sede_outcomes, 2, sede_tokens, 7},
-    {"bateria", sede_outcomes, 3, sede_tokens, 7}
+    {"bateria", sede_outcomes, 3, sede_tokens, 7},
+    {"novo", novo_outcomes, 2, novo_tokens, 8},
+    {"nova", novo_outcomes, 2, novo_tokens, 8}
 };
 
 const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
@@ -142,6 +153,7 @@ const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
   {"o_que", "what"},
+  {"quanto_mais", "the more"},
   {"qual_é", "what is"},
   {"por_que", "why"},
   {"do_que", "than"},
@@ -271,9 +283,6 @@ constexpr Entry nouns[] = {
   {"amigo", "friend"},
   {"fome", "hunger"},
   {"sede", "thirst"},
-  {"frio", "cold"},
-  {"gelado", "cold"},
-  {"quente", "hot"},
   {"dia", "day"},
   {"noite", "night"},
   {"olho", "eye"},
@@ -416,8 +425,14 @@ constexpr Entry obl_pro[] = {
 
 // adjectives
 constexpr Entry adj[] = {
+  {"frio", "cold"},
+  {"gelado", "cold"},
+  {"quente", "hot"},
+  
   {"azul", "blue"},
   {"vermelho", "red"},
+  {"amarelo", "yellow"},
+  
   {"bonito", "beautiful"},
   {"legal", "cool"},
   {"grande", "big"},
@@ -465,7 +480,9 @@ constexpr Entry adj[] = {
   {"perto", "close"},
   {"pesado", "heavy"},
   {"torto", "bent"},
-  {"perto", "close"}
+  {"perto", "close"},
+  {"limpo", "clean"},
+  {"sujo", "dirty"}
 };
 
 //adverbs
@@ -574,7 +591,9 @@ constexpr Verb reg_verbs[]  = {
   {"par", "stop", 1, true},
   {"chor", "cry", 1, true},
   {"cur", "cure", 1, true},
-  {"fing", "pretend", 1, false}
+  {"fing", "pretend", 1, false},
+  {"ajud", "help", 1, false},
+  {"desenvolv", "develop", 1, true}
   
 };
 
@@ -1593,7 +1612,15 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
             return reordered_arr;
         }
 
+// demais
+else if (i > 0 && sentence_arr[i - 1].type == 1 && sentence_arr[i].word == "demais") {
 
+        reordered_arr.pop_back();  
+
+    reordered_arr.push_back(Word{"demais", "too", 4});
+    reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type}); 
+}
+    
         // ------------------------ ADJ + VERBS ----------------- 
         // yk like, díficil de jogar -> very hard of to play . you cant have an adjective and a verb with a broken connector (8)
             else if (i > 0 && sentence_arr[i - 2].type == 1 && sentence_arr[i - 1].type == 8  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
@@ -1697,8 +1724,6 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
     continue;  
 }
 
-
-    
   // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
         else if (i > 0 && sentence_arr[i - 1].type == 0 && sentence_arr[i].type == 1) {
@@ -1716,6 +1741,12 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
         // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
         // since it defaults to 'the' i dont think i need a fallback                                                            // this is problably wrong, but ideally -1 should be proper nouns SOMEHOW.
         else if (i > 0 && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 4 || sentence_arr[i].type == 9 || sentence_arr[i].type == -1)) {
+          reordered_arr.pop_back(); 
+            reordered_arr.push_back(Word{"à","to", 20});
+            reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
+        } 
+        // for verbs (e.g ajudar a* desenvolver)
+                else if (i > 0 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
           reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"à","to", 20});
             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
@@ -1944,7 +1975,8 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
         if (preceded_by_pronoun) {
             reordered_arr[i].translation = "is";
         } else {
-            reordered_arr.push_back(Word{"$it", "it", 4 });
+            
+            reordered_arr[i].translation = "it is";
             i++; 
         }
     }    // ------------------------ ARTICLE TWEAKS  --------------------
@@ -2024,7 +2056,7 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 }
 //homonym mediation
 for (size_t i = 0; i < final_arr.size(); ++i) {
-    if (final_arr[i].word == "manga" || final_arr[i].word == "banco" || final_arr[i].word == "pena") {
+    if (final_arr[i].word == "manga" || final_arr[i].word == "banco" || final_arr[i].word == "pena" || final_arr[i].word == "novo" || final_arr[i].word == "nova") {
         
         int start = max(0, static_cast<int>(i) - 2);
         int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);

@@ -20,9 +20,11 @@ struct EntryJ {
     size_t len;
     int kanji[4]; // this will store the offset from the first unicode of CJK (U+4E00), and the server api will spit out the numbers,
     int kanjiCount;
-};             // whatever frontend being used (preferablly web-javascript) will simply calculate the resulf offset and display the kanji  
+             // whatever frontend being used (preferablly web-javascript) will simply calculate the resulf offset and display the kanji  
                // no kanji will simply send it as it is. the actual hiragana, and will be stored as -1
-struct Adjective {
+   int wordType;
+};
+               struct Adjective {
     const char* w;
     const int* t;
     size_t len;
@@ -109,11 +111,32 @@ Word _tmg[] = {TA, MA, GO};
 Word _important[] = {DA, I, JI};
 Word _yes[] = {HA, I};
 Word _ie[] = {I, E};
+
+Word _kr[] = {KO, RE};
+Word _ar[] = {A, RE};
+
 Word _kh[] = {KO, NBS, HI, NBS};
+
+
+Word _i[] = {WA, TA, SI};
+Word _you[] = {A, NA, TA};
+Word _we[] = {WA, TA, SI, TA, CHI};
+Word _he[] = {KA, RE};
+Word _she[] = {KA, NO, JO};
+Word _they[] = {A, NA, TA, TA, CHI};
+Word _antn[] = {A, NA, TA, NO};
+Word _wtsn[] = {WA, TA, SI, NO};
+Word _to[] = {TO};
+
+
+
+
 constexpr EntryJ dict[] = { 
-    {"am", _is, 1, {-1}, 0},
-    {"are", _is, 1,{-1}, 0},
-    {"is", _is, 1,{-1}, 0},     // this will be the example of what i'm cooking
+    {"and", _to, 1, {-1}, 0 , 3},
+    {"am", _is, 1, {-1}, 0 , 3},
+    {"are", _is, 1,{-1}, 0, 3},
+    {"is", _is, 1,{-1}, 0, 3},   
+    {"important", _important, 3, {2855, 139},  2, 1},       // this will be the example of what i'm cooking
                                 // pay ATTENTION MATE. an Entry is composed of its 'original_word (important)', 'translation_kana (DA, I, JI)' 
                                 // 'size (3)', kanji_offsets {2855, 139}, 'number_of_kanji (2)'
                                 // how do you get this shit??? you find the unicode hex value of the kanji you need, and substract the first
@@ -143,33 +166,26 @@ constexpr EntryJ dict[] = {
                                
                                
                                */
-    {"important", _important, 3, {2855, 139},  2},
-    {"egg", _tmg, 3, {1397},  1},
-    {"yes", _yes, 2, {-1}, 0},
-    {"thanks", _thank, 5, {-1}, 0},
-    {"house", _ie, 2, {3510}, 1},
-    {"coffee", _kh, 4, {-1}, 0}
-};
+    
+    {"egg", _tmg, 3, {1397},  1, 0},
+    {"yes", _yes, 2, {-1}, 0, 0},
+    {"thanks", _thank, 5, {-1}, 0, 0},
+    {"house", _ie, 2, {3510}, 1, 0},
+    {"coffee", _kh, 4, {-1}, 0, 0},
+    
+    {"this", _kr, 2, {-1}, 0, 8},
+    {"that", _ar, 2, {-1}, 0, 8},
 
+    // pronouns
 
-Word _i[] = {WA, TA, SI};
-Word _you[] = {A, NA, TA};
-Word _we[] = {WA, TA, SI, TA, CHI};
-Word _he[] = {KA, RE};
-Word _she[] = {KA, NO, JO};
-Word _they[] = {A, NA, TA, TA, CHI};
-Word _antn[] = {A, NA, TA, NO};
-Word _wtsn[] = {WA, TA, SI, NO};
-
-constexpr EntryJ pro[] = { 
-    {"i", _i, 3, {-1}, 0},
-    {"you", _you, 3, {-1}, 0},
-    {"we", _we, 5, {-1}, 0},
-    {"he", _he, 2, {-1}, 0},
-    {"she", _she, 3, {-1}, 0},
-    {"they", _they, 5, {-1}, 0},
-    {"my", _wtsn, 4, {-1}, 0},
-    {"your", _antn, 4, {-1}, 0}
+    {"i", _i, 3, {11201}, 1, 4},
+    {"you", _you, 3, {-1}, 0, 4},
+    {"we", _we, 5, {-1}, 0, 4},
+    {"he", _he, 2, {4476}, 1, 4},
+    {"she", _she, 3, {4476, 2931}, 2, 4},
+    {"they", _they, 5, {-1}, 0, 4},
+    {"my", _wtsn, 4, {-1}, 0, 44},
+    {"your", _antn, 4, {-1}, 0, 44}
 };
 
 
@@ -369,12 +385,32 @@ static Result findVerb(string &word) {
     return Result{word, "", -1};
 }
 
+std::string getKanjiFromOffset(int offset) {
+    char32_t base = 0x4E00;
+    char32_t ch = base + offset;
 
-static Result nounLookup(string &word) {
+    std::string out;
+    if (ch <= 0x7F) {
+        out += static_cast<char>(ch);
+    } else if (ch <= 0x7FF) {
+        out += static_cast<char>(0xC0 | ((ch >> 6) & 0x1F));
+        out += static_cast<char>(0x80 | (ch & 0x3F));
+    } else if (ch <= 0xFFFF) {
+        out += static_cast<char>(0xE0 | ((ch >> 12) & 0x0F));
+        out += static_cast<char>(0x80 | ((ch >> 6) & 0x3F));
+        out += static_cast<char>(0x80 | (ch & 0x3F));
+    } else {
+        out += static_cast<char>(0xF0 | ((ch >> 18) & 0x07));
+        out += static_cast<char>(0x80 | ((ch >> 12) & 0x3F));
+        out += static_cast<char>(0x80 | ((ch >> 6) & 0x3F));
+        out += static_cast<char>(0x80 | (ch & 0x3F));
+    }
+    return out;
+}
+static Result nounLookup(string &word, bool kanji) {
     string translation;
     int word_type;
     const EntryJ* e = lookup(dict, word.c_str());
-    const EntryJ* p = lookup(pro, word.c_str());
     const Adjective* a = lookup(adj, word.c_str());
     Result vres = findVerb(word);
 
@@ -383,14 +419,28 @@ static Result nounLookup(string &word) {
     // i'll just have to impleemnt romaji and kanji as query params and function params or whatever
     string out;
     string romaji;
-    string kanji;
     if (e) {
-        for (size_t i = 0; i < e->len; ++i) out += HIRAGANA[e->t[i]];
-        if(e->kanjiCount > 0) {
-            for(int i = 0; i < e->kanjiCount; ++i){
-                kanji =+ e->kanji[i];
-            };
-        };
+
+
+    for (size_t i = 0; i < e->len; ++i) {
+        if (kanji) {
+            if (e->kanjiCount > 0) {
+                for (int k = 0; k < e->kanjiCount; ++k) {
+                    if (e->kanji[k] != -1) {
+                        out += getKanjiFromOffset(e->kanji[k]);
+                        i += e->len;
+                    } else {
+                        out += HIRAGANA[e->t[i]];
+                    }
+                }
+            } else {
+                out += HIRAGANA[e->t[i]];
+            }
+        } else {
+            out += HIRAGANA[e->t[i]];
+        }
+    }
+
         for (size_t i = 0; i < e->len; ++i) romaji += ROMAJI[e->t[i] - 1];
         translation = out;
         word_type = 0;
@@ -401,10 +451,6 @@ static Result nounLookup(string &word) {
         if(a->type == 1) out += HIRAGANA[NA];
         translation = out;
         word_type = 1;
-    }else if(p){
-        for (size_t i = 0; i < p->len; ++i) out += HIRAGANA[p->t[i]];
-        translation = out;
-        word_type = 4;
     }
     else if (vres.translation.size() > 0) {
         translation = vres.translation;
@@ -416,13 +462,13 @@ static Result nounLookup(string &word) {
  return Result{word, translation, word_type};
 }
 
-static string unigramLookup(vector<string> &array_of_words) {
+static string unigramLookup(vector<string> &array_of_words, bool kanji) {
     string sentence;
     vector<Result> array_of_results;
 
     for (size_t i = 0; i < array_of_words.size(); ++i) {
         if (!sentence.empty()) sentence += " ";
-        auto p = nounLookup(array_of_words[i]);
+        auto p = nounLookup(array_of_words[i], kanji);
         array_of_results.push_back(p);
     }
     array_of_results = reorder_helpers(array_of_results);
@@ -430,7 +476,7 @@ static string unigramLookup(vector<string> &array_of_words) {
     return sentence;
 }
 
-static string bigramLookup(vector<string> &array_of_words) {
+static string bigramLookup(vector<string> &array_of_words, bool kanji) {
     vector<string> result;
     size_t i = 1;
     while (i < array_of_words.size()) {
@@ -446,19 +492,19 @@ static string bigramLookup(vector<string> &array_of_words) {
         }
     }
     if (i == array_of_words.size()) result.push_back(array_of_words.back());
-    return unigramLookup(result);
+    return unigramLookup(result, kanji);
 }
 
-static string trigramLookup(vector<string> &array_of_words) {
+static string trigramLookup(vector<string> &array_of_words, bool kanji) {
     
-    return bigramLookup(array_of_words);
+    return bigramLookup(array_of_words, kanji);
 }
 
-std::string translate_ja(const char* sentence) {
+std::string translate_ja(const char* sentence, bool kanji) {
     std::string s(sentence);  
     to_lower(s);            
     auto tokens = tokenize(s);
-    return trigramLookup(tokens);
+    return trigramLookup(tokens, kanji);
 }
 
 #endif
