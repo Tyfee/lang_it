@@ -29,8 +29,9 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
-| Portuguese    | English       |  🆗    | 233kb |      0.2 %        |                      |  1128 | ≈ 0.68 ms/word |
-| English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |                |
+| Portuguese    | English       |  🆗    | 242kb |      0.2 %        |                      |  1128 | ≈ 0.68 ms/word |
+| Portuguese    | Spanish       |  ⚠️    | 152kb |       ?? %        |                      |  N/A  |      N/A       |
+| English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |      N/A       |
 | French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
 | English       | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |  
 | English       | French        |  ❌    |       |       ?? %        |                      |       |                |
@@ -48,7 +49,7 @@ g++ -o server server.cpp lang_it.h -DALL pairs/*.cpp  # generate binary
 ./server # run server 
 ```
 
-!["HTML page"](/test_server/display.gif)
+!["HTML page"](/server/display.gif)
 
 --------------------
 
