@@ -112,12 +112,15 @@ constexpr Entry nouns[] = {
   {"leite", "leche"},
   {"blusa", "shirt"},
   {"dinheiro", "money"},
-
-  {"terra", "dirt"}, //dirt, earth, land 
+  {"meia", "calcetín"},
+  {"rua", "calle"},
+  {"onda", "ola"},
   {"praia", "playa"},
 
   {"coração", "corazón"},
   {"loja", "tienda"},
+  {"janela", "ventana"},
+  {"varanda", "balcón"},
   
   {"banheiro", "baño"},
   {"cozinha", "cocina"},
@@ -196,7 +199,6 @@ constexpr Entry adj[] = {
   {"pequeno", "little"},
   {"maior", "más grande"},
   {"engraçado", "gracioso"},
-  {"molhado", "wet"},
   {"sozinho", "solo"},
   {"dificil", "duro"},
   {"bem", "bien"},
@@ -209,7 +211,7 @@ constexpr Entry adj[] = {
   {"pior", "worse"},
   {"estranho", "raro"},
   {"esquisito", "raro"},
-  {"doente", "sick"},
+  {"doente", "enfermo"},
   {"certo", "certain"},
   {"outro", "other"},
   {"gratis", "free"},
@@ -372,14 +374,35 @@ static string normalize(string word) {
         char thirdLast = word[word.size() - 3];
         string last2 = word.substr(word.size() - 2);
        
-        if (word.substr(0, 2) == "ch") {
-            normalized_ = "ll" + normalized_.substr(2);
-        }
-        if (word.substr(0, 2) == "qu") {
-            normalized_ = "cu" + normalized_.substr(2);
+        size_t pos = 0;
+        while ((pos = normalized_.find("ch", pos)) != string::npos) {
+            normalized_.replace(pos, 2, "ll");
+            pos += 2; 
         }
 
-
+        pos = 0;
+        while ((pos = normalized_.find("qu", pos)) != string::npos) {
+            normalized_.replace(pos, 2, "cu");
+            pos += 2; 
+        }
+        
+        pos = 0;
+        while ((pos = normalized_.find("lh", pos)) != string::npos) {
+            normalized_.replace(pos, 2, "j");
+            pos += 2; 
+        }
+        
+        pos = 0;
+        while ((pos = normalized_.find("ça", pos)) != string::npos) {
+            normalized_.replace(pos, 3, "za");
+            pos += 2; 
+        }
+          pos = 0;
+        while ((pos = normalized_.find("nh", pos)) != string::npos) {
+            normalized_.replace(pos, 2, "ñ");
+            pos += 2; 
+        }
+         
         if (normalized_.size() >= 3 && (normalized_.substr(normalized_.size() - 2) == "ém" || normalized_.substr(normalized_.size() - 2) == "em")) {
             normalized_ = normalized_.substr(0, normalized_.size() - 2) + "ién";
         }
@@ -387,7 +410,6 @@ static string normalize(string word) {
 
     return normalized_;
 }
-
 
 static Word morphemeLookup(string word){
   string translation_; 

@@ -232,43 +232,6 @@ inline std::vector<std::string> tokenize(const std::string &text) {
       return tokens;
   }
 
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-/* ------- OPTIONAL FUNCTIONS -------------
-|             all pairs CAN use             |  
-------------------------------------------*/
-typedef struct{
-   std::string word;
-   std::string most_similar;
-   float percentage;
-} L_D;
-
-inline L_D levenshtein_distance(std::string word){
-    L_D most_similar = {word, word, 0.0};
-    return most_similar;
-}
-
-
-
-
-
-
-
-
 /* ------- SHARED FUNCTIONS ----------------
 |           some pairs have to use         |  
 ------------------------------------------*/

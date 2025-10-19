@@ -153,6 +153,7 @@ const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
   {"o_que", "what"},
+  {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
   {"quanto_mais", "the more"},
   {"qual_é", "what is"},
   {"por_que", "why"},
@@ -247,9 +248,14 @@ constexpr Entry nouns[] = {
   {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
   {"sal", "salt"},
+  {"ovo", "egg"},
+  {"receita", "recipe"},
+  {"arroz", "rice"},
+  {"feijão", "beans"}, // this is weird, should i store it as beans or bean? 
+  {"frango", "chicken"}, 
 
   {"cachorro", "dog"},
-  
+  {"galinha", "chicken"},
   {"pássaro", "bird"},
   {"baleia", "whale"},
   {"tubarão", "shark"},
@@ -308,7 +314,8 @@ constexpr Entry nouns[] = {
   {"dente", "tooth"},
   {"lingua", "tongue"},
   {"cérebro", "brain"},
-  {"coração", "heart"} ,
+  {"coração", "heart"},
+  {"pele", "skin"},
 
   {"principe", "prince"}, // TODO: irregular feminine noun shifts such as princesa, duquesa, garçonete, etc
   {"tradutor", "translator"},
@@ -654,7 +661,8 @@ constexpr Verb irr_verbs[] = {
   {"fa", "do", 1, false},
   {"pag", "pay", 1, true},
   {"sent", "sit", 1, true},
-  {"levant", "stand_up", 1, true}
+  {"levant", "stand_up", 1, true}, // deal with ts at some point lol
+  {"ach", "find", 1, false}
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -836,8 +844,9 @@ static string normalize(string word) {
     if (word.length() > 3) {
         char thirdLast = word[word.size() - 3];
         string last2 = word.substr(word.size() - 2);
-        if (isVowel(thirdLast) && last2 == "ed") {
+        if (isVowel(thirdLast) && thirdLast != 'e' && last2 == "ed") {
             normalized_ = word.substr(0, word.size() - 3) + "ed";
+            
         }
 
         if (word.substr(0, 3) == "esp") {
@@ -875,6 +884,23 @@ static string normalize(string word) {
     return normalized_;
 }
 
+typedef struct{
+   std::string word;
+   std::string most_similar;
+   float percentage;
+} L_D;
+
+L_D auto_correct(std::string word){
+    L_D most_similar = {word, word, 0.0};
+
+    string attempt;
+    //qwerty
+    for(int i = 0; i < word.length(); i++){
+         
+    }
+    return most_similar;
+}
+
 
 //so this will get the stem of a found verb
 // like chor, add o, and form it into a noun -> to cry -> a cry to cure -> a cure
@@ -882,11 +908,40 @@ static string normalize(string word) {
 // in pt its usually NOUN_FORM == 1st pers. sing. English is literally just the infinitive.
 // call this when the verb comes after an article !
 Word createNounFromVerb(string verb){
-   string n = "";
-
-  return Word{n, verb, 0};
+    string n = "";
+       // this creates agents, pintor => root is pint, theres a verb entry for pint[ar] that resolves to paint. we add 'er'. we get painter
+   // one who paints!
+    if (verb.length() > 4) {
+        string stem = "";
+        string ending4 = verb.substr(verb.length() - 4);
+        string ending3 = verb.substr(verb.length() - 3);
+        string ending5 = verb.substr(verb.length() - 5);
+        
+        if (ending5 == "adora") { // feminine odd root, dont want to think about how to padronize this shit so IDCCCCCCCCCCC 
+            stem = verb.substr(0, verb.length() - 5);
+        } else if (ending4 == "ador") { // same but MASC4MASC
+            stem = verb.substr(0, verb.length() - 4);
+        } else if (ending3 == "ora") { // shorter ones that match most (fem.)
+            stem = verb.substr(0, verb.length() - 3);
+        } else if (ending3.substr(1) == "or") { // shorter ones that match most (masc.)
+            stem = verb.substr(0, verb.length() - 2);
+        }
+        
+        // If theres a verb root make it a noun
+        if (!stem.empty()) {
+            const Verb *v = lookupRegVerb(stem.c_str());
+            const Verb *irr_v = lookupIrrVerb(stem.c_str());
+            
+            if (v) {
+                n = v->translation + string("er");
+            } else if (irr_v) {
+                n = irr_v->translation + string("er");
+            }
+        }
+    }
+    
+    return Word{verb, n, 0};
 }
-
 //maybe adjectives as well? but idk, like bless[3] -> blessed[1], curse -> cursed, (that lowk might be easier)
 //does it work in pt tho?
 // abençoar -> abençoado, amaldiçoar -> amaldiçoado, curar -> curado
@@ -979,12 +1034,7 @@ if(word.length() > 5 && word.substr(word.length() - 5) != "ção" && word.substr
             break;
         }
     }
-}else if(word.substr(word.length() - 3) == "dor" && lookupRegVerb(word.substr(0, word.length() - 4).c_str())){
-  
-  const Verb* v = lookupRegVerb(word.substr(0, word.length() - 4).c_str());
-  translation_ =  string(v->translation) + "er";
-  word_type_ = 0;
-}
+          }
 else{
              translation_ = "";
              word_type_ = -1;
@@ -1012,6 +1062,9 @@ Word prefixLookup(string word){
             int word_type_;
             int verb_type;
             bool aux = false;
+            bool compound = false; // is this verb a compound one? make out, find out, sit down, pass around ets chetera!! DID YOU JUST MISPRONOUNCE ET CETERA? my latin degree was fake jeff 
+            string compound_verb;
+            string verb_complement;
             bool intransitiveness;
             string ending;
 
@@ -1087,7 +1140,16 @@ Word prefixLookup(string word){
                     return Word{word, string(buffer), word_type_};
 
                 } else if(v_irr){
-
+                    for(int i = 0; i < string(v_irr->translation).length(); ++i){
+                        if(v_irr->translation[i] == '_') { // if theres an underscore in the middle of the verb, then its 110% a compound verb, i would know
+                    
+                            compound = true;
+                            compound_verb = string(v_irr->translation).substr(0, i); // and make a copy of the first part omg
+                            verb_complement = string(v_irr->translation).substr(i + 1); // also exctract the following word (up, down, around etc)
+                            break;
+                        } 
+                    }
+                    
                     if(root == "est"){
                         // estou == am estamos == are está == is estão == are
                         if (word.substr(3, word.length()) == "ou"){
@@ -1110,14 +1172,15 @@ Word prefixLookup(string word){
                         case 1: ending = "ed"; break;
                         case 2: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
-                        case 4: ending = "e"; break;
+                        case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 5: ending = "ing"; break;
                         case 6: case 7: ending = (v_irr->type== 0) ? "e" : ""; break;
                         default: break;
                     }
 
                     if(verb_info == 4){
-                        translation_ = "used to " + string(v_irr->translation) + ending;
+                        translation_ = "used to " + (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
+           
                     }
                     else if (verb_info == 5) {
                         string base = v_irr->translation;
@@ -1145,14 +1208,14 @@ Word prefixLookup(string word){
                     else if(verb_info == 6){
                         if (root == "pod") translation_ = "could";
                         else if(root == "dev") translation_ = "should";
-                        else translation_ = "would " + string(v_irr->translation) + ending;
+                        else translation_ = "would " + (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
                         aux = true;
                     } else if(verb_info == 1){
          //TODO: Set up the very specific rules that most verbs can abide to.
                 
                 if(string(v_irr->translation).substr(string(v_irr->translation).length() - 3, 3) == "eed"){
                       translation_ = string(v_irr->translation).substr(0, string(v_irr->translation).length() - 3) + "ed";
-
+                    
                       // O VOWEL SHIFT + E 
 
                       // this is a weird ass pattern that works for a small lil list of verbs (7 as of right now T-T)
@@ -1542,6 +1605,11 @@ bool diminutive = false;
             }
                 word_type = 0;
             }
+
+         else if(createNounFromVerb(word).translation.size() > 0){
+        translation = createNounFromVerb(word).translation;
+        word_type = createNounFromVerb(word).type;
+       }
          // if not found morpheme
         else if(morphemeLookup(word).translation.length() > 0){
         // if suffix not found, look for morpheme breakdown
@@ -1561,7 +1629,7 @@ bool diminutive = false;
         translation = look;
         word_type = suffixLookup(word).translation.length() > 0 ? suffixLookup(word).type : suffixLookup(word.substr(0, word.length() - 1)).type;
        }
-   
+     
        else if(adjectification(word).translation.size() > 0){
         translation = adjectification(word).translation;
         word_type = adjectification(word).type;
@@ -1862,7 +1930,7 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
 
                 if (i + 1 < sentence_arr.size()) {
                     int next_type = sentence_arr[i + 1].type;
-                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == 2 || next_type == 9  || next_type == 8 || next_type == 13) {
+                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == 2 || next_type == 9  || next_type == 8 || next_type == 13 || next_type == 40) {
                         add_it = false; 
                     }
                 }
