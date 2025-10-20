@@ -214,17 +214,13 @@ constexpr Entry nouns[] = {
   {"dez", "ten"},
   {"cem", "a hundred"},
   {"mil", "a thousand"},
-  {"primeiro", "first"},
-  {"segundo", "second"},
-  {"terceiro", "third"},
-  {"quarto", "fourth"},
   {"número", "number"},
   {"ano", "year"},
   {"mês", "month"},
   {"dia", "day"},
   {"semana", "week"},
   {"hora", "hour"},
-  {"leite", "milk"},
+  {"leite", "milk", UNCOUNTABLE | NO_PLURAL},
   {"roda", "wheel"},
   {"blusa", "shirt"},
   {"dinheiro", "money"},
@@ -271,7 +267,7 @@ constexpr Entry nouns[] = {
   {"porta", "door"},
   {"janela", "window"},
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
-  {"todo", "all"},
+  {"todo", "all", NO_PLURAL},
   {"comida", "food"},
   {"cidade", "town"},
   {"arma", "gun"},
@@ -303,7 +299,7 @@ constexpr Entry nouns[] = {
   {"manga", "mango"},
   
   {"mão", "hand"},
-  {"pé", "foot"},
+  {"pé", "foot", IRREGULAR_PLURAL},
   {"braço", "arm"},
   {"perna", "leg"},
   {"cabeça", "head"},
@@ -311,7 +307,7 @@ constexpr Entry nouns[] = {
   {"boca", "mouth"},
   {"dedo", "finger"},
   {"unha", "nail"},
-  {"dente", "tooth"},
+  {"dente", "tooth", IRREGULAR_PLURAL},
   {"lingua", "tongue"},
   {"cérebro", "brain"},
   {"coração", "heart"},
@@ -343,7 +339,10 @@ constexpr Entry nouns[] = {
   {"gente", "people"},
   {"nao", "not"},
   {"sim", "yes"},
-  {"eis", "here's"}
+  {"eis", "here's"},
+  {"floresta", "forest"},
+  {"selva", "jungle"},
+  {"consolo", "consolation"}
 };
 
 constexpr Entry art[] = {
@@ -440,6 +439,10 @@ constexpr Entry adj[] = {
   {"vermelho", "red"},
   {"amarelo", "yellow"},
   
+  {"primeiro", "first"},
+  {"segundo", "second"},
+  {"terceiro", "third"},
+  {"quarto", "fourth"},
   {"bonito", "beautiful"},
   {"legal", "cool"},
   {"grande", "big"},
@@ -489,7 +492,8 @@ constexpr Entry adj[] = {
   {"torto", "bent"},
   {"perto", "close"},
   {"limpo", "clean"},
-  {"sujo", "dirty"}
+  {"sujo", "dirty"},
+  {"virgem", "virgin"}
 };
 
 //adverbs
@@ -600,8 +604,8 @@ constexpr Verb reg_verbs[]  = {
   {"cur", "cure", 1, true},
   {"fing", "pretend", 1, false},
   {"ajud", "help", 1, false},
-  {"desenvolv", "develop", 1, true}
-  
+  {"desenvolv", "develop", 1, true},
+  {"bast", "suffic", 0, true}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -1529,7 +1533,7 @@ bool diminutive = false;
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
     string word_normalized = script_adequation(word);
-
+ 
     if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "os") {
         singular_pt = word.substr(0, word.size() - 2) + "o"; // gatos -> gato, cachorros -> cachorro
     } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "as") {
@@ -1538,8 +1542,8 @@ bool diminutive = false;
                     if(lookup(nouns, key.c_str())){
                         singular_pt = key; 
                     }
-    } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "es") {
-        singular_pt = word.substr(0, word.size() - 2);       // flores -> flor
+    } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 3) == "res") { // i need to know the other three-letter-plurals, i know z, like vezes
+        singular_pt = word.substr(0, word.size() - 3) + "r";       // flores -> flor
     } else if (word_normalized.size() > 1 && word_normalized.back() == 's') {
         singular_pt = word.substr(0, word.size() - 1);       // fallback para palavras terminadas em s
     } else {
@@ -1557,6 +1561,16 @@ bool diminutive = false;
                 translation = singular_en + "s";
             }
             word_type = 0;
+               uint8_t f = lookupFlags(nouns, singular_pt.c_str());
+                if (f & (NO_PLURAL | UNCOUNTABLE)) { // we now have bit flags, one of them check for words with no plural forms like (all).
+                    translation = lookup(nouns, singular_pt.c_str()); // there's also the irregular_plural flag but who knows when i'll fkn do that
+                } else if(f & IRREGULAR_PLURAL){
+                    translation = lookup(nouns, singular_pt.c_str());
+                     if (translation.size() >= 4 && translation[1] == 'o' && translation[2] == 'o') {
+                      translation[1] = 'e';
+                      translation[2] = 'e';
+                    } 
+                }
             translation = normalize(translation);
         }
     }
@@ -1636,7 +1650,9 @@ bool diminutive = false;
        }
        else{
            return {word, word, -1};
+           
       }
+
   return {word, normalize(translation), word_type};
 }
 
@@ -2057,10 +2073,66 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
 }
 
 
+//VAI TOMAR NO CU ESSA PORRA VSFFFFFFFFFFFFFFFFFFFFFFFF QUE ODIO 
+
+else if (i == sentence_arr.size() - 1 && sentence_arr[i - 1].type == 9 && sentence_arr[i].type == 1) {
+        bool add_one = true;
+
+        if (i + 1 < sentence_arr.size()) {
+            int next_type = sentence_arr[i + 1].type;
+            if (next_type == 0 || next_type == 3 || next_type == 10) {
+                add_one = false;
+            }
+            if(isPunctuation(sentence_arr[i + 1].translation)){
+                add_one = true;
+            }
+        }
+
+        if (add_one) {
+            reordered_arr.pop_back();
+             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{"one", "one", 0});
+            if (i + 1 < sentence_arr.size()) reordered_arr.push_back(Word{sentence_arr[i + 1].word, sentence_arr[i + 1].translation, sentence_arr[i + 1].type});
+        }
+        continue;
+    }
+
+    else if (i == sentence_arr.size() - 1  && sentence_arr[i - 1].type == 1 && isPunctuation(sentence_arr[i].translation)) {
+        bool add_one = true;
+
+        if (i + 1 < sentence_arr.size()) {
+            int next_type = sentence_arr[i + 1].type;
+            if (next_type == 0 || next_type == 3 || next_type == 10) {
+                add_one = false;
+            }
+            if(isPunctuation(sentence_arr[i + 1].translation)){
+                add_one = true;
+            }
+        }
+
+        if (add_one) {
+            reordered_arr.pop_back(); reordered_arr.pop_back();
+            
+             reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i- 1].translation, sentence_arr[i - 1].type});
+            reordered_arr.push_back(Word{"one", "one", 0});
+            
+             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            }
+        continue;
+    }
+
+
 }
 
-// interrogative
+
+
+
+
+
 if(sentence_arr.size() > 0){
+
+// interrogative
+
     string last = sentence_arr[sentence_arr.size() - 1].word;
     //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
     if(last == "?"  && sentence_arr[0].type != 13){

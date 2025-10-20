@@ -1,6 +1,7 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 #include <string>
+#include <cstdint>
 #include <vector>
 
 // pairs
@@ -59,9 +60,20 @@ inline void to_lower(char *s) {
     }
 }
 
+enum Flags: uint8_t {
+    ANIMATE = 0,
+    IS_HUMAN = 1 << 0,
+    NO_PLURAL = 1 << 1,
+    IRREGULAR_PLURAL = 1 << 2,
+    IS_PLACE = 1 << 3,
+    IN_ON = 1 << 4,
+    UNCOUNTABLE = 1 << 5
+};
+
 typedef struct {
     const char* w;
     const char* t;
+    uint8_t flags;
 } Entry;
 
 template <size_t N>
@@ -75,8 +87,28 @@ inline const char* lookup(const Entry (&dict)[N], const char* word) {
     return nullptr;
 }
 
+template <size_t N>
+inline uint8_t lookupFlags(const Entry (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].w;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return dict[i].flags;
+    }
+    return 0;
+}
 
 
+inline bool isPunctuation(const std::string &token) {
+    if (token.empty()) return false;
+
+    const std::string punct = ".,?!-/:;()[]{}\"'";
+
+    char first = token.front();
+    char last  = token.back();
+
+    return punct.find(first) != std::string::npos || punct.find(last) != std::string::npos;
+}
 
 inline std::string detect_language(const char* sentence){
     std::string language = "en";
