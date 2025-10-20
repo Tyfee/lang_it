@@ -234,6 +234,7 @@ constexpr Entry nouns[] = {
 
   {"morte", "death"},
   {"vida", "life"},
+  {"bebê", "baby"},
   
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
@@ -249,6 +250,9 @@ constexpr Entry nouns[] = {
   {"arroz", "rice"},
   {"feijão", "beans"}, // this is weird, should i store it as beans or bean? 
   {"frango", "chicken"}, 
+  {"macarrão", "pasta"}, 
+  {"molho", "sauce"},
+  {"peixe", "fish", NO_PLURAL},
 
   {"cachorro", "dog"},
   {"galinha", "chicken"},
@@ -274,8 +278,8 @@ constexpr Entry nouns[] = {
   {"vida", "life"},
   {"folha", "leaf"},
   {"faca", "knife"},
-  {"mulher", "woman"},
-  {"homem", "man"},
+  {"mulher", "woman", IRREGULAR_PLURAL},
+  {"homem", "man", IRREGULAR_PLURAL},
   {"pessoa", "person"},
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
@@ -374,6 +378,10 @@ constexpr Entry pre[] = {
   {"fomos", "were"},
   {"era", "was"},
 
+  {"vai", "will"},
+  {"vou", "will"},
+  {"vamos", "will"},
+
   {"num", "in a"}
 };
 
@@ -450,6 +458,7 @@ constexpr Entry adj[] = {
   {"fraco", "weak"},
   {"pequeno", "little"},
   {"grande", "big"},
+  {"sano", "sane"},
   {"mais", "more"},
   {"engraçado", "funny"},
   {"molhado", "wet"},
@@ -486,6 +495,7 @@ constexpr Entry adj[] = {
   {"amargo", "bitter"},
   {"capaz", "capable"},
   {"louco", "crazy"},
+  {"doido", "crazy"},
   {"próximo", "close"},
   {"perto", "close"},
   {"pesado", "heavy"},
@@ -741,7 +751,7 @@ const VerbEnding* lookupEnding(const char* word) {
 }
 
 vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
-vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "ei", "z"};
+vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z"};
 vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
 vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia", "nha"};
 vector<string> present_continuous = {"ndo", "ndo", "ando"};
@@ -798,7 +808,8 @@ constexpr Suffix suff[] = {
   {"ismo", "ism",0,0},
   {"ópico", "opic", 1,0},
   {"ópica", "opic", 1,0},
-  {"arra", "ar", 0, 0}
+  {"arra", "ar", 0, 0},
+  {"ano", "ane", 1, 0}
 };
 
 inline string script_adequation(string word) {
@@ -848,7 +859,7 @@ static string normalize(string word) {
     if (word.length() > 3) {
         char thirdLast = word[word.size() - 3];
         string last2 = word.substr(word.size() - 2);
-        if (isVowel(thirdLast) && thirdLast != 'e' && last2 == "ed") {
+        if (isVowel(thirdLast) && thirdLast != 'e' && thirdLast != 'i' && last2 == "ed") {
             normalized_ = word.substr(0, word.size() - 3) + "ed";
             
         }
@@ -1082,6 +1093,19 @@ Word prefixLookup(string word){
 
                 if (v) {
                     const char* ending = "";
+
+                    
+                 if(verb_info == 1){ // past tense
+                        string stem = v->translation;
+                        if(!stem.empty() && stem.back() == 'y'){
+                            stem.back() = 'i';   // try -> tri
+                            stem += "ed";        
+                        } else {
+                            stem += "ed";        // regular verbs
+                        }
+                        return Word{word, stem, 3}; // 3 = verb past?
+                    }
+                    
                     switch (verb_info) {
                         case 0: ending = (v->type == 0) ? "e" : ""; break;
                         case 1: ending = "ed"; break;
@@ -1090,6 +1114,7 @@ Word prefixLookup(string word){
                         case 4: ending = "e"; break;
                         default: break;
                     }
+
 
                     if (verb_info == 4) { 
                         const char* used = "used to ";
@@ -1125,6 +1150,7 @@ Word prefixLookup(string word){
                         if (v->type == 0) buffer[i++] = 'e';
                         buffer[i] = '\0';
                     }
+                     
                     else{
                         size_t i = 0;
                         const char* base = v->translation;
@@ -1182,12 +1208,13 @@ Word prefixLookup(string word){
                         default: break;
                     }
 
+
                     if(verb_info == 4){
                         translation_ = "used to " + (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
            
                     }
                     else if (verb_info == 5) {
-                        string base = v_irr->translation;
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement;
 
                         if (!base.empty() && base.back() == 'e' && base != "be") {
                             base.pop_back();
@@ -1282,7 +1309,7 @@ Word prefixLookup(string word){
                             }
                         
                     }else {
-                        translation_ = string(v_irr->translation) + ending;
+                        translation_ =  (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
                     }
 
                     intransitiveness = v_irr->intransitive;
@@ -1434,7 +1461,7 @@ Word nounLookup(string word){
   
   
   // rules
-   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
+   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "m").c_str()) || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
    bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
 
    // adjectives need diminutive as well
@@ -1544,7 +1571,10 @@ bool diminutive = false;
                     }
     } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 3) == "res") { // i need to know the other three-letter-plurals, i know z, like vezes
         singular_pt = word.substr(0, word.size() - 3) + "r";       // flores -> flor
-    } else if (word_normalized.size() > 1 && word_normalized.back() == 's') {
+    }else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "ns") { 
+        singular_pt = word.substr(0, word.size() - 2) + "m";       // nuvens -> nuvem
+    }
+     else if (word_normalized.size() > 1 && word_normalized.back() == 's') {
         singular_pt = word.substr(0, word.size() - 1);       // fallback para palavras terminadas em s
     } else {
         singular_pt = ""; // não é plural conhecido
@@ -1688,7 +1718,7 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
                      pronoun = "";
                 }
                 else{
-                    pronoun = "to ";
+                    if(sentence_arr[0].translation.substr(sentence_arr[0].translation.length() - 2) != "ed") pronoun = "to ";
                 }
             reordered_arr.clear(); 
             reordered_arr.push_back(Word{sentence_arr[0].word, pronoun + sentence_arr[0].translation + (sentence_arr[0].type == 36 ? " it" : ""),sentence_arr[0].type});
@@ -2054,7 +2084,7 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
     if (reordered_arr[i].translation == "is") {
         
         bool preceded_by_pronoun = (i > 0 &&
-            (reordered_arr[i-1].type == 4 || reordered_arr[i-1].type == 0 || reordered_arr[i-1].type == 13 || reordered_arr[i-1].type == 2));
+            (reordered_arr[i-1].type == 4 || reordered_arr[i-1].type == 0 || reordered_arr[i-1].type == 13 || reordered_arr[i-1].type == 2 || reordered_arr[i-1].type == 3 || reordered_arr[i-1].type == 36));
 
         if (preceded_by_pronoun) {
             reordered_arr[i].translation = "is";
