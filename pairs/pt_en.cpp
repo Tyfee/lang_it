@@ -1694,6 +1694,7 @@ bool diminutive = false;
 static vector<Word> reorder_helpers(vector<Word> sentence_arr) {
     
     vector<Word> reordered_arr;
+    
 for (size_t j = 0; j < sentence_arr.size(); ++j) {
 }
 
@@ -1705,103 +1706,107 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
         // point being a portuguese verb can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS than an english one.
 
         // a single verb can define person: vejo -> I see
-      if (sentence_arr.size() == 1 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36 )) {
-        string pronoun;
+    if (sentence_arr.size() == 1 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36 )) {
+    string pronoun;
 
-                if(sentence_arr[0].word.back() == 'o'){
-                    pronoun = (sentence_arr[i - 1].word.size() < 1 ?  "I " : "I");
-                } else if(sentence_arr[0].word.back() == 's'){
-                     pronoun = "we ";
-                } else if(sentence_arr[0].word.back() == 'm'){
-                     pronoun = "they ";
-                } else if(sentence_arr[0].word.back() == 'e'){
-                     pronoun = "";
-                }
-                else{
-                    if(sentence_arr[0].translation.substr(sentence_arr[0].translation.length() - 2) != "ed") pronoun = "to ";
-                }
-            reordered_arr.clear(); 
-            reordered_arr.push_back(Word{sentence_arr[0].word, pronoun + sentence_arr[0].translation + (sentence_arr[0].type == 36 ? " it" : ""),sentence_arr[0].type});
+    if(sentence_arr[0].word.back() == 'o'){
+        pronoun = "I ";   
+    } else if(sentence_arr[0].word.back() == 's'){
+        pronoun = "we ";
+    } else if(sentence_arr[0].word.back() == 'm'){
+        pronoun = "they ";
+    } else if(sentence_arr[0].word.back() == 'e'){
+        pronoun = "";
+    } else {
+        if(sentence_arr[0].translation.size() >= 2 && sentence_arr[0].translation.substr(sentence_arr[0].translation.length() - 2) != "ed") 
+            pronoun = "to ";
+    }
 
-            return reordered_arr;
-        }
+    reordered_arr.clear(); 
+    reordered_arr.push_back(Word{
+        sentence_arr[0].word,
+        pronoun + sentence_arr[0].translation + (sentence_arr[0].type == 36 ? " it" : ""),
+        sentence_arr[0].type
+    });
 
+    return reordered_arr;
+}
 // demais
-else if (i > 0 && sentence_arr[i - 1].type == 1 && sentence_arr[i].word == "demais") {
+ if (i > 1 && sentence_arr.at(i - 1).type == 1 && sentence_arr.at(i).word == "demais") {
 
         reordered_arr.pop_back();  
 
     reordered_arr.push_back(Word{"demais", "too", 4});
-    reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type}); 
+    reordered_arr.push_back(Word{sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type}); 
 }
     
         // ------------------------ ADJ + VERBS ----------------- 
         // yk like, díficil de jogar -> very hard of to play . you cant have an adjective and a verb with a broken connector (8)
-            else if (i > 0 && sentence_arr[i - 2].type == 1 && sentence_arr[i - 1].type == 8  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-            if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            else if (i > 1 && sentence_arr.at(i - 2).type == 1 && sentence_arr.at(i - 1).type == 8  &&  (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+            if (sentence_arr.at(i - 1).translation == "don't" || sentence_arr.at(i - 1).translation == "doesn't") {
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
                 continue;
             }
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i).type});
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"de", "to", -1}); 
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
           
     
     } 
 
     //what are the pronouns called? the ones that are like, themself, itslef, myself.
     // lmk if anybody knows that, like..................
-   else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "-"  && sentence_arr[i].word == "se") {
+   else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 36) && sentence_arr.at(i - 1).translation == "-"  && sentence_arr.at(i).word == "se") {
     // ame-se        
     
             reordered_arr.pop_back(); 
             reordered_arr.pop_back(); 
             // verb
-            reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr[i-2].translation, sentence_arr[i].type}); 
+            reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr.at(i - 2).translation, sentence_arr.at(i).type}); 
             // yourself
-            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr[i].type}); 
+            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr.at(i).type}); 
         }
 
          // ------------------------ FOR/WITHOUT + VERB? IS THAT A NAME FOR THAT  --------------------
         // the construction for + verb[3 || 36], only shows up as the present continuous:
         // (for sending* me and invitation, for selling* yourself pardons)
         // (what is this food for? it's for selling*)
-    else if (i > 0 && (sentence_arr[i - 1].translation == "for" || sentence_arr[i - 1].translation == "without") &&
-    (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+    else if (i > 0 && (sentence_arr.at(i - 1).translation == "for" || sentence_arr.at(i - 1).translation == "without") &&
+    (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
 
       reordered_arr.pop_back();   
-    string fixed_verb = sentence_arr[i].translation.back() == 'e'
-        ? sentence_arr[i].translation.substr(0, sentence_arr[i].translation.length() - 1) + "ing"
-        : sentence_arr[i].translation + "ing";
+    string fixed_verb = sentence_arr.at(i).translation.back() == 'e'
+        ? sentence_arr.at(i).translation.substr(0, sentence_arr.at(i).translation.length() - 1) + "ing"
+        : sentence_arr.at(i).translation + "ing";
 
-    reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i - 1].translation,-1}); // "for"
-    reordered_arr.push_back(Word{ sentence_arr[i].word, fixed_verb,sentence_arr[i].type});
-    sentence_arr[i].type = -1;
+    reordered_arr.push_back(Word{sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation,-1}); // "for"
+    reordered_arr.push_back(Word{ sentence_arr.at(i).word, fixed_verb,sentence_arr.at(i).type});
+    sentence_arr.at(i).type = -1;
     continue;
 }
 
-else if (i > 0 && (sentence_arr[i - 1].type == 8 || sentence_arr[i - 1].type == 13) && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36 )) {
+else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).type == 13) && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36 )) {
 
     string pronoun;
-    if(sentence_arr[i].word.back() == 'o'){
+    if(sentence_arr.at(i).word.back() == 'o'){
         pronoun = "I ";
-    } else if(sentence_arr[i].word.back() == 's'){
+    } else if(sentence_arr.at(i).word.back() == 's'){
         pronoun = "we ";
-    } else if(sentence_arr[i].word.back() == 'e'){
+    } else if(sentence_arr.at(i).word.back() == 'e'){
         pronoun = ""; 
     }
     else{
         pronoun = ""; 
     }
     
-    if (!reordered_arr.empty() && reordered_arr.back().translation == sentence_arr[i - 1].translation) {
+    if (!reordered_arr.empty() && reordered_arr.back().translation == sentence_arr.at(i - 1).translation) {
         reordered_arr.pop_back();
     }
     
-    reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});
-    reordered_arr.push_back(Word{sentence_arr[i].word, pronoun + sentence_arr[i].translation,sentence_arr[i].type});
+    reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});
+    reordered_arr.push_back(Word{sentence_arr.at(i).word, pronoun + sentence_arr.at(i).translation,sentence_arr.at(i).type});
 
 }
              else if (i == 0 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36)) {
@@ -1829,22 +1834,22 @@ else if (i > 0 && (sentence_arr[i - 1].type == 8 || sentence_arr[i - 1].type == 
 
 
        // -------------------- KIND OF MEIO [ADJ] -----------------------------------------
-else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i].type == 1) {
+else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr.at(i).type == 1) {
     if (!reordered_arr.empty())
         reordered_arr.pop_back();  
 
     reordered_arr.push_back(Word{"meio", "kind of", -1});
-    reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+    reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
     continue;  
 }
 
   // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-        else if (i > 0 && sentence_arr[i - 1].type == 0 && sentence_arr[i].type == 1) {
+        else if (i > 0 && sentence_arr.at(i - 1).type == 0 && sentence_arr.at(i).type == 1) {
             reordered_arr.pop_back();   
 
-            reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, 1});  
-            reordered_arr.push_back(Word{sentence_arr[i- 1].word, sentence_arr[i - 1].translation, 0}); 
+            reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, 1});  
+            reordered_arr.push_back(Word{sentence_arr[i- 1].word, sentence_arr.at(i - 1).translation, 0}); 
             
         }
 
@@ -1854,30 +1859,30 @@ else if (i > 0 && sentence_arr[i - 1].translation == "middle" && sentence_arr[i]
   // ------------------------ ARTICLE VS PREPOSITION (e.g A VS À) COMPETITION  --------------------
         // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
         // since it defaults to 'the' i dont think i need a fallback                                                            // this is problably wrong, but ideally -1 should be proper nouns SOMEHOW.
-        else if (i > 0 && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 4 || sentence_arr[i].type == 9 || sentence_arr[i].type == -1)) {
+        else if (i > 0 && sentence_arr.at(i - 1).translation == "the" && (sentence_arr.at(i).type == 4 || sentence_arr.at(i).type == 9 || sentence_arr.at(i).type == -1)) {
           reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"à","to", 20});
-            reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
+            reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
         } 
         // for verbs (e.g ajudar a* desenvolver)
-                else if (i > 0 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+                else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 36) && sentence_arr.at(i - 1).translation == "the" && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
           reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"à","to", 20});
-            reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
+            reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
         } 
           
         // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
         // FUCLKKKKKKKKKK THERES ALSO "DOESN'T" FOR THIRD PERSON
         // a set is pronoun[4] + "no"  + verb[3]. 'no' becomes then 'don't' or doesn't so that não* gosto[3] -> don't like instead of 'no like'.
     // Handle: "not" + modal verb + following word (fixing "not can today" -> "can not today")
-else if (i > 0 && sentence_arr[i-1].translation == "not") {
+else if (i > 1 && sentence_arr.at(i - 1).translation == "not") {
     // Subject
-    string subj = (i >= 2) ? sentence_arr[i-2].word : ""; 
-    string subj_trans = (i >= 2) ? sentence_arr[i-2].translation : "";
+    string subj = (i >= 2) ? sentence_arr.at(i - 2).word : ""; 
+    string subj_trans = (i >= 2) ? sentence_arr.at(i - 2).translation : "";
 
-    string verb = sentence_arr[i].translation;
-    string verb_word = sentence_arr[i].word;
-    int verb_type = sentence_arr[i].type;
+    string verb = sentence_arr.at(i).translation;
+    string verb_word = sentence_arr.at(i).word;
+    int verb_type = sentence_arr.at(i).type;
 
     while (!reordered_arr.empty() &&
            (reordered_arr.back().translation == "not" ||
@@ -1903,8 +1908,8 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
     }
 
     // Now push **all remaining words after the verb** (like objects, complements)
-    while (i < sentence_arr.size() && sentence_arr[i].translation != "not") {
-        reordered_arr.push_back(sentence_arr[i]);
+    while (i < sentence_arr.size() && sentence_arr.at(i).translation != "not") {
+        reordered_arr.push_back(sentence_arr.at(i));
         i++;
     }
 
@@ -1913,64 +1918,64 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
 
                 // ------------------------ DOUBLE VERBS ----------------- 
             // a set is verb[3] and verb[3], we add 'to' between them, so that amo[3] correr[3] -> love[3] *to* run[3]
-            else if (i > 0 && (sentence_arr[i - 1].type == 3 || sentence_arr[i - 1].type == 36) && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-                if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
-                    reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            else if (i > 0 && (sentence_arr.at(i - 1).type == 3 || sentence_arr.at(i - 1).type == 36) && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+                if (sentence_arr.at(i - 1).translation == "don't" || sentence_arr.at(i - 1).translation == "doesn't") {
+                    reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
                     continue;
                 }
                 reordered_arr.pop_back(); 
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});  
-                if (std::find(modals.begin(), modals.end(), sentence_arr[i - 1].translation) == modals.end()) {
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});  
+                if (std::find(modals.begin(), modals.end(), sentence_arr.at(i - 1).translation) == modals.end()) {
                     
                 // reordered_arr.push_back(Word{"to", -1});  
                 // i believe +ing is better than verb [to] verb here. 'i love running' vs 'i love to run'
                 // we also need consonant duplication, runing => running
                reordered_arr.push_back(Word{"to", "to", -1});
-                reordered_arr.push_back( Word{sentence_arr[i].word,
-                    sentence_arr[i].translation,    
-                    sentence_arr[i].type
+                reordered_arr.push_back( Word{sentence_arr.at(i).word,
+                    sentence_arr.at(i).translation,    
+                    sentence_arr.at(i).type
                 });
                 
                 }else{
-                     reordered_arr.push_back( Word{sentence_arr[i].word,
-                    sentence_arr[i].translation,    
-                    sentence_arr[i].type
+                     reordered_arr.push_back( Word{sentence_arr.at(i).word,
+                    sentence_arr.at(i).translation,    
+                    sentence_arr.at(i).type
                 });
                 }
             }
    
           // ------------------------ ADJ + VERBS ----------------- 
         // yk like, muito fácil correr -> very easy run. you cant have an adjective and a verb without the connector "to"
-        else if (i > 0 &&sentence_arr[i - 1].type == 1  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-                if (i > 1 && sentence_arr[i - 2].type == 0 && sentence_arr[i - 1].type == 1) {
+        else if (i > 1 &&sentence_arr.at(i - 1).type == 1  &&  (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+                if (i > 1 && sentence_arr.at(i - 2).type == 0 && sentence_arr.at(i - 1).type == 1) {
         // This is actually part of a noun-adjective-verb sequence, skip this rule
-        reordered_arr.push_back(sentence_arr[i]);
+        reordered_arr.push_back(sentence_arr.at(i));
         continue;
     }
-            if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            if (sentence_arr.at(i - 1).translation == "don't" || sentence_arr.at(i - 1).translation == "doesn't") {
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
                 continue;
             }
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i).type});
             reordered_arr.push_back(Word{"de", "to", -1}); 
-            reordered_arr.push_back(Word{  sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{  sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
         }
 
         
      // ------------------------ OBLIQUE PRONOUNS  -----------------
         // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
-        else if (i > 0 && sentence_arr[i - 1].type == 11 && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+        else if (i > 0 && sentence_arr.at(i - 1).type == 11 && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
         
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
+            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});
         } 
 
     // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.
     // so if 'eu[2] amo[36]' => 'i[2] (love it[36])]!  
-       else  if (sentence_arr[i].type == 36) {
+       else  if (sentence_arr.at(i).type == 36) {
         
                 bool add_it = true;
 
@@ -1980,9 +1985,9 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
                         add_it = false; 
                     }
                 }
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
 
-                if (add_it && std::find(modals.begin(), modals.end(), sentence_arr[i].translation) == modals.end()) {
+                if (add_it && std::find(modals.begin(), modals.end(), sentence_arr.at(i).translation) == modals.end()) {
                     reordered_arr.push_back(Word{"$it", "it", -1});
                     
                 }
@@ -1993,31 +1998,31 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
          
         // ------------------------ SUPERLATIVE  --------------------
         // a set is word1 = 'o/a' and word2 = 'mais' and word3 = adj[1], we eliminate the 'mais', so that 'o mais forte[2]' -> 'the strongest'
-        else if (i > 1 && sentence_arr[i - 2].type == 9  && sentence_arr[i - 1].translation == "more" && sentence_arr[i].type == 1) {
+        else if (i > 1 && sentence_arr.at(i - 2).type == 9  && sentence_arr.at(i - 1).translation == "more" && sentence_arr.at(i).type == 1) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{"o mais " + sentence_arr[i].word, sentence_arr[i].translation + "est", 20});  
+            reordered_arr.push_back(Word{"o mais " + sentence_arr.at(i).word, sentence_arr.at(i).translation + "est", 20});  
         } 
 
         // ------------------------ COMPARATIVE  -----------------
         // a set is word1 = 'mais' and word2 = adj[1], we eliminate the first 'mais' and append 'er' to word2, so that mais forte[2] -> stronger
-        else if (i > 0 && sentence_arr[i - 1].translation == "more" && sentence_arr[i].type == 1) {
+        else if (i > 0 && sentence_arr.at(i - 1).translation == "more" && sentence_arr.at(i).type == 1) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ "mais " + sentence_arr[i].word, sentence_arr[i].translation + (sentence_arr[i].translation.back() == 'e' ? "r" : "er"), 20});  
+            reordered_arr.push_back(Word{ "mais " + sentence_arr.at(i).word, sentence_arr.at(i).translation + (sentence_arr.at(i).translation.back() == 'e' ? "r" : "er"), 20});  
         } 
 
         // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
         // a set is word1 = verb[3] and word2 = 'de', we eliminate the preposition 'de', so that gosto[1] de  -> stronger
-        else if (i > 0 && (sentence_arr[i - 1].type == 3 || sentence_arr[i - 1].type == 36) && sentence_arr[i].translation == "of") {
+        else if (i > 0 && (sentence_arr.at(i - 1).type == 3 || sentence_arr.at(i - 1).type == 36) && sentence_arr.at(i).translation == "of") {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});  
+            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});  
         } 
           // ------------------------ DOUBLE NOUNS ----------------- TODO: nuance? 
         // a set is noun[0] and "de" and noun[0], we invert them and remove the 'de/of' between them, so that "suco[0] de* laranja[0]" -> orange[0] juice[0]
-       else if (i > 1 && sentence_arr[i - 2].type == 0  && sentence_arr[i - 1].translation == "of" && sentence_arr[i].type == 0) {
+       else if (i > 1 && sentence_arr.at(i - 2).type == 0  && sentence_arr.at(i - 1).translation == "of" && sentence_arr.at(i).type == 0) {
     reordered_arr.pop_back();
     reordered_arr.pop_back();   
-    reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
-    reordered_arr.push_back(Word{ sentence_arr[i - 2].word, sentence_arr[i - 2].translation, sentence_arr[i - 2].type});
+    reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
+    reordered_arr.push_back(Word{ sentence_arr.at(i - 2).word, sentence_arr.at(i - 2).translation, sentence_arr.at(i - 2).type});
     continue;  // IMPORTANT: skip other rules
 }
 
@@ -2025,13 +2030,13 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
         // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
         // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
-        else if (i > 0 && (sentence_arr[i - 1].type == 3 || sentence_arr[i - 1].type == 36) && sentence_arr[i].type == 4) {
+        else if (i > 0 && (sentence_arr.at(i - 1).type == 3 || sentence_arr.at(i - 1).type == 36) && sentence_arr.at(i).type == 4) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});
-            reordered_arr.push_back(Word{ sentence_arr[i].word,
-              lookup(obj_pro, sentence_arr[i].translation.c_str()) 
-                  ? string(lookup(obj_pro, sentence_arr[i].translation.c_str())) 
-                  : sentence_arr[i].translation,
+            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word,
+              lookup(obj_pro, sentence_arr.at(i).translation.c_str()) 
+                  ? string(lookup(obj_pro, sentence_arr.at(i).translation.c_str())) 
+                  : sentence_arr.at(i).translation,
               10
           });
         }
@@ -2039,40 +2044,40 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
         // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
         // a set is word1 = pronoun[4] and word2 = "is", use an if to check the first pronoun and change it accordingly 
         // she is, i am, we are
-        else if (i > 0 && sentence_arr[i - 1].type == 4 && sentence_arr[i].translation == "is") {
+        else if (i > 0 && sentence_arr.at(i - 1).type == 4 && sentence_arr.at(i).translation == "is") {
             string corr_pro = "is";
             reordered_arr.pop_back(); 
-            if(sentence_arr[i - 1].translation == "she" || sentence_arr[i - 1].translation == "he"){
+            if(sentence_arr.at(i - 1).translation == "she" || sentence_arr.at(i - 1).translation == "he"){
                 corr_pro = "is";
-            } else if(sentence_arr[i - 1].translation == "we" || sentence_arr[i - 1].translation == "they" || sentence_arr[i - 1].translation == "you"){
+            } else if(sentence_arr.at(i - 1).translation == "we" || sentence_arr.at(i - 1).translation == "they" || sentence_arr.at(i - 1).translation == "you"){
                 corr_pro = "are";
-            } else if(sentence_arr[i - 1].translation == "i"){
+            } else if(sentence_arr.at(i - 1).translation == "i"){
                 corr_pro = "am";
             };
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i - 1].translation, sentence_arr[i - 1].type});   
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});   
             reordered_arr.push_back(Word{"$ser", corr_pro, 4});
         } 
 
 
         // same thing but when the verbs are connected by 'que' (e.g: tenho QUE ver)
-        else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "what"  && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+        else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 36) && sentence_arr.at(i - 1).translation == "what"  && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"que", "to", -1});  
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type}); 
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type}); 
         }
 
-        else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 3) && sentence_arr[i - 1].translation == "of" && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
+        else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 3) && sentence_arr.at(i - 1).translation == "of" && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{sentence_arr[i - 2].word, sentence_arr[i - 2].translation, sentence_arr[i - 2].type});  
+            reordered_arr.push_back(Word{sentence_arr.at(i - 2).word, sentence_arr.at(i - 2).translation, sentence_arr.at(i - 2).type});  
             reordered_arr.push_back(Word{"de", "to", -1});  
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
         } 
 
       
 
         else {
-            if (sentence_arr[i].type != -1)  // only push if not processed
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+            if (sentence_arr.at(i).type != -1)  // only push if not processed
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
         }
     }
 
@@ -2104,9 +2109,8 @@ else if (i > 0 && sentence_arr[i-1].translation == "not") {
 
 
 //VAI TOMAR NO CU ESSA PORRA VSFFFFFFFFFFFFFFFFFFFFFFFF QUE ODIO 
-
-else if (i == sentence_arr.size() - 1 && sentence_arr[i - 1].type == 9 && sentence_arr[i].type == 1) {
-        bool add_one = true;
+else if (sentence_arr.size() >= 2 && i == sentence_arr.size() - 1 && sentence_arr.at(i - 1).type == 9 && sentence_arr.at(i).type == 1) { 
+       bool add_one = true;
 
         if (i + 1 < sentence_arr.size()) {
             int next_type = sentence_arr[i + 1].type;
@@ -2120,15 +2124,14 @@ else if (i == sentence_arr.size() - 1 && sentence_arr[i - 1].type == 9 && senten
 
         if (add_one) {
             reordered_arr.pop_back();
-             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+             reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
             reordered_arr.push_back(Word{"one", "one", 0});
             if (i + 1 < sentence_arr.size()) reordered_arr.push_back(Word{sentence_arr[i + 1].word, sentence_arr[i + 1].translation, sentence_arr[i + 1].type});
         }
         continue;
     }
 
-    else if (i == sentence_arr.size() - 1  && sentence_arr[i - 1].type == 1 && isPunctuation(sentence_arr[i].translation)) {
-        bool add_one = true;
+   else if (sentence_arr.size() >= 2 && i == sentence_arr.size() - 1 && sentence_arr.at(i - 1).type == 1 && isPunctuation(sentence_arr.at(i).translation)) {     bool add_one = true;
 
         if (i + 1 < sentence_arr.size()) {
             int next_type = sentence_arr[i + 1].type;
@@ -2143,10 +2146,10 @@ else if (i == sentence_arr.size() - 1 && sentence_arr[i - 1].type == 9 && senten
         if (add_one) {
             reordered_arr.pop_back(); reordered_arr.pop_back();
             
-             reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i- 1].translation, sentence_arr[i - 1].type});
+             reordered_arr.push_back(Word{sentence_arr.at(i - 1).word, sentence_arr[i- 1].translation, sentence_arr.at(i - 1).type});
             reordered_arr.push_back(Word{"one", "one", 0});
             
-             reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+             reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
             }
         continue;
     }
@@ -2176,10 +2179,10 @@ if(sentence_arr.size() > 0){
         int word_type;
         bool isModal = false;
         for (size_t i = 0; i < sentence_arr.size(); ++i) {
-            if (sentence_arr[i].type == 4 || sentence_arr[i].type == 0) {
-                pronoun_ = sentence_arr[i].translation; 
+            if (sentence_arr.at(i).type == 4 || sentence_arr.at(i).type == 0) {
+                pronoun_ = sentence_arr.at(i).translation; 
                 pronoun_index = i;
-                word_type = sentence_arr[i].type;
+                word_type = sentence_arr.at(i).type;
                 break;                
             }
             
@@ -2187,8 +2190,8 @@ if(sentence_arr.size() > 0){
         if (!pronoun_.empty() && pronoun_index >= 0) {
             // is this pronoun in the third person vector?
             string aux = (std::find(th_per_aux.begin(), th_per_aux.end(), pronoun_) != th_per_aux.end()) ? "does" : "do";
-            if(std::find(modals.begin(), modals.end(), sentence_arr[pronoun_index + 1].translation) != modals.end()) 
-            {
+         if (pronoun_index + 1 < sentence_arr.size() && 
+         std::find(modals.begin(), modals.end(), sentence_arr[pronoun_index + 1].translation) != modals.end())   {
                 aux = sentence_arr[pronoun_index + 1].translation;
                 isModal = true;
             }
@@ -2196,7 +2199,7 @@ if(sentence_arr.size() > 0){
 
             // push everything before the pronoun as is
             for(int i = 0; i < pronoun_index; ++i){
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
             }
 
             // push pronoun + verb together
@@ -2212,7 +2215,7 @@ if(sentence_arr.size() > 0){
 
             // push remaining words (like "?") after that
             for(int i = pronoun_index + 2; i < sentence_arr.size(); ++i){
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
+                reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
             }
         }
     }
@@ -2283,11 +2286,11 @@ static std::string unigramLookup(vector<string> array_of_words, vector<int> igno
       break;
     }
   }
-  sentence_arr = reorder_helpers(word_arr);
+  if(word_arr.size() > 0) sentence_arr = reorder_helpers(word_arr);
 
   
  for (size_t i = 0; i < sentence_arr.size(); ++i) {
-    const std::string& token = sentence_arr[i].translation;
+    const std::string& token = sentence_arr.at(i).translation;
 
     char firstChar = token.empty() ? '\0' : token[0];
     bool isPunctuation = (firstChar == '?' || firstChar == '!' || 
