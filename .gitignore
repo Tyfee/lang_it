@@ -7,3 +7,4 @@ test_server/server
 *.Identifier
 .vscode
 .vs
+desktop/windows/*.dll
