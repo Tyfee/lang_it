@@ -12,7 +12,7 @@ int main() {
     while (true) {
         std::cin.getline(original_sentence, 250);
         if (original_sentence == "sair") break;
-        std::cout << traduzir_en(original_sentence) << std::endl;
+        std::cout << detect_language(original_sentence) << std::endl;
     }
 
     return 0;

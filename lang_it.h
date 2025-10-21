@@ -1,6 +1,7 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 #include <string>
+#include <iostream>
 #include <cstdint>
 #include <vector>
 
@@ -98,6 +99,46 @@ inline uint8_t lookupFlags(const Entry (&dict)[N], const char* word) {
     return 0;
 }
 
+inline std::vector<std::string> tokenize(const std::string &text) {
+      std::vector<std::string> tokens;
+      std::string current;
+      size_t i = 0;
+
+      while (i < text.size()) {
+          unsigned char c = text[i];
+
+          if ((c & 0x80) == 0) {
+              if (std::isalnum(c)) {
+                  current += c;
+              } else {
+                  if (!current.empty()) {
+                      tokens.push_back(current);
+                      current.clear();
+                  }
+                  if (!std::isspace(c))
+                      tokens.push_back(std::string(1, c));
+              }
+              ++i;
+          } else {
+              size_t len = 0;
+              if ((c & 0xE0) == 0xC0) len = 2;
+              else if ((c & 0xF0) == 0xE0) len = 3;
+              else if ((c & 0xF8) == 0xF0) len = 4;
+              else len = 1;
+
+              std::string utf8char = text.substr(i, len);
+              current += utf8char;
+              i += len;
+          }
+      }
+
+      if (!current.empty())
+          tokens.push_back(current);
+
+      return tokens;
+  }
+
+
 
 inline bool isPunctuation(const std::string &token) {
     if (token.empty()) return false;
@@ -110,10 +151,170 @@ inline bool isPunctuation(const std::string &token) {
     return punct.find(first) != std::string::npos || punct.find(last) != std::string::npos;
 }
 
-inline std::string detect_language(const char* sentence){
-    std::string language = "en";
+inline uint32_t next_utf8_char(const std::string& s, size_t& i) {
+    unsigned char c = s[i];
+    uint32_t cp = 0;
+    size_t extra = 0;
+
+    if (c <= 0x7F) {
+        cp = c;
+        extra = 0;
+    } else if ((c & 0xE0) == 0xC0) { 
+        cp = c & 0x1F;
+        extra = 1;
+    } else if ((c & 0xF0) == 0xE0) { 
+        cp = c & 0x0F;
+        extra = 2;
+    } else if ((c & 0xF8) == 0xF0) {
+        cp = c & 0x07;
+        extra = 3;
+    } else {
+        i++; 
+        return 0xFFFD; 
+    }
+
+    for (size_t j = 1; j <= extra; ++j) {
+        if (i + j >= s.size()) return 0xFFFD;
+        unsigned char cc = s[i + j];
+        if ((cc & 0xC0) != 0x80) return 0xFFFD;
+        cp = (cp << 6) | (cc & 0x3F);
+    }
+
+    i += extra;
+    return cp;
+}
+
+// this is the ugliest code you will see ever, do not pay attention to it :(
+// lowk might work tho, i'll tune the parameters later
+inline std::string detect_language(const char* sentence) {
+    std::string language = "Not Sure.";
+    std::vector<std::string> tokens = tokenize(std::string(sentence));
+
+    float en = 0.0f;
+    float pt = 0.0f;
+    float ja = 0.0f;
+    float es = 0.0f;
+    float fr = 0.0f;
+
+    for (size_t i = 0; i < tokens.size(); i++) {
+        const std::string& word = tokens[i];
+
+        
+        if(word == "o" || word == "e") pt += 0.5f;
+        if(word == "i") en += 0.5f;
+        if(word == "y"){ es += 0.5f; fr += 0.4;}
+
+        if(word == "em" || word == "sou" || word == "eu") pt += 1.0f;
+        if(word == "je" || word == "moi") fr += 1.0f;
+        if(word == "tu") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
+        if(word == "te") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
+        if(word.back() == 'g') en += 7.0f;
+            
+         auto first_char = [](const std::string &s) -> std::string {
+            if (s.empty()) return "";
+            size_t len = 1;
+            unsigned char c = static_cast<unsigned char>(s[0]);
+            if ((c & 0x80) == 0x00) len = 1;         
+            else if ((c & 0xE0) == 0xC0) len = 2;    
+            else if ((c & 0xF0) == 0xE0) len = 3;    
+            else if ((c & 0xF8) == 0xF0) len = 4;    
+            return s.substr(0, len);
+        };
+
+        auto last_char = [](const std::string &s) -> std::string {
+            size_t i = s.size();
+            while (i > 0 && (static_cast<unsigned char>(s[i-1]) & 0xC0) == 0x80) --i;
+            return s.substr(i-1);
+        };
+
+        if (last_char(word) == u8"é") { 
+                fr += 0.7;
+                pt += 0.4;
+                es += 0.7;
+            }
+        if (last_char(word) == u8"ó") { 
+                pt += 0.4;
+                es += 0.8;
+            }
+        if (first_char(word) == u8"ç") { 
+                pt -= 1.0;
+                fr += 0.6;
+            } 
+        if (word.find("ñ") != std::string::npos){
+            es += 1.0f;
+        }
+        if (word.find("ç") != std::string::npos){
+            pt += 0.7f; fr += 0.6f;
+        }
+        
+        if (word.find("ão") != std::string::npos)
+           { pt += 0.9f;}
+        if (word.find("yo") != std::string::npos)
+            {es += 0.6f; en += 0.7f; fr -= 0.8f;
+            }
+        
+        if (word.find("y") != std::string::npos){
+            pt -= 0.8f;}
+
+        if (word.find("nh") != std::string::npos || word.find("lh") != std::string::npos){
+            pt += 1.0f;}
+
+        if (word.find("sh") != std::string::npos || word.find("wr") != std::string::npos || word.find("ys") != std::string::npos || word.find("hy") != std::string::npos)
+         {   en += 1.0f;}
+        if(word.find("wh") != std::string::npos)
+         {  en += 1.0f;}
+        
+           if (word.find("ux") != std::string::npos || word.find("ée") != std::string::npos)
+          {  fr += 0.8f;}
+
+        if (word.find("ph") != std::string::npos) {
+            en += 0.4f;
+            fr += 0.2f;
+        }
+        if (word.find("eu") != std::string::npos) {
+            fr += 0.3f;
+            pt += 0.7f;
+        }
+
+        for (size_t j = 0; j < word.size(); ++j) {
+            uint32_t unicode_c = next_utf8_char(word, j);
+            // does it have hiragana
+            if (unicode_c >= 0x3040 && unicode_c <= 0x309F) ja += 1.0;
+            // does it have katakana
+            if (unicode_c >= 0x30A0 && unicode_c <= 0x30FF) ja += 1.0;
+            // does it have ideograms?
+            if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF) ja += 0.5;
+        }
+    }
+    float maxScore = en;
+    if (pt > maxScore) maxScore = pt;
+    if (ja > maxScore) maxScore = ja;
+    if (es > maxScore) maxScore = es;
+    if (fr > maxScore) maxScore = fr;
+
+    std::cout << "\npt: " << pt << ", ";
+    std::cout << "\nja: " << ja << ", ";
+    std::cout << "\nes: " << es << ", ";
+    std::cout << "\nfr: " << fr << ", ";
+    std::cout << "\nen: " << fr << ", ";
+
+    if (maxScore == 0.0f) {
+        language = "not sure.";
+    } else if (maxScore == en) {
+        language = "English";
+    } else if (maxScore == pt) {
+        language = "Portuguese";
+    } else if (maxScore == ja) {
+        language = "Japanese";
+    } else if (maxScore == es) {
+        language = "Spanish";
+    } else if (maxScore == fr) {
+        language = "French";
+    }
+
     return language;
 }
+
 
 
 inline std::string translate(const char* sentence, const char* from, const char* to){
@@ -224,45 +425,6 @@ inline std::string semantics(const std::vector<std::string>& sentence,
 }
 
 
-
-inline std::vector<std::string> tokenize(const std::string &text) {
-      std::vector<std::string> tokens;
-      std::string current;
-      size_t i = 0;
-
-      while (i < text.size()) {
-          unsigned char c = text[i];
-
-          if ((c & 0x80) == 0) {
-              if (std::isalnum(c)) {
-                  current += c;
-              } else {
-                  if (!current.empty()) {
-                      tokens.push_back(current);
-                      current.clear();
-                  }
-                  if (!std::isspace(c))
-                      tokens.push_back(std::string(1, c));
-              }
-              ++i;
-          } else {
-              size_t len = 0;
-              if ((c & 0xE0) == 0xC0) len = 2;
-              else if ((c & 0xF0) == 0xE0) len = 3;
-              else if ((c & 0xF8) == 0xF0) len = 4;
-              else len = 1;
-
-              std::string utf8char = text.substr(i, len);
-              current += utf8char;
-              i += len;
-          }
-      }
-
-      if (!current.empty())
-          tokens.push_back(current);
-
-      return tokens;
-  }
 
 /* ------- SHARED FUNCTIONS ----------------
 |           some pairs have to use         |  

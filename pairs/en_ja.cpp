@@ -127,6 +127,7 @@ Word _they[] = {A, NA, TA, TA, CHI};
 Word _antn[] = {A, NA, TA, NO};
 Word _wtsn[] = {WA, TA, SI, NO};
 Word _to[] = {TO};
+Word _ski[] = {SE, KA, I};
 
 
 
@@ -144,22 +145,20 @@ constexpr EntryJ dict[] = {
                                // the hex values are 大 = 5927 and　事 = 4E8B, so we subtract the first char value 
                                // and we get two offsets = B27 and 8B.
                                // then you convert the offset back to decimal and you will get the offset integers (2855, 139)
-                               // then your front end needs to make the steps backwards to retrieve the kanji!
+                               // then your front end needs to make the steps backwards to retrieve the kanji** YOU DONT NEED THAT ANYMORE,
+                               // if you pass kanji: true as the translate_ja() param you already get the utf8 ready to display (tested gtk and html)
                                // DO WHAT???????
                                // if theres no kanji associated: the offset is an array with {-1} and the length is 0!.
 
                                /* heres some js code to find the kanji with the offset
-                                <p id='result'></p>
-
-                                <script>
-                                const result = document.getElementById('result');
-
+                            
                                 function getKanji(offset){
                                 let base = 0x4E00;
                                 var kanji =  String.fromCodePoint(base + offset);
 
-                                result.innerText = kanji;
+                                console.log(kanji);
                                 }
+
                                 getKanji(1397);
 
                                 </script>
@@ -172,6 +171,7 @@ constexpr EntryJ dict[] = {
     {"thanks", _thank, 5, {-1}, 0, 0},
     {"house", _ie, 2, {3510}, 1, 0},
     {"coffee", _kh, 4, {-1}, 0, 0},
+    {"world", _ski, 3, {22, 10060}, 2, 0},
     
     {"this", _kr, 2, {-1}, 0, 8},
     {"that", _ar, 2, {-1}, 0, 8},
@@ -260,22 +260,43 @@ static void to_lower(string &s) {
     for (char &c : s) if (c >= 'A' && c <= 'Z') c = c - 'A' + 'a';
 }
 string script_adequation(const string &s) {
+
+    
     string converted;
+    string copy = s;
+
+    size_t pos = 0;
+        while ((pos = copy.find("l", pos)) != string::npos) {
+            copy.replace(pos, 1, "r");
+            pos += 1; 
+        }
+     pos = 0;
+        while ((pos = copy.find("tra", pos)) != string::npos) {
+            copy.replace(pos, 3, "tora");
+            pos += 3; 
+        }
+        pos = 0;
+        while ((pos = copy.find("tra", pos)) != string::npos) {
+            copy.replace(pos, 3, "tora");
+            pos += 3; 
+        }
+    
+
     size_t i = 0;
 
-    while (i < s.size()) {
+    while (i < copy.size()) {
         Kana k = static_cast<Kana>(0);
         string chunk;
-        if (i + 2 < s.size()) {
-            chunk = s.substr(i, 3);
+        if (i + 2 < copy.size()) {
+            chunk = copy.substr(i, 3);
             k = kanaFromRomaji(chunk);
         }
-        if (static_cast<int>(k) == 0 && i + 1 < s.size()) {
-            chunk = s.substr(i, 2);
+        if (static_cast<int>(k) == 0 && i + 1 < copy.size()) {
+            chunk = copy.substr(i, 2);
             k = kanaFromRomaji(chunk);
         }
         if (static_cast<int>(k) == 0) {
-            chunk = s.substr(i, 1);
+            chunk = copy.substr(i, 1);
             k = kanaFromRomaji(chunk);
         }
         if (static_cast<int>(k) != 0) {
@@ -411,7 +432,9 @@ static Result nounLookup(string &word, bool kanji) {
     string translation;
     int word_type;
     const EntryJ* e = lookup(dict, word.c_str());
+    const EntryJ* e_p = lookup(dict, word.substr(0, word.length() - 1).c_str()); //plural nouns
     const Adjective* a = lookup(adj, word.c_str());
+    
     Result vres = findVerb(word);
 
 
@@ -442,6 +465,32 @@ static Result nounLookup(string &word, bool kanji) {
     }
 
         for (size_t i = 0; i < e->len; ++i) romaji += ROMAJI[e->t[i] - 1];
+        translation = out;
+        word_type = 0;
+         
+    }else  if (e_p) {
+
+
+    for (size_t i = 0; i < e_p->len; ++i) {
+        if (kanji) {
+            if (e_p->kanjiCount > 0) {
+                for (int k = 0; k < e_p->kanjiCount; ++k) {
+                    if (e_p->kanji[k] != -1) {
+                        out += getKanjiFromOffset(e_p->kanji[k]);
+                        i += e_p->len;
+                    } else {
+                        out += HIRAGANA[e_p->t[i]];
+                    }
+                }
+            } else {
+                out += HIRAGANA[e_p->t[i]];
+            }
+        } else {
+            out += HIRAGANA[e_p->t[i]];
+        }
+    }
+
+        for (size_t i = 0; i < e_p->len; ++i) romaji += ROMAJI[e_p->t[i] - 1];
         translation = out;
         word_type = 0;
          

@@ -132,6 +132,16 @@ static const char* bateria_tokens[] = {
     "i","you"
 };
 
+static Outcome alto_outcomes[] = {
+    {"tall", 0.0f, 0}, {"high", 0.0f, 0}, {"loud", 0.0f, 3}
+};
+static const char* alto_tokens[] = {
+    "person", "he","she","i","am", "height","$",
+    "", "$",
+    "music","volume", "low", "turn"
+};
+
+
 
 
 
@@ -143,7 +153,9 @@ Homonym homonyms[] = {
     {"sede", sede_outcomes, 2, sede_tokens, 7},
     {"bateria", sede_outcomes, 3, sede_tokens, 7},
     {"novo", novo_outcomes, 2, novo_tokens, 8},
-    {"nova", novo_outcomes, 2, novo_tokens, 8}
+    {"nova", novo_outcomes, 2, novo_tokens, 8},
+    {"alto", alto_outcomes, 3, alto_tokens, 13},
+    {"alta", alto_outcomes, 3, alto_tokens, 13}
 };
 
 const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
@@ -152,7 +164,10 @@ const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
+  {"a_gente", "we"},
   {"o_que", "what"},
+  {"em_cima", "on top"},
+  
   {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
   {"quanto_mais", "the more"},
   {"qual_é", "what is"},
@@ -160,6 +175,13 @@ constexpr Entry fixed_ngrams[] = {
   {"do_que", "than"},
   {"por_favor", "please"},
   {"o_seu", "your"},
+  {"bom_dia", "good morning"},
+  {"boa_noite", "good night"},
+  {"boa_tarde", "good evening"},
+
+  {"sei_lá", "i don't know"},
+  {"eu_sei_lá", "i don't know"},
+  
   {"ao_redor", "around"},
   {"perto_de", "close to"},
   {"as_vezes", "sometimes"},
@@ -174,7 +196,8 @@ constexpr Entry fixed_ngrams[] = {
   {"com_sede", "thirsty"},
   {"com_raiva", "angry"},
   {"hoje_em_dia", "nowadays"},
-  {"de_vez_em_quando", "sometimes"}
+  {"de_vez_em_quando", "sometimes"},
+  {"se_preocup", "worry"} // need to deal with this bitch as well ..... TRUST, YOU WILL BE DEALT WITH
 };
 vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
@@ -239,11 +262,15 @@ constexpr Entry nouns[] = {
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
   {"sala", "room"},
-  
+  {"prédio", "building"},
+
+  {"chocolate", "chocolate"},
   {"melancia", "watermelon"},
   {"areia", "sand"},
   {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
+  {"morango", "strawberry"},
+  {"uva", "grape"},
   {"sal", "salt"},
   {"ovo", "egg"},
   {"receita", "recipe"},
@@ -253,6 +280,7 @@ constexpr Entry nouns[] = {
   {"macarrão", "pasta"}, 
   {"molho", "sauce"},
   {"peixe", "fish", NO_PLURAL},
+  {"sorvete", "ice cream"},
 
   {"cachorro", "dog"},
   {"galinha", "chicken"},
@@ -264,6 +292,7 @@ constexpr Entry nouns[] = {
   {"cavalo", "horse"},
   {"burro", "donkey"},
   {"porco", "pig"},
+  {"asa", "wing"},
 
   {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
@@ -277,7 +306,9 @@ constexpr Entry nouns[] = {
   {"arma", "gun"},
   {"vida", "life"},
   {"folha", "leaf"},
+  {"papel", "paper"},
   {"faca", "knife"},
+  {"tela", "screen"},
   {"mulher", "woman", IRREGULAR_PLURAL},
   {"homem", "man", IRREGULAR_PLURAL},
   {"pessoa", "person"},
@@ -287,8 +318,8 @@ constexpr Entry nouns[] = {
   {"dinheiro", "money"},
   {"criança", "kid"},
   {"amigo", "friend"},
-  {"fome", "hunger"},
-  {"sede", "thirst"},
+  {"fome", "hunger", UNCOUNTABLE},
+  {"sede", "thirst", UNCOUNTABLE},
   {"dia", "day"},
   {"noite", "night"},
   {"olho", "eye"},
@@ -299,6 +330,12 @@ constexpr Entry nouns[] = {
   {"casa", "house"},
   {"compania", "company"},
   {"empresa", "company"},
+  {"música", "music"},
+  {"som", "sound"},
+  {"som", "sound"},
+  {"sabão", "soap"},
+  {"sabonete", "soap"},
+  {"bolha", "bubble"},
 
   {"manga", "mango"},
   
@@ -336,8 +373,12 @@ constexpr Entry nouns[] = {
   {"lápis", "pencil"},
   {"caneta", "pen"},
   {"bolso", "pocket"},
+
   {"lua", "moon"},
   {"sol", "sun"},
+  {"vento", "wind"},
+  {"fogo", "fire"},
+  {"gelo", "ice"},
 
   {"pessoas", "people"},
   {"gente", "people"},
@@ -374,6 +415,7 @@ constexpr Entry pre[] = {
    // these verbs are grounded here for misbehaving until second order  
   {"é", "is"},
   {"são", "are"},
+  {"sou", "am"},
   {"foram", "were"},
   {"fomos", "were"},
   {"era", "was"},
@@ -402,6 +444,12 @@ constexpr Entry pro[] = {
   {"essas", "these"},
   {"este", "this"},
   {"esta", "this"},
+  {"estes", "these"},
+  {"estas", "these"},
+  {"aquele", "that"},
+  {"aquela", "that"},
+  {"aqueles", "those"},
+  {"aquelas", "those"},
   {"isso", "this"},
   {"isto", "this"}
   
@@ -451,7 +499,15 @@ constexpr Entry adj[] = {
   {"segundo", "second"},
   {"terceiro", "third"},
   {"quarto", "fourth"},
+  {"quinto", "fifth"},
+  {"sexto", "sixth"},
+  {"sétimo", "seventh"},
+  {"oitavo", "eigth"},
+  {"nono", "ninth"},
+  {"décimo", "tenth"},
+
   {"bonito", "beautiful"},
+  {"belo", "legal"},
   {"legal", "cool"},
   {"grande", "big"},
   {"forte", "strong"},
@@ -467,6 +523,7 @@ constexpr Entry adj[] = {
   {"triste", "sad"},
   {"feliz", "happy"},
   {"alto", "high"},
+  {"alto", "tall"},
   {"correto", "correct"},
   {"sozinho", "alone"},
   {"facil", "easy"},
@@ -571,8 +628,10 @@ struct VerbEnding {
 constexpr Verb reg_verbs[]  = {
   {"am", "lov", 0, false},
   {"gost", "lik", 0, false},
-  {"qu", "want", 1, false},
+  {"quis", "want", 1, false},
+  {"quer", "want", 1, false},
   {"fum", "smok", 0, true},
+  {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
   {"jog", "play", 1, true},
   {"abr", "open", 1, false},
@@ -615,7 +674,8 @@ constexpr Verb reg_verbs[]  = {
   {"fing", "pretend", 1, false},
   {"ajud", "help", 1, false},
   {"desenvolv", "develop", 1, true},
-  {"bast", "suffic", 0, true}
+  {"bast", "suffic", 0, true},
+  {"beij", "kiss", 1, true}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -646,9 +706,6 @@ constexpr Verb irr_verbs[] = {
 
   {"cant", "sing", 1, true},
   {"ganh", "win", 1, true},
-  {"é", "is", 1, true},
-  {"são", "are", 1, true},
-  {"sou", "am", 1, true},
   {"volt", "go back", 1, true},
   {"te", "have", 1, false},
   {"com", "eat", 1, false},
@@ -676,7 +733,7 @@ constexpr Verb irr_verbs[] = {
   {"pag", "pay", 1, true},
   {"sent", "sit", 1, true},
   {"levant", "stand_up", 1, true}, // deal with ts at some point lol
-  {"ach", "find", 1, false}
+  {"ach", "find", 1, false}              
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -756,7 +813,7 @@ vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê"
 vector<string> general_past = {"ei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia", "nha"};
 vector<string> present_continuous = {"ndo", "ndo", "ando"};
 vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
-vector<string> subjunctive = {"sse", "ssemos"};
+vector<string> subjunctive = {"esse", "sse", "ssemos"};
 vector<string> conditional_ = {"aria", "ariamos", "eria"};
 vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
@@ -764,6 +821,7 @@ vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 constexpr Suffix suff[] = {
   {"dade", "ty", 0, 0},
   {"mente", "ly", 4, 0},
+  {"ental", "ental", 1, 0},
   {"mento", "ment", 0, 0},
   {"ável", "able", 1, 0},
   {"ível", "ible", 1, 0},
@@ -1023,7 +1081,7 @@ if(word.length() > 5 && word.substr(word.length() - 5) != "ção" && word.substr
              translation_ = p + m;
              word_type_ = 1;
           }
-          else if (word.substr(0, 2) == "in") {
+          else if (word.substr(0, 2) == "in" || word.substr(0, 2) == "im")  {
     string stem = word.substr(2);  
 
 
@@ -1089,13 +1147,14 @@ Word prefixLookup(string word){
                 auto v_irr = lookupIrrVerb(root.c_str());
                 char buffer[64];
                 const Verb* v = lookupRegVerb(root.c_str());
-               
+                
+                
 
                 if (v) {
                     const char* ending = "";
 
                     
-                 if(verb_info == 1){ // past tense
+                 if(verb_info == 1 || verb_info == 2){ // past tense
                         string stem = v->translation;
                         if(!stem.empty() && stem.back() == 'y'){
                             stem.back() = 'i';   // try -> tri
@@ -1108,8 +1167,7 @@ Word prefixLookup(string word){
                     
                     switch (verb_info) {
                         case 0: ending = (v->type == 0) ? "e" : ""; break;
-                        case 1: ending = "ed"; break;
-                        case 2: ending = (v->type == 0) ? "e" : ""; break;
+                        case 1: case 2: ending = "ed"; break;
                         case 3: ending = (v->type == 0) ? "es" : "s"; break;
                         case 4: ending = "e"; break;
                         default: break;
@@ -1199,22 +1257,25 @@ Word prefixLookup(string word){
                     switch (verb_info)
                     {
                         case 0: ending = (v_irr->type == 0) ? "e" : ""; break;
-                        case 1: ending = "ed"; break;
-                        case 2: ending = (v_irr->type == 0) ? "e" : ""; break;
+                        case 1: case 2: ending = "ed"; break;
                         case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
                         case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 5: ending = "ing"; break;
                         case 6: case 7: ending = (v_irr->type== 0) ? "e" : ""; break;
                         default: break;
                     }
+                    if (verb_info == 3) {
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
 
+                        translation_ = base + ending;
+                    }
 
-                    if(verb_info == 4){
-                        translation_ = "used to " + (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
+                    else if(verb_info == 4){
+                        translation_ = "used to " + (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
            
                     }
                     else if (verb_info == 5) {
-                        string base = (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement;
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "");
 
                         if (!base.empty() && base.back() == 'e' && base != "be") {
                             base.pop_back();
@@ -1239,9 +1300,9 @@ Word prefixLookup(string word){
                     else if(verb_info == 6){
                         if (root == "pod") translation_ = "could";
                         else if(root == "dev") translation_ = "should";
-                        else translation_ = "would " + (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
+                        else translation_ = "would " + (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
                         aux = true;
-                    } else if(verb_info == 1){
+                    } else if(verb_info == 1 || verb_info == 2){
          //TODO: Set up the very specific rules that most verbs can abide to.
                 
                 if(string(v_irr->translation).substr(string(v_irr->translation).length() - 3, 3) == "eed"){
@@ -1309,7 +1370,7 @@ Word prefixLookup(string word){
                             }
                         
                     }else {
-                        translation_ =  (compound ? compound_verb : string(v_irr->translation)) + " " + verb_complement + ending;
+                        translation_ =  (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
                     }
 
                     intransitiveness = v_irr->intransitive;
@@ -1442,7 +1503,7 @@ Word suffixLookup(const std::string& word) {
 
 bool isDiminutive(const std::string& s, const char* suffix) {
     size_t n = 0;
-    while (suffix[n] != '\0') n++; // strlen without <cstring>
+    while (suffix[n] != '\0') n++; 
     if (s.size() < n) return false;
     for (size_t i = 0; i < n; i++) {
         if (s[s.size() - n + i] != suffix[i]) return false;
@@ -1753,6 +1814,13 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
             reordered_arr.push_back(Word{"de", "to", -1}); 
             reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
           
+    
+    } 
+         else if (i > 0 && sentence_arr.at(i - 1).translation == "mine" && sentence_arr.at(i - 0).type == 0 ) {
+          
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(Word{"meu", "my", 40});
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
     
     } 
 
@@ -2168,7 +2236,7 @@ if(sentence_arr.size() > 0){
 
     string last = sentence_arr[sentence_arr.size() - 1].word;
     //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
-    if(last == "?"  && sentence_arr[0].type != 13){
+    if(last == "?"  && sentence_arr[0].type != 13 && sentence_arr[0].translation != "what is"){
         
         reordered_arr.clear();  // clear previously added elements
 
@@ -2206,9 +2274,9 @@ if(sentence_arr.size() > 0){
             string question_phrase = aux + " " + sentence_arr[pronoun_index].translation;
             if (pronoun_index + 1 < sentence_arr.size() - 1) {
                 if ((sentence_arr[pronoun_index + 1].type == 3 || sentence_arr[pronoun_index + 1].type == 36) && sentence_arr[pronoun_index + 1].translation.back() != 's') {
-                    question_phrase += " " + (!isModal ? sentence_arr[pronoun_index + 1].translation : "");
+                    question_phrase +=  (!isModal ? sentence_arr[pronoun_index + 1].translation : "");
                 }else{
-                      question_phrase += " " + (sentence_arr[pronoun_index + 1].translation.substr(0, sentence_arr[pronoun_index + 1].translation.length() - 1));
+                      question_phrase += (!isModal ? sentence_arr[pronoun_index + 1].translation.substr(0, sentence_arr[pronoun_index + 1].translation.length() - 1) : "");
                 }
             }
             reordered_arr.push_back(Word{ sentence_arr[pronoun_index].word, question_phrase, sentence_arr[pronoun_index].type});
@@ -2229,7 +2297,13 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 }
 //homonym mediation
 for (size_t i = 0; i < final_arr.size(); ++i) {
-    if (final_arr[i].word == "manga" || final_arr[i].word == "banco" || final_arr[i].word == "pena" || final_arr[i].word == "novo" || final_arr[i].word == "nova") {
+    if (final_arr[i].word == "manga" || 
+        final_arr[i].word == "banco" || 
+        final_arr[i].word == "pena" || 
+        final_arr[i].word == "novo" || final_arr[i].word == "nova" ||
+        final_arr[i].word == "alto" || final_arr[i].word == "alta"
+    
+    ) {
         
         int start = max(0, static_cast<int>(i) - 2);
         int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);

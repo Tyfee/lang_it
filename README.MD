@@ -8,7 +8,7 @@ Eventually i wanna compare pairs as distant as Malay-Japanese and Chinese-Portug
 
 ## Why would i do that to myself
 
-Getting into studies of computational linguistics and machine translation, i wanted to know how far i can get with small amounts of code for a translation program based on rules on lemmas and stems.
+After reading about derivational linguistic morphology and machine translation, i wanted to know how far i can get with small amounts of code for a translation program based on rules on lemmas and stems. It just seems stupid that there are no self-contained accurate translation libraries that can "run anywhere".
 
 My benchmarks will be:
 
@@ -29,7 +29,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
-| Portuguese    | English       |  🆗    | 242kb |      0.2 %        |                      |  1128 | ≈ 0.68 ms/word |
+| Portuguese    | English       |  🆗    | 267kb |     ≈ 0.4 %       |                      |  1526 | ≈ 0.68 ms/word |
 | Portuguese    | Spanish       |  ⚠️    | 152kb |       ?? %        |                      |  N/A  |      N/A       |
 | English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |      N/A       |
 | French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |
