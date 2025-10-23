@@ -1,9 +1,9 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 #include <string>
-#include <iostream>
 #include <cstdint>
 #include <vector>
+#include <iostream>
 
 // pairs
 
@@ -200,51 +200,67 @@ inline std::string detect_language(const char* sentence) {
         const std::string& word = tokens[i];
 
         
-        if(word == "o" || word == "e") pt += 0.5f;
+        if(word == "o" || word == "e") {
+            pt += 0.5f; 
+            en += 0.5f;
+        };
+
+        if(word.length() > 1 && std::string(word).substr(word.length() - 2) == "ll"){
+                   en += 1.0;
+        }
         if(word == "i") en += 0.5f;
         if(word == "y"){ es += 0.5f; fr += 0.4;}
 
-        if(word == "em" || word == "sou" || word == "eu") pt += 1.0f;
-        if(word == "je" || word == "moi") fr += 1.0f;
+        if(word == "em" || word == "sou" || word == "eu"){ pt += 1.0f;}
+
+        if(word == "je" || word == "moi") {fr += 1.0f;}
+
+        if(word == "are" || word == "you") {en += 1.0f;}
+
+        if(word == "lo" || word == "la") {es += 1.0f;}
+
         if(word == "tu") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
         if(word == "te") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
         if(word.back() == 'g') en += 7.0f;
-            
-         auto first_char = [](const std::string &s) -> std::string {
+        auto first_char = [](const std::string &s) -> std::string {
             if (s.empty()) return "";
             size_t len = 1;
             unsigned char c = static_cast<unsigned char>(s[0]);
-            if ((c & 0x80) == 0x00) len = 1;         
-            else if ((c & 0xE0) == 0xC0) len = 2;    
-            else if ((c & 0xF0) == 0xE0) len = 3;    
-            else if ((c & 0xF8) == 0xF0) len = 4;    
+            if ((c & 0x80) == 0x00) len = 1;    
+            else if ((c & 0xE0) == 0xC0) len = 2;
+            else if ((c & 0xF0) == 0xE0) len = 3;  
+            else if ((c & 0xF8) == 0xF0) len = 4;  
             return s.substr(0, len);
         };
 
         auto last_char = [](const std::string &s) -> std::string {
+            if (s.empty()) return "";
             size_t i = s.size();
             while (i > 0 && (static_cast<unsigned char>(s[i-1]) & 0xC0) == 0x80) --i;
             return s.substr(i-1);
         };
 
-        if (last_char(word) == u8"é") { 
-                fr += 0.7;
-                pt += 0.4;
-                es += 0.7;
-            }
-        if (last_char(word) == u8"ó") { 
-                pt += 0.4;
-                es += 0.8;
-            }
-        if (first_char(word) == u8"ç") { 
-                pt -= 1.0;
-                fr += 0.6;
-            } 
+        if (last_char(word) == std::string("é")) { 
+            fr += 0.7;
+            pt += 0.4;
+            es += 0.7;
+        }
+        if (last_char(word) == std::string("ó")) { 
+            pt += 0.4;
+            es += 0.8;
+        }
+        if (first_char(word) == std::string("ç")) { 
+            pt -= 1.0;
+            fr += 0.6;
+        }
         if (word.find("ñ") != std::string::npos){
             es += 1.0f;
         }
         if (word.find("ç") != std::string::npos){
             pt += 0.7f; fr += 0.6f;
+        }
+         if (word.find("k") != std::string::npos || word.find("y") != std::string::npos || word.find("w") != std::string::npos){
+            pt -= 1.0f;
         }
         
         if (word.find("ão") != std::string::npos)
@@ -252,20 +268,24 @@ inline std::string detect_language(const char* sentence) {
         if (word.find("yo") != std::string::npos)
             {es += 0.6f; en += 0.7f; fr -= 0.8f;
             }
-        
-        if (word.find("y") != std::string::npos){
-            pt -= 0.8f;}
-
         if (word.find("nh") != std::string::npos || word.find("lh") != std::string::npos){
             pt += 1.0f;}
 
         if (word.find("sh") != std::string::npos || word.find("wr") != std::string::npos || word.find("ys") != std::string::npos || word.find("hy") != std::string::npos)
          {   en += 1.0f;}
+
         if(word.find("wh") != std::string::npos)
          {  en += 1.0f;}
         
            if (word.find("ux") != std::string::npos || word.find("ée") != std::string::npos)
           {  fr += 0.8f;}
+           if (word.find("uis") != std::string::npos)
+          {  fr += 1.0f;}
+            if (word.find("ois") != std::string::npos)
+          {  fr += 0.6f;pt += 0.6f;}
+         if (word.find("um") != std::string::npos || word.find("tu") != std::string::npos)
+          {  pt += 0.7f;}
+
 
         if (word.find("ph") != std::string::npos) {
             en += 0.4f;
@@ -286,11 +306,14 @@ inline std::string detect_language(const char* sentence) {
             if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF) ja += 0.5;
         }
     }
+    
     float maxScore = en;
     if (pt > maxScore) maxScore = pt;
     if (ja > maxScore) maxScore = ja;
     if (es > maxScore) maxScore = es;
     if (fr > maxScore) maxScore = fr;
+
+    
 
     std::cout << "\npt: " << pt << ", ";
     std::cout << "\nja: " << ja << ", ";
@@ -299,19 +322,18 @@ inline std::string detect_language(const char* sentence) {
     std::cout << "\nen: " << fr << ", ";
 
     if (maxScore == 0.0f) {
-        language = "not sure.";
+        language = "unknown";
     } else if (maxScore == en) {
-        language = "English";
+        language = "en";
     } else if (maxScore == pt) {
-        language = "Portuguese";
+        language = "pt";
     } else if (maxScore == ja) {
-        language = "Japanese";
+        language = "ja";
     } else if (maxScore == es) {
-        language = "Spanish";
+        language = "es";
     } else if (maxScore == fr) {
-        language = "French";
+        language = "fr";
     }
-
     return language;
 }
 
