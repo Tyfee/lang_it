@@ -23,6 +23,7 @@ struct EntryJ {
              // whatever frontend being used (preferablly web-javascript) will simply calculate the resulf offset and display the kanji  
                // no kanji will simply send it as it is. the actual hiragana, and will be stored as -1
    int wordType;
+   int katakana; // if one, lookup on the katakana enum table
 };
                struct Adjective {
     const char* w;
@@ -43,6 +44,7 @@ struct Verb {
     size_t len;
     int type;
     int compound; // 0 = 作「る」 1 =　愛「する」
+    
 };
 
 enum Kana : int {
@@ -128,16 +130,18 @@ Word _antn[] = {A, NA, TA, NO};
 Word _wtsn[] = {WA, TA, SI, NO};
 Word _to[] = {TO};
 Word _ski[] = {SE, KA, I};
+Word _inu[] = {I, NU};
+Word _tk[] = {TO, KI};
 
 
 
 
 constexpr EntryJ dict[] = { 
-    {"and", _to, 1, {-1}, 0 , 3},
-    {"am", _is, 1, {-1}, 0 , 3},
-    {"are", _is, 1,{-1}, 0, 3},
-    {"is", _is, 1,{-1}, 0, 3},   
-    {"important", _important, 3, {2855, 139},  2, 1},       // this will be the example of what i'm cooking
+    {"and", _to, 1, {-1}, 0 , 3, 0},
+    {"am", _is, 1, {-1}, 0 , 3, 0},
+    {"are", _is, 1,{-1}, 0, 3, 0},
+    {"is", _is, 1,{-1}, 0, 3, 0},   
+    {"important", _important, 3, {2855, 139},  2, 1, 0},       // this will be the example of what i'm cooking
                                 // pay ATTENTION MATE. an Entry is composed of its 'original_word (important)', 'translation_kana (DA, I, JI)' 
                                 // 'size (3)', kanji_offsets {2855, 139}, 'number_of_kanji (2)'
                                 // how do you get this shit??? you find the unicode hex value of the kanji you need, and substract the first
@@ -166,32 +170,34 @@ constexpr EntryJ dict[] = {
                                
                                */
     
-    {"egg", _tmg, 3, {1397},  1, 0},
-    {"yes", _yes, 2, {-1}, 0, 0},
-    {"thanks", _thank, 5, {-1}, 0, 0},
-    {"house", _ie, 2, {3510}, 1, 0},
-    {"coffee", _kh, 4, {-1}, 0, 0},
-    {"world", _ski, 3, {22, 10060}, 2, 0},
+    {"egg", _tmg, 3, {1397},  1, 0, 1},
+    {"yes", _yes, 2, {-1}, 0, 0, 0},
+    {"thanks", _thank, 5, {-1}, 0, 0, 0},
+    {"house", _ie, 2, {3510}, 1, 0, 0},
+    {"coffee", _kh, 4, {-1}, 0, 0, 1 /* <- this is katakana */}, 
+    {"world", _ski, 3, {22, 10060}, 2, 0, 0},
+    {"time", _tk, 3, {6210}, 1, 0, 0},
+    {"dog", _inu, 2, {9388}, 1, 0, 0},
     
-    {"this", _kr, 2, {-1}, 0, 8},
-    {"that", _ar, 2, {-1}, 0, 8},
+    {"this", _kr, 2, {-1}, 0, 8, 0},
+    {"that", _ar, 2, {-1}, 0, 8, 0},
 
     // pronouns
 
-    {"i", _i, 3, {11201}, 1, 4},
-    {"you", _you, 3, {-1}, 0, 4},
-    {"we", _we, 5, {-1}, 0, 4},
-    {"he", _he, 2, {4476}, 1, 4},
-    {"she", _she, 3, {4476, 2931}, 2, 4},
-    {"they", _they, 5, {-1}, 0, 4},
-    {"my", _wtsn, 4, {-1}, 0, 44},
-    {"your", _antn, 4, {-1}, 0, 44}
+    {"i", _i, 3, {11201}, 1, 4, 0},
+    {"you", _you, 3, {-1}, 0, 4, 0},
+    {"we", _we, 5, {-1}, 0, 4, 0},
+    {"he", _he, 2, {4476}, 1, 4, 0},
+    {"she", _she, 3, {4476, 2931}, 2, 4, 0},
+    {"they", _they, 5, {-1}, 0, 4, 0},
+    {"my", _wtsn, 4, {-1}, 0, 44, 0},
+    {"your", _antn, 4, {-1}, 0, 44, 0}
 };
 
 
 
 constexpr EntryJ fixed_ngrams[] = { 
-    {"thank_you", _thank, 5, {-1}, 0} 
+    {"thank_you", _thank, 5, {-1}, 0, 0} 
 };
 
 constexpr Verb verbs[] = { 
@@ -278,6 +284,16 @@ string script_adequation(const string &s) {
         pos = 0;
         while ((pos = copy.find("tra", pos)) != string::npos) {
             copy.replace(pos, 3, "tora");
+            pos += 3; 
+        }
+          pos = 0;
+        while ((pos = copy.find("pro", pos)) != string::npos) {
+            copy.replace(pos, 3, "puro");
+            pos += 3; 
+        }
+           pos = 0;
+        while ((pos = copy.find("pre", pos)) != string::npos) {
+            copy.replace(pos, 3, "pure");
             pos += 3; 
         }
     
@@ -453,14 +469,14 @@ static Result nounLookup(string &word, bool kanji) {
                         out += getKanjiFromOffset(e->kanji[k]);
                         i += e->len;
                     } else {
-                        out += HIRAGANA[e->t[i]];
+                        out += e->katakana == 0 ? HIRAGANA[e->t[i]] : KATAKANA[e->t[i]];
                     }
                 }
             } else {
-                out += HIRAGANA[e->t[i]];
+                out += e->katakana == 0 ? HIRAGANA[e->t[i]] : KATAKANA[e->t[i]];
             }
         } else {
-            out += HIRAGANA[e->t[i]];
+            out += e->katakana == 0 ? HIRAGANA[e->t[i]] : KATAKANA[e->t[i]];
         }
     }
 

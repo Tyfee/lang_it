@@ -110,8 +110,6 @@ constexpr Entry nouns[] = {
   {"mês", "month"},
   {"hora", "hour"},
   {"leite", "leche"},
-  {"blusa", "shirt"},
-  {"dinheiro", "money"},
   {"meia", "calcetín"},
   {"rua", "calle"},
   {"onda", "ola"},
@@ -121,7 +119,10 @@ constexpr Entry nouns[] = {
   {"loja", "tienda"},
   {"janela", "ventana"},
   {"varanda", "balcón"},
-  
+  {"casal", "pareja"},
+  {"meia", "calcetín"},
+  {"rua", "calle"},
+
   {"banheiro", "baño"},
   {"cozinha", "cocina"},
   

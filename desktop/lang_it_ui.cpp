@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Enter text");
 
     GtkWidget *button = gtk_button_new_with_label("Translate");
-    GtkWidget *label = gtk_label_new(getKanji(123).c_str());
+    GtkWidget *label = gtk_label_new("");
     PangoFontDescription *font_desc = pango_font_description_from_string("Sans 20");
     gtk_widget_override_font(label, font_desc);
     gtk_widget_override_font(entry, font_desc);

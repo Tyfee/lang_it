@@ -266,8 +266,6 @@ constexpr Entry nouns[] = {
 
   {"chocolate", "chocolate"},
   {"melancia", "watermelon"},
-  {"areia", "sand"},
-  {"chuva", "rain"}, // this is a verbifiable
   {"acucar", "sugar"},
   {"morango", "strawberry"},
   {"uva", "grape"},
@@ -379,6 +377,10 @@ constexpr Entry nouns[] = {
   {"vento", "wind"},
   {"fogo", "fire"},
   {"gelo", "ice"},
+  {"neve", "snow"},
+  {"areia", "sand"},
+  {"chuva", "rain"}, // this is a verbifiable
+  {"", ""},
 
   {"pessoas", "people"},
   {"gente", "people"},
@@ -507,7 +509,8 @@ constexpr Entry adj[] = {
   {"décimo", "tenth"},
 
   {"bonito", "beautiful"},
-  {"belo", "legal"},
+  {"lindo", "beautiful"},
+  {"belo", "beautiful"},
   {"legal", "cool"},
   {"grande", "big"},
   {"forte", "strong"},
@@ -825,7 +828,7 @@ constexpr Suffix suff[] = {
   {"mento", "ment", 0, 0},
   {"ável", "able", 1, 0},
   {"ível", "ible", 1, 0},
-  {"ória", "ory", 0, 0},
+  {"ória", "ory", 1, 0},
   {"ência", "ency", 0, 0},
   {"cidade", "city", 0, 0},
   {"açado", "aced", 1, 0},
@@ -931,6 +934,9 @@ static string normalize(string word) {
 
         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "icaly") {
             normalized_ = normalized_.substr(0, normalized_.size() - 5) + "ically";
+        }
+           if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "sctly") {
+            normalized_ = normalized_.substr(0, normalized_.size() - 5) + "stly";
         }
          if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "taly") {
             normalized_ = normalized_.substr(0, normalized_.size() - 4) + "ctly";

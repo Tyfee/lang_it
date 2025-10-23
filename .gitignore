@@ -1,9 +1,10 @@
 lang_it
 test
+test.exe
 translate_line
 benchmarks/translate_line
 benchmarks/results/*.txt
-test_server/server
+test_server/httplib/server
 *.Identifier
 .vscode
 .vs

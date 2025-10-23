@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>lang_it</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+#container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    width: 400px;
+}
+select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+#output {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f7f7f7;
+    border-radius: 5px;
+    min-height: 50px;
+    white-space: pre-wrap;
+}
+</style>
+</head>
+<body>
+<div id="container">
+    <h2>lang_it</h2>
+    <select id="langSelect">
+        <option value="pt_en">Portuguese → English</option>
+        <option value="pt_es">Portuguese → Spanish</option>
+        <option value="en_ja">English → Japanese</option>
+        <option value="pt_ja">Portuguese → Japanese (Pivot)</option>
+    </select>
+    <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+    <div id="output"></div>
+    <div id="output_json"></div>
+</div>
+<script>
+let timeout;
+const inputEl = document.getElementById('inputText');
+const langEl = document.getElementById('langSelect');
+const outputEl = document.getElementById('output_json');
+
+const output = document.getElementById('output');
+async function translate() {
+    const text = inputEl.value;
+    if(!text) {
+        outputEl.textContent = '';
+        return;
+    }
+
+    const response = await fetch(`http://localhost:8080/translate/${langEl.value}`,{
+        method:'POST',
+        body:text
+    });
+    const result = await response.json(); 
+    outputEl.textContent = `Result brought in: ${result.time_ms} ms`;
+    
+    output.textContent = result.translation;
+}
+
+function clear(){
+    console.log('what');
+    inputEl.value = "";
+    outputEl.textContent = "";
+    output.textContent = "";
+}
+
+inputEl.addEventListener('input', ()=>{
+    clearTimeout(timeout);
+    timeout = setTimeout(translate, 300);
+});
+langEl.addEventListener('change', clear);
+</script>
+</body>
+</html>
