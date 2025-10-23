@@ -292,24 +292,18 @@ inline std::string detect_language(const char* sentence) {
     if (es > maxScore) maxScore = es;
     if (fr > maxScore) maxScore = fr;
 
-    std::cout << "\npt: " << pt << ", ";
-    std::cout << "\nja: " << ja << ", ";
-    std::cout << "\nes: " << es << ", ";
-    std::cout << "\nfr: " << fr << ", ";
-    std::cout << "\nen: " << fr << ", ";
-
     if (maxScore == 0.0f) {
         language = "not sure.";
     } else if (maxScore == en) {
-        language = "English";
+        language = "en";
     } else if (maxScore == pt) {
-        language = "Portuguese";
+        language = "pt";
     } else if (maxScore == ja) {
-        language = "Japanese";
+        language = "ja";
     } else if (maxScore == es) {
-        language = "Spanish";
+        language = "es";
     } else if (maxScore == fr) {
-        language = "French";
+        language = "fr";
     }
 
     return language;
