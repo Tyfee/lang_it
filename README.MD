@@ -29,7 +29,7 @@ At first, My goal is to introduce the following translations, and then pivot the
 
 | FROM          | TO            | STATUS |  SIZE | The Little Prince | Estimated CEFR Level | Words | SPEED (ESP32)  |
 | ------------- | ------------- | ------ | ----- | ----------------- | -------------------- | ----- |  ------------- |     
-| Portuguese    | English       |  🆗    | 267kb |     ≈ 0.4 %       |                      |  1526 | ≈ 0.68 ms/word |
+| Portuguese    | English       |  🆗    | 267kb |     ≈ 0.4 %       |                      |  1628 | ≈ 0.68 ms/word |
 | Portuguese    | Spanish       |  ⚠️    | 152kb |       ?? %        |                      |  N/A  |      N/A       |
 | English       | Japanese      |  ⚠️    | 58kb  |       ?? %        |                      |   4   |      N/A       |
 | French        | Portuguese    |  ❌    |       |       ?? %        |                      |       |                |

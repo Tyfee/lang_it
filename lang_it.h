@@ -67,7 +67,7 @@ enum Flags: uint8_t {
     NO_PLURAL = 1 << 1,
     IRREGULAR_PLURAL = 1 << 2,
     IS_PLACE = 1 << 3,
-    IN_ON = 1 << 4,
+    ON = 1 << 4, // should use ON instead of IN
     UNCOUNTABLE = 1 << 5
 };
 

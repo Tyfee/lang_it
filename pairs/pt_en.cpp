@@ -110,7 +110,7 @@ static Outcome banco_outcomes[] = {
     {"bank", 0.0f, 0}, {"bench", 0.0f, 0}
 };
 static const char* banco_tokens[] = {
-    "pay", "money", "loan", "work","$",
+    "pay", "money", "loan", "work", "central", "national","$",
      "sit", "beautiful", "outside"
 };
 
@@ -258,6 +258,7 @@ constexpr Entry nouns[] = {
   {"morte", "death"},
   {"vida", "life"},
   {"bebê", "baby"},
+  {"buraco", "hole"},
   
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
@@ -295,7 +296,7 @@ constexpr Entry nouns[] = {
   {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
-  {"porta", "door"},
+  {"porta", "door", IS_PLACE},
   {"janela", "window"},
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
   {"todo", "all", NO_PLURAL},
@@ -337,7 +338,7 @@ constexpr Entry nouns[] = {
 
   {"manga", "mango"},
   
-  {"mão", "hand"},
+  {"mão", "hand", ON},
   {"pé", "foot", IRREGULAR_PLURAL},
   {"braço", "arm"},
   {"perna", "leg"},
@@ -347,7 +348,7 @@ constexpr Entry nouns[] = {
   {"dedo", "finger"},
   {"unha", "nail"},
   {"dente", "tooth", IRREGULAR_PLURAL},
-  {"lingua", "tongue"},
+  {"lingua", "tongue", ON},
   {"cérebro", "brain"},
   {"coração", "heart"},
   {"pele", "skin"},
@@ -357,13 +358,15 @@ constexpr Entry nouns[] = {
   {"metade", "half"},
   {"meio", "middle"},
   {"bolo", "cake"},
+  {"vela", "candle"},
   {"vez", "time"},
+  {"gaveta", "drawer"},
   {"algo", "something"},
   {"biblioteca", "library"},
   {"detalhe", "detail"},
   {"estação", "season"},
-  {"mesa", "table"},
-  {"cadeira", "chair"},
+  {"mesa", "table", ON},
+  {"cadeira", "chair", ON},
   {"tudo", "all"},
   {"perdão", "forgiveness"},
   {"desculpa", "apology"},
@@ -389,7 +392,17 @@ constexpr Entry nouns[] = {
   {"eis", "here's"},
   {"floresta", "forest"},
   {"selva", "jungle"},
-  {"consolo", "consolation"}
+  {"consolo", "consolation"},
+  {"padaria", "bakery", IS_PLACE},
+  {"mercado", "market", IS_PLACE},
+
+  //slang and curse words cause i'm soooo young and hip
+  
+  {"caramba", "damn"},
+  {"porra", "fuck"},
+  {"merda", "shit"},
+  {"bosta", "shit"},
+  {"caralho", "fuck"}
 };
 
 constexpr Entry art[] = {
@@ -637,6 +650,7 @@ constexpr Verb reg_verbs[]  = {
   {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
   {"jog", "play", 1, true},
+  {"esper", "wait", 1, true},
   {"abr", "open", 1, false},
   {"fech", "clos", 0, true},
   {"molh", "wet", 1, false},
@@ -678,7 +692,8 @@ constexpr Verb reg_verbs[]  = {
   {"ajud", "help", 1, false},
   {"desenvolv", "develop", 1, true},
   {"bast", "suffic", 0, true},
-  {"beij", "kiss", 1, true}
+  {"beij", "kiss", 1, true},
+  {"sopr", "blow", 1, false}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -844,6 +859,7 @@ constexpr Suffix suff[] = {
   {"ário", "ary",0,0},
   {"ária", "ary",0,0},
   {"ral", "ral", 0,0},
+  {"mal", "mal", 1,0},
   {"ais", "als", 0, 1},
   {"oria", "ory", 0, 0},
   {"ador", "ator", 0, 0},
@@ -924,7 +940,10 @@ static string normalize(string word) {
             normalized_ = word.substr(0, word.size() - 3) + "ed";
             
         }
-
+            size_t pos = normalized_.find("cio");
+            if (pos != std::string::npos) {
+                normalized_.replace(pos, 3, "tio"); 
+            }
         if (word.substr(0, 3) == "esp") {
             normalized_ = normalized_.substr(1);  
         }
@@ -1776,13 +1795,13 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
     if (sentence_arr.size() == 1 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36 )) {
     string pronoun;
 
-    if(sentence_arr[0].word.back() == 'o'){
+    if(sentence_arr[0].word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){
         pronoun = "I ";   
     } else if(sentence_arr[0].word.back() == 's'){
         pronoun = "we ";
     } else if(sentence_arr[0].word.back() == 'm'){
         pronoun = "they ";
-    } else if(sentence_arr[0].word.back() == 'e'){
+    } else if(sentence_arr[0].word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
         pronoun = "";
     } else {
         if(sentence_arr[0].translation.size() >= 2 && sentence_arr[0].translation.substr(sentence_arr[0].translation.length() - 2) != "ed") 
@@ -1864,11 +1883,11 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
 else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).type == 13) && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36 )) {
 
     string pronoun;
-    if(sentence_arr.at(i).word.back() == 'o'){
+    if(sentence_arr.at(i).word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){
         pronoun = "I ";
     } else if(sentence_arr.at(i).word.back() == 's'){
         pronoun = "we ";
-    } else if(sentence_arr.at(i).word.back() == 'e'){
+    } else if(sentence_arr.at(i).word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
         pronoun = ""; 
     }
     else{
@@ -1887,13 +1906,13 @@ else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).ty
     
     string pronoun;
     string pronoun_tr;
-    if (sentence_arr[0].word.back() == 'o'){ 
+    if (sentence_arr[0].word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){ 
         pronoun = "I"; pronoun_tr = "eu";
     } 
     else if (sentence_arr[0].word.back() == 's'){ 
         pronoun = "We"; pronoun_tr = "nós";
     }
-     else if(sentence_arr[0].word.back() == 'e'){
+     else if(sentence_arr[0].word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
         pronoun = ""; 
     }
     else {
@@ -2235,12 +2254,43 @@ else if (sentence_arr.size() >= 2 && i == sentence_arr.size() - 1 && sentence_ar
 
 
 
+if (!sentence_arr.empty()) {
 
-if(sentence_arr.size() > 0){
+    // this is preposition in, on, at disambiguation;
+    // every noun has a two flags ON and IS_PLACE
+   for (size_t i = 0; i < reordered_arr.size(); ++i) {
+    auto &current = reordered_arr.at(i);
+    // if no or na "in the";
+    if (current.word == "no" || current.word == "na") {
+        if (i + 1 < reordered_arr.size()) {
+            const auto &next = reordered_arr.at(i + 1);
+            if (next.type == 0) {
+                //get the flags
+                uint8_t f = lookupFlags(nouns, next.word.c_str());
+                if (f & ON) current.translation = "on the"; // if flag ON  is raised no(a) = "on the"
+                else if (f & IS_PLACE) current.translation = "at the";// if flag IS_PLACE is raised no(a) = "at the"
+                else current.translation = "in the"; // if none of the above, default to in
+            }
+        }
+    }
+}
+
+if(reordered_arr.size() > 2 && reordered_arr[0].word == "$inf" && reordered_arr[2].translation == "a"){
+  reordered_arr[0].translation = "there is"; 
+  reordered_arr[1].translation = ""; 
+}
+
+if(reordered_arr.size() > 2 && reordered_arr[0].word == "$inf" && reordered_arr[2].word.back() == 's'){
+ reordered_arr[0].translation = "there are"; 
+  reordered_arr[1].translation = ""; 
+}
+
+
 
 // interrogative
 
     string last = sentence_arr[sentence_arr.size() - 1].word;
+    
     //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
     if(last == "?"  && sentence_arr[0].type != 13 && sentence_arr[0].translation != "what is"){
         
