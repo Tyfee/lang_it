@@ -4,15 +4,18 @@
 
 int main() {
     char original_sentence[250];
-    std::cout << "Olá mundo! O tradutor funciona normalmente. -> ";
-    std::cout << translate("Olá mundo! O tradutor funciona normalmente.", "pt", "en") << std::endl;
-    std::cout << "O que deseja traduzir (pt-en)?\n";
+    const char* from = "pt";
+    const char* to = "es";
+    const char* sample = (from == "pt" ? "Olá mundo! O tradutor funciona normalmente." : from == "en" ? "Hello world! The translator works normally" : ".");
+    std::cout << sample << " -> ";
+    std::cout << translate(sample, from, to) << std::endl;
+    std::cout << "O que deseja traduzir? (" << from << "-" << to << ")\n";
     std::cout << "Digite 'sair' para encerrar.\n";
 
     while (true) {
         std::cin.getline(original_sentence, 250);
         if (original_sentence == "sair") break;
-        std::cout << translate(original_sentence, "pt", "en") << std::endl;
+        std::cout << translate(original_sentence, from, to) << std::endl;
     }
 
     return 0;

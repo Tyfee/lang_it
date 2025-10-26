@@ -71,6 +71,33 @@ std::string getKanji(int offset) {
 
     return std::string(utf8);
 }
+
+
+void on_settings(GtkWidget *widget, gpointer user_data) {
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(
+        "Settings",
+        GTK_WINDOW(user_data),  
+        GTK_DIALOG_MODAL,
+        "_Close", GTK_RESPONSE_CLOSE,
+        NULL
+    );
+
+    GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    GtkWidget *label = gtk_label_new("Settings go here...");
+    gtk_container_add(GTK_CONTAINER(content_area), label);
+
+    gtk_widget_show_all(dialog);
+
+    g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_destroy), dialog);
+}
+
+void on_open_file(GtkWidget *widget, gpointer user_data) {
+}
+
+void on_manage_dictionaries(GtkWidget *widget, gpointer user_data) {
+    
+}
+
 int main(int argc, char *argv[]) {
 
  
@@ -82,6 +109,29 @@ int main(int argc, char *argv[]) {
     gtk_window_set_title(GTK_WINDOW(window), "lang_it gtk");
     gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+
+    GtkWidget* navbar = gtk_toolbar_new();
+    gtk_toolbar_set_style(GTK_TOOLBAR(navbar), GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_icon_size(GTK_TOOLBAR(navbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+GtkToolItem* open = gtk_tool_button_new(NULL, "Open");
+gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(open), "document-open");
+gtk_toolbar_insert(GTK_TOOLBAR(navbar), open, -1);
+g_signal_connect(open, "clicked", G_CALLBACK(on_open_file), NULL);
+
+GtkToolItem* dict = gtk_tool_button_new(NULL, "Dictionaries");
+gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(dict), "folder");
+gtk_toolbar_insert(GTK_TOOLBAR(navbar), dict, -1);
+g_signal_connect(dict, "clicked", G_CALLBACK(on_manage_dictionaries), NULL);
+
+GtkToolItem* settings = gtk_tool_button_new(NULL, "Settings");
+gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(settings), "preferences-system");
+gtk_toolbar_insert(GTK_TOOLBAR(navbar), settings, -1);
+
+g_signal_connect(settings, "clicked", G_CALLBACK(on_settings), NULL);
+
+
 
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
@@ -107,7 +157,7 @@ int main(int argc, char *argv[]) {
 
     gtk_box_pack_start(GTK_BOX(hbox), from, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), to, FALSE, FALSE, 5);
-
+    gtk_box_pack_start(GTK_BOX(vbox), navbar, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(vbox), button, FALSE, FALSE, 5);
@@ -117,6 +167,10 @@ int main(int argc, char *argv[]) {
     gtk_container_add(GTK_CONTAINER(window), vbox);
 
     GtkWidget* widgets[4] = {entry, label, from, to};
+    
+    g_signal_connect(button, "clicked", G_CALLBACK(on_settings), widgets);
+    g_signal_connect(button, "clicked", G_CALLBACK(on_manage_dictionaries), widgets);
+    g_signal_connect(button, "clicked", G_CALLBACK(on_open_file), widgets);
     g_signal_connect(button, "clicked", G_CALLBACK(on_translate), widgets);
     g_signal_connect(entry, "changed", G_CALLBACK(on_translate), widgets);
     g_signal_connect(from, "changed", G_CALLBACK(on_choose), to);

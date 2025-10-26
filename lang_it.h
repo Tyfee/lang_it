@@ -7,7 +7,7 @@
 
 // pairs
 
-#if defined(PT_EN) || defined(ALL)
+#if defined(PT_EN) || defined(ALL) 
 std::string traduzir_en(const char* sentence);
 #endif
 
@@ -17,6 +17,10 @@ std::string traduzir_es(const char* sentence);
 
 #if defined(EN_JA) || defined(ALL)
 std::string translate_ja(const char* sentence, bool kanji);
+#endif
+
+#if defined(EN_PT) || defined(ALL)
+std::string translate_pt(const char* sentence);
 #endif
 
 
@@ -68,7 +72,9 @@ enum Flags: uint8_t {
     IRREGULAR_PLURAL = 1 << 2,
     IS_PLACE = 1 << 3,
     ON = 1 << 4, // should use ON instead of IN
-    UNCOUNTABLE = 1 << 5
+    UNCOUNTABLE = 1 << 5,
+    FEMININE = 1 << 6, // need that
+    NOT_GENDERED = 1 << 7 // need that as well
 };
 
 typedef struct {
@@ -346,6 +352,11 @@ inline std::string translate(const char* sentence, const char* from, const char*
     #if defined(EN_JA) || defined(ALL)
         if ((f == "en" || f == "EN") && (t == "ja" || t == "JA")) {
             return translate_ja(sentence, true);
+        }
+    #endif
+  #if defined(EN_PT) || defined(ALL)
+        if ((f == "en" || f == "EN") && (t == "pt" || t == "PT")) {
+            return translate_pt(sentence);
         }
     #endif
 

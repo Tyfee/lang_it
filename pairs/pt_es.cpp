@@ -136,7 +136,9 @@ constexpr Entry nouns[] = {
 
 constexpr Entry art[] = {
   {"o", "el"},
-  {"a", "la"}
+  {"a", "la"},
+  {"um", "un"},
+  {"uma", "una"}
 };
 
 constexpr Entry pre[] = { 
@@ -235,6 +237,7 @@ constexpr Entry adj[] = {
 constexpr Entry adv[] = {
   {"se", "si"},
   {"talvez", "tal vez"},
+  {"tomara", "ojalá"},
   {"mas", "pero"},
   {"enquanto", "mientras"},
   {"onde", "donde"},
@@ -375,6 +378,12 @@ static string normalize(string word) {
         char thirdLast = word[word.size() - 3];
         string last2 = word.substr(word.size() - 2);
        
+
+        
+         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "agem") {
+            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "aje";
+        }
+
         size_t pos = 0;
         while ((pos = normalized_.find("ch", pos)) != string::npos) {
             normalized_.replace(pos, 2, "ll");
