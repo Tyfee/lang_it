@@ -237,6 +237,7 @@ Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 constexpr Entry nouns[] = {
   {"olá", "hello"},
+  {"ola", "hello"},
   {"inglês", "english"},
   {"mundo", "world"},
   {"nome", "name"},
