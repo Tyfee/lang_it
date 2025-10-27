@@ -10,3 +10,8 @@ test_server/httplib/server
 .vscode
 .vs
 desktop/windows/*.dll
+wrappers/ruby/pairs
+wrappers/ruby/pairs/*
+wrappers/ruby/lang_it_rb.o
+wrappers/ruby/lang_it_rb.so
+pairs/*.o
