@@ -5,7 +5,7 @@
 extern "C" {
 
 JNIEXPORT jstring JNICALL
-Java_com_example_myapp_LangIt_detectLanguage(JNIEnv* env, jclass clazz, jstring sentence) {
+Java_com_tyfee_lang_1it_LangIt_detectLanguage(JNIEnv* env, jclass clazz, jstring sentence) {
     const char* c_sentence = env->GetStringUTFChars(sentence, nullptr);
     std::string result = detect_language(c_sentence);
     env->ReleaseStringUTFChars(sentence, c_sentence);
@@ -13,8 +13,8 @@ Java_com_example_myapp_LangIt_detectLanguage(JNIEnv* env, jclass clazz, jstring 
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_example_myapp_LangIt_translate(JNIEnv* env, jclass clazz, jstring sentence,
-                                        jstring from, jstring to) {
+Java_com_tyfee_lang_1it_LangIt_translate(JNIEnv* env, jclass clazz, jstring sentence,
+                                         jstring from, jstring to) {
     const char* c_sentence = env->GetStringUTFChars(sentence, nullptr);
     const char* c_from = env->GetStringUTFChars(from, nullptr);
     const char* c_to = env->GetStringUTFChars(to, nullptr);
@@ -27,5 +27,6 @@ Java_com_example_myapp_LangIt_translate(JNIEnv* env, jclass clazz, jstring sente
 
     return env->NewStringUTF(result.c_str());
 }
+
 
 }
