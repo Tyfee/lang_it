@@ -743,10 +743,12 @@ constexpr Verb reg_verbs[]  = {
   {"desenvolv", "develop", 1, true},
   {"bast", "suffic", 0, true},
   {"beij", "kiss", 1, true},
-  {"sopr", "blow", 1, false},
   {"machuc", "hurt", 1, true},
   {"deslig", "turn_off", 1, true},
-  {"lig", "turn_on", 1, true}
+  {"lig", "turn_on", 1, true},
+  {"empurr", "push", 1, true},
+  {"pux", "pull", 1, true},
+  {"apert", "press", 1, true}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -766,6 +768,7 @@ constexpr Verb irr_verbs[] = {
   {"sangr", "bleed", 1, true},
   {"procri", "breed", 1, true},
   {"aliment", "feed", 1, false},
+  {"sopr", "blow", 1, false},
   {"nad", "swim", 1, true},
   {"quebr", "break", 1, false},
   {"escrev", "writ", 1, true},

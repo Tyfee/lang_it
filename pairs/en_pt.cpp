@@ -256,13 +256,13 @@ constexpr Entry nouns[] = {
   
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
-  {"sala", "room"},
+  {"room", "sala"},
   {"prédio", "building"},
 
   {"chocolate", "chocolate"},
-  {"melancia", "watermelon"},
-  {"acucar", "sugar"},
-  {"morango", "strawberry"},
+  {"watermelon", "melancia"},
+  {"sugar", "açucar"},
+  {"strawberry", "morango"},
   {"uva", "grape"},
   {"sal", "salt"},
   {"egg", "ovo"},
@@ -586,9 +586,10 @@ constexpr Entry adv[] = {
   {"mas", "but"},
   {"when", "quando"},
   {"sobre", "about"},
-  {"enquanto", "while"},
-  {"quem", "who"},
-  {"também", "too"},
+  {"while", "enquanto"},
+  {"who", "quem"},
+  {"too", "também"},
+  {"also", "também"},
   {"because", "porque"},
   {"why", "por que"},
   {"where", "onde"},
@@ -676,7 +677,6 @@ constexpr Verb reg_verbs[]  = {
   {"engol", "swallow", 1, false},
   {"respond", "answer", 1, false},
   {"desej", "wish", 1, true},
-  {"trabalh", "work", 1, true},
   {"mov", "mov", 0, false},
   {"digit", "typ", 0, false},
   {"olh", "look", 1, true}, //olho -> olhar even 
@@ -693,7 +693,6 @@ constexpr Verb reg_verbs[]  = {
   {"desenvolv", "develop", 1, true},
   {"bast", "suffic", 0, true},
   {"beij", "kiss", 1, true},
-  {"sopr", "blow", 1, false},
   {"machuc", "hurt", 1, true}
 };
 
@@ -714,6 +713,7 @@ constexpr Verb irr_verbs[] = {
   {"sangr", "bleed", 1, true},
   {"procri", "breed", 1, true},
   {"aliment", "feed", 1, false},
+  {"sopr", "blow", 1, false},
   {"nad", "swim", 1, true},
   {"quebr", "break", 1, false},
   {"escrev", "writ", 1, true},
@@ -738,7 +738,7 @@ constexpr Verb irr_verbs[] = {
   {"v", "see", 1, false},
   {"t", "hav", 0, false},
   {"ti", "hav", 0, false},
-  {"funcion", "work", 1, true},
+  {"work", "trabalh", 1, true},
   {"desenh", "draw", 1, true},
   {"dorm", "sleep", 1, true},
   {"durm", "sleep", 1, true},
@@ -829,7 +829,7 @@ static const VerbEnding* lookupEnding(const char* word) {
 
 static vector<string> infinitive = {"e"};
 vector<string> first_person = {"ed"};
-vector<string> other_person = {"es"};
+vector<string> other_person = {"es", "s"};
 vector<string> continuous = {"ing"};
 
 // common suffixes with traceable trnaslation pattern
@@ -1327,7 +1327,7 @@ static Word prefixLookup(string word){
     result = find_verb(first_person, word, 1);
     if(result.type != -1) return result;
 
-    result = find_verb(continuous, word, 2);
+    result = find_verb(other_person, word, 2);
     if(result.type != -1) return result;
 
     result = find_verb(continuous, word, 3);

@@ -1,5 +1,6 @@
 lang_it
 test
+test.cpp
 test.exe
 translate_line
 benchmarks/translate_line
