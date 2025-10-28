@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+
+  <meta charset="UTF-8">
+  <title>lang_it translator</title>
+</head>
+<body>
+  <h1>lang_it wasm demo</h1>
+ <center>
+  <div class="pick">
+    <div class="hor">
+ <div id="from" class="dropdown-selection">
+  <sl-dropdown>
+    <sl-button slot="trigger" caret>From</sl-button>
+    <sl-menu>
+        
+      <sl-menu-item value="detect">Detect Language</sl-menu-item>
+      <sl-menu-item value="pt">Portuguese</sl-menu-item>
+      <sl-menu-item value="en">English</sl-menu-item>
+      <sl-menu-item value="ja">Japanese</sl-menu-item>
+      <sl-menu-item value="es">Spanish</sl-menu-item>
+      <sl-menu-item value="fr">French</sl-menu-item>
+    </sl-menu>
+  </sl-dropdown>
+</div>
+<sl-textarea id="input_thing" size="large" placeholder="Enter text" class="input"></sl-textarea>
+</div>
+<sl-button class="invert">- -</sl-button>
+
+<div class="hor">
+ <div id="to" class="dropdown-selection">
+  <sl-dropdown>
+    <sl-button slot="trigger" caret>To</sl-button>
+    <sl-menu>
+      <sl-menu-item value="en">English</sl-menu-item>
+      <sl-menu-item value="pt">Portuguese</sl-menu-item>
+      <sl-menu-item value="ja">Japanese</sl-menu-item>
+      <sl-menu-item value="es">Spanish</sl-menu-item>
+      <sl-menu-item value="fr">French</sl-menu-item>
+    </sl-menu>
+  </sl-dropdown>
+</div>
+  <sl-textarea id="output_thing" class="input" size="large" placeholder="Translation" disabled></sl-textarea>
+
+</div>
+</div>
+</center>
+
+
+
+<style>
+.pick{
+    width: 80vw;
+    display: flex;
+}
+.hor, sl-menu, sl-button {
+  width: 40vw;
+}
+
+sl-dropdown, sl-dropdown::part(panel)  {
+  width: 100%;
+}
+.invert{
+ width: 10%;
+ }
+
+ .result_box{
+    background-color: gainsboro;
+    height: 100%;
+ }
+ .input{
+     height: 100%;
+     color: black !important;
+     font-weight: bold !important;
+ }
+</style>
+  <script src="lang_it.js"></script>
+<script>
+const input_thing = document.querySelector('#input_thing');
+const output_thing = document.querySelector('#output_thing');
+const from_input = document.querySelector('#from');
+const to_input = document.querySelector('#to');
+
+const button_from = from_input.querySelector('sl-button[slot="trigger"]');
+const button_to = to_input.querySelector('sl-button[slot="trigger"]');
+
+var from = 'null';
+var to = 'null';
+
+importTranslator().then(Module => {
+    const result = Module.translate("Olá mundo! O tradutor funciona normalmente.", "pt", "en");
+    console.log(result);
+  });
+
+from_input.addEventListener('sl-select', event => {
+  const selectedItem = event.detail.item;
+  button_from.textContent = selectedItem.textContent;
+  from = selectedItem.value;
+  console.log('Selected:', selectedItem.value);
+});
+to_input.addEventListener('sl-select', event => {
+  const selectedItem = event.detail.item;
+  button_to.textContent = selectedItem.textContent;
+  to = selectedItem.value;
+  console.log('Selected:', selectedItem.value);
+});
+
+
+input_thing.addEventListener('input', event => {
+  importTranslator().then(Module => {
+    if(from == "detect"){
+    const detected_lang = Module.detect_language(input_thing.value);
+        button_from.textContent = detected_lang + " - detected";
+        console.log(detected_lang);
+    }
+    const result = Module.translate(input_thing.value,from == "detect" ? Module.detect_language(input_thing.value) : from, to);
+    output_thing.value = result;
+   
+  });
+});
+
+
+ 
+</script>
+
+</body>
+</html>

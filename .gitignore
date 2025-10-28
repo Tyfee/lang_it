@@ -1,7 +1,5 @@
 *.exe
-test
-test.cpp
-test.exe
+lang_it
 translate_line
 benchmarks/translate_line
 benchmarks/results/*.txt

@@ -1,1 +1,0 @@
-g++ -DALL ../lang_it.h lang_it_ui.cpp ../pairs/*.cpp -o translator `pkg-config --cflags --libs gtk+-3.0`
