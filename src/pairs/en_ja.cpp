@@ -132,6 +132,8 @@ Word _to[] = {TO};
 Word _ski[] = {SE, KA, I};
 Word _inu[] = {I, NU};
 Word _tk[] = {TO, KI};
+Word _knncw[] = {KO, N , NI, CHI, WA};
+Word _hnyk[] = {HO, N , YA, KU};
 
 
 
@@ -178,6 +180,8 @@ constexpr EntryJ dict[] = {
     {"world", _ski, 3, {22, 10060}, 2, 0, 0},
     {"time", _tk, 3, {6210}, 1, 0, 0},
     {"dog", _inu, 2, {9388}, 1, 0, 0},
+    {"hello", _knncw, 5, {-1 }, 0, 0, 0},
+    {"translator", _hnyk, 4, {-1 }, 0, 0, 0},
     
     {"this", _kr, 2, {-1}, 0, 8, 0},
     {"that", _ar, 2, {-1}, 0, 8, 0},
@@ -234,6 +238,23 @@ int toIForm(int kana) {
             case BU: return BI;    
             case MU: return MI;    
             case RU: return RI;    
+            default: return kana;
+        }
+    }
+    return kana; 
+}
+
+int toAorm(int kana) {
+    if (kana >= KU && kana <= RU) {
+        switch(kana) {
+            case KU: return KA;   
+            case GU: return GA;    
+            case SU: return SA;    
+            case TU: return TA;  
+            case NU: return NA;   
+            case BU: return BA;    
+            case MU: return MA;    
+            case RU: return RA;    
             default: return kana;
         }
     }
@@ -444,7 +465,7 @@ std::string getKanjiFromOffset(int offset) {
     }
     return out;
 }
-static Result nounLookup(string &word, bool kanji) {
+static Result nounLookup(string &word, int script) {
     string translation;
     int word_type;
     const EntryJ* e = lookup(dict, word.c_str());
@@ -462,7 +483,7 @@ static Result nounLookup(string &word, bool kanji) {
 
 
     for (size_t i = 0; i < e->len; ++i) {
-        if (kanji) {
+        if (script == 1) {
             if (e->kanjiCount > 0) {
                 for (int k = 0; k < e->kanjiCount; ++k) {
                     if (e->kanji[k] != -1) {
@@ -480,15 +501,17 @@ static Result nounLookup(string &word, bool kanji) {
         }
     }
 
-        for (size_t i = 0; i < e->len; ++i) romaji += ROMAJI[e->t[i] - 1];
-        translation = out;
+        for (size_t i = 0; i < e->len; ++i){
+            romaji += ROMAJI[e->t[i] - 1];
+        }
+        translation = script == 2 ? romaji : out;
         word_type = 0;
          
     }else  if (e_p) {
 
 
     for (size_t i = 0; i < e_p->len; ++i) {
-        if (kanji) {
+        if (script == 2) {
             if (e_p->kanjiCount > 0) {
                 for (int k = 0; k < e_p->kanjiCount; ++k) {
                     if (e_p->kanji[k] != -1) {
@@ -507,7 +530,8 @@ static Result nounLookup(string &word, bool kanji) {
     }
 
         for (size_t i = 0; i < e_p->len; ++i) romaji += ROMAJI[e_p->t[i] - 1];
-        translation = out;
+        
+        translation = script == 2 ? romaji : out;
         word_type = 0;
          
     }else if(a){
@@ -527,13 +551,13 @@ static Result nounLookup(string &word, bool kanji) {
  return Result{word, translation, word_type};
 }
 
-static string unigramLookup(vector<string> &array_of_words, bool kanji) {
+static string unigramLookup(vector<string> &array_of_words, int script) {
     string sentence;
     vector<Result> array_of_results;
 
     for (size_t i = 0; i < array_of_words.size(); ++i) {
         if (!sentence.empty()) sentence += " ";
-        auto p = nounLookup(array_of_words[i], kanji);
+        auto p = nounLookup(array_of_words[i], script);
         array_of_results.push_back(p);
     }
     array_of_results = reorder_helpers(array_of_results);
@@ -541,7 +565,7 @@ static string unigramLookup(vector<string> &array_of_words, bool kanji) {
     return sentence;
 }
 
-static string bigramLookup(vector<string> &array_of_words, bool kanji) {
+static string bigramLookup(vector<string> &array_of_words, int script) {
     vector<string> result;
     size_t i = 1;
     while (i < array_of_words.size()) {
@@ -557,19 +581,19 @@ static string bigramLookup(vector<string> &array_of_words, bool kanji) {
         }
     }
     if (i == array_of_words.size()) result.push_back(array_of_words.back());
-    return unigramLookup(result, kanji);
+    return unigramLookup(result, script);
 }
 
-static string trigramLookup(vector<string> &array_of_words, bool kanji) {
+static string trigramLookup(vector<string> &array_of_words, int script) {
     
-    return bigramLookup(array_of_words, kanji);
+    return bigramLookup(array_of_words, script);
 }
 
-std::string translate_ja(const char* sentence, bool kanji) {
+std::string translate_ja(const char* sentence, int script) {
     std::string s(sentence);  
     to_lower(s);            
     auto tokens = tokenize(s);
-    return trigramLookup(tokens, kanji);
+    return trigramLookup(tokens, script);
 }
 
 #endif
