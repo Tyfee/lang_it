@@ -1,4 +1,4 @@
-#include "../lang_it.h"
+#include "../../src/lang_it.h"
 #include <emscripten/bind.h>
 #include <string>
 

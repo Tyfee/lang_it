@@ -7,7 +7,8 @@ test_server/httplib/server
 *.Identifier
 .vscode
 .vs
-desktop/windows/*.dll
+dist/desktop/windows/*.dll
+dist/wasm/index.html
 wrappers/ruby/pairs
 wrappers/ruby/pairs/*
 wrappers/ruby/lang_it_rb.o
