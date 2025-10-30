@@ -193,6 +193,7 @@ constexpr Entry fixed_ngrams[] = {
   {"todo_lugar", "everywhere"},
   {"todo_mundo", "everybody"},
   {"ao_mesmo", "at the same"},
+  {"comigo_mesmo", "with myself"},
 
   {"sei_lá", "i don't know"},
   {"eu_sei_lá", "i don't know"},
@@ -319,6 +320,9 @@ constexpr Entry nouns[] = {
   {"burro", "donkey"},
   {"porco", "pig"},
   {"asa", "wing"},
+  {"anjo", "angel"},
+  {"ponta", "tip", ON},
+  {"ponto", "point", IS_PLACE},
 
   {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
@@ -327,19 +331,23 @@ constexpr Entry nouns[] = {
   {"janela", "window"},
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
   {"todo", "all", NO_PLURAL},
-  {"cidade", "town"},
+  {"cidade", "town", IS_PLACE},
   {"arma", "gun"},
   {"vida", "life"},
   {"folha", "leaf"},
-  {"papel", "paper"},
+  {"papel", "paper", ON},
   {"faca", "knife"},
-  {"tela", "screen"},
+  {"tela", "screen", ON},
   {"mulher", "woman", IRREGULAR_PLURAL},
   {"homem", "man", IRREGULAR_PLURAL},
   {"garoto", "boy"},
   {"menino", "boy"},
+  {"árvore", "tree"},
+  {"arbusto", "bush"},
   {"garota", "girl"},
   {"menina", "girl"},
+  {"filho", "son"},
+  {"filha", "daughter"},
   {"pessoa", "person"},
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
@@ -373,6 +381,7 @@ constexpr Entry nouns[] = {
   {"sabão", "soap"},
   {"sabonete", "soap"},
   {"bolha", "bubble"},
+  {"botão", "button"},
 
   {"manga", "mango"},
   
@@ -388,6 +397,7 @@ constexpr Entry nouns[] = {
   {"unha", "nail"},
   {"dente", "tooth", IRREGULAR_PLURAL},
   {"lingua", "tongue", ON},
+  {"garganta", "throat"},
   {"cérebro", "brain"},
   {"coração", "heart"},
   {"pele", "skin"},
@@ -499,6 +509,8 @@ constexpr Entry pro[] = {
   {"eles", "they"},
   {"esse", "this"},
   {"essa", "this"},
+  {"nesse", "in this"},
+  {"nessa", "in this"},
   {"esses", "these"},
   {"essas", "these"},
   {"este", "this"},
@@ -510,7 +522,8 @@ constexpr Entry pro[] = {
   {"aqueles", "those"},
   {"aquelas", "those"},
   {"isso", "this"},
-  {"isto", "this"}
+  {"isto", "this"},
+  {"comigo", "with myself"}
   
 };
 constexpr Entry poss_pro[] = {
@@ -588,6 +601,7 @@ constexpr Entry adj[] = {
   {"molhado", "wet"},
   {"seco", "dry"},
   {"novo", "new"},
+  {"passado", "last"},
   {"triste", "sad"},
   {"feliz", "happy"},
   {"alto", "high"},
@@ -611,9 +625,16 @@ constexpr Entry adj[] = {
   {"proprio", "own"},
   {"sério", "serious"},
   {"doente", "sick"},
+  {"saudavel", "healthy"},
   {"surdo", "deaf"},
   {"cego", "blind"},
   {"certo", "right"},
+  {"próprio", "own"},
+  
+  {"direito", "right"},
+  {"esquerdo", "left"},
+  {"errado", "wrong"},
+
   {"certo", "certain"},
   {"outro", "other"},
   {"gratis", "free"},
@@ -627,6 +648,7 @@ constexpr Entry adj[] = {
   {"doido", "crazy"},
   {"próximo", "close"},
   {"perto", "close"},
+  {"longe", "far"},
   {"pesado", "heavy"},
   {"torto", "bent"},
   {"perto", "close"},
@@ -785,6 +807,7 @@ constexpr Verb irr_verbs[] = {
                     // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
 
   {"cant", "sing", 1, true},
+  {"danç", "danc", 0, true},
   {"ganh", "win", 1, true},
   {"volt", "go back", 1, true},
   {"te", "have", 1, false},
@@ -801,8 +824,10 @@ constexpr Verb irr_verbs[] = {
   {"ti", "hav", 0, false},
   {"funcion", "work", 1, true},
   {"desenh", "draw", 1, true},
+  {"mant", "keep", 1, true},
   {"dorm", "sleep", 1, true},
   {"durm", "sleep", 1, true},
+  {"conhec", "meet", 1, true},
   {"congel", "freeze", 1, true},
   {"compr", "buy", 1, true},
   {"continu", "keep", 1, true},
@@ -891,7 +916,7 @@ const VerbEnding* lookupEnding(const char* word) {
 vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
 vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z"};
 vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
-vector<string> general_past = {"ei","uei", "ou", "eu", "ti", "aram", "ri", "i", "iu", "imos", "inha", "is", "bia", "nha"};
+vector<string> general_past = {"iu", "ei","uei", "ou", "eu", "ti", "aram", "ri", "i", "imos", "inha", "is", "bia", "nha"};
 vector<string> present_continuous = {"ndo", "ndo", "ando"};
 vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
 vector<string> subjunctive = {"esse", "sse", "ssemos"};
@@ -907,6 +932,7 @@ constexpr Suffix suff[] = {
   {"mento", "ment", 0, 0},
   {"ável", "able", 1, 0},
   {"ível", "ible", 1, 0},
+  {"auro", "aur", 0, 0},
   {"erno", "ernal", 1, 0},
   {"erna", "ernal", 1, 0},
   {"ória", "ory", 1, 0},
@@ -1122,6 +1148,9 @@ Word createNounFromVerb(string verb){
 // abençoar -> abençoado, amaldiçoar -> amaldiçoado, curar -> curado
 // bless -> blessed, curse -> cursed, cure -> cured
 // seems like it does
+// but theres the irregular verbs of courseeeeeeeeee fuckdddddddddddd
+// think of written spoken, broken, at least is literally the past tense with an "N"
+
 
 Word createAdjectiveFromVerb(string verb){
   string n = "";
@@ -1415,8 +1444,10 @@ Word prefixLookup(string word){
                     } else if(verb_info == 1 || verb_info == 2){
          //TODO: Set up the very specific rules that most verbs can abide to.
                 
-                if(string(v_irr->translation).substr(string(v_irr->translation).length() - 3, 3) == "eed"){
-                      translation_ = string(v_irr->translation).substr(0, string(v_irr->translation).length() - 3) + "ed";
+                if(string(v_irr->translation).substr(string(v_irr->translation).length() - 3, 2) == "ee"){
+                      translation_ = string(v_irr->translation).substr(0, string(v_irr->translation).length() - 2) +
+                      string(v_irr->translation).substr(string(v_irr->translation).length() - 1) + 
+                      (string(v_irr->translation).substr(string(v_irr->translation).length() - 1) == "p" ? "t" : "");
                     
                       // O VOWEL SHIFT + E 
 
@@ -1963,6 +1994,15 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
             reordered_arr.pop_back(); 
             // verb
             reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr.at(i - 2).translation, sentence_arr.at(i).type}); 
+            // yourself
+            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr.at(i).type}); 
+        }
+      // se mate  , se joga, 
+           else if (i > 0 && sentence_arr.at(i - 1).word == "se" && (sentence_arr.at(i).type == 36 ||sentence_arr.at(i).type == 3)) {
+   
+            reordered_arr.pop_back(); 
+            // verb
+            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr.at(i).translation, sentence_arr.at(i).type}); 
             // yourself
             reordered_arr.push_back(Word{ "se", "yourself", sentence_arr.at(i).type}); 
         }

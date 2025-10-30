@@ -54,7 +54,7 @@ enum Kana : int {
     E, KE, GE, SE, ZE, TE, DE, NE, HE, BE, PE, ME, RE,
     O, KO, GO, SO, ZO, TO, DO, NO, HO, BO, PO, MO, YO, RO, WO,
 
-    JA, CHA, JU, CHU, JO, CHO, NBS
+    JA, CHA, JU, CHU, JO, CHO, NBS, LA, LI, LU, LE, LO
 };
 
 
@@ -65,7 +65,7 @@ const char* ROMAJI[] = {
     "u","ku","gu","su","zu","tsu","nu","fu","bu","pu","mu","yu","ru",
     "e","ke","ge","se","ze","te","de","ne","he","be","pe","me","re",
     "o","ko","go","so","zo","to","do","no","ho","bo","po","mo","yo","ro","wo",
-    "ja","cha","ju","chu","jo","cho", "-"
+    "ja","cha","ju","chu","jo","cho", "-", "la", "li", "lu", "le", "lo"
 };
 
 Kana kanaFromRomaji(const std::string &r) {
@@ -81,7 +81,7 @@ const string HIRAGANA[] = {
     "う","く","ぐ","す","ず","つ","ぬ","ふ","ぶ","ぷ","む","ゆ","る",
     "え","け","げ","せ","ぜ","て","で","ね","へ","べ","ぺ","め","れ",
     "お","こ","ご","そ","ぞ","と","ど","の","ほ","ぼ","ぽ","も","よ","ろ","を",
-    "じゃ","ちゃ","じゅ","ちゅ","じょ","ちょ", "ー"
+    "じゃ","ちゃ","じゅ","ちゅ","じょ","ちょ", "ー", "ぁ", "ぃ", "ぅ", "ぇ", "ぉ"
 };
 
 const string KATAKANA[] = {
@@ -90,7 +90,7 @@ const string KATAKANA[] = {
     "ウ","ク","グ","ス","ズ","ツ","ヌ","フ","ブ","プ","ム","ユ","ル",
     "エ","ケ","ゲ","セ","ゼ","テ","デ","ネ","ヘ","ベ","ペ","メ","レ",
     "オ","コ","ゴ","ソ","ゾ","ト","ド","ノ","ホ","ボ","ポ","モ","ヨ","ロ","ヲ",
-    "ジャ","チャ","ジュ","チュ","ジョ","チョ", "ー"
+    "ジャ","チャ","ジュ","チュ","ジョ","チョ", "ー","ァ", "ィ", "ゥ", "ェ", "ォ"
 };
 
 // wait i'll save some numbers to turn u endings into i endings
@@ -134,6 +134,7 @@ Word _inu[] = {I, NU};
 Word _tk[] = {TO, KI};
 Word _knncw[] = {KO, N , NI, CHI, WA};
 Word _hnyk[] = {HO, N , YA, KU};
+Word _blank[] = {};
 
 
 
@@ -181,10 +182,13 @@ constexpr EntryJ dict[] = {
     {"time", _tk, 3, {6210}, 1, 0, 0},
     {"dog", _inu, 2, {9388}, 1, 0, 0},
     {"hello", _knncw, 5, {-1 }, 0, 0, 0},
-    {"translator", _hnyk, 4, {-1 }, 0, 0, 0},
+    {"translator", _hnyk, 4, {12795, 15411}, 2, 0, 0},
     
     {"this", _kr, 2, {-1}, 0, 8, 0},
     {"that", _ar, 2, {-1}, 0, 8, 0},
+    {"the", _blank, 0, {-1}, 0, 10, 0},
+    {"a", _blank, 0, {-1}, 0, 10, 0},
+    {"an", _blank, 0, {-1}, 0, 10, 0},
 
     // pronouns
 
@@ -244,7 +248,7 @@ int toIForm(int kana) {
     return kana; 
 }
 
-int toAorm(int kana) {
+int toAForm(int kana) {
     if (kana >= KU && kana <= RU) {
         switch(kana) {
             case KU: return KA;   
@@ -292,14 +296,45 @@ string script_adequation(const string &s) {
     string converted;
     string copy = s;
 
+
+
     size_t pos = 0;
         while ((pos = copy.find("l", pos)) != string::npos) {
             copy.replace(pos, 1, "r");
             pos += 1; 
         }
+        pos = 0;
+         while ((pos = copy.find("ty", pos)) != string::npos) {
+            copy.replace(pos, 3, "tei-");
+            pos += 3; 
+        }
+        pos = 0;
+        while ((pos = copy.find("y", pos)) != string::npos) {
+            copy.replace(pos, 1, "i");
+            pos += 1; 
+        }
+        
+        if (!copy.empty() && copy.back() == 'r') {
+            copy = copy.substr(0, copy.length() - 1) + "ru";
+        }
      pos = 0;
         while ((pos = copy.find("tra", pos)) != string::npos) {
             copy.replace(pos, 3, "tora");
+            pos += 3; 
+        }
+    pos = 0;
+        while ((pos = copy.find("coo", pos)) != string::npos) {
+            copy.replace(pos, 3, "ku-");
+            pos += 3; 
+        }
+        pos = 0;
+        while ((pos = copy.find("poo", pos)) != string::npos) {
+            copy.replace(pos, 3, "pu-");
+            pos += 3; 
+        }
+         pos = 0;
+        while ((pos = copy.find("par", pos)) != string::npos) {
+            copy.replace(pos, 3, "pa-");
             pos += 3; 
         }
         pos = 0;
@@ -317,6 +352,7 @@ string script_adequation(const string &s) {
             copy.replace(pos, 3, "pure");
             pos += 3; 
         }
+        
     
 
     size_t i = 0;
@@ -504,7 +540,7 @@ static Result nounLookup(string &word, int script) {
         for (size_t i = 0; i < e->len; ++i){
             romaji += ROMAJI[e->t[i] - 1];
         }
-        translation = script == 2 ? romaji : out;
+        translation = script == 2 ? (romaji + " ") : out;
         word_type = 0;
          
     }else  if (e_p) {

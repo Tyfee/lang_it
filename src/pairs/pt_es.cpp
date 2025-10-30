@@ -116,6 +116,7 @@ constexpr Entry nouns[] = {
   {"praia", "playa"},
 
   {"coração", "corazón"},
+  {"árvore", "árbol"},
   {"loja", "tienda"},
   {"janela", "ventana"},
   {"varanda", "balcón"},

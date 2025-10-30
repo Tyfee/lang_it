@@ -291,6 +291,11 @@ inline std::string detect_language(const char* sentence) {
           {  fr += 0.6f;pt += 0.6f;}
          if (word.find("um") != std::string::npos || word.find("tu") != std::string::npos)
           {  pt += 0.7f;}
+           if (word.find("mbre") != std::string::npos)
+          { 
+            en += 0.2f;
+             es += 0.7f;
+        }
 
 
         if (word.find("ph") != std::string::npos) {
@@ -337,7 +342,11 @@ inline std::string detect_language(const char* sentence) {
 
 
 
-inline std::string translate(const char* sentence, const char* from, const char* to){
+inline std::string translate(const char* sentence, const char* from, const char* to, int script = 1){
+    // script will be passed to languages that can be written in more than one script
+    // japanese (0 = kana, 1 = kana + kanji, 2 = romaji ), malay(0 = rumi, 1 = jawi) and mandarin chinese (0 = hanzi, 1 = pinyin) 
+    //  are the ones i plan to implement
+
     std::string f(from), t(to);
     #if defined(PT_EN) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "en" || t == "EN")) {
@@ -351,7 +360,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
     #endif
     #if defined(EN_JA) || defined(ALL)
         if ((f == "en" || f == "EN") && (t == "ja" || t == "JA")) {
-            return translate_ja(sentence, 2);
+            return translate_ja(sentence, script);
         }
     #endif
   #if defined(EN_PT) || defined(ALL)
