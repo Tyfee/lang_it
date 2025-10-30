@@ -4,8 +4,8 @@
 
 std::string translate_it(std::string sentence,
                               std::string from,
-                              std::string to) {
-    return translate(sentence.c_str(), from.c_str(), to.c_str());
+                              std::string to, int type) {
+    return translate(sentence.c_str(), from.c_str(), to.c_str(), type);
 }
 
 std::string detect_it(std::string sentence) {
