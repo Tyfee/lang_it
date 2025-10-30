@@ -134,6 +134,7 @@ Word _inu[] = {I, NU};
 Word _tk[] = {TO, KI};
 Word _knncw[] = {KO, N , NI, CHI, WA};
 Word _hnyk[] = {HO, N , YA, KU};
+Word _nn[] = {NA, NI};
 Word _blank[] = {};
 
 
@@ -183,6 +184,7 @@ constexpr EntryJ dict[] = {
     {"dog", _inu, 2, {9388}, 1, 0, 0},
     {"hello", _knncw, 5, {-1 }, 0, 0, 0},
     {"translator", _hnyk, 4, {12795, 15411}, 2, 0, 0},
+    {"what", _nn, 2, {341}, 1, 4, 0},
     
     {"this", _kr, 2, {-1}, 0, 8, 0},
     {"that", _ar, 2, {-1}, 0, 8, 0},
@@ -385,12 +387,21 @@ string script_adequation(const string &s) {
 }
 
 
-vector<Result> reorder_helpers(vector<Result> &array_of_words) {
+vector<Result> reorder_helpers(vector<Result> &array_of_words, int script) {
 vector<Result> array_of_results = array_of_words;
+ 
 
+    array_of_results.push_back(Result{" ", script == 2 ? "desu" : desu, -1});
     if(array_of_words.back().word == "?"){
         array_of_words.pop_back();
-        desu += HIRAGANA[KA];
+        
+        
+    array_of_results.push_back(Result{" ", script == 2 ? "ka" : HIRAGANA[KA], -1});
+    } 
+    if(array_of_words.back().word == "?" && script == 2){
+        array_of_words.pop_back();
+        array_of_results.push_back(Result{"ka"," ka",-1});
+             
     }
 
     for(int i = 0; i < array_of_words.size(); ++i){
@@ -403,7 +414,6 @@ vector<Result> array_of_results = array_of_words;
         }
     };
 
-    array_of_results.push_back(Result{" ", desu, -1});
 return array_of_results;
 }
 
@@ -596,7 +606,7 @@ static string unigramLookup(vector<string> &array_of_words, int script) {
         auto p = nounLookup(array_of_words[i], script);
         array_of_results.push_back(p);
     }
-    array_of_results = reorder_helpers(array_of_results);
+    array_of_results = reorder_helpers(array_of_results, script);
     for(int i = 0; i< array_of_results.size(); ++i) sentence += array_of_results[i].translation;
     return sentence;
 }

@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
             ? "salir"
             : ".";
         
-        std::cout << sample << " -> " << translate(sample, from, to) << std::endl;
+        std::cout << sample << " -> " << translate(sample, from, to, 2) << std::endl;
         std::cout << prompt << " (" << from << "-" << to << ")\n";
         std::cout << quit_message;
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         while (true) {
             std::getline(std::cin, input);
             if (input == quit_cmd) break;
-            std::cout << translate(input.c_str(), from, to) << std::endl;
+            std::cout << translate(input.c_str(), from, to, 2) << std::endl;
         }
 
         return 0;
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 
         std::string line;
         while (std::getline(infile, line)) {
-            std::cout << translate(line.c_str(), from, to) << std::endl;
+            std::cout << translate(line.c_str(), from, to, 2) << std::endl;
         }
 
         return 0;
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
     std::string line;
     while (std::getline(infile, line)) {
-        outfile << translate(line.c_str(), from, to) << std::endl;
+        outfile << translate(line.c_str(), from, to, 2) << std::endl;
     }
 
     std::cout << "File translated successfully: " << destination << "from " << from << "to " << to << "." << std::endl;
@@ -125,6 +125,6 @@ int main(int argc, char* argv[]) {
     const char* from = argv[2];
     const char* to = argv[3];
 
-    std::cout << translate(original_sentence, from, to) << std::endl;
+    std::cout << translate(original_sentence, from, to, 2) << std::endl;
     return 0;
 }
