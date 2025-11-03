@@ -49,19 +49,10 @@ vector<FrequencyTable> tabela = {
 
 
 
-static Outcome manga_outcomes[] = {
-    {"mango", 0.0f,0}, {"sleeve", 0.0f,0}
-};
-static const char* manga_tokens[] = {
-    "eat", "taste", "pick", "juice", "sweet", "candy", "$",
-    "blusa", "shirt", "camisa", "com", "sew", "ripped", "rip", "button", "tight"
-};
-
-
 
 
 Homonym homonimos[] = {
-    {"manga", manga_outcomes, 2, manga_tokens, 13}
+
 };
 
 const size_t homonimosCount = sizeof(homonimos) / sizeof(homonimos[0]);
@@ -268,6 +259,7 @@ struct Verb {
     const char* root;       
     const char* translation; 
     bool intransitive;
+    bool dative_const;
 };
 struct VerbEnding {
     const char* ending;
@@ -277,7 +269,8 @@ struct VerbEnding {
 // verb prefixes where 0 = regular, 1 = irregular conjugation
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
-  {"fal", "habl", false}
+  {"fal", "hablar", false, false},
+  {"gost", "gustar", false, true}
   
 };
 
@@ -477,22 +470,7 @@ static Word prefixLookup(string word){
 
                 } else if(v_irr){
 
-                    if(root == "est"){
-                        // estou == am estamos == are está == is estão == are
-                        if (word.substr(3, word.length()) == "ou"){
-                            translation_ = "am";
-                        } else if (word.substr(3, word.length()) == "ava"){
-                            translation_ = "was";
-                        } else if(word.substr(3, word.length()) == "amos" || word.substr(3, word.length()) == "ão"){
-                            translation_ = "are";
-                        } else if(word.substr(3, word.length()) == "á"){
-                            translation_ = "is";
-                        }
-
-                        word_type_ = 28; // 28 == to be cause 2 == TO 8 == B
-                        return Word{word, translation_, word_type_};
-                    }
-
+                
                     
 
                     if(verb_info == 4){
@@ -920,7 +898,7 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 //homonym mediation
 // need to remember what portuguese homonyms arent homonyms in spanish
 for (size_t i = 0; i < final_arr.size(); ++i) {
-    if (final_arr[i].word == "manga" || final_arr[i].word == "banco" || final_arr[i].word == "pena") {
+    if (final_arr[i].word == "manga") {
         
         int start = max(0, static_cast<int>(i) - 2);
         int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);

@@ -161,37 +161,25 @@ constexpr Entry fixed_ngrams[] = {
   {"on_top", "em cima"},
   {"with_no", "sem"},
   {"it_is", "é"},
-  
-  {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
-  {"quanto_mais", "the more"},
-  {"qual_é", "what is"},
-  {"do_que", "than"},
-  {"por_favor", "please"},
-  {"o_seu", "your"},
-  {"bom_dia", "good morning"},
+  {"the_more", "quanto mais"},
+  {"what_is", "o que é"},
+  {"good_morning", "bom dia"},
   {"boa_noite", "good night"},
   {"boa_tarde", "good evening"},
   {"papel_de_parede", "wallpaper"},
   {"por_toda_parte", "everywhere"},
   {"todo_lugar", "everywhere"},
   {"todo_mundo", "everybody"},
-  {"ao_mesmo", "at the same"},
-  {"em_casa", "at home"},
-  
-  {"ao_redor", "around"},
-  {"perto_de", "close to"},
-  {"as_vezes", "sometimes"},
-  {"o_meu", "mine"},
-  {"o_dele", "his"},
-  {"por_causa", "because of"},
-  {"até_mesmo", "even"},
-  {"por_enquanto", "for now"},
+  {"at_the_same", "ao mesmo"},
+  {"at_home", "em casa"},
+  {"close_to", "perto de"},
+  {"because_of", "por causa"},
+  {"for_now", "por enquanto"},
   {"com_fome", "hungry"},
   {"com_sede", "thirsty"},
   {"com_raiva", "angry"},
   {"hoje_em_dia", "nowadays"},
-  {"de_vez_em_quando", "sometimes"},
-  {"se_preocup", "worry"} // need to deal with this bitch as well ..... TRUST, YOU WILL BE DEALT WITH
+  {"de_vez_em_quando", "sometimes"}
 };
 static vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
@@ -241,26 +229,29 @@ constexpr Entry nouns[] = {
   {"dinheiro", "money"},
   {"palavra", "word"},
 
-  {"terra", "dirt"}, //dirt, earth, land 
-  {"praia", "beach"},
+  {"dirt", "terra", FEMININE},
+  {"earth", "terra", FEMININE},
+  {"land", "terra", FEMININE},
+  {"praia", "beach", FEMININE},
 
-  {"escola", "school"},
-  {"loja", "store"},
+  {"escola", "school", FEMININE},
+  {"loja", "store", FEMININE},
   
 
-  {"morte", "death"},
-  {"vida", "life"},
-  {"bebê", "baby"},
-  {"buraco", "hole"},
-  {"espinho", "thorn"},
+  {"death", "morte", FEMININE},
+  {"life", "vida", FEMININE},
+  {"database", "banco de dados"},
+  {"baby", "bebê"},
+  {"hole", "buraco"},
+  {"thorn", "espinho"},
   
-  {"banheiro", "bathroom"},
-  {"cozinha", "kitchen"},
-  {"room", "sala"},
+  {"bathroom", "banheiro"},
+  {"kitchen", "cozinha", FEMININE},
+  {"room", "sala", FEMININE},
   {"prédio", "building"},
 
   {"chocolate", "chocolate"},
-  {"watermelon", "melancia"},
+  {"watermelon", "melancia", FEMININE},
   {"sugar", "açucar"},
   {"strawberry", "morango"},
   {"uva", "grape"},
@@ -337,25 +328,28 @@ constexpr Entry nouns[] = {
   {"empresa", "company"},
   {"música", "music"},
   {"canção", "song"},
-  {"som", "sound"},
-  {"som", "sound"},
-  {"sabão", "soap"},
-  {"sabonete", "soap"},
+  {"sound", "som"},
+  {"song", "música"},
+  {"soap", "sabão"},
   {"bolha", "bubble"},
 
-  {"manga", "mango"},
+  {"mango", "manga"},
+  {"sleeve", "manga"},
   
-  {"mão", "hand", ON},
-  {"pé", "foot", IRREGULAR_PLURAL},
-  {"braço", "arm"},
-  {"perna", "leg"},
-  {"cabeça", "head"},
+  {"hands", "mão", ON},
+  {"foot", "pé"},
+  {"feet", "pés"},
+  {"arm", "braço"},
+  {"leg", "perna"},
+  {"head", "cabeça"},
   {"testa", "forehead"},
-  {"cabelo", "hair"},
+  {"hair", "cabelo"},
+  {"fur", "pelo"},
   {"boca", "mouth"},
   {"dedo", "finger"},
   {"unha", "nail"},
-  {"dente", "tooth", IRREGULAR_PLURAL},
+  {"tooth", "dente"},
+  {"teeth", "dentes"},
   {"lingua", "tongue", ON},
   {"cérebro", "brain"},
   {"coração", "heart"},
@@ -437,7 +431,7 @@ constexpr Entry pre[] = {
   {"às", "to the"},
   {"ao", "to the"},
    // these verbs are grounded here for misbehaving until second order  
-  {"é", "is"},
+  {"is", "é"},
   {"são", "are"},
   {"sou", "am"},
   {"foram", "were"},
@@ -522,7 +516,7 @@ constexpr Entry adj[] = {
   {"little", "pequeno"},
   {"grande", "big"},
   {"sano", "sane"},
-  {"mais", "more"},
+  {"more", "mais"},
   {"menos", "less"},
   {"engraçado", "funny"},
   {"molhado", "wet"},
@@ -585,7 +579,8 @@ constexpr Entry adv[] = {
   {"que", "that"},
   {"mas", "but"},
   {"when", "quando"},
-  {"sobre", "about"},
+  {"what", "o que"},
+  {"about", "sobre"},
   {"while", "enquanto"},
   {"who", "quem"},
   {"too", "também"},
@@ -593,10 +588,7 @@ constexpr Entry adv[] = {
   {"because", "porque"},
   {"why", "por que"},
   {"where", "onde"},
-  {"qual", "what is"},
-  {"quantos", "how many"},
-  {"e", "and"},
-  {"quanto", "how much"},
+  {"and", "e"},
   {"never", "nunca"},
   {"always", "sempre"},
   {"here", "aqui"},
@@ -612,21 +604,19 @@ constexpr Entry adv[] = {
   {"já", "already"},
   {"dentro", "inside"},
   {"fora", "outside"},
-  {"hoje", "today"},
-  {"ontem", "yesterday"},
-  {"amanhã", "tomorrow"},
-  {"agora", "now"},
-  {"antes", "before"},
-  {"depois", "after"},
-  {"para", "to"},
-  {"pra", "to"},
-  {"por", "for"},
-  {"ainda", "still"},
-  {"somente", "only"},
+  {"today", "hoje"},
+  {"yesterday", "ontem"},
+  {"tomorrow", "amanhã"},
+  {"now", "agora"},
+  {"before", "antes"},
+  {"after", "depois"},
+  {"to", "para"},
+  {"for", "para"},
+  {"still", "ainda"},
+  {"only", "somente"},
   {"só", "only"},
   {"apenas", "just"},
-  {"então", "then"},
-  {"tão", "so"}
+  {"so", "então"}
 };
 
 struct Verb {
@@ -838,18 +828,19 @@ constexpr Suffix suff[] = {
   {"ty", "dade", 0, 0, true},
   {"ly", "mente", 4, 0, false},
   {"ental", "ental", 1, 0, false},
-  {"mento", "ment", 0, 0, false},
-  {"ável", "able", 1, 0, false},
-  {"ível", "ible", 1, 0, false},
-  {"ória", "ory", 1, 0, true},
+  {"ment", "mento", 0, 0, false},
+  {"able", "ável", 1, 0, false},
+  {"ible", "ível", 1, 0, false},
+  {"ogy", "ogia", 0, 0},
+  {"ory", "ória", 1, 0, true},
   {"ency", "ência", 0, 0, true},
   {"cidade", "city", 0, 0, false},
   {"açado", "aced", 1, 0, false},
   {"ágico", "agic", 1, 0, false},
   {"asmo", "asm", 0, 0, false},
   {"ágica", "agic", 1, 0, true},
-  {"ção", "tion", 0, 0, true},
-  {"ções", "tions", 0, 1, true},
+  {"tion", "ção", 0, 0, true},
+  {"tions", "ções", 0, 1, true},
   {"culo", "cle", 0, 0, false},
   {"cula", "cle", 0, 0, false},
   {"cleta", "cle", 0,0, false},
@@ -876,8 +867,8 @@ constexpr Suffix suff[] = {
   {"edy", "édia", 0,0, true},
   {"édio", "edy", 0, 0, false},
   {"ura", "ure", 0, 0, true},
-  {"ese", "ês", 0, 0, false},
-  {"ança", "ance", 0,0, true},
+  {"ês", "ese", 0, 0, false},
+  {"ance", "ança", 0,0, true},
   {"opy", "opia", 0,0, false},
   {"ismo", "ism",0,0, false},
   {"opic", "ópico", 1,0, false},
@@ -901,15 +892,15 @@ static string normalize(string word) {
             normalized_ = word.substr(0, word.size() - 3) + "ed";
             
         }
-            size_t pos = normalized_.find("cio");
+            size_t pos = normalized_.find("tio");
             if (pos != std::string::npos) {
-                normalized_.replace(pos, 3, "tio"); 
+                normalized_.replace(pos, 3, "cio"); 
             }
-        if (word.substr(0, 3) == "esp") {
-            normalized_ = normalized_.substr(1);  
+        if (word.substr(0, 2) == "sp") {
+            normalized_ = "e" + word;  
         }
-         if (word.substr(0, 3) == "teo") {
-              normalized_ = "theo" + normalized_.substr(3);
+         if (word.substr(0, 4) == "theo") {
+              normalized_ = "teo" + normalized_.substr(4);
         }
 
         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "icaly") {
@@ -1150,20 +1141,10 @@ static Word prefixLookup(string word){
                     const char* ending = "";
 
                     
-                 if(verb_info == 1 || verb_info == 2){ // past tense
-                        string stem = v->translation;
-                        if(!stem.empty() && stem.back() == 'y'){
-                            stem.back() = 'i';   // try -> tri
-                            stem += "ed";        
-                        } else {
-                            stem += "ed";        // regular verbs
-                        }
-                        return Word{word, stem, 3}; // 3 = verb past?
-                    }
                     
                     switch (verb_info) {
                         case 0: ending = (v->type == 0) ? "e" : ""; break;
-                        case 1: case 2: ending = "ed"; break;
+                        case 1: case 2: ending = "a"; break;
                         case 3: ending = (v->type == 0) ? "es" : "s"; break;
                         case 4: ending = "e"; break;
                         default: break;
@@ -1234,26 +1215,11 @@ static Word prefixLookup(string word){
                         } 
                     }
                     
-                    if(root == "est"){
-                        // estou == am estamos == are está == is estão == are
-                        if (word.substr(3, word.length()) == "ou"){
-                            translation_ = "am";
-                        } else if (word.substr(3, word.length()) == "ava"){
-                            translation_ = "was";
-                        } else if(word.substr(3, word.length()) == "amos" || word.substr(3, word.length()) == "ão"){
-                            translation_ = "are";
-                        } else if(word.substr(3, word.length()) == "á"){
-                            translation_ = "is";
-                        }
-
-                        word_type_ = 28; // 28 == to be cause 2 == TO 8 == B
-                        return Word{word, translation_, word_type_};
-                    }
 
                     switch (verb_info)
                     {
                         case 0: ending = (v_irr->type == 0) ? "e" : ""; break;
-                        case 1: case 2: ending = "ed"; break;
+                        case 1: case 2: ending = "a"; break;
                         case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
                         case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 5: ending = "ing"; break;
@@ -1831,25 +1797,6 @@ else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr
             reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});  
         } 
      
-
- 
-        // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
-        // a set is word1 = pronoun[4] and word2 = "is", use an if to check the first pronoun and change it accordingly 
-        // she is, i am, we are
-        else if (i > 0 && sentence_arr.at(i - 1).type == 4 && sentence_arr.at(i).translation == "is") {
-            string corr_pro = "is";
-            reordered_arr.pop_back(); 
-            if(sentence_arr.at(i - 1).translation == "she" || sentence_arr.at(i - 1).translation == "he"){
-                corr_pro = "is";
-            } else if(sentence_arr.at(i - 1).translation == "we" || sentence_arr.at(i - 1).translation == "they" || sentence_arr.at(i - 1).translation == "you"){
-                corr_pro = "are";
-            } else if(sentence_arr.at(i - 1).translation == "i"){
-                corr_pro = "am";
-            };
-            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});   
-            reordered_arr.push_back(Word{"$ser", corr_pro, 4});
-        } 
-
 
       
 

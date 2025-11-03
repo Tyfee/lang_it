@@ -177,6 +177,8 @@ constexpr Entry fixed_ngrams[] = {
   {"a_gente", "we"},
   {"o_que", "what"},
   {"em_cima", "on top"},
+
+  {"jogo_da_velha", "tic tac toe"},
   
   {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
   {"quanto_mais", "the more"},
@@ -184,6 +186,8 @@ constexpr Entry fixed_ngrams[] = {
   {"por_que", "why"},
   {"do_que", "than"},
   {"por_favor", "please"},
+  {"para_sempre", "forever"},
+  {"pra_sempre", "forever"},
   {"o_seu", "your"},
   {"bom_dia", "good morning"},
   {"boa_noite", "good night"},
@@ -286,6 +290,22 @@ constexpr Entry nouns[] = {
 
   {"chocolate", "chocolate"},
   {"melancia", "watermelon"},
+  {"maçã", "apple"},
+  {"pêssego", "peach"},
+  {"melancia", "watermelon"},
+
+  {"natal", "christmas"},
+  {"páscoa", "easter"},
+  {"aniversário", "birthday"},
+  {"véspera", "eve"},
+  {"feriado", "holiday"},
+
+  {"espada", "sword"},
+  {"escudo", "shield"},
+  {"lâmina", "blade"},
+  {"armadura", "armor"},
+
+
   {"acucar", "sugar"},
   {"morango", "strawberry"},
   {"uva", "grape"},
@@ -319,6 +339,14 @@ constexpr Entry nouns[] = {
   {"cavalo", "horse"},
   {"burro", "donkey"},
   {"porco", "pig"},
+  {"pato", "duck"},
+  {"rato", "mouse"},
+  {"águia", "eagle"},
+  {"tamanduá", "anteater"},
+  {"lobo", "wolf"},
+  {"vaca", "cow"},
+  {"cobra", "snake"},
+
   {"asa", "wing"},
   {"anjo", "angel"},
   {"ponta", "tip", ON},
@@ -337,12 +365,18 @@ constexpr Entry nouns[] = {
   {"folha", "leaf"},
   {"papel", "paper", ON},
   {"faca", "knife"},
+  {"cruz", "cross"},
+  {"celular", "phone", ON},
   {"tela", "screen", ON},
   {"mulher", "woman", IRREGULAR_PLURAL},
   {"homem", "man", IRREGULAR_PLURAL},
   {"garoto", "boy"},
   {"menino", "boy"},
   {"árvore", "tree"},
+  {"carro", "car"},
+  {"caminhão", "truck"},
+  {"avião", "airplane"},
+  {"ônibus", "bus"},
   {"arbusto", "bush"},
   {"garota", "girl"},
   {"menina", "girl"},
@@ -382,6 +416,9 @@ constexpr Entry nouns[] = {
   {"sabonete", "soap"},
   {"bolha", "bubble"},
   {"botão", "button"},
+  {"sino", "bell"},
+  {"campainha", "doorbell"},
+  {"viagem", "trip"},
 
   {"manga", "mango"},
   
@@ -402,6 +439,7 @@ constexpr Entry nouns[] = {
   {"coração", "heart"},
   {"pele", "skin"},
   {"osso", "bone"},
+
 
   {"principe", "prince"}, // TODO: irregular feminine noun shifts such as princesa, duquesa, garçonete, etc
   {"tradutor", "translator"},
@@ -428,6 +466,12 @@ constexpr Entry nouns[] = {
   {"caneta", "pen"},
   {"bolso", "pocket"},
 
+  
+  {"ouro", "gold"},
+  {"prata", "silver"},
+  {"madeira", "wood"},
+  {"diamante", "diamond"},
+
   {"lua", "moon"},
   {"sol", "sun"},
   {"vento", "wind"},
@@ -436,7 +480,7 @@ constexpr Entry nouns[] = {
   {"neve", "snow"},
   {"areia", "sand"},
   {"chuva", "rain"}, // this is a verbifiable
-  {"", ""},
+  {"centro", "center"},
 
   {"pessoas", "people"},
   {"gente", "people"},
@@ -686,6 +730,8 @@ constexpr Entry adv[] = {
   {"até", "until"},
   {"muito", "very"},
   {"assim", "like this"},
+  {"pré", "pre"},
+  {"pós", "post"},
   {"já", "already"},
   {"dentro", "inside"},
   {"fora", "outside"},
@@ -753,6 +799,7 @@ constexpr Verb reg_verbs[]  = {
   {"mastig", "chew", 1, false},
   {"engol", "swallow", 1, false},
   {"respond", "answer", 1, false},
+  
   {"desej", "wish", 1, true},
   {"trabalh", "work", 1, true},
   {"mov", "mov", 0, false},
@@ -776,7 +823,11 @@ constexpr Verb reg_verbs[]  = {
   {"lig", "turn_on", 1, true},
   {"empurr", "push", 1, true},
   {"pux", "pull", 1, true},
-  {"apert", "press", 1, true}
+  {"apert", "press", 1, true},
+  {"serv", "serv", 0, true},
+  {"inici", "start", 1, false},
+  {"comec", "start", 1, false},
+  {"começ", "start", 1, false}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -791,7 +842,7 @@ static const Verb* lookupRegVerb(const char* root) {
 
 
 constexpr Verb irr_verbs[] = {
-  {"fal", "speak", 1, false},
+  {"fal", "speak", 1, true},
   {"beb", "drink", 1, false},
   {"sangr", "bleed", 1, true},
   {"procri", "breed", 1, true},
@@ -937,7 +988,9 @@ constexpr Suffix suff[] = {
   {"erna", "ernal", 1, 0},
   {"ória", "ory", 1, 0},
   {"ência", "ency", 0, 0},
+  {"ama", "am", 0, 0},
   {"cidade", "city", 0, 0},
+  {"ogia", "ogy", 0, 0},
   {"açado", "aced", 1, 0},
   {"ágico", "agic", 1, 0},
   {"asmo", "asm", 0, 0},
@@ -952,6 +1005,7 @@ constexpr Suffix suff[] = {
   {"ário", "ary",0,0},
   {"ária", "ary",0,0},
   {"ral", "ral", 0,0},
+  {"ial", "ial", 1,0},
   {"mal", "mal", 1,0},
   {"ais", "als", 0, 1},
   {"oria", "ory", 0, 0},
@@ -960,6 +1014,7 @@ constexpr Suffix suff[] = {
   {"ência", "ency", 0,0},
   {"êncio", "ence", 0,0},
   {"fia", "phy", 0,0},
+  {"pia", "py", 0,0},
   {"eta", "et", 0,0},
   {"ema", "em", 0,0},
   {"ndida", "ndid", 1,0},
@@ -1060,16 +1115,21 @@ static string normalize(string word) {
   
             normalized_ = normalized_.substr(0, normalized_.size() - 3) + "gies";
         }
-      
-
-       /* for (size_t i = 0; i + 1 < normalized_.size(); ) {
-        if (normalized_[i] == 'l' && normalized_[i+1] == 'f' && normalized_[i+2] == 'a') {
-            normalized_.replace(i, 2, "f");
-            i++;
-        } else {
-            i++;
+        if (normalized_.size() > 5 && normalized_.substr(normalized_.size() - 4) == "fone") {
+  
+            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "phone";
         }
-    }*/
+
+        if (normalized_.size() > 5 && normalized_.substr(0, 5) == "psico") {
+            normalized_ = "psycho" + normalized_.substr(5);
+        }
+         if (normalized_.size() > 5 && normalized_.substr(0, 4) == "fisi") {
+            normalized_ = "physi" + normalized_.substr(4);
+        }
+         if (normalized_.size() > 5 && normalized_.substr(0, 4) == "alfa") {
+            normalized_ = "alpha" + normalized_.substr(4);
+        }
+      
     }
 
     return normalized_;
@@ -1109,10 +1169,10 @@ Word createNounFromVerb(string verb){
         string ending3 = verb.substr(verb.length() - 3);
         string ending5 = verb.substr(verb.length() - 5);
         
-        if (ending5 == "adora") { // feminine odd root, dont want to think about how to padronize this shit so IDCCCCCCCCCCC 
+        if (ending5 == "adora" || ending5 == "idora") { // feminine odd root, dont want to think about how to padronize this shit so IDCCCCCCCCCCC 
             stem = verb.substr(0, verb.length() - 5);
             ending = "er";
-        } else if (ending4 == "ador") { // same but MASC4MASC
+        } else if (ending4 == "ador" || ending4 == "idor") { // same but MASC4MASC
             stem = verb.substr(0, verb.length() - 4);
             ending = "er";
         } else if (ending3 == "ura") { // this will match pintura and hopefully something else? i can only think of escritura right now but the root is different so.......
@@ -1239,6 +1299,10 @@ if(word.length() > 5 && word.substr(word.length() - 5) != "ção" && word.substr
         }
     }
           }
+
+
+
+
 else{
              translation_ = "";
              word_type_ = -1;
@@ -1311,9 +1375,42 @@ Word prefixLookup(string word){
                         case 4: ending = "e"; break;
                         default: break;
                     }
+                     if (verb_info == 10) {
+                        
+                        const char* would = "de";
+                        size_t i = 0;
+                        while (*would && i + 1 < sizeof(buffer)) buffer[i++] = *would++;
+                        const char* base = (compound ? compound_verb.c_str() : v->translation);
+                        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+                        if (v->type == 0) buffer[i++] = 'e';
+                        buffer[i] = '\0';
+                    
+                    }
+                    else if (verb_info == 11) {
+                       const char* would = "pre";
+                        size_t i = 0;
+                        while (*would && i + 1 < sizeof(buffer)) buffer[i++] = *would++;
+                        const char* base = (compound ? compound_verb.c_str() : v->translation);
+                        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+                        if (v->type == 0) buffer[i++] = 'e';
+                        buffer[i] = '\0';
+                    }
+                    else if (verb_info == 12) {
+                      const char* would = "re";
+                        size_t i = 0;
+                        while (*would && i + 1 < sizeof(buffer)) buffer[i++] = *would++;
+                        const char* base = (compound ? compound_verb.c_str() : v->translation);
+                        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
+                        if (v->type == 0) buffer[i++] = 'e';
+                        buffer[i] = '\0';
+                    }
+                    else if (verb_info == 3) {
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
 
+                        translation_ = base + ending;
+                    }
 
-                    if (verb_info == 4) { 
+                    else if (verb_info == 4) { 
                         const char* used = "used to ";
                         size_t i = 0;
                         while (*used && i + 1 < sizeof(buffer)) buffer[i++] = *used++;
@@ -1377,25 +1474,10 @@ Word prefixLookup(string word){
                         } 
                     }
                     
-                    if(root == "est"){
-                        // estou == am estamos == are está == is estão == are
-                        if (word.substr(3, word.length()) == "ou"){
-                            translation_ = "am";
-                        } else if (word.substr(3, word.length()) == "ava"){
-                            translation_ = "was";
-                        } else if(word.substr(3, word.length()) == "amos" || word.substr(3, word.length()) == "ão"){
-                            translation_ = "are";
-                        } else if(word.substr(3, word.length()) == "á"){
-                            translation_ = "is";
-                        }
-
-                        word_type_ = 28; // 28 == to be cause 2 == TO 8 == B
-                        return Word{word, translation_, word_type_};
-                    }
 
                     switch (verb_info)
                     {
-                        case 0: ending = (v_irr->type == 0) ? "e" : ""; break;
+                        case 0:  case 10: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 1: case 2: ending = "ed"; break;
                         case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
                         case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
@@ -1403,7 +1485,22 @@ Word prefixLookup(string word){
                         case 6: case 7: ending = (v_irr->type== 0) ? "e" : ""; break;
                         default: break;
                     }
-                    if (verb_info == 3) {
+                    if (verb_info == 10) {
+                        
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
+                     
+                        translation_ = "de" + base + ending; 
+                    }
+                    else if (verb_info == 11) {
+                        
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
+                        translation_ = "pre" + base + ending; 
+                    }
+                    else if (verb_info == 12) {
+                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
+                        translation_ = "re" + base + ending; 
+                    }
+                    else if (verb_info == 3) {
                         string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
 
                         translation_ = base + ending;
@@ -1558,6 +1655,26 @@ Word prefixLookup(string word){
 
     result = find_verb(imperative, word, 7);
     if(result.type != -1) return result;
+
+
+    // i'll handle this better but for testing now i'll just duplicate i guess
+   if (word.size() > 3) {
+    if(word.substr(0, 3) == "des") {
+      result = find_verb(infinitive, word.substr(3), 10);
+       if (result.type != -1) return result;
+     }
+     else if(word.substr(0, 3) == "pre") {
+      result = find_verb(infinitive, word.substr(3), 11);
+       if (result.type != -1) return result;
+     }
+      else if(word.substr(0, 2) == "re") {
+      result = find_verb(infinitive, word.substr(2), 12);
+       if (result.type != -1) return result;
+     }
+   }
+    //re 
+ 
+    
 
       const VerbEnding* ve = lookupEnding(word.c_str());
       if (ve) { 
@@ -2028,17 +2145,19 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
 else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).type == 13  || isPunctuation(sentence_arr.at(i - 1).word)) && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36 )) {
 
     string pronoun;
-    if(sentence_arr.at(i).word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){
-        pronoun = "I ";
-    } else if(sentence_arr.at(i).word.back() == 's'){
-        pronoun = "we ";
-    } else if(sentence_arr.at(i).word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
-        pronoun = ""; 
-    }
-    else{
-        pronoun = ""; 
-    }
-    
+if(sentence_arr.at(i).word.back() == 'o' &&
+   sentence_arr[0].word.length() >= 3 &&
+   sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo") {
+    pronoun = "I ";
+} else if(sentence_arr.at(i).word.back() == 's'){
+    pronoun = "we ";
+} else if(sentence_arr.at(i).word.back() == 'e' || 
+          (sentence_arr[0].word.length() >= 3 && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo")) {
+    pronoun = ""; 
+} else {
+    pronoun = ""; 
+}
+
     if (!reordered_arr.empty() && reordered_arr.back().translation == sentence_arr.at(i - 1).translation) {
         reordered_arr.pop_back();
     }
