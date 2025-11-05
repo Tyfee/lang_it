@@ -15,3 +15,6 @@ wrappers/ruby/pairs/*
 wrappers/ruby/lang_it_rb.o
 wrappers/ruby/lang_it_rb.so
 pairs/*.o
+src/lang_it.h.gch
+testing/*.exe
+testing/test
