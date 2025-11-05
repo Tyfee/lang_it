@@ -64,93 +64,11 @@ static vector<FrequencyTable> table = {
 
 // homonyms in portuguese
 
-static Outcome manga_outcomes[] = {
-    {"mango", 0.0f, 0}, {"sleeve", 0.0f, 0}
-};
-static const char* manga_tokens[] = {
-    "eat", "taste", "pick", "juice", "sweet", "candy", "dessert", "flavor","taste","ripe","$",
-    "shirt", "sew", "ripped", "rip", "button", "tight", "loose"
-};
-
-static Outcome rosa_outcomes[] = {
-    {"pink", 0.0f, 0}, {"rose", 0.0f, 0}
-};
-static const char* rosa_tokens[] = {
-    "color", "shirt", "clothes", "light","$",
-    "flower", "button", "sprout", "thorn", "a", "an"
-};
-
-
-static Outcome sede_outcomes[] = {
-    {"thirst", 0.0f, 0}, {"headquarters", 0.0f, 0}
-};
-static const char* sede_tokens[] = {
-    "drink", "water", "feel","$",
-    "company", "location", "building"
-};
-
-static Outcome novo_outcomes[] = {
-    {"new", 0.0f, 0}, {"young", 0.0f, 0}
-};
-// once i implament bit flags for person/non-person. implement it too
-static const char* novo_tokens[] = {
-    "buy", "brand", "product", "$",
-    "very", "person", "she", "he", "i",
-};
-
-
-
-static Outcome banco_outcomes[] = {
-    {"bank", 0.0f, 0}, {"bench", 0.0f, 0}
-};
-static const char* banco_tokens[] = {
-    "pay", "money", "loan", "work", "central", "national","$",
-     "sit", "beautiful", "outside"
-};
-
-static Outcome pena_outcomes[] = {
-    {"feather", 0.0f, 0}, {"pity", 0.0f, 0}
-};
-static const char* pena_tokens[] = {
-    "bird", "animal", "$",
-     "feel", "what", "for"
-};
-
-
-static Outcome bateria_outcomes[] = {
-    {"battery", 0.0f, 0}, {"drums", 0.0f, 0}, {"would hit", 0.0f, 3}
-};
-static const char* bateria_tokens[] = {
-    "phone", "charge","percentage","computer","laptop","$",
-    "play", "music", "sound","loud", "$",
-    "i","you"
-};
-
-static Outcome alto_outcomes[] = {
-    {"tall", 0.0f, 0}, {"high", 0.0f, 0}, {"loud", 0.0f, 3}
-};
-static const char* alto_tokens[] = {
-    "person", "he","she","i","am", "height","$",
-    "", "$",
-    "music","volume", "low", "turn"
-};
-
-
-
 
 
 
 Homonym homonyms_[] = {
-    {"manga", manga_outcomes, 2, manga_tokens, 13},
-    {"banco", banco_outcomes, 2, banco_tokens, 7},
-    {"pena", pena_outcomes, 2, pena_tokens, 6},
-    {"sede", sede_outcomes, 2, sede_tokens, 7},
-    {"bateria", sede_outcomes, 3, sede_tokens, 7},
-    {"novo", novo_outcomes, 2, novo_tokens, 8},
-    {"nova", novo_outcomes, 2, novo_tokens, 8},
-    {"alto", alto_outcomes, 3, alto_tokens, 13},
-    {"alta", alto_outcomes, 3, alto_tokens, 13},
-    {"rosa", rosa_outcomes, 2, rosa_tokens, 11}
+  
 };
 
 const size_t homonymCount_ = sizeof(homonyms_) / sizeof(homonyms_[0]);
@@ -1965,14 +1883,16 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
             context.push_back(final_arr[j].translation);
         }
 
-        // But pass the PORTUGUESE word to semantics for homonym lookup
         size_t contextIndex = static_cast<size_t>(i - start);
         
-        // Create a temporary context with the Portuguese word at the target position
-        vector<string> portuguese_context = context;
-        portuguese_context[contextIndex] = final_arr[i].word;  // Use Portuguese word for lookup
+        vector<string> english_context = context;
         
-        string resolved_word = semantics(portuguese_context, contextIndex, homonyms_, homonymCount_);
+        vector<int> word_types;
+        english_context[contextIndex] = final_arr[i].word;  
+        
+        word_types[contextIndex] = final_arr[i].type;  
+        
+        string resolved_word = semantics(english_context, word_types, contextIndex, homonyms_, homonymCount_);
 
         final_arr[i].translation = resolved_word;
     }

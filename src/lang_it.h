@@ -27,20 +27,6 @@ std::string translate_pt(const char* sentence);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ------- GLOBAL CORE FUNCTIONS -----------
 |           all pairs use                  |  
 ------------------------------------------*/
@@ -65,7 +51,7 @@ inline void to_lower(char *s) {
     }
 }
 
-enum Flags: uint8_t {
+enum Flags: uint16_t {
     ANIMATE = 0,
     IS_HUMAN = 1 << 0,
     NO_PLURAL = 1 << 1,
@@ -144,6 +130,36 @@ inline std::vector<std::string> tokenize(const std::string &text) {
       return tokens;
   }
 
+#include <vector>
+#include <string>
+
+inline std::vector<std::string> tokenize_cjk(const std::string &text) {
+    std::vector<std::string> tokens;
+    size_t i = 0;
+
+    while (i < text.size()) {
+        unsigned char c = text[i];
+        size_t len = 0;
+
+        // Determine UTF-8 sequence length
+        if ((c & 0x80) == 0) {
+            // ASCII
+            len = 1;
+        } else if ((c & 0xE0) == 0xC0) len = 2;
+        else if ((c & 0xF0) == 0xE0) len = 3;
+        else if ((c & 0xF8) == 0xF0) len = 4;
+        else len = 1; // fallback, invalid byte
+
+        std::string utf8char = text.substr(i, len);
+        tokens.push_back(utf8char);
+
+        i += len;
+    }
+
+    return tokens;
+}
+
+
 
 
 inline bool isPunctuation(const std::string &token) {
@@ -201,6 +217,9 @@ inline std::string detect_language(const char* sentence) {
     float ja = 0.0f;
     float es = 0.0f;
     float fr = 0.0f;
+    float zh = 0.0f;
+    float sv = 0.0f;
+    float my = 0.0f;
 
     for (size_t i = 0; i < tokens.size(); i++) {
         const std::string& word = tokens[i];
@@ -314,7 +333,14 @@ inline std::string detect_language(const char* sentence) {
             // does it have katakana
             if (unicode_c >= 0x30A0 && unicode_c <= 0x30FF) ja += 1.0;
             // does it have ideograms?
-            if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF) ja += 0.5;
+            if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF){
+                ja += 0.5;
+                zh += 0.5;
+            };
+                if(unicode_c == 0x6211 || unicode_c == 0x4F60 ){
+                   ja -= 1.0;
+                   zh += 1.0;     
+                }
         }
     }
     
@@ -323,6 +349,9 @@ inline std::string detect_language(const char* sentence) {
     if (ja > maxScore) maxScore = ja;
     if (es > maxScore) maxScore = es;
     if (fr > maxScore) maxScore = fr;
+    if (zh > maxScore) maxScore = zh;
+    if (sv > maxScore) maxScore = sv;
+    if (my > maxScore) maxScore = my;
 
     if (maxScore == 0.0f) {
         language = "unknown";
@@ -336,6 +365,12 @@ inline std::string detect_language(const char* sentence) {
         language = "es";
     } else if (maxScore == fr) {
         language = "fr";
+    }else if (maxScore == zh) {
+        language = "zh";
+    }else if (maxScore == sv) {
+        language = "sb";
+    }else if (maxScore == my) {
+        language = "my";
     }
     return language;
 }
@@ -384,6 +419,7 @@ struct Homonym {
     Outcome* outcomes; 
     size_t num_outcomes;
     const char** tokens;
+    const int* forbidden_previous_type;
     size_t num_tokens;
 };
 
@@ -392,6 +428,7 @@ extern const size_t homonymCount;
 
 // this can be global, since specific cases are defined on the structs and not on the function itself
 inline std::string semantics(const std::vector<std::string>& sentence,
+                             const std::vector<int>& word_types,
                              size_t index,
                              Homonym* homonyms,
                              size_t numHomonyms)
@@ -431,12 +468,24 @@ inline std::string semantics(const std::vector<std::string>& sentence,
                 }
 
                 if (nearby == token) {
-                    if (hom.outcomes && currentOutcome < hom.num_outcomes) {
-                        hom.outcomes[currentOutcome].score += 1.0f;
-                    
+                    bool forbidden = false;
+
+                    int prevIdx = nearbyIdx - 1; 
+                    int prevType = (prevIdx >= 0) ? word_types[prevIdx] : -1;
+
+                    if (prevType >= 0 && hom.forbidden_previous_type) {
+                        if (prevType == hom.forbidden_previous_type[currentOutcome]) {
+                            forbidden = true;
+                        }
                     }
+
+                    if (!forbidden && hom.outcomes && currentOutcome < hom.num_outcomes) {
+                        hom.outcomes[currentOutcome].score += 1.0f;
+                    }
+
                     break;
                 }
+
             }
         }
 

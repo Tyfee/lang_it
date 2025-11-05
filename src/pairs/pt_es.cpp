@@ -270,7 +270,8 @@ struct VerbEnding {
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
   {"fal", "hablar", false, false},
-  {"gost", "gustar", false, true}
+  {"gost", "gustar", false, true},
+  {"com", "comer", false, false},
   
 };
 
@@ -302,9 +303,6 @@ static const Verb* lookupIrrVerb(const char* root) {
 
 
 
-static vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber", "zer"};
-
-
 // common suffixes with traceable trnaslation pattern
 constexpr Suffix suff[] = {
 
@@ -322,43 +320,6 @@ constexpr Suffix suff[] = {
   {"ês", "és", 0, 0},
   {"ção", "cion", 0,0},
 };
-
-inline string script_adequation(string word) {
-    auto replace_all = [&](const std::string& from, const std::string& to) {
-        size_t pos = 0;
-        while ((pos = word.find(from, pos)) != std::string::npos) {
-            word.replace(pos, from.size(), to);
-            pos += to.size();
-        }
-    };
-
-   /* replace_all("\xC3\xA1", "a"); // á
-    replace_all("\xC3\xA0", "a"); // à
-    replace_all("\xC3\xA3", "a"); // ã
-    replace_all("\xC3\xA2", "a"); // â
-    replace_all("\xC3\xA9", "e"); // é
-    replace_all("\xC3\xAA", "e"); // ê
-    replace_all("\xC3\xAD", "i"); // í
-    replace_all("\xC3\xB3", "o"); // ó
-    replace_all("\xC3\xB4", "o"); // ô
-    replace_all("\xC3\xB5", "o"); // õ
-    replace_all("\xC3\xBA", "u"); // ú
-    replace_all("\xC3\xA7", "c"); // ç
-replace_all("\xC3\x81", "a"); // Á
-replace_all("\xC3\x80", "a"); // À
-replace_all("\xC3\x83", "a"); // Ã
-replace_all("\xC3\x82", "a"); // Â
-replace_all("\xC3\x89", "é"); // É
-replace_all("\xC3\x8A", "e"); // Ê
-replace_all("\xC3\x8D", "i"); // Í
-replace_all("\xC3\x93", "o"); // Ó
-replace_all("\xC3\x94", "o"); // Ô
-replace_all("\xC3\x95", "o"); // Õ
-replace_all("\xC3\x9A", "u"); // Ú
-replace_all("\xC3\x87", "c"); // Ç*/
-    return word;
-
-}
 
 
 
@@ -425,141 +386,48 @@ static Word morphemeLookup(string word){
   return Word{word, translation_, word_type_};
 };
 
-    //look for preffix matches 
-static Word prefixLookup(string word){
-    string translation = word; 
-    int word_type;
+Word prefixLookup(const std::string &word) {
+    string translation;
+    // endings
+    static const vector<string> infinitive = {"ar", "er", "ir", "dir", "ir", "ber", "zer"};
+    static const vector<string> past_tense_first_sin = {"ei", "ti", "ri", "is", "ia"};
+    static const vector<string> past_tense_second_sin = {"iu", "ou", "eu"};
 
-
-    // this will try to find a verb ending that can be translated to past tense or infinitive or continuous or whatever
-    // it's a lambda that returns a pair with the match lemma + the vowel/conjugation.
-    auto find_verb = [](vector<string> format, string word, int verb_info) -> Word {
- 
-        for(size_t i = 0; i < format.size(); ++i){
-            string translation_;
-            int word_type_;
-            int verb_type;
-            bool aux = false;
-            bool intransitiveness;
-            string ending;
-
-            size_t match = word.rfind(format[i]);
-            if (match != string::npos && match + format[i].length() == word.length()) {
-                string root = word.substr(0, match);
-                auto v_irr = lookupIrrVerb(root.c_str());
-                char buffer[64];
-                const Verb* v = lookupRegVerb(root.c_str());
-               
-
-                if (v) {
-                  
-                
-                        size_t i = 0;
-                        const char* base = v->translation;
-                        while (*base && i + 1 < sizeof(buffer)) buffer[i++] = *base++;
-                        buffer[i] = '\0';
-                    
-
-                    intransitiveness = v->intransitive;
-                    if(intransitiveness == true){
-                        word_type_ = 3;
-                    }else{
-                       word_type_ = 36;
-                    }
-                    return Word{word, string(buffer), word_type_};
-
-                } else if(v_irr){
-
-                
-                    
-
-                    if(verb_info == 4){
-                        translation_ = "used to " + string(v_irr->translation) + ending;
-                    }
-                    else if (verb_info == 5) {
-                        string base = v_irr->translation;
-
-                        if (!base.empty() && base.back() == 'e' && base != "be") {
-                            base.pop_back();
-                        }
-
-                        // consonant doubling rule: if word ends consonant-vowel-consonant (and length > 2)
-                        // e.g. run → running, stop → stopping, but not need → needing
-                        if (base.length() >= 3) {
-                            char a = base[base.length() - 3];
-                            char b = base[base.length() - 2];
-                            char c = base[base.length() - 1];
-
-                            if (!isVowel(a) && isVowel(b) && !isVowel(c) && c != 'w' && c != 'x' && c != 'y') {
-                                base.push_back(c);
-                            }
-                        }
-
-                        // append ing
-                        translation_ = base + "ing";
-                    }
-
-                    else if(verb_info == 6){
-                        if (root == "pod") translation_ = "could";
-                        else if(root == "dev") translation_ = "should";
-                        else translation_ = "would " + string(v_irr->translation) + ending;
-                        aux = true;
-                    } else if(verb_info == 1){
-         //TODO: Set up the very specific rules that most verbs can abide to.
-                
-
-            
-                                 // ANOTHER HYPERSPECIFIC RULE
-                            // is the verbs second letter not 'h'?
-                            // does it end in either ng or nk?
-
-                            string base_ = string(v_irr->translation);
-                            if (base_.length() >= 3 
-                            && base_[1] != 'h' 
-                        && (base_.substr(base_.length()-2) == "ng" 
-                        || base_.substr(base_.length()-2) == "nk"))
-                            {
-                                        // replace the i for an 'a' so that e.g: drink => drank
-                                translation_ = base_.replace(base_.find("i"), 1, "a");;  
-                            }
-                        
-                    }else {
-                        translation_ = string(v_irr->translation) + ending;
-                    }
-
-                    intransitiveness = v_irr->intransitive;
-                    if(intransitiveness == true){
-                        word_type_ = !aux ? 3 : 33;
-                    }else{
-                       word_type_ = 36;
-                    }
-                    return {word, translation_, word_type_};
-                }
-            }
-            
-        }
-        
-        return Word{word, "", -1};
+    // group vectors with a type index
+    static const std::vector<std::pair<const std::vector<std::string>*, int>> groups = {
+        {&infinitive, 0},             // infinitive
+        {&past_tense_first_sin, 1},   // past 1st singular
+        {&past_tense_second_sin, 2}   // past 2nd singular
     };
 
-    Word result;
+    for (auto &[vec, type] : groups) {
+        for (const auto &ending : *vec) {
+            if (word.size() > ending.size() &&
+                word.compare(word.size() - ending.size(), ending.size(), ending) == 0) {
 
-    result = find_verb(infinitive, word, 0);
-    if(result.type != -1) return result;   
-
-    return {word, "", -1};
+                std::string base = word.substr(0, word.size() - ending.size());
+                if(type == 0) {
+                    translation = word;
+                    return Word{word, translation, 3};
+                }
+                 if(type == 1){ 
+                    translation = word.substr(0, word.length() - 2) + "é";
+                    return Word{word, translation, 3};
+                }
+            return Word{word, translation, 3};
+            }
+        }
+    }
+    return Word{word, "", -1};
 }
+
+
 static Word suffixLookup(const std::string& word) {
     std::string translation;
     int word_type = 0;
 
     // example: in- prefix detection
-    if (word.size() > 4) {
-        if (word.substr(0, 2) == "in" &&
-            lookupSuff(suff, word.substr(word.size() - 4).c_str()).t) {
-            return {word, "", -1};
-        }
-    }
+  
 
     // check suffix patterns
    for (int len = 6; len >= 2; --len) {
@@ -589,7 +457,7 @@ static Word suffixLookup(const std::string& word) {
                 translation = stem + mapped;
             }
 
-            return {word, normalize(script_adequation(translation)), word_type};
+            return {word, normalize(translation), word_type};
         }
     }
 }
@@ -626,13 +494,13 @@ static Word nounLookup(string word){
    word_type = 0;
    }
    //then without accentuation (helpful in plural)
-   else if(lookup(nouns, script_adequation(word).c_str())){
-       translation = lookup(nouns, script_adequation(word).c_str());
+   else if(lookup(nouns, word.c_str())){
+       translation = lookup(nouns, word.c_str());
        word_type = 0; 
    }
-   else if(lookup(adj, (script_adequation(word)).c_str())){
+   else if(lookup(adj, word.c_str())){
     
-      translation = lookup(adj, script_adequation(word).c_str());
+      translation = lookup(adj, word.c_str());
       word_type = 1;
 
     }
@@ -672,7 +540,7 @@ static Word nounLookup(string word){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
-    string word_normalized = script_adequation(word);
+    string word_normalized = word;
 
     if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "os") {
         singular_pt = word.substr(0, word.size() - 2) + "o"; // gatos -> gato, cachorros -> cachorro
@@ -790,36 +658,7 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
     
     } 
 
-    //what are the pronouns called? the ones that are like, themself, itslef, myself.
-    // lmk if anybody knows that, like..................
-   else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 36) && sentence_arr[i - 1].translation == "-"  && sentence_arr[i].word == "se") {
-    // ame-se        
-    
-            reordered_arr.pop_back(); 
-            reordered_arr.pop_back(); 
-            // verb
-            reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr[i-2].translation, sentence_arr[i].type}); 
-            // yourself
-            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr[i].type}); 
-        }
-
-         // ------------------------ FOR/WITHOUT + VERB? IS THAT A NAME FOR THAT  --------------------
-        // the construction for + verb[3 || 36], only shows up as the present continuous:
-        // (for sending* me and invitation, for selling* yourself pardons)
-        // (what is this food for? it's for selling*)
-    else if (i > 0 && (sentence_arr[i - 1].translation == "for" || sentence_arr[i - 1].translation == "without") &&
-    (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-
-      reordered_arr.pop_back();   
-    string fixed_verb = sentence_arr[i].translation.back() == 'e'
-        ? sentence_arr[i].translation.substr(0, sentence_arr[i].translation.length() - 1) + "ing"
-        : sentence_arr[i].translation + "ing";
-
-    reordered_arr.push_back(Word{sentence_arr[i - 1].word, sentence_arr[i - 1].translation,-1}); // "for"
-    reordered_arr.push_back(Word{ sentence_arr[i].word, fixed_verb,sentence_arr[i].type});
-    sentence_arr[i].type = -1;
-    continue;
-}
+  
 
 else if (i > 0 && (sentence_arr[i - 1].type == 8 || sentence_arr[i - 1].type == 13) && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36 )) {
 
@@ -907,15 +746,15 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
         for (int j = start; j <= end; ++j) {
             context.push_back(final_arr[j].translation);
         }
-
-        // But pass the PORTUGUESE word to semantics for homonym lookup
+        
         size_t contextIndex = static_cast<size_t>(i - start);
+
+        vector<string> spanish_context = context;
+        vector<int> word_types;
+        spanish_context[contextIndex] = final_arr[i].word;  
+        word_types[contextIndex] = final_arr[i].type;  
         
-        // Create a temporary context with the Portuguese word at the target position
-        vector<string> portuguese_context = context;
-        portuguese_context[contextIndex] = final_arr[i].word;  // Use Portuguese word for lookup
-        
-        string resolved_word = semantics(portuguese_context, contextIndex, homonimos, homonimosCount);
+        string resolved_word = semantics(spanish_context, word_types,contextIndex, homonyms, homonymCount);
 
         final_arr[i].translation = resolved_word;
     }
@@ -1036,7 +875,7 @@ std::string traduzir_es(const char* sentence) {
     vector<string> arr = tokenize(string(buffer));  
     std::string translated = trigramLookup(arr);
     
-    return script_adequation(translated); 
+    return translated; 
 }
 
 #endif

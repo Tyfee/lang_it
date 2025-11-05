@@ -79,13 +79,32 @@ vector<FrequencyTable> table = {
 
 // homonyms in portuguese
 
+// a homonym needs three structures BROTHER EUGHHHHHH
+
+// you need every outcome as an array Outcome {"word", 0.0f, word_type}
+// So you initialize it as a possible outcome of the translation with the score zeroed and it's type(0 = noun , etc)
+//the first one is the default
 static Outcome manga_outcomes[] = {
     {"mango", 0.0f, 0}, {"sleeve", 0.0f, 0}
 };
+// you then need to specify every and any word that comes to mind (LOL) that can settle dispute between the two words
+// Thats obviously prone to error but we can add more layers as we go
+// in our case "Manga", can be translated as mango or sleeve,
+// you add all words that point to mango   "eat", "taste", "pick", "juice".... and separate it with a '$'
+// and define the other words for sleeve "shirt", "sew", "ripped", "rip".
+// you can add as many as you need, but you need to keep track of how many tokens are there including the separators ($)
+// here we have 18
 static const char* manga_tokens[] = {
     "eat", "taste", "pick", "juice", "sweet", "candy", "dessert", "flavor","taste","ripe","$",
     "shirt", "sew", "ripped", "rip", "button", "tight", "loose"
 };
+
+//here we add 1 forbidden previous word for each!, we have two words, and we define one type for each
+// here there are NONE lol, so lets just add a number that never shows up (not a type) 98
+static const int manga_forbidden[] = {
+   98, 98
+};
+
 
 static Outcome rosa_outcomes[] = {
     {"pink", 0.0f, 0}, {"rose", 0.0f, 0}
@@ -93,6 +112,10 @@ static Outcome rosa_outcomes[] = {
 static const char* rosa_tokens[] = {
     "color", "shirt", "clothes", "light","$",
     "flower", "button", "sprout", "thorn", "a", "an"
+};
+
+static const int rosa_forbidden[] = {
+    1, 2
 };
 
 
@@ -104,6 +127,11 @@ static const char* sede_tokens[] = {
     "company", "location", "building"
 };
 
+static const int sede_forbidden[] = {
+    1, 2
+};
+
+
 static Outcome novo_outcomes[] = {
     {"new", 0.0f, 0}, {"young", 0.0f, 0}
 };
@@ -111,6 +139,10 @@ static Outcome novo_outcomes[] = {
 static const char* novo_tokens[] = {
     "buy", "brand", "product", "$",
     "very", "person", "she", "he", "i",
+};
+
+static const int novo_forbidden[] = {
+    1, 2
 };
 
 
@@ -123,12 +155,21 @@ static const char* banco_tokens[] = {
      "sit", "beautiful", "outside"
 };
 
+static const int banco_forbidden[] = {
+    1, 2
+};
+
+
 static Outcome pena_outcomes[] = {
     {"feather", 0.0f, 0}, {"pity", 0.0f, 0}
 };
 static const char* pena_tokens[] = {
     "bird", "animal", "$",
      "feel", "what", "for"
+};
+
+static const int pena_forbidden[] = {
+    1, 2
 };
 
 
@@ -141,31 +182,54 @@ static const char* bateria_tokens[] = {
     "i","you"
 };
 
+static const int bateria_forbidden[] = {
+    1, 2
+};
+
+
 static Outcome alto_outcomes[] = {
     {"tall", 0.0f, 0}, {"high", 0.0f, 0}, {"loud", 0.0f, 3}
 };
 static const char* alto_tokens[] = {
     "person", "he","she","i","am", "height","$",
-    "", "$",
+    "fly", "$",
     "music","volume", "low", "turn"
 };
 
+static const int alto_forbidden[] = {
+    1, 2
+};
+
+static Outcome como_outcomes[] = {
+    {"like", 0.0f, 13}, {"as", 0.0f, 13}, {"eat", 0.0f, 3}, {"how", 0.0f, 13}
+};
+static const char* como_tokens[] = {
+    "him", "me","her","a","it's", "the","$",
+    "if", "$",
+    "food","dinner", "lunch","i", "snack", "$",
+    "do","are", "is", "can"
+};
+
+static const int como_forbidden[] = {
+    1, 2, 1, 4
+};
 
 
 
 
 
 Homonym homonyms[] = {
-    {"manga", manga_outcomes, 2, manga_tokens, 13},
-    {"banco", banco_outcomes, 2, banco_tokens, 7},
-    {"pena", pena_outcomes, 2, pena_tokens, 6},
-    {"sede", sede_outcomes, 2, sede_tokens, 7},
-    {"bateria", sede_outcomes, 3, sede_tokens, 7},
-    {"novo", novo_outcomes, 2, novo_tokens, 8},
-    {"nova", novo_outcomes, 2, novo_tokens, 8},
-    {"alto", alto_outcomes, 3, alto_tokens, 13},
-    {"alta", alto_outcomes, 3, alto_tokens, 13},
-    {"rosa", rosa_outcomes, 2, rosa_tokens, 11}
+    {"manga", manga_outcomes, 2, manga_tokens, manga_forbidden, 13},
+    {"banco", banco_outcomes, 2, banco_tokens, banco_forbidden, 7},
+    {"pena", pena_outcomes, 2, pena_tokens, pena_forbidden, 6},
+    {"sede", sede_outcomes, 2, sede_tokens, sede_forbidden,7},
+    {"bateria", sede_outcomes, 3, sede_tokens, bateria_forbidden, 7},
+    {"novo", novo_outcomes, 2, novo_tokens, novo_forbidden,8},
+    {"nova", novo_outcomes, 2, novo_tokens, novo_forbidden, 8},
+    {"alto", alto_outcomes, 3, alto_tokens, alto_forbidden,13},
+    {"alta", alto_outcomes, 3, alto_tokens, alto_forbidden, 13},
+    {"rosa", rosa_outcomes, 2, rosa_tokens, rosa_forbidden, 11},
+    {"como", como_outcomes, 4, como_tokens, como_forbidden, 19}
 };
 
 const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
@@ -181,6 +245,8 @@ constexpr Entry fixed_ngrams[] = {
   {"jogo_da_velha", "tic tac toe"},
   
   {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
+  {"roupa_intima", "underwear"},
+ 
   {"quanto_mais", "the more"},
   {"qual_é", "what is"},
   {"por_que", "why"},
@@ -192,7 +258,10 @@ constexpr Entry fixed_ngrams[] = {
   {"bom_dia", "good morning"},
   {"boa_noite", "good night"},
   {"boa_tarde", "good evening"},
+  
+  {"papai_noel", "Santa Claus"},
   {"papel_de_parede", "wallpaper"},
+  {"papel_higienico", "toilet paper"},
   {"por_toda_parte", "everywhere"},
   {"todo_lugar", "everywhere"},
   {"todo_mundo", "everybody"},
@@ -266,15 +335,31 @@ constexpr Entry nouns[] = {
   {"hora", "hour"},
   {"leite", "milk", UNCOUNTABLE | NO_PLURAL},
   {"roda", "wheel"},
+  
   {"blusa", "shirt"},
+  {"camisa", "shirt"},
+  {"camiseta", "t-shirt"},
+  {"calça", "pants", NO_PLURAL},
+  {"calças", "pants", NO_PLURAL},
+  {"cinto", "belt"},
+  {"saia", "skirt"},
+  {"sapato", "shoe"},
+  {"cueca", "underwear"},
+  {"calcinha", "underwear"},
+
   {"dinheiro", "money"},
   {"palavra", "word"},
+  {"presente", "gift"},
+  
+  {"chaminé", "chimney"},
 
-  {"terra", "dirt"}, //dirt, earth, land 
-  {"praia", "beach"},
+  {"terra", "dirt", IS_PLACE}, //dirt, earth, land 
+  {"praia", "beach", IS_PLACE},
 
-  {"escola", "school"},
-  {"loja", "store"},
+  {"escola", "school", IS_PLACE},
+  {"loja", "store", IS_PLACE},
+  {"lago", "lake", IS_PLACE},
+  {"fazenda", "farm", IS_PLACE},
   
 
   {"morte", "death"},
@@ -286,6 +371,7 @@ constexpr Entry nouns[] = {
   {"banheiro", "bathroom"},
   {"cozinha", "kitchen"},
   {"sala", "room"},
+  {"predio", "building"},
   {"prédio", "building"},
 
   {"chocolate", "chocolate"},
@@ -294,11 +380,11 @@ constexpr Entry nouns[] = {
   {"pêssego", "peach"},
   {"melancia", "watermelon"},
 
-  {"natal", "christmas"},
-  {"páscoa", "easter"},
-  {"aniversário", "birthday"},
-  {"véspera", "eve"},
-  {"feriado", "holiday"},
+  {"natal", "christmas", ON},
+  {"páscoa", "easter", ON},
+  {"aniversário", "birthday", ON},
+  {"véspera", "eve", ON},
+  {"feriado", "holiday", ON},
 
   {"espada", "sword"},
   {"escudo", "shield"},
@@ -365,6 +451,7 @@ constexpr Entry nouns[] = {
   {"folha", "leaf"},
   {"papel", "paper", ON},
   {"faca", "knife"},
+  {"tatuagem", "tattoo"},
   {"cruz", "cross"},
   {"celular", "phone", ON},
   {"tela", "screen", ON},
@@ -419,6 +506,8 @@ constexpr Entry nouns[] = {
   {"sino", "bell"},
   {"campainha", "doorbell"},
   {"viagem", "trip"},
+  {"placa", "sign"},
+  {"poça", "puddle"},
 
   {"manga", "mango"},
   
@@ -890,7 +979,8 @@ constexpr Verb irr_verbs[] = {
   {"sent", "sit", 1, true},
   {"levant", "stand_up", 1, true}, // deal with ts at some point lol, update: dealt
   {"ach", "find", 1, false},
-  {"mord", "bit", 0, true}              
+  {"mord", "bit", 0, true},
+  {"vo", "fly", 1, true}              
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -903,7 +993,7 @@ static const Verb* lookupIrrVerb(const char* root) {
     return nullptr;
 }
 
-// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it 10 = ize
+// 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it 20 = ize 21 == ct
 // quick dirty verb guessing
 constexpr VerbEnding patt_verbs[] = {
   {"ptar", 0}, // adaptar = adapt,
@@ -917,6 +1007,8 @@ constexpr VerbEnding patt_verbs[] = {
   {"erir", 8},
   {"itar", 9},
   {"izar", 20},
+  {"ctar", 21},
+
 
   //surely theres a way to imolement the past tense endings dinamically, will i? who knows
   {"ptou", 4}, {"ptei", 4}, {"ptado", 4},
@@ -1034,7 +1126,8 @@ constexpr Suffix suff[] = {
   {"ópico", "opic", 1,0},
   {"ópica", "opic", 1,0},
   {"arra", "ar", 0, 0},
-  {"ano", "ane", 1, 0}
+  {"ano", "ane", 1, 0},
+  {"este", "est", 0, 0}
 };
 
 inline string script_adequation(string word) {
@@ -1698,6 +1791,7 @@ Word prefixLookup(string word){
               case 8: case 18: ending="er"; break; 
               case 9: case 19: ending="it"; break; 
               case 20: case 30: ending="ize"; break; 
+              case 21: case 31: ending="ct"; break; 
           } 
           if(stem.length() > 2) { 
               return {stem, normalize(stem + ending), 3}; 
@@ -2640,7 +2734,8 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
         final_arr[i].word == "pena" || 
         final_arr[i].word == "novo" || final_arr[i].word == "nova" ||
         final_arr[i].word == "alto" || final_arr[i].word == "alta" ||
-        final_arr[i].word == "rosa"
+        final_arr[i].word == "rosa" ||
+        final_arr[i].word == "como" 
     
     ) {
         
@@ -2652,14 +2747,15 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
             context.push_back(final_arr[j].translation);
         }
 
-        // But pass the PORTUGUESE word to semantics for homonym lookup
         size_t contextIndex = static_cast<size_t>(i - start);
         
         // Create a temporary context with the Portuguese word at the target position
         vector<string> portuguese_context = context;
-        portuguese_context[contextIndex] = final_arr[i].word;  // Use Portuguese word for lookup
+        vector<int> word_types(context.size(), 0); 
+        portuguese_context[contextIndex] = final_arr[i].word;  
+        word_types[contextIndex] = final_arr[i].type;  
         
-        string resolved_word = semantics(portuguese_context, contextIndex, homonyms, homonymCount);
+        string resolved_word = semantics(portuguese_context, word_types,contextIndex, homonyms, homonymCount);
 
         final_arr[i].translation = resolved_word;
     }
