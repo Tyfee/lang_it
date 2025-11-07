@@ -67,9 +67,7 @@ static vector<FrequencyTable> table = {
 
 
 
-Homonym homonyms_[] = {
-  
-};
+Homonym homonyms_[1];
 
 const size_t homonymCount_ = sizeof(homonyms_) / sizeof(homonyms_[0]);
 

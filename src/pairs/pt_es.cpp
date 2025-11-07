@@ -51,9 +51,7 @@ vector<FrequencyTable> tabela = {
 
 
 
-Homonym homonimos[] = {
-
-};
+Homonym homonimos[1];
 
 const size_t homonimosCount = sizeof(homonimos) / sizeof(homonimos[0]);
 

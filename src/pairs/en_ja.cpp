@@ -54,7 +54,7 @@ enum Kana : int {
     E, KE, GE, SE, ZE, TE, DE, NE, HE, BE, PE, ME, RE,
     O, KO, GO, SO, ZO, TO, DO, NO, HO, BO, PO, MO, YO, RO, WO,
 
-    JA, CHA, JU, CHU, JO, CHO, NBS, LA, LI, LU, LE, LO
+    JA, CHA, JU, CHU, JO, CHO, NBS, LA, LI, LU, LE, LO, NONE
 };
 
 
@@ -65,7 +65,7 @@ const char* ROMAJI[] = {
     "u","ku","gu","su","zu","tsu","nu","fu","bu","pu","mu","yu","ru",
     "e","ke","ge","se","ze","te","de","ne","he","be","pe","me","re",
     "o","ko","go","so","zo","to","do","no","ho","bo","po","mo","yo","ro","wo",
-    "ja","cha","ju","chu","jo","cho", "-", "la", "li", "lu", "le", "lo"
+    "ja","cha","ju","chu","jo","cho", "-", "la", "li", "lu", "le", "lo", ""
 };
 
 Kana kanaFromRomaji(const std::string &r) {
@@ -81,7 +81,7 @@ const string HIRAGANA[] = {
     "う","く","ぐ","す","ず","つ","ぬ","ふ","ぶ","ぷ","む","ゆ","る",
     "え","け","げ","せ","ぜ","て","で","ね","へ","べ","ぺ","め","れ",
     "お","こ","ご","そ","ぞ","と","ど","の","ほ","ぼ","ぽ","も","よ","ろ","を",
-    "じゃ","ちゃ","じゅ","ちゅ","じょ","ちょ", "ー", "ぁ", "ぃ", "ぅ", "ぇ", "ぉ"
+    "じゃ","ちゃ","じゅ","ちゅ","じょ","ちょ", "ー", "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", ""
 };
 
 const string KATAKANA[] = {
@@ -90,7 +90,7 @@ const string KATAKANA[] = {
     "ウ","ク","グ","ス","ズ","ツ","ヌ","フ","ブ","プ","ム","ユ","ル",
     "エ","ケ","ゲ","セ","ゼ","テ","デ","ネ","ヘ","ベ","ペ","メ","レ",
     "オ","コ","ゴ","ソ","ゾ","ト","ド","ノ","ホ","ボ","ポ","モ","ヨ","ロ","ヲ",
-    "ジャ","チャ","ジュ","チュ","ジョ","チョ", "ー","ァ", "ィ", "ゥ", "ェ", "ォ"
+    "ジャ","チャ","ジュ","チュ","ジョ","チョ", "ー","ァ", "ィ", "ゥ", "ェ", "ォ", ""
 };
 
 // wait i'll save some numbers to turn u endings into i endings
@@ -135,7 +135,7 @@ Word _tk[] = {TO, KI};
 Word _knncw[] = {KO, N , NI, CHI, WA};
 Word _hnyk[] = {HO, N , YA, KU};
 Word _nn[] = {NA, NI};
-Word _blank[] = {};
+Word _blank[] = {NONE};
 
 
 

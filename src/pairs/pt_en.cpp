@@ -244,6 +244,8 @@ constexpr Entry fixed_ngrams[] = {
 
   {"jogo_da_velha", "tic tac toe"},
   
+  {"desse_jeito", "this way"},
+  
   {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
   {"roupa_intima", "underwear"},
  
@@ -346,6 +348,9 @@ constexpr Entry nouns[] = {
   {"sapato", "shoe"},
   {"cueca", "underwear"},
   {"calcinha", "underwear"},
+
+  {"jeito", "way"},
+  {"maneira", "manner"},
 
   {"dinheiro", "money"},
   {"palavra", "word"},
@@ -2149,12 +2154,18 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
 }
 
     reordered_arr.clear(); 
+    if( sentence_arr.size() > 1){
     reordered_arr.push_back(Word{
         sentence_arr[0].word,
         pronoun + sentence_arr[0].translation + (sentence_arr[0].type == 36 ? " it" : ""),
         sentence_arr[0].type
     });
-
+    } else{
+        reordered_arr.push_back(Word{ sentence_arr[0].word,
+        sentence_arr[0].translation,
+        sentence_arr[0].type});
+    }
+    
     return reordered_arr;
 }
 // demais
@@ -2426,7 +2437,7 @@ else if (i > 1 && sentence_arr.at(i - 1).translation == "not") {
     // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.
     // so if 'eu[2] amo[36]' => 'i[2] (love it[36])]!  
-       else  if (sentence_arr.at(i).type == 36) {
+       else  if (sentence_arr.size() > 1 && sentence_arr.at(i).type == 36) {
         
                 bool add_it = true;
 
