@@ -231,10 +231,10 @@ inline std::string detect_language(const char* sentence) {
         };
 
         if(word.length() > 1 && std::string(word).substr(word.length() - 2) == "ll"){
-                   en += 1.0;
+                   en += 1.0f;
         }
         if(word == "i") en += 0.5f;
-        if(word == "y"){ es += 0.5f; fr += 0.4;}
+        if(word == "y"){ es += 0.5f; fr += 0.4f;}
 
         if(word == "em" || word == "sou" || word == "eu"){ pt += 1.0f;}
 
@@ -266,17 +266,17 @@ inline std::string detect_language(const char* sentence) {
         };
 
         if (last_char(word) == std::string("é")) { 
-            fr += 0.7;
-            pt += 0.4;
-            es += 0.7;
+            fr += 0.7f;
+            pt += 0.4f;
+            es += 0.7f;
         }
         if (last_char(word) == std::string("ó")) { 
-            pt += 0.4;
-            es += 0.8;
+            pt += 0.4f;
+            es += 0.8f;
         }
         if (first_char(word) == std::string("ç")) { 
-            pt -= 1.0;
-            fr += 0.6;
+            pt -= 1.0f;
+            fr += 0.6f;
         }
         if (word.find("ñ") != std::string::npos){
             es += 1.0f;

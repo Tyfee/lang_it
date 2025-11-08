@@ -1,4 +1,4 @@
-#include "src/lang_it.h"
+#include "lang_it.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,7 +9,12 @@ bool isFile(const std::string& filename) {
 }
 
 int main(int argc, char* argv[]) {
-    bool replMode = (argc == 4 && std::strcmp(argv[1], "REPL") == 0);
+    bool help = (argc == 2 && std::strcmp(argv[1], "-help") == 0);
+    bool info = (argc == 2 && std::strcmp(argv[1], "-info") == 0);
+    bool version = (argc == 2 && std::strcmp(argv[1], "-v") == 0);
+
+    bool d_l = (argc == 3 && std::strcmp(argv[1], "-detect") == 0);
+    bool replMode = (argc == 4 && std::strcmp(argv[1], "-REPL") == 0);
     bool fileMode = (argc == 4 && isFile(argv[1]));
     bool newFile = (argc == 5 && isFile(argv[1]) && isFile(argv[4]));
 
@@ -113,12 +118,45 @@ int main(int argc, char* argv[]) {
 
 
     if (argc < 4) {
-        std::cerr << "Usage:\n"
-                  << "  " << argv[0] << " <sentence> <from> <to>\n"
-                  << "  " << argv[0] << " REPL <from> <to>\n"
-                  << "  " << argv[0] << " <file.txt> <from> <to>\n"
-                  << "  " << argv[0] << " <file.txt> <from> <to> <file2.txt>\n";
-        return 1;
+        if (info) {
+            #if defined(ALL)
+
+            std::cout << "Available languages: English, Portuguese(BR), Español, French, Japanese, Svenska\nBinary size : \n";
+
+            return 0;
+            #endif
+
+        }
+        else if (help) {
+            std::cout << "Usage:\n\n"
+                << "Installed version:" << "lang_it -v\n\n"
+                << "Auto detect language:" << "lang_it -detect <sentence>\n\n"
+                << "Translate a sentence: " << "lang_it <sentence> <from> <to>\n\n"
+                << "Interactive translator:" << "lang_it -REPL <from> <to>\n\n"
+                << "Translate files:" << "lang_it <file.txt> <from> <to>\n\n"
+                << "Translate a file into another:" << "lang_it <file.txt> <from> <to> <file2.txt>\n\n";
+
+            return 0;
+        }
+        else if (version) {
+
+            std::cout << "lang_it v0.01";
+            return 0;
+        }else if(d_l) {
+
+            const char* sentence = argv[2];
+            std::cout << detect_language(sentence) << std::endl;
+        }
+        else {
+            std::cerr << "Usage:\n"
+                << "Installed version:" << argv[0] << " -v>\n"
+                << "Auto detect language:" << argv[0] << " -detect <sentence>\n"
+                << "Translate a sentence: " << argv[0] << " <sentence> <from> <to>\n"
+                << "Interactive translator:" << argv[0] << " -REPL <from> <to>\n"
+                << "Translate files:" << argv[0] << " <file.txt> <from> <to>\n"
+                << "Translate a file into another:" << argv[0] << " <file.txt> <from> <to> <file2.txt>\n";
+            return 1;
+        }
     }
 
     const char* original_sentence = argv[1];

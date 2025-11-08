@@ -18,6 +18,10 @@ target_include_directories(lang_it_lib PUBLIC src)
 target_compile_definitions(lang_it_lib PUBLIC ALL)
 target_compile_features(lang_it_lib PUBLIC cxx_std_17)
 
+if (MSVC)
+    target_compile_options(lang_it_lib PRIVATE /utf-8)
+endif()
+
 add_executable(lang_it)
 
 target_sources(lang_it

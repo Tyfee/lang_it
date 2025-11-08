@@ -91,9 +91,6 @@ constexpr Entry fixed_ngrams[] = {
   {"close_to", "perto de"},
   {"because_of", "por causa"},
   {"for_now", "por enquanto"},
-  {"com_fome", "hungry"},
-  {"com_sede", "thirsty"},
-  {"com_raiva", "angry"},
   {"hoje_em_dia", "nowadays"},
   {"de_vez_em_quando", "sometimes"}
 };
@@ -214,9 +211,11 @@ constexpr Entry nouns[] = {
   {"papel", "paper"},
   {"faca", "knife"},
   {"tela", "screen"},
-  {"mulher", "woman", IRREGULAR_PLURAL},
-  {"homem", "man", IRREGULAR_PLURAL},
-  {"pessoa", "person"},
+  {"woman", "mulher"},
+  {"man", "homem"},
+  {"women", "mulheres"},
+  {"men", "homens"},
+  {"person", "pessoa"},
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
   {"flor", "flower"},
@@ -425,9 +424,9 @@ constexpr Entry adj[] = {
   {"beautiful", "bonito"},
   {"lindo", "beautiful"},
   {"belo", "beautiful"},
-  {"legal", "cool"},
-  {"grande", "big"},
-  {"forte", "strong"},
+  {"cool", "legal"},
+  {"big", "grande"},
+  {"strong", "forte"},
   {"fraco", "weak"},
   {"little", "pequeno"},
   {"grande", "big"},
@@ -1251,6 +1250,49 @@ static Word prefixLookup(string word){
 
     return {word, "", -1};
 }
+//superlative and copmarative
+static Word adjectiveForms(const std::string& word) {
+
+    std::string stem = word;
+    std::string translation;
+
+    if (word.size() > 4 && word.substr(word.size() - 4) == "iest") {
+        stem = word.substr(0, word.size() - 4) + "y";   // happiest -> happy
+    }
+    else if (word.size() > 3 && word.substr(word.size() - 3) == "ier") {
+        stem = word.substr(0, word.size() - 4) + "y"; // happier => happy
+    }
+    else if (word.size() > 3 && word.substr(word.size() - 3) == "est") {
+        stem = word.substr(0, word.size() - 3);         // fastest -> fast
+        // ends in ce
+        if (!stem.empty() && stem.back() == 'c')
+            stem += "e";
+
+        // consonant doubling
+        if (stem.size() > 1 && stem[stem.size() - 1] == stem[stem.size() - 2])
+            stem.pop_back();
+    }
+    else if (word.size() > 2 && word.substr(word.size() - 2) == "er") {
+        stem = word.substr(0, word.size() - 2);         // faster -> fast
+        // ends in ce
+        if (!stem.empty() && stem.back() == 'c')
+            stem += "e";
+
+        // consonant doubling
+        if (stem.size() > 1 && stem[stem.size() - 1] == stem[stem.size() - 2])
+            stem.pop_back();
+    }
+
+    if (lookup(adj, stem.c_str())) {
+        std::string r = lookup(adj, stem.c_str());
+        return { word, "mais " + r, 1 };
+    }
+
+    return { word, "", -1 };
+}
+
+
+
 static Word suffixLookup(const std::string& word) {
     std::string translation;
     int word_type = 0;
@@ -1449,7 +1491,12 @@ static Word nounLookup(string word){
         
     // same as above for adjectives. e.g pequena -> (pequena - a) + o -> pequeno
    
-
+        // if not found try to lookup for the superlative/comparative
+      else if (adjectiveForms(word).translation.length() > 0 || adjectiveForms(word.substr(0, word.length() - 1)).translation.length() > 0) {
+       string look = adjectiveForms(word).translation;
+       translation = look;
+       word_type = adjectiveForms(word).translation.length() > 0 ? adjectiveForms(word).type : adjectiveForms(word.substr(0, word.length() - 1)).type;
+       }
          else if(createNounFromVerb(word).translation.size() > 0){
         translation = createNounFromVerb(word).translation;
         word_type = createNounFromVerb(word).type;
@@ -1473,7 +1520,7 @@ static Word nounLookup(string word){
         translation = look;
         word_type = suffixLookup(word).translation.length() > 0 ? suffixLookup(word).type : suffixLookup(word.substr(0, word.length() - 1)).type;
        }
-     
+   
        else if(adjectification(word).translation.size() > 0){
         translation = adjectification(word).translation;
         word_type = adjectification(word).type;
@@ -1539,7 +1586,7 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
     reordered_arr.push_back(Word{"demais", "too", 4});
     reordered_arr.push_back(Word{sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type}); 
 }
-     
+
  else if (i > 1 && sentence_arr.at(i - 2).type == 9  && sentence_arr.at(i - 1).type == 1 && isPunctuation(sentence_arr.at(i - 0).word)) {
           
             reordered_arr.pop_back(); 

@@ -1,1 +1,1 @@
-g++ -DALL ../../src/lang_it.h lang_it_ui.cpp ../../src/pairs/*.cpp -o translator `pkg-config --cflags --libs gtk+-3.0`
+g++ -DALL ../../src/lang_it.h lang_it_ui.cpp ../../src/pairs/*.cpp -o lang_it `pkg-config --cflags --libs gtk+-3.0`

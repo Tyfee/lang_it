@@ -21,3 +21,4 @@ testing/test
 build
 out
 install
+CMakeSettings.json

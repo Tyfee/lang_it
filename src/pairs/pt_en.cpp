@@ -317,6 +317,7 @@ constexpr Entry nouns[] = {
   {"inglês", "english"},
   {"mundo", "world"},
   {"nome", "name"},
+  {"amor", "love"},
 
   {"dois", "two"},
   {"duas", "two"},
@@ -468,6 +469,7 @@ constexpr Entry nouns[] = {
   {"carro", "car"},
   {"caminhão", "truck"},
   {"avião", "airplane"},
+  { "robô", "robot" },
   {"ônibus", "bus"},
   {"arbusto", "bush"},
   {"garota", "girl"},
