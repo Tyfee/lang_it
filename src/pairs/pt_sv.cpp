@@ -1,10 +1,10 @@
 #include "../lang_it.h"
 
 #if defined(ALL)
-#define PT_EN
+#define PT_SV
 #endif
 
-#ifdef PT_EN
+#ifdef PT_SV
 
 #include <iostream>
 #include <string>
@@ -54,7 +54,7 @@ typedef struct{
      float frequency;
 } FrequencyTable;
 
-vector<FrequencyTable> table = {
+vector<FrequencyTable> table_sv = {
     { {4, 3, 0}, 1.0 },
     { {5, 2, 7}, 0.7 },
     { {4, 4, 3}, 0.3 }
@@ -218,7 +218,7 @@ static const int como_forbidden[] = {
 
 
 
-Homonym homonyms[] = {
+Homonym homonyms_sv[] = {
     {"manga", manga_outcomes, 2, manga_tokens, manga_forbidden, 13},
     {"banco", banco_outcomes, 2, banco_tokens, banco_forbidden, 7},
     {"pena", pena_outcomes, 2, pena_tokens, pena_forbidden, 6},
@@ -232,14 +232,14 @@ Homonym homonyms[] = {
     {"como", como_outcomes, 4, como_tokens, como_forbidden, 19}
 };
 
-const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
+const size_t homonymCount_sv = sizeof(homonyms_sv) / sizeof(homonyms_sv[0]);
 
 // any set of (n)words in portuguese that can't be translated separately
 
 constexpr Entry fixed_ngrams[] = {
-  {"de_novo", "again"},
-  {"a_gente", "we"},
-  {"o_que", "what"},
+  {"de_novo", "igen"},
+  {"a_gente", "vi"},
+  {"o_que", "var"},
   {"em_cima", "on top"},
 
   {"jogo_da_velha", "tic tac toe"},
@@ -291,7 +291,7 @@ constexpr Entry fixed_ngrams[] = {
   {"de_vez_em_quando", "sometimes"},
   {"se_preocup", "worry"} // need to deal with this bitch as well ..... TRUST, YOU WILL BE DEALT WITH
 };
-vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
+static vector<string> modals = {"kan", "must", "skulle", "kunde", "may", "ska", "är"};
 
 
 
@@ -312,36 +312,37 @@ Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 constexpr Entry nouns[] = {
-  {"olá", "hello"},
+  {"olá", "h"},
   {"ola", "hello"},
-  {"inglês", "english"},
-  {"mundo", "world"},
-  {"nome", "name"},
-  {"amor", "love"},
+  {"inglês", "engelska"},
+  {"sueco", "svenska"},
+  {"mundo", "värld"},
+  {"nome", "nam"},
+  {"amor", "kärlek"},
 
-  {"dois", "two"},
-  {"duas", "two"},
-  {"três", "three"},
-  {"quatro", "four"},
-  {"cinco", "five"},
-  {"seis", "six"},
-  {"seven", "seven"},
-  {"oito", "eight"},
-  {"nove", "nine"},
-  {"dez", "ten"},
-  {"cem", "a hundred"},
-  {"mil", "a thousand"},
+  {"dois", "två"},
+  {"duas", "två"},
+  {"três", "tre"},
+  {"quatro", "fyra"},
+  {"cinco", "fem"},
+  {"seis", "sex"},
+  {"seven", "sjo"},
+  {"oito", "åtta"},
+  {"nove", "nio"},
+  {"dez", "tio"},
+  {"cem", "hundra"},
+  {"mil", "tusen"},
   {"número", "number"},
-  {"ano", "year"},
+  {"ano", "år"},
   {"mês", "month"},
   {"semana", "week"},
   {"hora", "hour"},
   {"leite", "milk", UNCOUNTABLE | NO_PLURAL},
   {"roda", "wheel"},
   
-  {"blusa", "shirt"},
-  {"camisa", "shirt"},
-  {"camiseta", "t-shirt"},
+  {"blusa", "skjorta"},
+  {"camisa", "skjorta"},
+  {"camiseta", "skjorta"},
   {"calça", "pants", NO_PLURAL},
   {"calças", "pants", NO_PLURAL},
   {"cinto", "belt"},
@@ -354,7 +355,7 @@ constexpr Entry nouns[] = {
   {"maneira", "manner"},
 
   {"dinheiro", "money"},
-  {"palavra", "word"},
+  {"palavra", "ord"},
   {"presente", "gift"},
   
   {"chaminé", "chimney"},
@@ -368,8 +369,8 @@ constexpr Entry nouns[] = {
   {"fazenda", "farm", IS_PLACE},
   
 
-  {"morte", "death"},
-  {"vida", "life"},
+  {"morte", "död"},
+  {"vida", "liv"},
   {"bebê", "baby"},
   {"buraco", "hole"},
   {"espinho", "thorn"},
@@ -381,10 +382,9 @@ constexpr Entry nouns[] = {
   {"prédio", "building"},
 
   {"chocolate", "chocolate"},
-  {"melancia", "watermelon"},
+  {"melancia", "vattenmelon"},
   {"maçã", "apple"},
   {"pêssego", "peach"},
-  {"melancia", "watermelon"},
 
   {"natal", "christmas", ON},
   {"páscoa", "easter", ON},
@@ -404,7 +404,7 @@ constexpr Entry nouns[] = {
   {"sal", "salt"},
   {"ovo", "egg"},
   {"mel", "honey"},
-  {"chá", "tea"},
+  {"chá", "te"},
   {"comida", "food"},
   {"colher", "spoon"},
   {"garfo", "fork"},
@@ -421,12 +421,12 @@ constexpr Entry nouns[] = {
   {"repolho", "cabbage"},
   {"sopa", "soup"},
 
-  {"cachorro", "dog"},
+  {"cachorro", "hund"},
   {"galinha", "chicken"},
-  {"pássaro", "bird"},
-  {"baleia", "whale"},
+  {"pássaro", "fågel"},
+  {"baleia", "val"},
   {"tubarão", "shark"},
-  {"gato", "cat"},
+  {"gato", "katt"},
   {"macaco", "monkey"},
   {"cavalo", "horse"},
   {"burro", "donkey"},
@@ -444,14 +444,14 @@ constexpr Entry nouns[] = {
   {"ponta", "tip", ON},
   {"ponto", "point", IS_PLACE},
 
-  {"agua", "water"}, // this is a verbifiable ig?
+  {"agua", "vatten"}, // this is a verbifiable ig?
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
   {"porta", "door", IS_PLACE},
   {"janela", "window"},
-  {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
-  {"todo", "all", NO_PLURAL},
-  {"cidade", "town", IS_PLACE},
+  {"jogo", "spel"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
+  {"todo", "allt", NO_PLURAL},
+  {"cidade", "stad", IS_PLACE},
   {"arma", "gun"},
   {"vida", "life"},
   {"folha", "leaf"},
@@ -461,7 +461,7 @@ constexpr Entry nouns[] = {
   {"cruz", "cross"},
   {"celular", "phone", ON},
   {"tela", "screen", ON},
-  {"mulher", "woman", IRREGULAR_PLURAL},
+  {"mulher", "kvinna", IRREGULAR_PLURAL},
   {"homem", "man", IRREGULAR_PLURAL},
   {"garoto", "boy"},
   {"menino", "boy"},
@@ -475,22 +475,22 @@ constexpr Entry nouns[] = {
   {"garota", "girl"},
   {"menina", "girl"},
   {"filho", "son"},
-  {"filha", "daughter"},
+  {"filha", "dotter"},
   {"pessoa", "person"},
   {"cogumelo", "mushroom"},
   {"nuvem", "cloud"}, // TODO. IRREGULAR PLURAL SUCH AS M => NS
-  {"flor", "flower"},
+  {"flor", "blomma"},
   {"dinheiro", "money"},
-  {"criança", "kid"},
-  {"amigo", "friend"},
+  {"criança", "kind"},
+  {"amigo", "vän"},
   {"fome", "hunger", UNCOUNTABLE},
   {"sede", "thirst", UNCOUNTABLE},
-  {"dia", "day"},
-  {"noite", "night"},
-  {"manhã", "morning"},
+  {"dia", "dag"},
+  {"noite", "nacht"},
+  {"manhã", "morgen"},
   {"tarde", "evening"},
-  {"olho", "eye"},
-  {"coracao", "heart"},
+  {"olho", "öga"},
+  {"coracao", "hjärta"},
   {"coisa", "thing"},
   {"estrela", "star"},
   {"livro", "book"},
@@ -568,20 +568,19 @@ constexpr Entry nouns[] = {
   {"madeira", "wood"},
   {"diamante", "diamond"},
 
-  {"lua", "moon"},
-  {"sol", "sun"},
+  {"lua", "mån"},
   {"vento", "wind"},
-  {"fogo", "fire"},
-  {"gelo", "ice"},
-  {"neve", "snow"},
+  {"fogo", "brand"},
+  {"gelo", "is"},
+  {"neve", "snö"},
   {"areia", "sand"},
-  {"chuva", "rain"}, // this is a verbifiable
+  {"chuva", "regn"}, // this is a verbifiable
   {"centro", "center"},
 
   {"pessoas", "people"},
   {"gente", "people"},
-  {"nao", "not"},
-  {"sim", "yes"},
+  {"nao", "inga"},
+  {"sim", "jag"},
   {"eis", "here's"},
   {"floresta", "forest"},
   {"selva", "jungle"},
@@ -600,70 +599,70 @@ constexpr Entry nouns[] = {
 };
 
 constexpr Entry art[] = {
-  {"o", "the"},
-  {"a", "the"},
-  {"um", "a"},
-  {"uma", "a"}
+  {"o", "en"},
+  {"a", "en"},
+  {"um", "en"},
+  {"uma", "en"}
 };
 
 constexpr Entry pre[] = { 
   {"do", "of the"},
   {"da", "of the"},
   {"de", "of"},
-  {"com", "with"}, // have to differentiate this from 'como' as in 'like', how tho......... ominous
-  {"sem", "without"},
-  {"ou", "or"},
-  {"em", "in"},
-  {"no", "in the"},
-  {"na", "in the"},
-  {"nos", "in the"},
-  {"nas", "in the"},
-  {"à", "to"},
+  {"com", "med"}, // have to differentiate this from 'como' as in 'like', how tho......... ominous
+  {"sem", "utan"},
+  {"ou", "eller"},
+  {"em", "i"},
+  {"no", "i"},
+  {"na", "i"},
+  {"nos", "i"},
+  {"nas", "i"},
+  {"à", "for"},
   {"às", "to the"},
   {"ao", "to the"},
    // these verbs are grounded here for misbehaving until second order  
-  {"é", "is"},
-  {"são", "are"},
-  {"sou", "am"},
-  {"foram", "were"},
-  {"fomos", "were"},
-  {"era", "was"},
+  {"é", "är"},
+  {"são", "är"},
+  {"sou", "är"},
+  {"foram", "var"},
+  {"fomos", "var"},
+  {"era", "var"},
 
-  {"vai", "will"},
-  {"vou", "will"},
-  {"vamos", "will"},
+  {"vai", "ska"},
+  {"vou", "ska"},
+  {"vamos", "ska"},
 
   {"num", "in a"}
 };
 
 // nominative/personal pronouns
 constexpr Entry pro[] = {
-  {"eu", "i"},
-  {"você", "you"},
-  {"voce", "you"},
-  {"tu", "you"},
-  {"nós",  "we"},
-  {"ele",  "he"},
-  {"ela",  "she"},
-  {"elas",  "they"},
-  {"eles", "they"},
-  {"esse", "this"},
-  {"essa", "this"},
-  {"nesse", "in this"},
-  {"nessa", "in this"},
-  {"esses", "these"},
-  {"essas", "these"},
-  {"este", "this"},
-  {"esta", "this"},
-  {"estes", "these"},
-  {"estas", "these"},
-  {"aquele", "that"},
-  {"aquela", "that"},
-  {"aqueles", "those"},
-  {"aquelas", "those"},
-  {"isso", "this"},
-  {"isto", "this"},
-  {"comigo", "with myself"}
+  {"eu", "jag"},
+  {"você", "du"},
+  {"voce", "du"},
+  {"tu", "du"},
+  {"nós",  "vi"},
+  {"ele",  "han"},
+  {"ela",  "hon"},
+  {"elas",  "de"},
+  {"eles", "de"},
+  {"esse", "den här"},
+  {"essa", "den här"},
+  {"nesse", "i den här"},
+  {"nessa", "i den här"},
+  {"esses", "dessa"},
+  {"essas", "dessa"},
+  {"este", "den här"},
+  {"esta", "den här"},
+  {"estes", "dessa"},
+  {"estas", "dessa"},
+  {"aquele", "den där"},
+  {"aquela", "den där"},
+  {"aqueles", "de där"},
+  {"aquelas", "de där"},
+  {"isso", "det"},
+  {"isto", "det"},
+  {"comigo", "med mig"}
   
 };
 constexpr Entry poss_pro[] = {
@@ -688,8 +687,8 @@ constexpr Entry obj_pro[] = {
 
 
 
-vector<string> th_per_aux = {"she", "he", "it"};
-vector<string> reg_aux = {"i", "you", "we", "they"};
+static vector<string> th_per_aux = {"hon", "han", "det"};
+static vector<string> reg_aux = {"jag", "du", "vi", "de"};
 
 // oblique pronouns
 constexpr Entry obl_pro[] = {
@@ -800,46 +799,45 @@ constexpr Entry adj[] = {
 //adverbs
 
 constexpr Entry adv[] = {
-  {"se", "if"},
-  {"talvez", "maybe"},
+  {"se", "om"},
+  {"talvez", "kanske"},
   {"que", "that"},
-  {"mas", "but"},
-  {"quando", "when"},
+  {"mas", "men"},
+  {"quando", "när"},
   {"sobre", "about"},
   {"enquanto", "while"},
-  {"quem", "who"},
+  {"quem", "vem"},
   {"também", "too"},
-  {"porque", "because"},
-  {"onde", "where"},
-  {"qual", "what is"},
+  {"porque", "för att"},
+  {"onde", "var"},
+  {"qual", "vad är"},
   {"quantos", "how many"},
-  {"e", "and"},
+  {"e", "och"},
   {"quanto", "how much"},
-  {"nunca", "never"},
-  {"sempre", "always"},
-  {"aqui", "here"},
-  {"ali", "there"},
-  {"desde", "since"},
-  {"ninguém", "nobody"},
-  {"fora", "out"},
-  {"pouco", "bit"},
-  {"até", "until"},
-  {"muito", "very"},
+  {"nunca", "aldrig"},
+  {"sempre", "alltid"},
+  {"aqui", "den här"},
+  {"ali", "där"},
+  {"desde", "sedan"},
+  {"ninguém", "ingen"},
+  {"fora", "utan"},
+  {"pouco", "liten"},
+  {"até", "till"},
+  {"muito", "mycket"},
   {"assim", "like this"},
   {"pré", "pre"},
   {"pós", "post"},
   {"já", "already"},
   {"dentro", "inside"},
-  {"fora", "outside"},
   {"hoje", "today"},
   {"ontem", "yesterday"},
   {"amanhã", "tomorrow"},
-  {"agora", "now"},
-  {"antes", "before"},
-  {"depois", "after"},
-  {"para", "to"},
-  {"pra", "to"},
-  {"por", "for"},
+  {"agora", "nu"},
+  {"antes", "före"},
+  {"depois", "efter"},
+  {"para", "för"},
+  {"pra", "för"},
+  {"por", "för"},
   {"ainda", "still"},
   {"somente", "only"},
   {"só", "only"},
@@ -862,14 +860,14 @@ struct VerbEnding {
 // verb prefixes where 0 = regular, 1 = irregular conjugation
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
-  {"am", "lov", 0, false},
-  {"gost", "lik", 0, false},
-  {"quis", "want", 1, false},
+  {"am", "älsk", 0, false},
+  {"gost", "gill", 0, false},
+  {"quis", "vill", 1, false},
   {"quer", "want", 1, false},
   {"fum", "smok", 0, true},
   {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
-  {"jog", "play", 1, true},
+  {"jog", "spel", 1, true},
   {"esper", "wait", 1, true},
   {"abr", "open", 1, false},
   {"fech", "clos", 0, true},
@@ -1045,7 +1043,7 @@ constexpr VerbEnding patt_verbs[] = {
 
 };
 
-const VerbEnding* lookupEnding(const char* word) {
+static const VerbEnding* lookupEnding(const char* word) {
     for (const auto& ve : patt_verbs) {
         size_t word_len = 0;
         while (word[word_len] != '\0') ++word_len;
@@ -1063,15 +1061,15 @@ const VerbEnding* lookupEnding(const char* word) {
     return nullptr;
 }
 
-vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
-vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z"};
-vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
-vector<string> general_past = {"iu", "ei","uei", "ou", "eu", "ti", "aram", "ri", "i", "imos", "inha", "is", "bia", "nha"};
-vector<string> present_continuous = {"ndo", "ndo", "ando"};
-vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
-vector<string> subjunctive = {"esse", "sse", "ssemos"};
-vector<string> conditional_ = {"aria", "ariamos", "eria"};
-vector<string> imperative = {"e", "a", "eja", "enha", "á"};
+static vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
+static vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z"};
+static vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
+static vector<string> general_past = {"iu", "ei","uei", "ou", "eu", "ti", "aram", "ri", "i", "imos", "inha", "is", "bia", "nha"};
+static vector<string> present_continuous = {"ndo", "ndo", "ando"};
+static vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
+static vector<string> subjunctive = {"esse", "sse", "ssemos"};
+static vector<string> conditional_ = {"aria", "ariamos", "eria"};
+static vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
 // common suffixes with traceable trnaslation pattern
 // TODO: ADD AN EXAMPLE FOR EACH CAUSE TS IS CONFUSING
@@ -1241,7 +1239,7 @@ typedef struct{
    float percentage;
 } L_D;
 
-L_D auto_correct(std::string word){
+static L_D auto_correct(std::string word){
     L_D most_similar = {word, word, 0.0};
 
     string attempt;
@@ -1258,7 +1256,7 @@ L_D auto_correct(std::string word){
 // WAIT I DONT EVEN NEED THE PT?? but what about exceptions? 
 // in pt its usually NOUN_FORM == 1st pers. sing. English is literally just the infinitive.
 // call this when the verb comes after an article !
-Word createNounFromVerb(string verb){
+static Word createNounFromVerb(string verb){
     string n = "";
        // this creates agents, pintor => root is pint, theres a verb entry for pint[ar] that resolves to paint. we add 'er'. we get painter
    // one who paints!
@@ -1312,12 +1310,12 @@ Word createNounFromVerb(string verb){
 // think of written spoken, broken, at least is literally the past tense with an "N"
 
 
-Word createAdjectiveFromVerb(string verb){
+static Word createAdjectiveFromVerb(string verb){
   string n = "";
   return Word{n, verb, 0};
 }
 
-Word adjectification(string adj) {
+static Word adjectification(string adj) {
     string a;
     int word_type_;
 
@@ -1416,7 +1414,7 @@ else{
 };
 
     //look for preffix matches 
-Word prefixLookup(string word){
+static Word prefixLookup(string word){
     string translation = word; 
     int word_type;
 
@@ -1461,18 +1459,18 @@ Word prefixLookup(string word){
                         string stem =  (compound ? compound_verb : string(v->translation));
                         if(!stem.empty() && stem.back() == 'y'){
                             stem.back() = 'i';   // try -> tri
-                            stem += "ed";        
+                            stem += "de";        
                         } else {
-                            stem += "ed";        // regular verbs
+                            stem += "de";        // regular verbs
                         }
                         return Word{word, (compound? stem + " " + verb_complement : stem), 3}; // 3 = verb past?
                     }
                     
                     switch (verb_info) {
-                        case 0: ending = (v->type == 0) ? "e" : ""; break;
-                        case 1: case 2: ending = "ed"; break;
+                        case 0: ending = (v->type == 0) ? "a" : ""; break;
+                        case 1: case 2: ending = "de"; break;
                         case 3: ending = (v->type == 0) ? "es" : "s"; break;
-                        case 4: ending = "e"; break;
+                        case 4: ending = "a"; break;
                         default: break;
                     }
                      if (verb_info == 10) {
@@ -1577,12 +1575,12 @@ Word prefixLookup(string word){
 
                     switch (verb_info)
                     {
-                        case 0:  case 10: ending = (v_irr->type == 0) ? "e" : ""; break;
-                        case 1: case 2: ending = "ed"; break;
+                        case 0:  case 10: ending = (v_irr->type == 0) ? "a" : ""; break;
+                        case 1: case 2: ending = "de"; break;
                         case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
                         case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 5: ending = "ing"; break;
-                        case 6: case 7: ending = (v_irr->type== 0) ? "e" : ""; break;
+                        case 6: case 7: ending = (v_irr->type== 0) ? "a" : ""; break;
                         default: break;
                     }
                     if (verb_info == 10) {
@@ -1811,7 +1809,7 @@ Word prefixLookup(string word){
 
     return {word, "", -1};
 }
-Word suffixLookup(const std::string& word) {
+static Word suffixLookup(const std::string& word) {
     std::string translation;
     int word_type = 0;
 
@@ -1861,8 +1859,7 @@ Word suffixLookup(const std::string& word) {
 }
 
 
-
-Word nounLookup(string word){
+static Word nounLookup(string word){
   // TODO: Creaate hierarchy for word category
   string translation;
   // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
@@ -2759,7 +2756,7 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
         portuguese_context[contextIndex] = final_arr[i].word;  
         word_types[contextIndex] = final_arr[i].type;  
         
-        string resolved_word = semantics(portuguese_context, word_types,contextIndex, homonyms, homonymCount);
+        string resolved_word = semantics(portuguese_context, word_types,contextIndex, homonyms_sv, homonymCount_sv);
 
         final_arr[i].translation = resolved_word;
     }
@@ -2871,7 +2868,7 @@ static std::string trigramLookup(const std::vector<std::string>& words) {
     return bigramLookup(mended, ignore_flags);
 }
 
-std::string traduzir_en(const char* sentence) {
+std::string traduzir_sv(const char* sentence) {
     char buffer[250];
     strncpy(buffer, sentence, sizeof(buffer));
     buffer[sizeof(buffer) - 1] = '\0';

@@ -24,7 +24,7 @@ static void on_translate(GtkWidget *widget, gpointer data) {
         if (strcmp(to_lang, "English") == 0) to_code = "en";
         else if (strcmp(to_lang, "Japanese") == 0) to_code = "ja";
         else if (strcmp(to_lang, "Spanish") == 0) to_code = "es";
-
+        else if (strcmp(to_lang, "Swedish") == 0) to_code = "sv";
         if (from_code && to_code) {
             std::string output = translate(input_text, from_code, to_code);
             gtk_label_set_text(label, output.c_str());
@@ -51,6 +51,7 @@ static void on_choose(GtkComboBoxText *combo, gpointer data) {
     if (strcmp(from_lang, "Portuguese") == 0) {
         gtk_combo_box_text_append_text(to_combo, "English");
         gtk_combo_box_text_append_text(to_combo, "Spanish");
+        gtk_combo_box_text_append_text(to_combo, "Swedish");
     } else if (strcmp(from_lang, "English") == 0) {
         gtk_combo_box_text_append_text(to_combo, "Japanese");
         gtk_combo_box_text_append_text(to_combo, "Spanish");

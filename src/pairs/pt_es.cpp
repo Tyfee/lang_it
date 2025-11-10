@@ -383,19 +383,18 @@ static Word morphemeLookup(string word){
 
   return Word{word, translation_, word_type_};
 };
-
 Word prefixLookup(const std::string &word) {
+    using namespace std;
     string translation;
-    // endings
-    static const vector<string> infinitive = {"ar", "er", "ir", "dir", "ir", "ber", "zer"};
+
+    static const vector<string> infinitive = {"ar", "er", "ir", "ber", "zer"};
     static const vector<string> past_tense_first_sin = {"ei", "ti", "ri", "is", "ia"};
     static const vector<string> past_tense_second_sin = {"iu", "ou", "eu"};
 
-    // group vectors with a type index
-    static const std::vector<std::pair<const std::vector<std::string>*, int>> groups = {
-        {&infinitive, 0},             // infinitive
-        {&past_tense_first_sin, 1},   // past 1st singular
-        {&past_tense_second_sin, 2}   // past 2nd singular
+    static const vector<pair<const vector<string>*, int>> groups = {
+        {&infinitive, 0},
+        {&past_tense_first_sin, 1},
+        {&past_tense_second_sin, 2}
     };
 
     for (auto &[vec, type] : groups) {
@@ -403,21 +402,32 @@ Word prefixLookup(const std::string &word) {
             if (word.size() > ending.size() &&
                 word.compare(word.size() - ending.size(), ending.size(), ending) == 0) {
 
-                std::string base = word.substr(0, word.size() - ending.size());
-                if(type == 0) {
-                    translation = word;
+                string base = word.substr(0, word.size() - ending.size());
+
+                // infinitive: just confirm it's a verb form
+                if (type == 0) {
+                    translation = base  + ending; 
                     return Word{word, translation, 3};
                 }
-                 if(type == 1){ 
-                    translation = word.substr(0, word.length() - 2) + "é";
+
+                // past 1st singular
+                if (type == 1) {
+                    translation = base + "é";
                     return Word{word, translation, 3};
                 }
-            return Word{word, translation, 3};
+
+                // past 2nd singular
+                if (type == 2) {
+                    translation = base + "ó";
+                    return Word{word, translation, 3};
+                }
             }
         }
     }
+
     return Word{word, "", -1};
 }
+
 
 
 static Word suffixLookup(const std::string& word) {

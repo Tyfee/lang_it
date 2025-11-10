@@ -549,10 +549,9 @@ struct VerbEnding {
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
   {"lov", "am", 0, false},
-  {"gost", "lik", 0, false},
-  {"quis", "want", 1, false},
-  {"quer", "want", 1, false},
-  {"fum", "smok", 0, true},
+  {"lik", "gost", 0, false},
+  {"want", "quer", 1, false},
+  {"smok", "fum", 0, true},
   {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
   {"jog", "play", 1, true},
@@ -1293,6 +1292,8 @@ static Word adjectiveForms(const std::string& word) {
 
 
 
+
+
 static Word suffixLookup(const std::string& word) {
     std::string translation;
     int word_type = 0;
@@ -1595,6 +1596,14 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
             reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
      break;
     } 
+
+ else if (i > 1 && sentence_arr.at(i - 1).word == "would"  && (sentence_arr.at(i).type == 3 ||  sentence_arr.at(i).type == 36  || sentence_arr.at(i).type == 33)) {
+          cout<< "yeah";
+            reordered_arr.pop_back(); 
+            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
+     break;
+    } 
+
     //what are the pronouns called? the ones that are like, themself, itslef, myself.
     // lmk if anybody knows that, like..................
    else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 36) && sentence_arr.at(i - 1).translation == "-"  && sentence_arr.at(i).word == "se") {

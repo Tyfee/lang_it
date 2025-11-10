@@ -23,6 +23,10 @@ std::string translate_ja(const char* sentence, int script);
 std::string translate_pt(const char* sentence);
 #endif
 
+#if defined(PT_SV) || defined(ALL)
+std::string traduzir_sv(const char* sentence);
+#endif
+
 
 
 
@@ -389,8 +393,13 @@ inline std::string translate(const char* sentence, const char* from, const char*
         }
     #endif
     #if defined(PT_ES) || defined(ALL)
-        if ((f == "pt" || f == "ES") && (t == "es" || t == "ES")) {
+        if ((f == "pt" || f == "PT") && (t == "es" || t == "ES")) {
             return traduzir_es(sentence);
+        }
+    #endif
+       #if defined(PT_SV) || defined(ALL)
+        if ((f == "pt" || f == "PT") && (t == "sv" || t == "SV")) {
+            return traduzir_sv(sentence);
         }
     #endif
     #if defined(EN_JA) || defined(ALL)
@@ -536,6 +545,18 @@ inline bool isPortuguese(const std::string& word){
     }
     return isIt;
 }
+
+inline bool isDiminutive_PT(const std::string& s, const char* suffix) {
+    size_t n = 0;
+    while (suffix[n] != '\0') n++; 
+    if (s.size() < n) return false;
+    for (size_t i = 0; i < n; i++) {
+        if (s[s.size() - n + i] != suffix[i]) return false;
+    }
+    return true;
+}
+
+
 #endif
 
 
