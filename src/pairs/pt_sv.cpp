@@ -306,8 +306,9 @@ Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 constexpr Entry nouns[] = {
-  {"olá", "h"},
-  {"ola", "hello"},
+  {"olá", "hej"},
+  {"ola", "hej"},
+  {"oi", "hej"},
   {"inglês", "engelska"},
   {"sueco", "svenska"},
   {"mundo", "värld"},
@@ -516,7 +517,7 @@ constexpr Entry nouns[] = {
   {"pé", "foot", IRREGULAR_PLURAL},
   {"braço", "arm"},
   {"perna", "leg"},
-  {"cabeça", "head"},
+  {"cabeça", "huvud"},
   {"testa", "forehead"},
   {"cabelo", "hair"},
   {"boca", "mouth"},
@@ -526,9 +527,9 @@ constexpr Entry nouns[] = {
   {"lingua", "tongue", ON},
   {"garganta", "throat"},
   {"cérebro", "brain"},
-  {"coração", "heart"},
-  {"pele", "skin"},
-  {"osso", "bone"},
+  {"coração", "hjärta"},
+  {"pele", "liv", FEMININE_NEUTER},
+  {"osso", "ben"},
 
 
   {"principe", "prince"}, // TODO: irregular FEMININE_NEUTER noun shifts such as princesa, duquesa, garçonete, etc

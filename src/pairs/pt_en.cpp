@@ -310,6 +310,7 @@ Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
 constexpr Entry nouns[] = {
   {"olá", "hello"},
   {"ola", "hello"},
+  {"oi", "hi"},
   {"inglês", "english"},
   {"mundo", "world"},
   {"nome", "name"},
