@@ -39,12 +39,6 @@ typedef struct
 } Suffix;
 
 
-typedef struct {
-   string word;
-   string translation;
-   int type;
-} Word;
-
 // this will happen at some point
 // a final check for anomaly fixing
 // it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
@@ -537,7 +531,7 @@ constexpr Entry nouns[] = {
   {"osso", "bone"},
 
 
-  {"principe", "prince"}, // TODO: irregular feminine noun shifts such as princesa, duquesa, garçonete, etc
+  {"principe", "prince"}, // TODO: irregular FEMININE_NEUTER noun shifts such as princesa, duquesa, garçonete, etc
   {"tradutor", "translator"},
   {"metade", "half"},
   {"meio", "middle"},
@@ -1267,7 +1261,7 @@ static Word createNounFromVerb(string verb){
         string ending3 = verb.substr(verb.length() - 3);
         string ending5 = verb.substr(verb.length() - 5);
         
-        if (ending5 == "adora" || ending5 == "idora") { // feminine odd root, dont want to think about how to padronize this shit so IDCCCCCCCCCCC 
+        if (ending5 == "adora" || ending5 == "idora") { // FEMININE_NEUTER odd root, dont want to think about how to padronize this shit so IDCCCCCCCCCCC 
             stem = verb.substr(0, verb.length() - 5);
             ending = "er";
         } else if (ending4 == "ador" || ending4 == "idor") { // same but MASC4MASC
@@ -1859,7 +1853,7 @@ static Word suffixLookup(const std::string& word) {
 }
 
 
-static Word nounLookup(string word){
+static Word nounLookup(const std::string& word) {
   // TODO: Creaate hierarchy for word category
   string translation;
   // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
@@ -2102,14 +2096,22 @@ bool diminutive = false;
 // when words need to switch order
 // this is actually various manipulations (Take Off The Blindfold REFERENCE????)
 //not only word order, but i'm not changing the name at this point
-static vector<Word> reorder_helpers(vector<Word> sentence_arr) {
-    
+static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
+    std::vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
     
-for (size_t j = 0; j < sentence_arr.size(); ++j) {
-}
+    int word_count = sentence_arr.size();
+
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
+    bool one_ = (i > 0);
+    bool two_ = (i >= 1);
+    bool three_ = (i >= 2);
+
+    const Word& current = sentence_arr.at(i);
+    const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;
+    const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
+    
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
@@ -2117,28 +2119,28 @@ for (size_t j = 0; j < sentence_arr.size(); ++j) {
         // point being a portuguese verb can infer more info on the person: eu comO, você comE, eles comEM, nos comEMOS than an english one.
 
         // a single verb can define person: vejo -> I see
-    if (sentence_arr.size() == 1 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36 )) {
+    if (word_count == 1 && (current.type == VERB || current.type == INTRANSITIVE_VERB )) {
     string pronoun;
 
-    if(sentence_arr[0].word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){
-        pronoun = "I ";   
-    } else if(sentence_arr[0].word.back() == 's'){
-        pronoun = "we ";
-    } else if(sentence_arr[0].word.back() == 'm'){
-        pronoun = "they ";
-    } else if(sentence_arr[0].word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
+    if(current.word.back() == 'o' && current.word.substr(current.word.length() - 3) != "ndo"){
+        pronoun = "Jag ";   
+    } else if(current.word.back() == 's'){
+        pronoun = "vi ";
+    } else if(current.word.back() == 'm'){
+        pronoun = "de ";
+    } else if(current.word.back() == 'e' || current.word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
         pronoun = "";
     }else {
-    const std::string &word = sentence_arr[0].translation;
+    const std::string &word = current.translation;
     size_t space_pos = word.find(' ');
 
     if (space_pos != std::string::npos) {
-        if (space_pos >= 2 && word.substr(space_pos - 2, 2) != "ed") {
-            pronoun = "to ";
+        if (space_pos >= 2 && word.substr(space_pos - 2, 2) != "de") {
+            pronoun = "att ";
         }
     } else {
-        if (word.size() >= 2 && word.substr(word.size() - 2, 2) != "ed") {
-            pronoun = "to ";
+        if (word.size() >= 2 && word.substr(word.size() - 2, 2) != "de") {
+            pronoun = "att ";
         }
     }
 }
@@ -2766,107 +2768,6 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
     return final_arr;
 }
 
-//ngram groups
-static std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
-
-  vector<Word> sentence_arr;
-  vector<Word> word_arr;
-
-  int match_type;
-  string sentence;
-  for(size_t i = 0; i < array_of_words.size(); ++i){
-    
-    Word match = nounLookup(array_of_words[i]);
-    switch (ignore_flags[i])
-    {
-    case 0:{
-    match_type = match.type;
-    if(match.type == -1) match_type = 0;
-    
-         Word match_ = {array_of_words[i], match.translation, match_type};
-        sentence_arr.push_back({match.word, match.translation ,match_type});
-        word_arr.push_back(match_);
-        break;}
-    case 1:{
-        Word match_ = {array_of_words[i], array_of_words[i], 0};
-       sentence_arr.push_back({array_of_words[i], array_of_words[i],0});
-         word_arr.push_back(match_);
-       break;}
-    default:
-      break;
-    }
-  }
-  if(word_arr.size() > 0) sentence_arr = reorder_helpers(word_arr);
-
-  
- for (size_t i = 0; i < sentence_arr.size(); ++i) {
-    const std::string& token = sentence_arr.at(i).translation;
-
-    char firstChar = token.empty() ? '\0' : token[0];
-    bool isPunctuation = (firstChar == '?' || firstChar == '!' || 
-                          firstChar == '.' || firstChar == ','
-                          || firstChar == '-' || firstChar == '/' || firstChar == ':');
-
-    if (!sentence.empty() && !isPunctuation) {
-        sentence += " ";
-    }
-
-    sentence += token;
-}
-  return sentence;
-}
-
-static std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>& ignore_flags) {
-    std::vector<std::string> mended_array_of_words;
-    std::vector<int> new_ignore_flags;
-
-    size_t i = 0;
-    while (i < words.size()) {
-        if (i + 1 < words.size() && ignore_flags[i] == 0 && ignore_flags[i + 1] == 0) {
-            std::string bigram = words[i] + "_" + words[i + 1];
-            const char* bigram_translation = lookup(fixed_ngrams, bigram.c_str());
-            
-            if (bigram_translation) {
-                mended_array_of_words.push_back(bigram_translation);
-                new_ignore_flags.push_back(1);  
-                i += 2;  
-                continue;
-            }
-        }
-        
-        mended_array_of_words.push_back(words[i]);
-        new_ignore_flags.push_back(ignore_flags[i]);
-        i++;
-    }
-
-    return unigramLookup(mended_array_of_words, new_ignore_flags);
-}
-
-static std::string trigramLookup(const std::vector<std::string>& words) {
-    std::vector<std::string> mended;
-    std::vector<int> ignore_flags(words.size(), 0);
-
-    size_t i = 0;
-    while (i < words.size()) {
-        if (i + 2 < words.size()) {
-            std::string trigram = words[i] + "_" + words[i + 1] + "_" + words[i + 2];
-            const char* trigram_translation = lookup(fixed_ngrams, trigram.c_str());
-            
-            if (trigram_translation) {
-                mended.push_back(trigram_translation);
-                ignore_flags.push_back(1);  
-                i += 3;  
-                continue;
-            }
-        }
-        mended.push_back(words[i]);
-        ignore_flags.push_back(0);
-        i++;
-    }
-
-    // Then process bigrams on the result
-    return bigramLookup(mended, ignore_flags);
-}
 
 std::string traduzir_sv(const char* sentence) {
     char buffer[250];
@@ -2874,7 +2775,7 @@ std::string traduzir_sv(const char* sentence) {
     buffer[sizeof(buffer) - 1] = '\0';
     to_lower(buffer);
     vector<string> arr = tokenize(string(buffer));  
-    std::string translated = trigramLookup(arr);
+    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
     
     return script_adequation(translated); 
 }

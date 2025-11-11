@@ -24,13 +24,6 @@ typedef struct
   int plural;
 } Suffix;
 
-
-typedef struct {
-   string word;
-   string translation;
-   int type;
-} Word;
-
 // this will happen at some point
 // a final check for anomaly fixing
 // it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
@@ -475,8 +468,7 @@ static Word suffixLookup(const std::string& word) {
 }
 
 
-
-static Word nounLookup(string word){
+static Word nounLookup(const std::string& word) {
   // TODO: Creaate hierarchy for word category
   string translation;
   // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
@@ -641,8 +633,8 @@ static Word nounLookup(string word){
 // when words need to switch order
 // this is actually various manipulations (Take Off The Blindfold REFERENCE????)
 //not only word order, but i'm not changing the name at this point
-static vector<Word> reorder_helpers(vector<Word> sentence_arr) {
-    
+static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
+    vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
 for (size_t j = 0; j < sentence_arr.size(); ++j) {
 }
@@ -773,107 +765,6 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
 }
 
 
-//ngram groups
-static std::string unigramLookup(vector<string> array_of_words, vector<int> ignore_flags){
-
-  vector<Word> sentence_arr;
-  vector<Word> word_arr;
-
-  int match_type;
-  string sentence;
-  for(size_t i = 0; i < array_of_words.size(); ++i){
-    
-    Word match = nounLookup(array_of_words[i]);
-    switch (ignore_flags[i])
-    {
-    case 0:{
-    match_type = match.type;
-    if(match.type == -1) match_type = 0;
-    
-         Word match_ = {array_of_words[i], match.translation, match_type};
-        sentence_arr.push_back({match.word, match.translation ,match_type});
-        word_arr.push_back(match_);
-        break;}
-    case 1:{
-        Word match_ = {array_of_words[i], array_of_words[i], 0};
-       sentence_arr.push_back({array_of_words[i], array_of_words[i],0});
-         word_arr.push_back(match_);
-       break;}
-    default:
-      break;
-    }
-  }
-  sentence_arr = reorder_helpers(word_arr);
-
-  
- for (size_t i = 0; i < sentence_arr.size(); ++i) {
-    const std::string& token = sentence_arr[i].translation;
-
-    char firstChar = token.empty() ? '\0' : token[0];
-    bool isPunctuation = (firstChar == '?' || firstChar == '!' || 
-                          firstChar == '.' || firstChar == ','
-                          || firstChar == '-' || firstChar == '/' || firstChar == ':');
-
-    if (!sentence.empty() && !isPunctuation) {
-        sentence += " ";
-    }
-
-    sentence += token;
-}
-  return sentence;
-}
-
-static std::string bigramLookup(const std::vector<std::string>& words, std::vector<int>& ignore_flags) {
-    std::vector<std::string> mended_array_of_words;
-    std::vector<int> new_ignore_flags;
-
-    size_t i = 0;
-    while (i < words.size()) {
-        if (i + 1 < words.size() && ignore_flags[i] == 0 && ignore_flags[i + 1] == 0) {
-            std::string bigram = words[i] + "_" + words[i + 1];
-            const char* bigram_translation = lookup(fixed_ngrams, bigram.c_str());
-            
-            if (bigram_translation) {
-                mended_array_of_words.push_back(bigram_translation);
-                new_ignore_flags.push_back(1);  
-                i += 2;  
-                continue;
-            }
-        }
-        
-        mended_array_of_words.push_back(words[i]);
-        new_ignore_flags.push_back(ignore_flags[i]);
-        i++;
-    }
-
-    return unigramLookup(mended_array_of_words, new_ignore_flags);
-}
-
-static std::string trigramLookup(const std::vector<std::string>& words) {
-    std::vector<std::string> mended;
-    std::vector<int> ignore_flags(words.size(), 0);
-
-    size_t i = 0;
-    while (i < words.size()) {
-        if (i + 2 < words.size()) {
-            std::string trigram = words[i] + "_" + words[i + 1] + "_" + words[i + 2];
-            const char* trigram_translation = lookup(fixed_ngrams, trigram.c_str());
-            
-            if (trigram_translation) {
-                mended.push_back(trigram_translation);
-                ignore_flags.push_back(1);  
-                i += 3;  
-                continue;
-            }
-        }
-        mended.push_back(words[i]);
-        ignore_flags.push_back(0);
-        i++;
-    }
-
-    // Then process bigrams on the result
-    return bigramLookup(mended, ignore_flags);
-}
 
 std::string traduzir_es(const char* sentence) {
     char buffer[250];
@@ -881,7 +772,8 @@ std::string traduzir_es(const char* sentence) {
     buffer[sizeof(buffer) - 1] = '\0';
     to_lower(buffer);
     vector<string> arr = tokenize(string(buffer));  
-    std::string translated = trigramLookup(arr);
+    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
+    
     
     return translated; 
 }

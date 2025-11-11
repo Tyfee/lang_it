@@ -8,6 +8,7 @@ target_sources(lang_it_lib
    PRIVATE src/lang_it.h
    src/pairs/pt_en.cpp
    src/pairs/pt_es.cpp
+   src/pairs/pt_sv.cpp
    src/pairs/en_pt.cpp
    src/pairs/en_ja.cpp
 )

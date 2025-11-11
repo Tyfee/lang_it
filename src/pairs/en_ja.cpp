@@ -12,7 +12,7 @@
 #include <vector>
 
 using namespace std;
-typedef const int Word;
+typedef const int WordJ;
 
 struct EntryJ {
     const char* w;
@@ -100,42 +100,42 @@ string desu = HIRAGANA[DE] + HIRAGANA[SU];
 string masita = HIRAGANA[MA] + HIRAGANA[SI] + HIRAGANA[TA];
 
 
-Word _is[] = {HA};
-Word _ai[] = {A, I};
-Word _krs[] = {KO, RO, SU};
+WordJ _is[] = {HA};
+WordJ _ai[] = {A, I};
+WordJ _krs[] = {KO, RO, SU};
 
-Word _thank[] = {A, RI, GA, TO, U};
-Word _taberu[] = {TA, BE, RU};
-Word _tukuru[] = {TU, KU, RU};
-Word _egk[] = {E, GA, KU};
-Word _tmg[] = {TA, MA, GO};
+WordJ _thank[] = {A, RI, GA, TO, U};
+WordJ _taberu[] = {TA, BE, RU};
+WordJ _tukuru[] = {TU, KU, RU};
+WordJ _egk[] = {E, GA, KU};
+WordJ _tmg[] = {TA, MA, GO};
 
-Word _important[] = {DA, I, JI};
-Word _yes[] = {HA, I};
-Word _ie[] = {I, E};
+WordJ _important[] = {DA, I, JI};
+WordJ _yes[] = {HA, I};
+WordJ _ie[] = {I, E};
 
-Word _kr[] = {KO, RE};
-Word _ar[] = {A, RE};
+WordJ _kr[] = {KO, RE};
+WordJ _ar[] = {A, RE};
 
-Word _kh[] = {KO, NBS, HI, NBS};
+WordJ _kh[] = {KO, NBS, HI, NBS};
 
 
-Word _i[] = {WA, TA, SI};
-Word _you[] = {A, NA, TA};
-Word _we[] = {WA, TA, SI, TA, CHI};
-Word _he[] = {KA, RE};
-Word _she[] = {KA, NO, JO};
-Word _they[] = {A, NA, TA, TA, CHI};
-Word _antn[] = {A, NA, TA, NO};
-Word _wtsn[] = {WA, TA, SI, NO};
-Word _to[] = {TO};
-Word _ski[] = {SE, KA, I};
-Word _inu[] = {I, NU};
-Word _tk[] = {TO, KI};
-Word _knncw[] = {KO, N , NI, CHI, WA};
-Word _hnyk[] = {HO, N , YA, KU};
-Word _nn[] = {NA, NI};
-Word _blank[] = {NONE};
+WordJ _i[] = {WA, TA, SI};
+WordJ _you[] = {A, NA, TA};
+WordJ _we[] = {WA, TA, SI, TA, CHI};
+WordJ _he[] = {KA, RE};
+WordJ _she[] = {KA, NO, JO};
+WordJ _they[] = {A, NA, TA, TA, CHI};
+WordJ _antn[] = {A, NA, TA, NO};
+WordJ _wtsn[] = {WA, TA, SI, NO};
+WordJ _to[] = {TO};
+WordJ _ski[] = {SE, KA, I};
+WordJ _inu[] = {I, NU};
+WordJ _tk[] = {TO, KI};
+WordJ _knncw[] = {KO, N , NI, CHI, WA};
+WordJ _hnyk[] = {HO, N , YA, KU};
+WordJ _nn[] = {NA, NI};
+WordJ _blank[] = {NONE};
 
 
 
@@ -218,11 +218,11 @@ constexpr Verb verbs[] = {
     {"draw", _egk, 3, 1, 0}
 };
 
-Word _ao[] = {A, O};
-Word _ooki[] = {O, O, KI};
-Word _chiisai[] = {CHI, I, SA};
-Word _szk[] = {SI, ZU, KA};
-Word _mdr[] = {MI, DO, RO};
+WordJ _ao[] = {A, O};
+WordJ _ooki[] = {O, O, KI};
+WordJ _chiisai[] = {CHI, I, SA};
+WordJ _szk[] = {SI, ZU, KA};
+WordJ _mdr[] = {MI, DO, RO};
 
 
 constexpr Adjective adj[] = { 

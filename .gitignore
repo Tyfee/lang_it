@@ -22,3 +22,5 @@ build
 out
 install
 CMakeSettings.json
+test.cpp
+test

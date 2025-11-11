@@ -35,25 +35,18 @@ std::string traduzir_sv(const char* sentence);
 |           all pairs use                  |  
 ------------------------------------------*/
 
+enum WordType {
+    NOUN = 0,
+    ADJECTIVE = 1,
+    VERB = 3,
+    INTRANSITIVE_VERB = 36,
+    PRONOUN = 4,
+    OBLIQUE_PRONOUN = 11,
+    PREPOSITION = 8,
+    ARTICLE = 9,
+    ADVERB = 13
+};
 
-
-inline bool isVowel(char x)
-{
-    if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
-        || x == 'u' || x == 'y' || x == 'A' || x == 'E' || x == 'I'
-        || x == 'O' || x == 'U' || x == 'Y')
-    return true;
-    else
-     return false;
-}
-
-inline void to_lower(char *s) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] >= 'A' && s[i] <= 'Z') {
-            s[i] = s[i] - 'A' + 'a';
-        }
-    }
-}
 
 enum Flags: uint16_t {
     ANIMATE = 0,
@@ -63,8 +56,9 @@ enum Flags: uint16_t {
     IS_PLACE = 1 << 3,
     ON = 1 << 4, // should use ON instead of IN
     UNCOUNTABLE = 1 << 5,
-    FEMININE = 1 << 6, // need that
+    FEMININE_NEUTER = 1 << 6, // need that // will call that the FEMININE_NEUTER so that swedish works too, don't know what i'd do for three-gendered languages
     NOT_GENDERED = 1 << 7 // need that as well
+                            // MAYBE if something is FEMININE_NEUTER AND NOT_GENDERED SIMULTANEOUSLY i'll consider it the third neutral gender
 };
 
 typedef struct {
@@ -72,6 +66,19 @@ typedef struct {
     const char* t;
     uint8_t flags;
 } Entry;
+
+
+typedef struct {
+   std::string word;
+   std::string translation;
+   int type;
+} Word;
+
+
+
+
+
+// making a decent API for the pairs to access and make implementing easier, but i know i'll keep changing it and never be satisfied
 
 template <size_t N>
 inline const char* lookup(const Entry (&dict)[N], const char* word) {
@@ -94,6 +101,170 @@ inline uint8_t lookupFlags(const Entry (&dict)[N], const char* word) {
     }
     return 0;
 }
+
+
+
+
+//invert a pair (casa azul -> azul casa)
+inline void invert(std::vector<Word>& output, const Word& first, const Word& second) {
+    if (!output.empty()) output.pop_back(); 
+    output.push_back(first);
+    output.push_back(second);
+}
+
+// inject a word in the middle of two words (orange juice -> suco de laranja)
+inline void sandwich(std::vector<Word>& output, const Word& first, const Word& middle, const Word& second) {
+    if (!output.empty()) output.pop_back(); 
+    output.push_back(first);
+    output.push_back(middle);
+    output.push_back(second);
+}
+
+//remove middle word
+inline void removeMiddle(std::vector<Word>& output, const Word& first, const Word& middle, const Word& last) {
+    if (!output.empty()) output.pop_back();  
+    output.push_back(first);
+    output.push_back(last);
+}
+
+// all the lookups
+
+using Reorder = std::vector<Word>(*)(const std::vector<Word>&);
+using NounLookup = Word(*)(const std::string&);
+
+//ngram groups
+inline std::string unigramLookup(const std::vector<std::string>& array_of_words,
+                                 const std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr){
+
+  std::vector<Word> sentence_arr;
+  std::vector<Word> word_arr;
+
+  int match_type;
+  std::string sentence;
+  for(size_t i = 0; i < array_of_words.size(); ++i){
+    
+    Word match = nounLookup(array_of_words[i]);
+    switch (ignore_flags[i])
+    {
+    case 0:{
+    match_type = match.type;
+    if(match.type == -1) match_type = 0;
+    
+         Word match_ = {array_of_words[i], match.translation, match_type};
+        sentence_arr.push_back({match.word, match.translation ,match_type});
+        word_arr.push_back(match_);
+        break;}
+    case 1:{
+        Word match_ = {array_of_words[i], array_of_words[i], 0};
+       sentence_arr.push_back({array_of_words[i], array_of_words[i],0});
+         word_arr.push_back(match_);
+       break;}
+    default:
+      break;
+    }
+  }
+  if(word_arr.size() > 0) sentence_arr = reorder_helpers(word_arr);
+
+  
+ for (size_t i = 0; i < sentence_arr.size(); ++i) {
+    const std::string& token = sentence_arr.at(i).translation;
+
+    char firstChar = token.empty() ? '\0' : token[0];
+    bool isPunctuation = (firstChar == '?' || firstChar == '!' || 
+                          firstChar == '.' || firstChar == ','
+                          || firstChar == '-' || firstChar == '/' || firstChar == ':');
+
+    if (!sentence.empty() && !isPunctuation) {
+        sentence += " ";
+    }
+
+    sentence += token;
+}
+  return sentence;
+}
+
+template <size_t N>
+inline std::string bigramLookup(const Entry (&fixed_ngrams)[N],
+                                const std::vector<std::string>& words,
+                                std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr) {
+    std::vector<std::string> mended_array_of_words;
+    std::vector<int> new_ignore_flags;
+
+    size_t i = 0;
+    while (i < words.size()) {
+        if (i + 1 < words.size() && ignore_flags[i] == 0 && ignore_flags[i + 1] == 0) {
+            std::string bigram = words[i] + "_" + words[i + 1];
+            const char* bigram_translation = lookup(fixed_ngrams, bigram.c_str());
+            
+            if (bigram_translation) {
+                mended_array_of_words.push_back(bigram_translation);
+                new_ignore_flags.push_back(1);  
+                i += 2;  
+                continue;
+            }
+        }
+        
+        mended_array_of_words.push_back(words[i]);
+        new_ignore_flags.push_back(ignore_flags[i]);
+        i++;
+    }
+
+    return unigramLookup(mended_array_of_words, new_ignore_flags, reorder_helpers, nounLookup);
+}
+
+
+template <size_t N>
+inline std::string trigramLookup(const Entry (&fixed_ngrams)[N],
+                                 const std::vector<std::string>& words, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr) { 
+                                    std::vector<std::string> mended;
+                                    std::vector<int> ignore_flags(words.size(), 0);
+
+    size_t i = 0;
+    while (i < words.size()) {
+        if (i + 2 < words.size()) {
+            std::string trigram = words[i] + "_" + words[i + 1] + "_" + words[i + 2];
+            
+            const char* trigram_translation = lookup(fixed_ngrams, trigram.c_str());
+            
+            if (trigram_translation) {
+                mended.push_back(trigram_translation);
+                ignore_flags.push_back(1);  
+                i += 3;  
+                continue;
+            }
+        }
+        mended.push_back(words[i]);
+        ignore_flags.push_back(0);
+        i++;
+    }
+
+    // Then process bigrams on the result
+   return bigramLookup(fixed_ngrams, mended, ignore_flags, reorder_helpers, nounLookup);
+}
+
+
+
+// Y is considered a vowel for english reasons obviously but one day i'll see what to do, but only
+// if another language i implement needs a vowel as a consonant
+inline bool isVowel(char x)
+{
+    if (x == 'a' || x == 'e' || x == 'i' || x == 'o'
+        || x == 'u' || x == 'y' || x == 'A' || x == 'E' || x == 'I'
+        || x == 'O' || x == 'U' || x == 'Y')
+    return true;
+    else
+     return false;
+}
+
+
+inline void to_lower(char *s) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] >= 'A' && s[i] <= 'Z') {
+            s[i] = s[i] - 'A' + 'a';
+        }
+    }
+}
+
 
 inline std::vector<std::string> tokenize(const std::string &text) {
       std::vector<std::string> tokens;
