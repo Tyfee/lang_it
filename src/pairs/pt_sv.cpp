@@ -30,14 +30,6 @@ using namespace std;
 // feed -> fed , meet -> met: simple vowel reduction
 
 
-typedef struct
-{
-  const char* w;
-  const char* t;
-  int type;
-  int plural;
-} Suffix;
-
 
 // this will happen at some point
 // a final check for anomaly fixing
@@ -288,20 +280,6 @@ constexpr Entry fixed_ngrams[] = {
 static vector<string> modals = {"kan", "must", "skulle", "kunde", "may", "ska", "är"};
 
 
-
-template <size_t N>
-Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
-    for (size_t i = 0; i < N; ++i) {
-        const char* p = dict[i].w;
-        const char* q = word;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-
-        if (*p == *q) {
-            return dict[i];
-        }
-    }
-    return Suffix{nullptr, nullptr, -1, -1};
-}
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -841,12 +819,7 @@ constexpr Entry adv[] = {
   {"tão", "so"}
 };
 
-struct Verb {
-    const char* root;       
-    const char* translation; 
-    int type;      
-    bool intransitive;
-};
+
 struct VerbEnding {
     const char* ending;
     int code;
@@ -1057,8 +1030,7 @@ static const VerbEnding* lookupEnding(const char* word) {
 }
 
 static vector<string> infinitive = {"ar", "er", "ir", "dir", "r", "ir", "ber","zer"};
-static vector<string> present_non_s = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z"};
-static vector<string> present_s = {"a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
+static vector<string> present = {"o", "to", "go", "ro", "am", "em", "amos", "emos", "mo", "lo", "ço", "nho", "so", "ejo", "enho", "ero", "z", "a","as", "ta", "tas", "re", "ga", "ui", "uis", "ê", "ês", "em", "be", "ço"};
 static vector<string> general_past = {"iu", "ei","uei", "ou", "eu", "ti", "aram", "ri", "i", "imos", "inha", "is", "bia", "nha"};
 static vector<string> present_continuous = {"ndo", "ndo", "ando"};
 static vector<string> completed_past = {"ava", "ávamos", "íamos", "nhamos","ia"};
@@ -1464,7 +1436,8 @@ static Word prefixLookup(string word){
                     switch (verb_info) {
                         case 0: ending = (v->type == 0) ? "a" : ""; break;
                         case 1: case 2: ending = "de"; break;
-                        case 3: ending = (v->type == 0) ? "es" : "s"; break;
+                     
+                        case 3: ending = (v_irr->type == 0) ? "r" : "ar"; break;
                         case 4: ending = "a"; break;
                         default: break;
                     }
@@ -1547,12 +1520,10 @@ static Word prefixLookup(string word){
                         buffer[i] = '\0';
                     }
 
-                    intransitiveness = v->intransitive;
-                    if(intransitiveness == true){
-                        word_type_ = 3;
-                    }else{
-                       word_type_ = 36;
-                    }
+                    uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
+                    word_type_ = (intransitiveness ? 3 : 36);
+
                     verb_type = v->type;
                     return Word{word,(compound ? string(buffer) + " " + verb_complement : string(buffer)), word_type_};
 
@@ -1572,7 +1543,7 @@ static Word prefixLookup(string word){
                     {
                         case 0:  case 10: ending = (v_irr->type == 0) ? "a" : ""; break;
                         case 1: case 2: ending = "de"; break;
-                        case 3: ending = (v_irr->type == 0) ? "es" : "s"; break;
+                        case 3: ending = (v_irr->type == 0) ? "r" : "ar"; break;
                         case 4: ending = (v_irr->type == 0) ? "e" : ""; break;
                         case 5: ending = "ing"; break;
                         case 6: case 7: ending = (v_irr->type== 0) ? "a" : ""; break;
@@ -1704,7 +1675,9 @@ static Word prefixLookup(string word){
                         translation_ =  (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
                     }
 
-                    intransitiveness = v_irr->intransitive;
+                    
+                     uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
                     if(intransitiveness == true){
                         word_type_ = !aux ? 3 : 33;
                     }else{
@@ -1725,10 +1698,7 @@ static Word prefixLookup(string word){
     result = find_verb(infinitive, word, 0);
     if(result.type != -1) return result;
 
-    result = find_verb(present_non_s, word, 0);
-    if(result.type != -1) return result;
-
-    result = find_verb(present_s, word, 3);
+    result = find_verb(present, word, 3);
     if(result.type != -1) return result;
 
     result = find_verb(general_past, word, 1);
@@ -2253,7 +2223,7 @@ if(sentence_arr.at(i).word.back() == 'o' &&
           (sentence_arr[0].word.length() >= 3 && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo")) {
     pronoun = ""; 
 } else {
-    pronoun = ""; 
+    pronoun = "att "; 
 }
 
     if (!reordered_arr.empty() && reordered_arr.back().translation == sentence_arr.at(i - 1).translation) {

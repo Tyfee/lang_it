@@ -14,33 +14,6 @@
 
 using namespace std;
 
-
-//note for myself. 
-// how many verbs can actually be categorized into rules vs complete exceptions for conjugation?
-// *IT WAS REVEALED TO ME IN A DREAM*, that the number of verbs in english that are actually exceptions (i'll call them isolates)
-// and can't fit into hyperspecific-non-grammatical-pseudo fake rules can actually be 
-// counted with less fingers than the ones in my hand 
-// so someone shoot me if i'm wrong
-// the only true exceptions i can think of from the top of my head are go -> went, see -> saw and of course be -> was were 
-// there are no ways to apply morphology rules to reach their past tense, and there aren't any other verbs like them
-// EVERY OTHER EXISTING VERB does similar operations to at least a handful of others, such as:
-// draw -> drew, come -> came. (vowel change)
-// think -> thought, teach ->  taught: (complex suffix appending)
-// love -> loved, paint -> painted: (simple suffix appending)
-// feed -> fed , meet -> met: simple vowel reduction
-
-
-typedef struct
-{
-  const char* w;
-  const char* t;
-  int type;
-  int plural;
-} Suffix;
-
-
-
-
 // this will happen at some point
 // a final check for anomaly fixing
 // it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
@@ -290,21 +263,6 @@ constexpr Entry fixed_ngrams[] = {
 vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
 
-
-template <size_t N>
-Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
-    for (size_t i = 0; i < N; ++i) {
-        const char* p = dict[i].w;
-        const char* q = word;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-
-        if (*p == *q) {
-            return dict[i];
-        }
-    }
-    return Suffix{nullptr, nullptr, -1, -1};
-}
-
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
 constexpr Entry nouns[] = {
@@ -465,6 +423,9 @@ constexpr Entry nouns[] = {
   {"árvore", "tree"},
   {"carro", "car"},
   {"caminhão", "truck"},
+  {"carta", "letter"},
+  {"letra", "letter"},
+  {"cartão", "card"},
   {"avião", "airplane"},
   { "robô", "robot" },
   {"ônibus", "bus"},
@@ -845,12 +806,6 @@ constexpr Entry adv[] = {
   {"tão", "so"}
 };
 
-struct Verb {
-    const char* root;       
-    const char* translation; 
-    int type;      
-    bool intransitive;
-};
 struct VerbEnding {
     const char* ending;
     int code;
@@ -859,68 +814,68 @@ struct VerbEnding {
 // verb prefixes where 0 = regular, 1 = irregular conjugation
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
-  {"am", "lov", 0, false},
-  {"gost", "lik", 0, false},
-  {"quis", "want", 1, false},
-  {"quer", "want", 1, false},
-  {"fum", "smok", 0, true},
-  {"caç", "hunt", 1, true},
-  {"corr", "run", 1, true},
-  {"jog", "play", 1, true},
-  {"esper", "wait", 1, true},
-  {"abr", "open", 1, false},
-  {"fech", "clos", 0, true},
-  {"molh", "wet", 1, false},
-  {"pergunt", "ask", 1, true},
-  {"pe", "ask", 1, false},
-  {"precis", "need", 1, false},
-  {"morr", "di", 0, true},
-  {"sonh", "dream", 1, true},
-  {"grit", "scream", 1, true},
-  {"acredit","believ", 0, true},
-  {"viv", "liv", 0, true},
-  {"mor", "liv", 0, true},
-  {"tent", "try", 1, true},
-  {"compreend", "comprehend", 1, false},
-  {"busc", "search", 1, false},
-  {"brilh", "glow", 1, true}, // a lot of these verbs can be inferred from their nouns: brilho -> brilhar, glow -> glow
+  {"am", "lov", 0},
+  {"gost", "lik", 0},
+  {"quis", "want", 1},
+  {"quer", "want", 1},
+  {"fum", "smok", 0, INTRANSITIVE},
+  {"caç", "hunt", 1, INTRANSITIVE},
+  {"corr", "run", 1, INTRANSITIVE},
+  {"jog", "play", 1, INTRANSITIVE},
+  {"esper", "wait", 1, INTRANSITIVE},
+  {"abr", "open", 1},
+  {"fech", "clos", 0, INTRANSITIVE},
+  {"molh", "wet", 1},
+  {"pergunt", "ask", 1, INTRANSITIVE},
+  {"pe", "ask", 1},
+  {"precis", "need", 1},
+  {"morr", "di", 0, INTRANSITIVE},
+  {"sonh", "dream", 1, INTRANSITIVE},
+  {"grit", "scream", 1, INTRANSITIVE},
+  {"acredit","believ", 0, INTRANSITIVE},
+  {"viv", "liv", 0, INTRANSITIVE},
+  {"mor", "liv", 0, INTRANSITIVE},
+  {"tent", "try", 1, INTRANSITIVE},
+  {"compreend", "comprehend", 1},
+  {"busc", "search", 1},
+  {"brilh", "glow", 1, INTRANSITIVE}, // a lot of these verbs can be inferred from their nouns: brilho -> brilhar, glow -> glow
   {"possu", "have", 1, false}, // remind to implement that, me;
-  {"aprend", "learn", 1, false},
-  {"apag", "eras", 0, false},
-  {"pint", "paint", 1, true},
-  {"traduz", "translat", 0, true},
-  {"mastig", "chew", 1, false},
-  {"engol", "swallow", 1, false},
-  {"respond", "answer", 1, false},
+  {"aprend", "learn", 1},
+  {"apag", "eras", 0},
+  {"pint", "paint", 1, INTRANSITIVE},
+  {"traduz", "translat", 0, INTRANSITIVE},
+  {"mastig", "chew", 1},
+  {"engol", "swallow", 1},
+  {"respond", "answer", 1},
   
-  {"desej", "wish", 1, true},
-  {"trabalh", "work", 1, true},
-  {"mov", "mov", 0, false},
-  {"digit", "typ", 0, false},
-  {"olh", "look", 1, true}, //olho -> olhar even 
-  {"sint", "feel", 1, false},
-  {"mat", "kill", 1, false},
-  {"prefer", "prefer", 1, false},
-  {"prefir", "prefer", 1, false},
-  {"lembr", "remember", 1, false},
-  {"par", "stop", 1, true},
-  {"chor", "cry", 1, true},
-  {"cur", "cure", 1, true},
-  {"fing", "pretend", 1, false},
-  {"ajud", "help", 1, false},
-  {"desenvolv", "develop", 1, true},
-  {"bast", "suffic", 0, true},
-  {"beij", "kiss", 1, true},
-  {"machuc", "hurt", 1, true},
-  {"deslig", "turn_off", 1, true},
-  {"lig", "turn_on", 1, true},
-  {"empurr", "push", 1, true},
-  {"pux", "pull", 1, true},
-  {"apert", "press", 1, true},
-  {"serv", "serv", 0, true},
-  {"inici", "start", 1, false},
-  {"comec", "start", 1, false},
-  {"começ", "start", 1, false}
+  {"desej", "wish", 1, INTRANSITIVE},
+  {"trabalh", "work", 1, INTRANSITIVE},
+  {"mov", "mov", 0},
+  {"digit", "typ", 0},
+  {"olh", "look", 1, INTRANSITIVE}, //olho -> olhar even 
+  {"sint", "feel", 1},
+  {"mat", "kill", 1},
+  {"prefer", "prefer", 1},
+  {"prefir", "prefer", 1},
+  {"lembr", "remember", 1},
+  {"par", "stop", 1, INTRANSITIVE},
+  {"chor", "cry", 1, INTRANSITIVE},
+  {"cur", "cure", 1, INTRANSITIVE},
+  {"fing", "pretend", 1},
+  {"ajud", "help", 1},
+  {"desenvolv", "develop", 1, INTRANSITIVE},
+  {"bast", "suffic", 0, INTRANSITIVE},
+  {"beij", "kiss", 1, INTRANSITIVE},
+  {"machuc", "hurt", 1, INTRANSITIVE},
+  {"deslig", "turn_off", 1, INTRANSITIVE},
+  {"lig", "turn_on", 1, INTRANSITIVE},
+  {"empurr", "push", 1, INTRANSITIVE},
+  {"pux", "pull", 1, INTRANSITIVE},
+  {"apert", "press", 1, INTRANSITIVE},
+  {"serv", "serv", 0, INTRANSITIVE},
+  {"inici", "start", 1},
+  {"comec", "start", 1},
+  {"começ", "start", 1}
 };
 
 static const Verb* lookupRegVerb(const char* root) {
@@ -1073,65 +1028,64 @@ vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 // common suffixes with traceable trnaslation pattern
 // TODO: ADD AN EXAMPLE FOR EACH CAUSE TS IS CONFUSING
 constexpr Suffix suff[] = {
-  {"dade", "ty", 0, 0},
-  {"mente", "ly", 4, 0},
-  {"ental", "ental", 1, 0},
-  {"mento", "ment", 0, 0},
-  {"ável", "able", 1, 0},
-  {"ível", "ible", 1, 0},
-  {"auro", "aur", 0, 0},
-  {"erno", "ernal", 1, 0},
-  {"erna", "ernal", 1, 0},
-  {"ória", "ory", 1, 0},
-  {"ência", "ency", 0, 0},
-  {"ama", "am", 0, 0},
-  {"cidade", "city", 0, 0},
-  {"ogia", "ogy", 0, 0},
-  {"açado", "aced", 1, 0},
-  {"ágico", "agic", 1, 0},
-  {"asmo", "asm", 0, 0},
-  {"ágica", "agic", 1, 0},
-  {"ção", "tion", 0, 0},
-  {"ções", "tions", 0, 1},
-  {"culo", "cle", 0, 0},
-  {"cula", "cle", 0, 0},
-  {"cleta", "cle", 0,0},
-  {"tério", "tery",0,0},
-  {"téria", "tery", 0,0},
-  {"ário", "ary",0,0},
-  {"ária", "ary",0,0},
-  {"ral", "ral", 0,0},
-  {"ial", "ial", 1,0},
-  {"mal", "mal", 1,0},
-  {"ais", "als", 0, 1},
-  {"oria", "ory", 0, 0},
-  {"ador", "ator", 0, 0},
-  {"etro", "meter", 0,0},
-  {"ência", "ency", 0,0},
-  {"êncio", "ence", 0,0},
-  {"fia", "phy", 0,0},
-  {"pia", "py", 0,0},
-  {"eta", "et", 0,0},
-  {"ema", "em", 0,0},
-  {"ndida", "ndid", 1,0},
-  {"ndido", "ndid", 0, 0},
-  {"fico", "fic",0,0},
-  {"eito", "ect", 1,0},
-  {"feita", "fect", 1,0},
-  {"édia", "edy", 0,0},
-  {"édio", "edy", 0, 0},
-  {"ura", "ure", 0, 0},
-  {"ês", "ese", 0, 0},
-  {"ança", "ance", 0,0},
-  {"ão", "on", 0,0},
-  {"ópia", "opy", 0,0},
-  {"opia", "opy", 0,0},
-  {"ismo", "ism",0,0},
-  {"ópico", "opic", 1,0},
-  {"ópica", "opic", 1,0},
-  {"arra", "ar", 0, 0},
-  {"ano", "ane", 1, 0},
-  {"este", "est", 0, 0}
+  {"dade", "ty", NOUN},
+  {"mente", "ly", ADVERB},
+  {"ental", "ental", ADJECTIVE},
+  {"mento", "ment", NOUN},
+  {"ável", "able", ADJECTIVE},
+  {"ível", "ible", ADJECTIVE},
+  {"auro", "aur", NOUN},
+  {"erno", "ernal", ADJECTIVE}, // todo: check for both masc. and fem. so that i dont need to add both for each 
+  {"erna", "ernal", ADJECTIVE},
+  {"ória", "ory", NOUN},
+  {"ência", "ency", NOUN},
+  {"cidade", "city", ADJECTIVE},
+  {"ogia", "ogy", NOUN},
+  {"açado", "aced", ADJECTIVE},
+  {"ágico", "agic", ADJECTIVE},
+  {"asmo", "asm", NOUN},
+  {"ágica", "agic", ADJECTIVE},
+  {"ção", "tion", NOUN},
+  {"ções", "tions", NOUN, PLURAL}, //plural search to maybe
+  {"culo", "cle", NOUN},
+  {"cula", "cle", NOUN},
+  {"cleta", "cle", NOUN},
+  {"tério", "tery",NOUN},
+  {"téria", "tery", NOUN},
+  {"ário", "ary",NOUN},
+  {"ária", "ary",NOUN},
+  {"ral", "ral", NOUN},
+  {"ial", "ial", NOUN},
+  {"mal", "mal", NOUN},
+  {"ais", "als", NOUN, PLURAL},
+  {"oria", "ory", NOUN},
+  {"ador", "ator", NOUN},
+  {"etro", "meter", NOUN},
+  {"ência", "ency", NOUN},
+  {"êncio", "ence", NOUN},
+  {"fia", "phy", NOUN},
+  {"pia", "py", NOUN},
+  {"eta", "et", NOUN},
+  {"ema", "em", NOUN},
+  {"ndida", "ndid", ADJECTIVE},
+  {"ndido", "ndid", ADJECTIVE},
+  {"fico", "fic",ADJECTIVE},
+  {"eito", "ect", ADJECTIVE},
+  {"feita", "fect", ADJECTIVE},
+  {"édia", "edy", NOUN},
+  {"édio", "edy", NOUN},
+  {"ura", "ure", NOUN},
+  {"ês", "ese", NOUN},
+  {"ança", "ance", NOUN},
+  {"ão", "on", NOUN},
+  {"ópia", "opy", NOUN},
+  {"opia", "opy", NOUN},
+  {"ismo", "ism",NOUN},
+  {"ópico", "opic", NOUN},
+  {"ópica", "opic", NOUN},
+  {"arra", "ar", NOUN},
+  {"ano", "ane", ADJECTIVE},
+  {"este", "est", NOUN}
 };
 
 inline string script_adequation(string word) {
@@ -1430,7 +1384,6 @@ Word prefixLookup(string word){
             bool compound = false; // is this verb a compound one? make out, find out, sit down, pass around ets chetera!! DID YOU JUST MISPRONOUNCE ET CETERA? my latin degree was fake jeff 
             string compound_verb;
             string verb_complement;
-            bool intransitiveness;
             string ending;
 
             size_t match = word.rfind(format[i]);
@@ -1550,13 +1503,12 @@ Word prefixLookup(string word){
                         while (*e && i + 1 < sizeof(buffer)) buffer[i++] = *e++;
                         buffer[i] = '\0';
                     }
+                    uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
+                    intransitiveness = f & INTRANSITIVE;
+                    word_type_ = (intransitiveness ? 3 : 36);
 
-                    intransitiveness = v->intransitive;
-                    if(intransitiveness == true){
-                        word_type_ = 3;
-                    }else{
-                       word_type_ = 36;
-                    }
                     verb_type = v->type;
                     return Word{word,(compound ? string(buffer) + " " + verb_complement : string(buffer)), word_type_};
 
@@ -1707,9 +1659,11 @@ Word prefixLookup(string word){
                     }else {
                         translation_ =  (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
                     }
-
-                    intransitiveness = v_irr->intransitive;
-                    if(intransitiveness == true){
+                    
+                    uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
+            
+                    if(intransitiveness){
                         word_type_ = !aux ? 3 : 33;
                     }else{
                        word_type_ = 36;
@@ -2155,7 +2109,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     if( sentence_arr.size() > 1){
     reordered_arr.push_back(Word{
         sentence_arr[0].word,
-        pronoun + sentence_arr[0].translation + (sentence_arr[0].type == 36 ? " it" : ""),
+        pronoun + sentence_arr[0].translation + (sentence_arr[0].type == INTRANSITIVE_VERB ? " it" : ""),
         sentence_arr[0].type
     });
     } else{
@@ -2218,7 +2172,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             reordered_arr.push_back(Word{"se", "yourself", current.type}); 
         }
       // se mate  , se joga, 
-           else if (i > 0 && sentence_arr.at(i - 1).word == "se" && (sentence_arr.at(i).type == 36 ||sentence_arr.at(i).type == 3)) {
+           else if (i > 0 && sentence_arr.at(i - 1).word == "se" && (sentence_arr.at(i).type == INTRANSITIVE_VERB ||sentence_arr.at(i).type == 3)) {
    
             reordered_arr.pop_back(); 
             // verb
@@ -2232,7 +2186,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
         // (for sending* me and invitation, for selling* yourself pardons)
         // (what is this food for? it's for selling*)
     else if (i > 0 && (sentence_arr.at(i - 1).translation == "for" || sentence_arr.at(i - 1).translation == "without") &&
-    (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+    (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB)) {
 
       reordered_arr.pop_back();   
     string fixed_verb = sentence_arr.at(i).translation.back() == 'e'
@@ -2245,7 +2199,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     continue;
 }
 
-else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).type == 13  || isPunctuation(sentence_arr.at(i - 1).word)) && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36 )) {
+else if (i > 0 && (sentence_arr.at(i - 1).type == 8 || sentence_arr.at(i - 1).type == 13  || isPunctuation(sentence_arr.at(i - 1).word)) && (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB )) {
 
     string pronoun;
 if(sentence_arr.at(i).word.back() == 'o' &&
@@ -2269,7 +2223,7 @@ if(sentence_arr.at(i).word.back() == 'o' &&
     reordered_arr.push_back(Word{sentence_arr.at(i).word, pronoun + sentence_arr.at(i).translation,sentence_arr.at(i).type});
 
 }
-             else if (i == 0 && (sentence_arr[0].type == 3 || sentence_arr[0].type == 36)) {
+             else if (i == 0 && (sentence_arr[0].type == VERB|| sentence_arr[0].type == INTRANSITIVE_VERB)) {
     
     string pronoun;
     string pronoun_tr;
@@ -2299,13 +2253,13 @@ else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr
         reordered_arr.pop_back();  
 
     reordered_arr.push_back(Word{"meio", "kind of", -1});
-    reordered_arr.push_back(Word{sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
+    reordered_arr.push_back(current);
     continue;  
 }
 
   // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-        else if (one_ && previous->type == 0 && current.type == 1) {
+        else if (two_ && previous->type == NOUN && current.type == ADJECTIVE) {
            invert(reordered_arr, current, *previous);
         }
 
@@ -2316,15 +2270,12 @@ else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr
         // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
         // since it defaults to 'the' i dont think i need a fallback                                                            // this is problably wrong, but ideally -1 should be proper nouns SOMEHOW.
         else if (two_ && previous->translation == "the" && (current.type == PRONOUN ||current.type == ARTICLE || current.type == -1)) {
-          reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{"à","to", 20});
-            reordered_arr.push_back(Word{current.word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
-        } 
+      sandwich_replace(reordered_arr, Word{"à","to", 20}, current);  } 
+
         // for verbs (e.g ajudar a* desenvolver)
-                else if (three_ && (previous_->type == 3 || previous_->type == 36) && previous->translation == "the" && (current.type == VERB || current.type == INTRANSITIVE_VERB)) {
-          reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{"à","to", 20});
-            reordered_arr.push_back(Word{current.word, current.translation,current.type});  
+                else if (three_ && (previous_->type == VERB|| previous_->type == INTRANSITIVE_VERB) && previous->translation == "the" && (current.type == VERB || current.type == INTRANSITIVE_VERB)) {
+        // shiiiii this works 
+            sandwich_replace(reordered_arr, Word{"à","to", 20}, current);
         } 
           
         // ------------------------ NOT VS DON'T ----------------- TODO: i'm sure theres more cases where not is dont, and vice versa, ALSO THERES NO. 
@@ -2387,22 +2338,17 @@ else if (two_ && previous->translation == "not") {
                 // i believe +ing is better than verb [to] verb here. 'i love running' vs 'i love to run'
                 // we also need consonant duplication, runing => running
                     reordered_arr.push_back(Word{"to", "to", -1});
-                    reordered_arr.push_back( Word{current.word,
-                    current.translation,    
-                    current.type
-                });
+                    reordered_arr.push_back(current);
+                
                 
                 }else{
-                     reordered_arr.push_back( Word{current.word,
-                    sentence_arr.at(i).translation,    
-                    sentence_arr.at(i).type
-                });
+                     reordered_arr.push_back( current );
                 }
             }
    
           // ------------------------ ADJ + VERBS ----------------- 
         // yk like, muito fácil correr -> very easy run. you cant have an adjective and a verb without the connector "to"
-        else if (i > 1 &&sentence_arr.at(i - 1).type == 1  &&  (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+        else if (i > 1 &&sentence_arr.at(i - 1).type == 1  &&  (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB)) {
                 if (i > 1 && sentence_arr.at(i - 2).type == 0 && sentence_arr.at(i - 1).type == 1) {
         // This is actually part of a noun-adjective-verb sequence, skip this rule
         reordered_arr.push_back(sentence_arr.at(i));
@@ -2421,23 +2367,22 @@ else if (two_ && previous->translation == "not") {
         
      // ------------------------ OBLIQUE PRONOUNS  -----------------
         // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
-        else if (i > 0 && sentence_arr.at(i - 1).type == 11 && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+        else if (two_&& previous->type == OBLIQUE_PRONOUN && (current.type == VERB|| current.type == INTRANSITIVE_VERB)) {
         
-            reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});  
-            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});
+            invert(sentence_arr, *previous, current);
+         
         } 
 
     // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.
     // so if 'eu[2] amo[36]' => 'i[2] (love it[36])]!  
-       else  if (sentence_arr.size() > 1 && sentence_arr.at(i).type == 36) {
+       else  if (sentence_arr.size() > 1 && sentence_arr.at(i).type == INTRANSITIVE_VERB) {
         
                 bool add_it = true;
 
                 if (i + 1 < sentence_arr.size()) {
                     int next_type = sentence_arr[i + 1].type;
-                    if (next_type == 3 || next_type == 36 || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == 2 || next_type == 9  || next_type == 8 || next_type == 13 || next_type == 40) {
+                    if (next_type == VERB|| next_type == INTRANSITIVE_VERB || next_type == 0 || next_type == 1 || next_type == 4 || next_type == -1 ||  next_type == 2 || next_type == 9  || next_type == 8 || next_type == 13 || next_type == 40) {
                         add_it = false; 
                     }
                 }
@@ -2468,7 +2413,7 @@ else if (two_ && previous->translation == "not") {
 
         // ------------------------ INTRANSITIVE VERBS THAT TAKE 'DE'  ----------------- 
         // a set is word1 = verb[3] and word2 = 'de', we eliminate the preposition 'de', so that gosto[1] de  -> stronger
-        else if (i > 0 && (sentence_arr.at(i - 1).type == 3 || sentence_arr.at(i - 1).type == 36) && sentence_arr.at(i).translation == "of") {
+        else if (i > 0 && (sentence_arr.at(i - 1).type == VERB|| sentence_arr.at(i - 1).type == INTRANSITIVE_VERB) && sentence_arr.at(i).translation == "of") {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});  
         } 
@@ -2486,13 +2431,13 @@ else if (two_ && previous->translation == "not") {
         // ------------------------ TRANSITIVE VERBS WITH A PERSONAL PRONOUN  ----------------- 
         // a set is word1 = verb[3] and word2 = pronoun[4], we use the second value of the pair? of the pronoun i guess idk i'm tired
         // like the value of the key 'ela' is a pair<string, string> that holds both the subject and object pronoun {'she', 'her'}
-        else if (i > 0 && (sentence_arr.at(i - 1).type == 3 || sentence_arr.at(i - 1).type == 36) && sentence_arr.at(i).type == 4) {
+        else if (two_ && (previous->type == VERB || previous->type == INTRANSITIVE_VERB) && current.type == PRONOUN) {
             reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});
-            reordered_arr.push_back(Word{ sentence_arr.at(i).word,
-              lookup(obj_pro, sentence_arr.at(i).translation.c_str()) 
-                  ? string(lookup(obj_pro, sentence_arr.at(i).translation.c_str())) 
-                  : sentence_arr.at(i).translation,
+            reordered_arr.push_back(Word{ previous->word, previous->translation, previous->type});
+            reordered_arr.push_back(Word{ current.word,
+              lookup(obj_pro, current.translation.c_str()) 
+                  ? string(lookup(obj_pro, current.translation.c_str())) 
+                  : current.translation,
               10
           });
         }
@@ -2500,29 +2445,29 @@ else if (two_ && previous->translation == "not") {
         // ------------------------ CONTINUOUS TO BE (IS, ARE, AM)  ----------------- 
         // a set is word1 = pronoun[4] and word2 = "is", use an if to check the first pronoun and change it accordingly 
         // she is, i am, we are
-        else if (i > 0 && sentence_arr.at(i - 1).type == 4 && sentence_arr.at(i).translation == "is") {
+        else if (two_ && previous->type == 4 && current.translation == "is") {
             string corr_pro = "is";
             reordered_arr.pop_back(); 
-            if(sentence_arr.at(i - 1).translation == "she" || sentence_arr.at(i - 1).translation == "he"){
+            if(previous->translation == "she" || previous->translation == "he"){
                 corr_pro = "is";
-            } else if(sentence_arr.at(i - 1).translation == "we" || sentence_arr.at(i - 1).translation == "they" || sentence_arr.at(i - 1).translation == "you"){
+            } else if(previous->translation == "we" || previous->translation == "they" || previous->translation == "you"){
                 corr_pro = "are";
-            } else if(sentence_arr.at(i - 1).translation == "i"){
+            } else if(previous->translation == "i"){
                 corr_pro = "am";
             };
-            reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type});   
+            reordered_arr.push_back(Word{ current.word, previous->translation, previous->type});   
             reordered_arr.push_back(Word{"$ser", corr_pro, 4});
         } 
 
 
         // same thing but when the verbs are connected by 'que' (e.g: tenho QUE ver)
-        else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 36) && sentence_arr.at(i - 1).translation == "what"  && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+        else if (three_ && (previous_->type == VERB|| sentence_arr.at(i - 2).type == INTRANSITIVE_VERB) && sentence_arr.at(i - 1).translation == "what"  && (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{"que", "to", -1});  
             reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type}); 
         }
 
-        else if (i > 1 && (sentence_arr.at(i - 2).type == 3 || sentence_arr.at(i - 2).type == 3) && sentence_arr.at(i - 1).translation == "of" && (sentence_arr.at(i).type == 3 || sentence_arr.at(i).type == 36)) {
+        else if (three_ && (previous_->type == VERB|| previous_->type == 3) && previous->translation == "of" && (current.type == VERB|| current.type == INTRANSITIVE_VERB)) {
             reordered_arr.pop_back(); 
             reordered_arr.push_back(Word{sentence_arr.at(i - 2).word, sentence_arr.at(i - 2).translation, sentence_arr.at(i - 2).type});  
             reordered_arr.push_back(Word{"de", "to", -1});  
@@ -2545,7 +2490,7 @@ else if (two_ && previous->translation == "not") {
     if (reordered_arr[i].translation == "is") {
         
         bool preceded_by_pronoun = (i > 0 &&
-            (reordered_arr[i-1].type == 4 || reordered_arr[i-1].type == 0 || reordered_arr[i-1].type == 13 || reordered_arr[i-1].type == 2 || reordered_arr[i-1].type == 3 || reordered_arr[i-1].type == 36));
+            (reordered_arr[i-1].type == 4 || reordered_arr[i-1].type == 0 || reordered_arr[i-1].type == 13 || reordered_arr[i-1].type == 2 || reordered_arr[i-1].type == VERB|| reordered_arr[i-1].type == INTRANSITIVE_VERB));
 
         if (preceded_by_pronoun) {
             reordered_arr[i].translation = "is";
@@ -2570,7 +2515,7 @@ else if (sentence_arr.size() >= 2 && i == sentence_arr.size() - 1 && sentence_ar
 
         if (i + 1 < sentence_arr.size()) {
             int next_type = sentence_arr[i + 1].type;
-            if (next_type == 0 || next_type == 3 || next_type == 10) {
+            if (next_type == 0 || next_type == VERB|| next_type == 10) {
                 add_one = false;
             }
             if(isPunctuation(sentence_arr[i + 1].translation)){
@@ -2591,7 +2536,7 @@ else if (sentence_arr.size() >= 2 && i == sentence_arr.size() - 1 && sentence_ar
 
         if (i + 1 < sentence_arr.size()) {
             int next_type = sentence_arr[i + 1].type;
-            if (next_type == 0 || next_type == 3 || next_type == 10) {
+            if (next_type == 0 || next_type == VERB|| next_type == 10) {
                 add_one = false;
             }
             if(isPunctuation(sentence_arr[i + 1].translation)){
@@ -2700,7 +2645,7 @@ if(reordered_arr.size() > 2 && reordered_arr[0].word == "$inf" && reordered_arr[
             // push pronoun + verb together
             string question_phrase = aux + " " + sentence_arr[pronoun_index].translation;
             if (pronoun_index + 1 < sentence_arr.size() - 1) {
-                if ((sentence_arr[pronoun_index + 1].type == 3 || sentence_arr[pronoun_index + 1].type == 36) && sentence_arr[pronoun_index + 1].translation.back() != 's') {
+                if ((sentence_arr[pronoun_index + 1].type == VERB|| sentence_arr[pronoun_index + 1].type == INTRANSITIVE_VERB) && sentence_arr[pronoun_index + 1].translation.back() != 's') {
                     question_phrase +=  (!isModal ? sentence_arr[pronoun_index + 1].translation : "");
                 }else{
                       question_phrase += (!isModal ? sentence_arr[pronoun_index + 1].translation.substr(0, sentence_arr[pronoun_index + 1].translation.length() - 1) : "");

@@ -15,15 +15,6 @@
 
 using namespace std;
 
-
-typedef struct
-{
-  const char* w;
-  const char* t;
-  int type;
-  int plural;
-} Suffix;
-
 // this will happen at some point
 // a final check for anomaly fixing
 // it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
@@ -54,20 +45,6 @@ constexpr Entry fixed_ngrams[] = {
   {"bem_vindo", "bienvenido"}
 };
 
-
-template <size_t N>
-Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
-    for (size_t i = 0; i < N; ++i) {
-        const char* p = dict[i].w;
-        const char* q = word;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-
-        if (*p == *q) {
-            return dict[i];
-        }
-    }
-    return Suffix{nullptr, nullptr, -1, -1};
-}
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -246,12 +223,7 @@ constexpr Entry adv[] = {
   {"então", "entonces"}
 };
 
-struct Verb {
-    const char* root;       
-    const char* translation; 
-    bool intransitive;
-    bool dative_const;
-};
+
 struct VerbEnding {
     const char* ending;
     int code;

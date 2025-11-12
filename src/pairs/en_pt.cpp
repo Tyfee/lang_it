@@ -14,15 +14,6 @@
 
 using namespace std;
 
-typedef struct
-{
-  const char* w;
-  const char* t;
-  int type;
-  int plural;
-  bool fem; // 
-} Suffix;
-
 
 
 // this will happen at some point
@@ -93,19 +84,6 @@ static vector<string> modals = {"can", "must", "should", "could", "may", "will",
 
 
 
-template <size_t N>
-Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
-    for (size_t i = 0; i < N; ++i) {
-        const char* p = dict[i].w;
-        const char* q = word;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-
-        if (*p == *q) {
-            return dict[i];
-        }
-    }
-    return Suffix{nullptr, nullptr, -1, -1};
-}
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
@@ -529,12 +507,7 @@ constexpr Entry adv[] = {
   {"so", "então"}
 };
 
-struct Verb {
-    const char* root;       
-    const char* translation; 
-    int type;      
-    bool intransitive;
-};
+
 struct VerbEnding {
     const char* ending;
     int code;
@@ -734,55 +707,55 @@ vector<string> continuous = {"ing"};
 // common suffixes with traceable trnaslation pattern
 // TODO: ADD AN EXAMPLE FOR EACH CAUSE TS IS CONFUSING
 constexpr Suffix suff[] = {
-  {"ty", "dade", 0, 0, true},
-  {"ly", "mente", 4, 0, false},
-  {"ental", "ental", 1, 0, false},
-  {"ment", "mento", 0, 0, false},
-  {"able", "ável", 1, 0, false},
-  {"ible", "ível", 1, 0, false},
-  {"ogy", "ogia", 0, 0},
-  {"ory", "ória", 1, 0, true},
-  {"ency", "ência", 0, 0, true},
-  {"cidade", "city", 0, 0, false},
-  {"açado", "aced", 1, 0, false},
-  {"ágico", "agic", 1, 0, false},
-  {"asmo", "asm", 0, 0, false},
-  {"ágica", "agic", 1, 0, true},
-  {"tion", "ção", 0, 0, true},
-  {"tions", "ções", 0, 1, true},
-  {"culo", "cle", 0, 0, false},
-  {"cula", "cle", 0, 0, false},
-  {"cleta", "cle", 0,0, false},
-  {"tério", "tery",0,0, false},
-  {"téria", "tery", 0,0, false},
-  {"ário", "ary",0,0, false},
-  {"ária", "ary",0,0, false},
-  {"ral", "ral", 0,0, false},
-  {"mal", "mal", 1,0, false},
-  {"ais", "als", 0, 1, false},
-  {"oria", "ory", 0, 0, false},
-  {"ador", "ator", 0, 0, false},
-  {"etro", "meter", 0,0, false},
-  {"ency", "ência", 0,0, true},
-  {"ence", "êncio", 0,0, false},
-  {"fia", "phy", 0,0, true},
-  {"eta", "et", 0,0, false},
-  {"ema", "em", 0,0, false},
-  {"ndida", "ndid", 1,0, false},
-  {"ndido", "ndid", 0, 0, false},
-  {"fico", "fic",0,0, false},
-  {"eito", "ect", 1,0, false},
-  {"feita", "fect", 1,0, false},
-  {"edy", "édia", 0,0, true},
-  {"édio", "edy", 0, 0, false},
-  {"ura", "ure", 0, 0, true},
-  {"ês", "ese", 0, 0, false},
-  {"ance", "ança", 0,0, true},
-  {"opy", "opia", 0,0, false},
-  {"ismo", "ism",0,0, false},
-  {"opic", "ópico", 1,0, false},
-  {"ar", "arra", 0, 0, true},
-  {"ano", "ane", 1, 0, false}
+  {"ty", "dade", NOUN, FEMININE},
+  {"ly", "mente", ADVERB},
+  {"ental", "ental", ADJECTIVE},
+  {"ment", "mento", NOUN},
+  {"able", "ável", ADJECTIVE},
+  {"ible", "ível", ADJECTIVE},
+  {"ogy", "ogia", NOUN, FEMININE},
+  {"ory", "ória", ADJECTIVE, 0},
+  {"ency", "ência", NOUN, 0},
+  {"cidade", "city", NOUN, 0},
+  {"açado", "aced", ADJECTIVE, 0},
+  {"ágico", "agic", ADJECTIVE, 0},
+  {"asmo", "asm", NOUN, 0},
+  {"ágica", "agic", ADJECTIVE, 0},
+  {"tion", "ção", NOUN, 0},
+  {"tions", "ções", NOUN, PLURAL | FEMININE},
+  {"culo", "cle", NOUN, 0},
+  {"cula", "cle", NOUN, 0},
+  {"cleta", "cle", NOUN,0},
+  {"tério", "tery",NOUN,0},
+  {"téria", "tery", NOUN,0},
+  {"ário", "ary",NOUN,0},
+  {"ária", "ary",NOUN,0},
+  {"ral", "ral", NOUN,0},
+  {"mal", "mal", ADJECTIVE,0},
+  {"ais", "als", NOUN, PLURAL},
+  {"oria", "ory", NOUN, 0},
+  {"ador", "ator", NOUN, 0},
+  {"etro", "meter", NOUN,0},
+  {"ency", "ência", NOUN,0},
+  {"ence", "êncio", NOUN,0},
+  {"fia", "phy", NOUN,0},
+  {"eta", "et", NOUN,0},
+  {"ema", "em", NOUN,0},
+  {"ndida", "ndid", ADJECTIVE,0},
+  {"ndido", "ndid", NOUN, 0},
+  {"fico", "fic",NOUN,0},
+  {"eito", "ect", ADJECTIVE,0},
+  {"feita", "fect", ADJECTIVE,0},
+  {"edy", "édia", NOUN,0},
+  {"édio", "edy", NOUN, 0},
+  {"ura", "ure", NOUN, 0},
+  {"ês", "ese", NOUN, 0},
+  {"ance", "ança", NOUN,0},
+  {"opy", "opia", NOUN,0},
+  {"ismo", "ism",NOUN,0,},
+  {"opic", "ópico", ADJECTIVE,0},
+  {"ar", "arra", NOUN, 0},
+  {"ano", "ane", ADJECTIVE, 0}
 };
 
 
@@ -1104,12 +1077,12 @@ static Word prefixLookup(string word){
                         buffer[i] = '\0';
                     }
 
-                    intransitiveness = v->intransitive;
-                    if(intransitiveness == true){
-                        word_type_ = 3;
-                    }else{
-                       word_type_ = 36;
-                    }
+                    uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
+                    intransitiveness = f & INTRANSITIVE;
+                    word_type_ = (intransitiveness ? 3 : 36);
+
                     verb_type = v->type;
                     return Word{word, string(buffer), word_type_};
 
@@ -1178,8 +1151,10 @@ static Word prefixLookup(string word){
                         translation_ =  (compound ? compound_verb : string(v_irr->translation)) + (compound ? (" " + verb_complement) : "") + ending;
                     }
 
-                    intransitiveness = v_irr->intransitive;
-                    if(intransitiveness == true){
+                   uint8_t f = lookupVerbFlags(irr_verbs, root.c_str());
+                    bool intransitiveness = (f & INTRANSITIVE) != 0;
+            
+                    if(intransitiveness){
                         word_type_ = !aux ? 3 : 33;
                     }else{
                        word_type_ = 36;

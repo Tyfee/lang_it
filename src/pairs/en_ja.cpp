@@ -38,7 +38,7 @@ typedef struct {
    int type;
 } Result;
 
-struct Verb {
+struct VerbJ {
     const char* w;
     const int* t;
     size_t len;
@@ -210,7 +210,7 @@ constexpr EntryJ fixed_ngrams[] = {
     {"thank_you", _thank, 5, {-1}, 0, 0} 
 };
 
-constexpr Verb verbs[] = { 
+constexpr VerbJ verbs[] = { 
     {"eat", _taberu, 3, 1, 0}, 
     {"create", _tukuru, 3, 0, 0},
     {"love", _ai, 2, 0, 1},
@@ -279,7 +279,7 @@ static const T* lookup(const T (&array)[N], const char* word) {
 }
 
 
-static const Verb* verbLookup(const Verb* array, size_t N, const char* word) {
+static const VerbJ* verbLookup(const VerbJ* array, size_t N, const char* word) {
     for (size_t i = 0; i < N; ++i) {
         const char* p = array[i].w;
         const char* q = word;
@@ -444,10 +444,10 @@ static vector<string> tokenize(string &text) {
     return tokens;
 }
 static Result findVerb(string &word) {
-    const Verb* v = verbLookup(verbs, sizeof(verbs)/sizeof(verbs[0]), word.c_str());
+    const VerbJ* v = verbLookup(verbs, sizeof(verbs)/sizeof(verbs[0]), word.c_str());
 
-    const Verb* v_past_e = nullptr;
-    const Verb* v_past_n = nullptr;
+    const VerbJ* v_past_e = nullptr;
+    const VerbJ* v_past_n = nullptr;
 
     if (word.size() > 2) {
         string base_ed = word.substr(0, word.size() - 2);
@@ -473,7 +473,7 @@ static Result findVerb(string &word) {
              }
     } 
     else if (v_past) {
-        const Verb* vref = v_past_e ? v_past_e : v_past_n;
+        const VerbJ* vref = v_past_e ? v_past_e : v_past_n;
         string out;
         for (size_t i = 0; i < vref->len; ++i)
             out += HIRAGANA[vref->t[i]];

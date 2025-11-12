@@ -1,5 +1,8 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
+
+
+
 #include <string>
 #include <cstdint>
 #include <vector>
@@ -48,7 +51,7 @@ enum WordType {
 };
 
 
-enum Flags: uint16_t {
+enum Flags: uint8_t {
     ANIMATE = 0,
     IS_HUMAN = 1 << 0,
     NO_PLURAL = 1 << 1,
@@ -59,6 +62,17 @@ enum Flags: uint16_t {
     FEMININE_NEUTER = 1 << 6, // need that // will call that the FEMININE_NEUTER so that swedish works too, don't know what i'd do for three-gendered languages
     NOT_GENDERED = 1 << 7 // need that as well
                             // MAYBE if something is FEMININE_NEUTER AND NOT_GENDERED SIMULTANEOUSLY i'll consider it the third neutral gender
+};
+
+enum VerbFlags: uint8_t {
+    REFLEXIVE = 0,
+    INTRANSITIVE = 1 << 0,
+    DATIVE_CONST = 1 << 1
+};
+
+enum SuffixFlags: uint8_t {
+    PLURAL = 0,
+    FEMININE = 1 << 0
 };
 
 typedef struct {
@@ -75,6 +89,22 @@ typedef struct {
 } Word;
 
 
+
+struct Verb {
+    const char* root;       
+    const char* translation; 
+    int type;      
+    uint8_t flags;
+};
+
+
+typedef struct
+{
+  const char* w;
+  const char* t;
+  int type;
+  uint8_t flags;
+} Suffix;
 
 
 
@@ -101,6 +131,42 @@ inline uint8_t lookupFlags(const Entry (&dict)[N], const char* word) {
     }
     return 0;
 }
+template <size_t N>
+inline uint8_t lookupVerbFlags(const Verb (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].root;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return dict[i].flags;
+    }
+    return 0;
+}
+
+
+template <size_t N>
+Suffix lookupSuff(const Suffix (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].w;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+
+        if (*p == *q) {
+            return dict[i];
+        }
+    }
+    return Suffix{nullptr, nullptr, 99, 0};
+}
+
+template <size_t N>
+inline uint8_t lookupSuffFlags(const Suffix (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].root;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return dict[i].flags;
+    }
+    return 0;
+}
 
 
 
@@ -116,6 +182,13 @@ inline void invert(std::vector<Word>& output, const Word& first, const Word& sec
 inline void sandwich(std::vector<Word>& output, const Word& first, const Word& middle, const Word& second) {
     if (!output.empty()) output.pop_back(); 
     output.push_back(first);
+    output.push_back(middle);
+    output.push_back(second);
+}
+
+// replace a word in the middle of two words (orange juice -> suco de laranja)
+inline void sandwich_replace(std::vector<Word>& output,const Word& middle, const Word& second) {
+    if (!output.empty()) output.pop_back(); 
     output.push_back(middle);
     output.push_back(second);
 }
@@ -568,7 +641,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return traduzir_es(sentence);
         }
     #endif
-       #if defined(PT_SV) || defined(ALL)
+    #if defined(PT_SV) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "sv" || t == "SV")) {
             return traduzir_sv(sentence);
         }
