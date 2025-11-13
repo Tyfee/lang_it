@@ -14,6 +14,10 @@
 using namespace std;
 typedef const int WordJ;
 
+enum ScriptType {
+     K = 1
+};
+
 struct EntryJ {
     const char* w;
     const int* t;
@@ -174,11 +178,11 @@ constexpr EntryJ dict[] = {
                                
                                */
     
-    {"egg", _tmg, 3, {1397},  1, 0, 1},
+    {"egg", _tmg, 3, {1397},  1, 0, 0},
     {"yes", _yes, 2, {-1}, 0, 0, 0},
     {"thanks", _thank, 5, {-1}, 0, 0, 0},
     {"house", _ie, 2, {3510}, 1, 0, 0},
-    {"coffee", _kh, 4, {-1}, 0, 0, 1 /* <- this is katakana */}, 
+    {"coffee", _kh, 4, {-1}, 0, 0, K /* <- this is katakana */}, 
     {"world", _ski, 3, {22, 10060}, 2, 0, 0},
     {"time", _tk, 3, {6210}, 1, 0, 0},
     {"dog", _inu, 2, {9388}, 1, 0, 0},

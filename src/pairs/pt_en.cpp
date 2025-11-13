@@ -711,6 +711,8 @@ constexpr Entry adj[] = {
   {"correto", "correct"},
   {"sozinho", "alone"},
   {"facil", "easy"},
+  {"cansado", "tired"},
+  {"ocupado", "busy"},
   {"dificil", "hard"},
   {"bem", "well"},
   {"bom", "good"},
@@ -1044,6 +1046,7 @@ constexpr Suffix suff[] = {
   {"ória", "ory", NOUN},
   {"ência", "ency", NOUN},
   {"cidade", "city", ADJECTIVE},
+  {"ama", "am", NOUN},
   {"ogia", "ogy", NOUN},
   {"açado", "aced", ADJECTIVE},
   {"ágico", "agic", ADJECTIVE},
@@ -1458,12 +1461,6 @@ Word prefixLookup(string word){
                         if (v->type == 0) buffer[i++] = 'e';
                         buffer[i] = '\0';
                     }
-                    else if (verb_info == 3) {
-                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
-
-                        translation_ = base + ending;
-                    }
-
                     else if (verb_info == 4) { 
                         const char* used = "used to ";
                         size_t i = 0;

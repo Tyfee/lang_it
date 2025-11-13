@@ -47,7 +47,8 @@ enum WordType {
     OBLIQUE_PRONOUN = 11,
     PREPOSITION = 8,
     ARTICLE = 9,
-    ADVERB = 13
+    ADVERB = 13,
+    POSSESSIVE_PRONOUN = 40
 };
 
 
@@ -194,10 +195,23 @@ inline void sandwich_replace(std::vector<Word>& output,const Word& middle, const
 }
 
 //remove middle word
-inline void removeMiddle(std::vector<Word>& output, const Word& first, const Word& middle, const Word& last) {
-    if (!output.empty()) output.pop_back();  
+inline void remove_middle(std::vector<Word>& output, const Word& first, const Word& middle, const Word& last) {
+    if (!output.empty()) output.pop_back();
     output.push_back(first);
     output.push_back(last);
+}
+inline void remove_previous(std::vector<Word>& output) {
+    output.erase(output.end() - 2);  
+}
+
+inline void remove_current(std::vector<Word>& output) {
+    output.pop_back();            
+}
+
+inline void remove_pair(std::vector<Word>& output) {
+    if (output.size() >= 2) {
+        output.erase(output.end() - 2, output.end()); 
+    }
 }
 
 // all the lookups
@@ -625,7 +639,7 @@ inline std::string detect_language(const char* sentence) {
 
 
 
-inline std::string translate(const char* sentence, const char* from, const char* to, int script = 1){
+inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2){
     // script will be passed to languages that can be written in more than one script
     // japanese (0 = kana, 1 = kana + kanji, 2 = romaji ), malay(0 = rumi, 1 = jawi) and mandarin chinese (0 = hanzi, 1 = pinyin) 
     //  are the ones i plan to implement

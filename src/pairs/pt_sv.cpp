@@ -429,7 +429,7 @@ constexpr Entry nouns[] = {
   {"vida", "life"},
   {"folha", "leaf"},
   {"papel", "paper", ON},
-  {"faca", "knife"},
+  {"faca", "kniv"},
   {"tatuagem", "tattoo"},
   {"cruz", "cross"},
   {"celular", "phone", ON},
@@ -496,6 +496,9 @@ constexpr Entry nouns[] = {
   {"braço", "arm"},
   {"perna", "leg"},
   {"cabeça", "huvud"},
+
+  { "rosto", "ansikte", FEMININE_NEUTER},
+  { "face", "ansikte", FEMININE_NEUTER },
   {"testa", "forehead"},
   {"cabelo", "hair"},
   {"boca", "mouth"},
@@ -643,10 +646,10 @@ constexpr Entry poss_pro[] = {
   {"dela", "her"},
   {"dele",  "his"},
   {"nosso",  "our"},
-  {"meu",  "my"},
-  {"meus", "my"},
-  {"minha",  "my"},
-  {"minhas",  "my"}
+  {"meu",  "min"},
+  {"meus", "mina"},
+  {"minha",  "min"},
+  {"minhas",  "mina"}
 };
 
 //object pronoun match (in english)
@@ -700,11 +703,11 @@ constexpr Entry adj[] = {
   {"lindo", "beautiful"},
   {"belo", "beautiful"},
   {"legal", "cool"},
-  {"grande", "big"},
-  {"forte", "strong"},
-  {"fraco", "weak"},
+  {"grande", "stor"},
+  {"forte", "stark"},
+  {"fraco", "svag"},
   {"moderno", "modern"},
-  {"pequeno", "little"},
+  {"pequeno", "liten"},
   {"grande", "big"},
   {"sano", "sane"},
   {"mais", "more"},
@@ -712,7 +715,9 @@ constexpr Entry adj[] = {
   {"engraçado", "funny"},
   {"molhado", "wet"},
   {"seco", "dry"},
-  {"novo", "new"},
+  {"novo", "ny"},
+  {"cansado", "trött"},
+  {"ocupado", "upptagen"},
   {"passado", "last"},
   {"triste", "sad"},
   {"feliz", "happy"},
@@ -722,13 +727,13 @@ constexpr Entry adj[] = {
   {"sozinho", "alone"},
   {"facil", "easy"},
   {"dificil", "hard"},
-  {"bem", "well"},
-  {"bom", "good"},
+  {"bem", "väl"},
+  {"bom", "bra"},
   {"ruim", "bad"},
   {"mal", "evil"},
   {"mau", "bad"},
   {"humido", "humid"},
-  {"melhor", "better"},
+  {"melhor", "bättre"},
   {"pior", "worse"},
   {"estranho", "weird"},
   {"esquisito", "weird"},
@@ -740,18 +745,18 @@ constexpr Entry adj[] = {
   {"saudavel", "healthy"},
   {"surdo", "deaf"},
   {"cego", "blind"},
-  {"certo", "right"},
+  {"certo", "rätt"},
+  {"errado", "fel"},
+  {"correto", "rätt"},
   {"próprio", "own"},
   
-  {"direito", "right"},
-  {"esquerdo", "left"},
-  {"errado", "wrong"},
+  {"direito", "höger"},
+  {"esquerdo", "vänster"},
 
-  {"certo", "certain"},
-  {"outro", "other"},
-  {"gratis", "free"},
-  {"livre", "free"},
-  {"ultimo", "last"},
+  {"outro", "eller"},
+  {"gratis", "gratis"},
+  {"livre", "fri"},
+  {"ultimo", "sista"},
   {"doce", "sweet"},
   {"azedo", "sour"},
   {"amargo", "bitter"},
@@ -831,8 +836,8 @@ constexpr Verb reg_verbs[]  = {
   {"am", "älsk", 0, false},
   {"gost", "gill", 0, false},
   {"quis", "vill", 1, false},
-  {"quer", "want", 1, false},
-  {"fum", "smok", 0, true},
+  {"quer", "vill", 1, false},
+  {"funcion", "funger", 0, true},
   {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
   {"jog", "spel", 1, true},
@@ -840,7 +845,7 @@ constexpr Verb reg_verbs[]  = {
   {"abr", "open", 1, false},
   {"fech", "clos", 0, true},
   {"molh", "wet", 1, false},
-  {"pergunt", "ask", 1, true},
+  {"pergunt", "fråg", 1, true},
   {"pe", "ask", 1, false},
   {"precis", "need", 1, false},
   {"morr", "di", 0, true},
@@ -904,56 +909,9 @@ static const Verb* lookupRegVerb(const char* root) {
 
 
 constexpr Verb irr_verbs[] = {
-  {"fal", "speak", 1, true},
+  {"entend", "forstå", 0, true},
   {"beb", "drink", 1, false},
-  {"sangr", "bleed", 1, true},
-  {"procri", "breed", 1, true},
-  {"aliment", "feed", 1, false},
-  {"sopr", "blow", 1, false},
-  {"nad", "swim", 1, true},
-  {"quebr", "break", 1, false},
-  {"escrev", "writ", 1, true},
-  {"dirig", "driv", 0, true},
-  {"dirij", "driv", 0, true},
-  {"est","%", 1, true}, // % is a flag for the 'to be' verb, i don't want to figure out a clever way to do that right now, so i'll simply mark it with a flag
-                    // and deal with conjugation based on what's goin on around it (i - 1) and (i + 1), since it could match:
-                    // está (3rd person singular => is) estamos (1st person plural => are) estão => (3rd person plural => are) or estou (1st person singular => am)
-
-  {"cant", "sing", 1, true},
-  {"danç", "danc", 0, true},
-  {"ganh", "win", 1, true},
-  {"volt", "go back", 1, true},
-  {"te", "have", 1, false},
-  {"com", "eat", 1, false},
-  {"lut", "fight", 1, true},
-  {"pod", "can", 1, true},
-  {"consegu", "can", 1, false},
-  {"consig", "can", 1, false},
-  {"pos", "can", 1, false},
-  {"dev", "should", 1, true},
-  {"pens", "think", 1, true},
-  {"v", "see", 1, false},
-  {"t", "hav", 0, false},
-  {"ti", "hav", 0, false},
-  {"funcion", "work", 1, true},
-  {"desenh", "draw", 1, true},
-  {"mant", "keep", 1, true},
-  {"dorm", "sleep", 1, true},
-  {"durm", "sleep", 1, true},
-  {"conhec", "meet", 1, true},
-  {"congel", "freeze", 1, true},
-  {"compr", "buy", 1, true},
-  {"continu", "keep", 1, true},
-  {"sa", "know", 1, true},
-  {"sab", "know", 1, true},
-  {"s", "know", 1, true},
-  {"fa", "do", 1, false},
-  {"pag", "pay", 1, true},
-  {"sent", "sit", 1, true},
-  {"levant", "stand_up", 1, true}, // deal with ts at some point lol, update: dealt
-  {"ach", "find", 1, false},
-  {"mord", "bit", 0, true},
-  {"vo", "fly", 1, true}              
+  {"sangr", "bleed", 1, true}
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -1042,7 +1000,7 @@ static vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 // TODO: ADD AN EXAMPLE FOR EACH CAUSE TS IS CONFUSING
 constexpr Suffix suff[] = {
   {"dade", "ty", 0, 0},
-  {"mente", "ly", 4, 0},
+  {"mente", "t", 4, 0},
   {"ental", "ental", 1, 0},
   {"mento", "ment", 0, 0},
   {"ável", "able", 1, 0},
@@ -1053,8 +1011,8 @@ constexpr Suffix suff[] = {
   {"ória", "ory", 1, 0},
   {"ência", "ency", 0, 0},
   {"ama", "am", 0, 0},
-  {"cidade", "city", 0, 0},
-  {"ogia", "ogy", 0, 0},
+  {"cidade", "citet", 0, 0},
+  {"ogia", "ogi", 0, 0},
   {"açado", "aced", 1, 0},
   {"ágico", "agic", 1, 0},
   {"asmo", "asm", 0, 0},
@@ -2142,12 +2100,16 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     
     return reordered_arr;
 }
+
+ 
+
+
 // demais
  if (i > 1 && sentence_arr.at(i - 1).type == 1 && sentence_arr.at(i).word == "demais") {
 
         reordered_arr.pop_back();  
 
-    reordered_arr.push_back(Word{"demais", "too", 4});
+    reordered_arr.push_back(Word{"demais", "för", 4});
     reordered_arr.push_back(Word{sentence_arr.at(i - 1).word, sentence_arr.at(i - 1).translation, sentence_arr.at(i - 1).type}); 
 }
     
@@ -2165,7 +2127,19 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
           
     
-    } 
+    }
+
+       
+ // article as suffix (common: en/n or neuter: et, t)
+            else if (two_ && previous->type == ARTICLE && current.type == NOUN) {
+     reordered_arr.push_back(current); 
+     uint8_t f = lookupFlags(nouns, current.word.c_str());
+     std::string suffix = (f & FEMININE_NEUTER) ? (current.translation.back() == 'e' ? "t" : "et")
+         : (current.translation.back() == 'e' ? "n" : "en");
+     reordered_arr.back().translation = current.translation + suffix;
+
+     reordered_arr[i - 1].translation.clear();
+ }
          else if (i > 0 && sentence_arr.at(i - 1).translation == "mine" && sentence_arr.at(i - 0).type == 0 ) {
           
             reordered_arr.pop_back(); 
@@ -2173,6 +2147,23 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type});
     
     } 
+
+// possessive pronoun (common: min or neuter: mitt)
+         else if (two_ && previous->type == POSSESSIVE_PRONOUN && current.type == NOUN) {
+     uint8_t f = lookupFlags(nouns, current.word.c_str());
+     std::string pro = (f & FEMININE_NEUTER) ? "mitt" : "min";
+
+     reordered_arr[i - 1].translation = pro;
+          reordered_arr.push_back(current);
+ }
+         else if (i > 0 && sentence_arr.at(i - 1).translation == "mine" && sentence_arr.at(i - 0).type == 0) {
+
+     reordered_arr.pop_back();
+     reordered_arr.push_back(Word{ "meu", "my", 40 });
+     reordered_arr.push_back(Word{ sentence_arr.at(i).word, sentence_arr.at(i).translation, sentence_arr.at(i).type });
+
+ }
+
  else if (i > 1 && sentence_arr.at(i - 2).type == 9  && sentence_arr.at(i - 1).type == 1 && isPunctuation(sentence_arr.at(i - 0).word)) {
           
             reordered_arr.pop_back(); 
@@ -2191,7 +2182,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             // verb
             reordered_arr.push_back(Word{ sentence_arr[i- 2].word, sentence_arr.at(i - 2).translation, sentence_arr.at(i).type}); 
             // yourself
-            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr.at(i).type}); 
+            reordered_arr.push_back(Word{ "se", "sig", sentence_arr.at(i).type}); 
         }
       // se mate  , se joga, 
            else if (i > 0 && sentence_arr.at(i - 1).word == "se" && (sentence_arr.at(i).type == 36 ||sentence_arr.at(i).type == 3)) {
@@ -2200,7 +2191,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             // verb
             reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr.at(i).translation, sentence_arr.at(i).type}); 
             // yourself
-            reordered_arr.push_back(Word{ "se", "yourself", sentence_arr.at(i).type}); 
+            reordered_arr.push_back(Word{ "se", "sig", sentence_arr.at(i).type}); 
         }
 
          // ------------------------ FOR/WITHOUT + VERB? IS THAT A NAME FOR THAT  --------------------
@@ -2250,16 +2241,16 @@ if(sentence_arr.at(i).word.back() == 'o' &&
     string pronoun;
     string pronoun_tr;
     if (sentence_arr[0].word.back() == 'o' && sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) != "ndo"){ 
-        pronoun = "I"; pronoun_tr = "eu";
+        pronoun = "Jag"; pronoun_tr = "eu";
     } 
     else if (sentence_arr[0].word.back() == 's'){ 
-        pronoun = "We"; pronoun_tr = "nós";
+        pronoun = "Nu"; pronoun_tr = "nós";
     }
      else if(sentence_arr[0].word.back() == 'e' || sentence_arr[0].word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
         pronoun = ""; 
     }
     else {
-        pronoun = "to";
+        pronoun = "att";
          pronoun_tr = "$inf";
     };
 
@@ -2534,14 +2525,7 @@ else if (i > 1 && sentence_arr.at(i - 1).translation == "not") {
             reordered_arr[i].translation = "it is";
             i++; 
         }
-    }    // ------------------------ ARTICLE TWEAKS  --------------------
-        // does the next translation start in a vowel? if so the article[9] should be an. a apple -> an apple
-       else if (i > 0 && reordered_arr[i - 1].type == 9 && isVowel(reordered_arr[i].translation[0]) && (reordered_arr[i].type == 0 || reordered_arr[i].type == 1)) {
-            string article = reordered_arr[i - 1].translation;
-            if (article != "the") article += "n"; 
-            reordered_arr[i - 1].translation = article; 
-
-}
+    }  
 
 
 //VAI TOMAR NO CU ESSA PORRA VSFFFFFFFFFFFFFFFFFFFFFFFF QUE ODIO 
