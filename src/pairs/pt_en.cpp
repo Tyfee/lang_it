@@ -335,6 +335,10 @@ constexpr Entry nouns[] = {
   {"predio", "building"},
   {"prédio", "building"},
 
+  
+  {"rua", "street", ON},
+  {"estrada", "highway", ON},
+
   {"chocolate", "chocolate"},
   {"melancia", "watermelon"},
   {"maçã", "apple"},

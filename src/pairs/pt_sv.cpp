@@ -511,7 +511,7 @@ constexpr Entry nouns[] = {
 
 
   {"principe", "prince"}, // TODO: irregular FEMININE_NEUTER noun shifts such as princesa, duquesa, garçonete, etc
-  {"tradutor", "translator"},
+  {"tradutor", "översattare"},
   {"metade", "half"},
   {"meio", "middle"},
   {"bolo", "cake"},
@@ -969,7 +969,7 @@ static const Verb* lookupIrrVerb(const char* root) {
 // 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it 20 = ize 21 == ct
 // quick dirty verb guessing
 constexpr VerbEnding patt_verbs[] = {
-  {"ptar", 0}, // adaptar = adapt,
+  {"dar", 0}, // estudar = estuderar,
   {"odir", 1}, // explodir = explode 
   {"atar", 2}, // contatar = contact
   {"trair", 2}, // extrair = extract
@@ -1437,7 +1437,7 @@ static Word prefixLookup(string word){
                         case 0: ending = (v->type == 0) ? "a" : ""; break;
                         case 1: case 2: ending = "de"; break;
                      
-                        case 3: ending = (v_irr->type == 0) ? "r" : "ar"; break;
+                        case 3: ending = (v->type == 0) ? "r" : "ar"; break;
                         case 4: ending = "a"; break;
                         default: break;
                     }
@@ -1471,10 +1471,21 @@ static Word prefixLookup(string word){
                         buffer[i] = '\0';
                     }
                     else if (verb_info == 3) {
-                        string base = (compound ? compound_verb : string(v_irr->translation)) + (compound ? verb_complement : "");
+                          size_t i = 0;
+                          const char* base = v->translation;
+                          while (*base && i + 1 < sizeof(buffer)) {
+                              buffer[i++] = *base++;
+                          }
 
-                        translation_ = base + ending;
-                    }
+                              if (i > 0 && buffer[i - 1] == 'e') {
+                                i--;
+                                }
+                          const char* ending = "ar";
+                         
+                           while (*ending && i + 3 < sizeof(buffer)) buffer[i++] = *ending++;
+
+                          buffer[i] = '\0';
+                      }
 
                     else if (verb_info == 4) { 
                         const char* used = "used to ";
@@ -1750,7 +1761,7 @@ static Word prefixLookup(string word){
               stem = word.substr(0, word.size() - ending_len); 
           } 
           switch(ve->code) { 
-              case 0: case 10: ending="pt"; break; 
+              case 0: case 10: ending="dera"; break; 
               case 1: case 11: ending="ode"; break; 
               case 2: case 12: ending="act"; break; 
               case 3: case 13: ending="trate"; break; 

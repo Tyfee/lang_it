@@ -121,8 +121,7 @@ int main(int argc, char* argv[]) {
         if (info) {
             #if defined(ALL)
 
-            std::cout << "Available languages: English, Portuguese(BR), Español, French, Japanese, Svenska\nBinary size : \n";
-
+            std::cout << "Available languages: English, Portuguese(BR), Spanish, French, Japanese, Svenska, Maxakali \nBinary size: 707kb\n";
             return 0;
             #endif
 
