@@ -551,6 +551,10 @@ inline std::string detect_language(const char* sentence) {
         }
          if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ä") != std::string::npos){
             sv += 0.9f;
+            pt -= 1.0f;
+            en -= 1.0f;
+            es -= 1.0f;
+            fr -= 1.0f;
         }
         
         if (word.find("ão") != std::string::npos)
@@ -633,7 +637,7 @@ inline std::string detect_language(const char* sentence) {
     }else if (maxScore == zh) {
         language = "zh";
     }else if (maxScore == sv) {
-        language = "sb";
+        language = "sv";
     }else if (maxScore == my) {
         language = "my";
     }
