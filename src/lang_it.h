@@ -549,11 +549,14 @@ inline std::string detect_language(const char* sentence) {
          if (word.find("k") != std::string::npos || word.find("y") != std::string::npos || word.find("w") != std::string::npos){
             pt -= 1.0f;
         }
+         if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ä") != std::string::npos){
+            sv += 0.9f;
+        }
         
         if (word.find("ão") != std::string::npos)
            { pt += 0.9f;}
         if (word.find("yo") != std::string::npos)
-            {es += 0.6f; en += 0.7f; fr -= 0.8f;
+            {es += 0.6f; en += 0.7f; fr -= 0.8f; ja += 0.5;
             }
         if (word.find("nh") != std::string::npos || word.find("lh") != std::string::npos){
             pt += 1.0f;}

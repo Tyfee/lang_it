@@ -145,6 +145,7 @@ int main(int argc, char* argv[]) {
 
             const char* sentence = argv[2];
             std::cout << detect_language(sentence) << std::endl;
+            return 0; 
         }
         else {
             std::cerr << "Usage:\n"
