@@ -536,7 +536,7 @@ constexpr Entry nouns[] = {
   {"chapéu", "hat"},
   {"lápis", "pencil"},
   {"caneta", "pen"},
-  {"bolso", "pocket"},
+  {"bolso", "ficka"},
 
   
   {"ouro", "gold"},
@@ -909,7 +909,7 @@ static const Verb* lookupRegVerb(const char* root) {
 
 
 constexpr Verb irr_verbs[] = {
-  {"entend", "forstå", 0, true},
+  {"entend", "forstå", 1, true},
   {"beb", "drink", 1, false},
   {"sangr", "bleed", 1, true}
 };
@@ -927,8 +927,8 @@ static const Verb* lookupIrrVerb(const char* root) {
 // 0 == pt 1 = ode 2 = ct 3 == ate 4 == ed 5 == icate 6 == ify 7 == itute 8 == er 9 = it 20 = ize 21 == ct
 // quick dirty verb guessing
 constexpr VerbEnding patt_verbs[] = {
-  {"dar", 0}, // estudar = estuderar,
-  {"odir", 1}, // explodir = explode 
+  {"dar", 0}, // estudar = estudera,
+  {"dir", 0}, // expandir = expandera 
   {"atar", 2}, // contatar = contact
   {"trair", 2}, // extrair = extract
   {"trar", 3}, // contatar = contact // what about encontrar.... (needs more specification)
@@ -1573,57 +1573,16 @@ static Word prefixLookup(string word){
                         aux = true;
                     } else if(verb_info == 1 || verb_info == 2){
          //TODO: Set up the very specific rules that most verbs can abide to.
-                
-                if(string(v_irr->translation).substr(string(v_irr->translation).length() - 3, 2) == "ee"){
-                      translation_ = string(v_irr->translation).substr(0, string(v_irr->translation).length() - 2) +
-                      string(v_irr->translation).substr(string(v_irr->translation).length() - 1) + 
-                      (string(v_irr->translation).substr(string(v_irr->translation).length() - 1) == "p" ? "t" : "");
-                    
-                      // O VOWEL SHIFT + E 
-
-                      // this is a weird ass pattern that works for a small lil list of verbs (7 as of right now T-T)
-                      // if an irregular verb starts with two consonants (substr(0, 1) and substr(1, 1) dont pass isVowel())
-                      // and the two consonants are followed by either 'ea', 'i' or 'ee'*
-                      // BUT IT DOESNT END IN D, G, P, K or M LMAOOOOOOOOOO
-                      // you basically get the vowel(s)* that follow the two consonants and replace them with an O
-                    //and if it DOESNT end with an E, you add it 
-                        // the vowel to o shift also works if the verb ends in 'get' (get => got, forget => forgot )
-                      // this way steal => stole, break => broke, speak => spoke, drive => drove 
-
-                } else if (string(v_irr->translation).length() >= 3 && // is the word more than three letters?
-                      !isVowel(string(v_irr->translation)[0]) &&   // is the first letter not a vowel?
-                      !isVowel(string(v_irr->translation)[1]) &&   // is the second letter not a vowel?
-                      (string(v_irr->translation).substr(2, 2) == "ea" || //are they followed by either "ea" || "i" || "ee"
-                        string(v_irr->translation).substr(2, 1) == "i" || 
-                        string(v_irr->translation).substr(2, 2) == "ee") &&
-                      string(v_irr->translation).back() != 'd' &&  // do they NOT end in 'd' || 'g' || 'p' || 'k'
-                      string(v_irr->translation).back() != 'g' && 
-                      string(v_irr->translation).back() != 'p' &&
-                     string(v_irr->translation).back() != 'k' &&
-                       string(v_irr->translation).back() != 'm'
-                    ) {
-                            size_t pos;
-                            size_t length;
-
-                            // qual das vogais é a que o verbo tem? 
-                            if ((pos = string(v_irr->translation).find("ea")) != string::npos) {
-                                length = 2;  
-                            } else if ((pos = string(v_irr->translation).find("i")) != string::npos) {
-                                length = 1; 
-                            } else if ((pos = string(v_irr->translation).find("ee")) != string::npos) {
-                                length = 2; 
-                            } else {
-                                translation_ = string(v_irr->translation);
-                            }
-
-                          translation_ = string(v_irr->translation);
-                          
-                          // remover as vogais e substituir por 'o'
-                          translation_.replace(pos, length, "o");
-                          if (translation_.back() != 'e') {
-                              translation_ += "e";
+    
+             if (string(v_irr->translation).length() >= 3 && 
+                string(v_irr->translation)[string(v_irr->translation).size()-2] == char(0xC3) && 
+                string(v_irr->translation)[string(v_irr->translation).size()-1] == char(0xA5)) {
+                                 translation_ = string(v_irr->translation).erase(string(v_irr->translation).size() - 2);  // remove å
+                                 translation_ += "od";   
                           }
-                        }
+                          {
+                            
+                           }
 
             
                                  // ANOTHER HYPERSPECIFIC RULE
@@ -2134,8 +2093,8 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
             else if (two_ && previous->type == ARTICLE && current.type == NOUN) {
      reordered_arr.push_back(current); 
      uint8_t f = lookupFlags(nouns, current.word.c_str());
-     std::string suffix = (f & FEMININE_NEUTER) ? (current.translation.back() == 'e' ? "t" : "et")
-         : (current.translation.back() == 'e' ? "n" : "en");
+     std::string suffix = (f & FEMININE_NEUTER) ? (isVowel(current.translation.back()) ? "t" : "et")
+         : (isVowel(current.translation.back()) ? "n" : "en");
      reordered_arr.back().translation = current.translation + suffix;
 
      reordered_arr[i - 1].translation.clear();
