@@ -31,10 +31,6 @@ vector<FrequencyTable> tabela = {
 };
 
 
-
-
-
-
 Homonym homonimos[1];
 
 const size_t homonimosCount = sizeof(homonimos) / sizeof(homonimos[0]);
@@ -60,11 +56,7 @@ constexpr Entry nouns[] = {
   {"dez", "ten"},
   {"cem", "a hundred"},
   {"mil", "a thousand"},
-  {"primeiro", "first"},
   {"segundo", "second"},
-  {"terceiro", "third"},
-  {"quarto", "fourth"},
-  {"número", "number"},
   {"ano", "year"},
   {"mês", "month"},
   {"hora", "hour"},
@@ -159,7 +151,6 @@ constexpr Entry adj[] = {
   {"vermelho", "rojo"},
   {"bonito", "belo"},
   {"legal", "genial"},
-  {"pequeno", "little"},
   {"maior", "más grande"},
   {"engraçado", "gracioso"},
   {"sozinho", "solo"},
@@ -170,26 +161,19 @@ constexpr Entry adj[] = {
   {"mal", "malo"},
   {"mau", "malo"},
   {"humido", "humid"},
-  {"melhor", "better"},
-  {"pior", "worse"},
+  {"pior", "peor"},
   {"estranho", "raro"},
   {"esquisito", "raro"},
   {"doente", "enfermo"},
-  {"certo", "certain"},
-  {"outro", "other"},
+  {"outro", "otro"},
   {"gratis", "free"},
-  {"livre", "free"},
-  {"ultimo", "last"},
-  {"doce", "sweet"},
-  {"azedo", "sour"},
-  {"amargo", "bitter"},
+  {"doce", "dulce"},
+  {"azedo", "ácido"},
   {"capaz", "capable"},
   {"louco", "crazy"},
-  {"próximo", "close"},
   {"perto", "close"},
   {"pesado", "heavy"},
-  {"torto", "bent"},
-  {"perto", "close"}
+  {"torto", "bent"}
 };
 
 //adverbs
@@ -289,48 +273,49 @@ constexpr Suffix suff[] = {
 //normalization
 //this will turn sets of letters that shift on translation and change them accordingly.
 // stuff such as aceitar -> aceipt -> accept
-static string normalize(string word) {
-    string normalized_ = word;
 
+typedef struct {
+    const char* letters;
+    const char* replacement;
+    int length; // length in bytes!!! so ça is 3 bytes cause ç is 2 bytes :p
+} Cluster;
+
+static string normalize(string word) {
+ 
+
+
+const Cluster to_replace[] = {
+        {"ch", "ll", 2},
+        {"qu", "cu", 2},
+        {"lh", "j", 2},
+        {"ça", "za", 3}, // ça = 3 bytes, see
+        {"nh", "ñ", 2},
+        {"vr", "br", 2}
+};
+    string normalized_ = word;
+    
     if (word.length() > 3) {
         char thirdLast = word[word.size() - 3];
         string last2 = word.substr(word.size() - 2);
        
-
+     // replace every entry in the Cluster struct regardless of position
+     // only useful for sounds that DO NOT exist in language B and are 1:1 equivalent to langugage A
+        for(int i = 0; i < (sizeof(to_replace) / sizeof(to_replace[0])); i++){
+            size_t pos = 0;
+            while ((pos = normalized_.find(to_replace[i].letters, pos)) != string::npos) {
+                normalized_.replace(pos, to_replace[i].length, to_replace[i].replacement);
+                pos += 2; 
+            }
+        }
         
          if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "agem") {
             normalized_ = normalized_.substr(0, normalized_.size() - 4) + "aje";
         }
+        if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "eiro") {
+                    normalized_ = normalized_.substr(0, normalized_.size() - 4) + "ero";
+         }
 
-        size_t pos = 0;
-        while ((pos = normalized_.find("ch", pos)) != string::npos) {
-            normalized_.replace(pos, 2, "ll");
-            pos += 2; 
-        }
-
-        pos = 0;
-        while ((pos = normalized_.find("qu", pos)) != string::npos) {
-            normalized_.replace(pos, 2, "cu");
-            pos += 2; 
-        }
-        
-        pos = 0;
-        while ((pos = normalized_.find("lh", pos)) != string::npos) {
-            normalized_.replace(pos, 2, "j");
-            pos += 2; 
-        }
-        
-        pos = 0;
-        while ((pos = normalized_.find("ça", pos)) != string::npos) {
-            normalized_.replace(pos, 3, "za");
-            pos += 2; 
-        }
-          pos = 0;
-        while ((pos = normalized_.find("nh", pos)) != string::npos) {
-            normalized_.replace(pos, 2, "ñ");
-            pos += 2; 
-        }
-         
+       
         if (normalized_.size() >= 3 && (normalized_.substr(normalized_.size() - 2) == "ém" || normalized_.substr(normalized_.size() - 2) == "em")) {
             normalized_ = normalized_.substr(0, normalized_.size() - 2) + "ién";
         }
@@ -338,6 +323,13 @@ static string normalize(string word) {
 
     return normalized_;
 }
+
+
+
+Homonym homonyms_es[] = {
+};
+
+const size_t homonymCount_es = sizeof(homonyms_es) / sizeof(homonyms_es[0]);
 
 static Word morphemeLookup(string word){
   string translation_; 
@@ -726,7 +718,7 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
         spanish_context[contextIndex] = final_arr[i].word;  
         word_types[contextIndex] = final_arr[i].type;  
         
-        string resolved_word = semantics(spanish_context, word_types,contextIndex, homonyms, homonymCount);
+        string resolved_word = semantics(spanish_context, word_types,contextIndex, homonyms_es, homonymCount_es);
 
         final_arr[i].translation = resolved_word;
     }

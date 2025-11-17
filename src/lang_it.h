@@ -172,6 +172,7 @@ inline uint8_t lookupSuffFlags(const Suffix (&dict)[N], const char* word) {
 
 
 
+
 //invert a pair (casa azul -> azul casa)
 inline void invert(std::vector<Word>& output, const Word& first, const Word& second) {
     if (!output.empty()) output.pop_back(); 
@@ -392,8 +393,7 @@ inline std::vector<std::string> tokenize(const std::string &text) {
       return tokens;
   }
 
-#include <vector>
-#include <string>
+  
 
 inline std::vector<std::string> tokenize_cjk(const std::string &text) {
     std::vector<std::string> tokens;
@@ -421,6 +421,21 @@ inline std::vector<std::string> tokenize_cjk(const std::string &text) {
     return tokens;
 }
 
+
+
+//imma cook with this.
+// one day, i'll make it so that all the ifs and else ifs on the loop over the vector can be described wiht a script language-like rule
+// sometihg like add_rule(vector, "IF NOUN THEN ADJECTIVE DO INVERT");
+// HOld up let me prototype more:
+// add_rule(vector, "IF ARTICLE THEN NOUN OR ADJECTIVE THEN VERB OR ADVERB DO REPLACE FIRST TO 'NOVO'");
+// i know nothing about how to do parsing in a serious manner but well see
+// but thats just a theory..................................................................
+// a game th-
+
+inline void add_rule(std::vector<Word>& output, std::string rule) {
+
+    std::vector<std::string>tokens =  tokenize(rule);
+}
 
 
 
@@ -643,6 +658,7 @@ inline std::string detect_language(const char* sentence) {
     }
     return language;
 }
+
 
 
 

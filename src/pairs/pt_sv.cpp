@@ -15,26 +15,8 @@
 using namespace std;
 
 
-//note for myself. 
-// how many verbs can actually be categorized into rules vs complete exceptions for conjugation?
-// *IT WAS REVEALED TO ME IN A DREAM*, that the number of verbs in english that are actually exceptions (i'll call them isolates)
-// and can't fit into hyperspecific-non-grammatical-pseudo fake rules can actually be 
-// counted with less fingers than the ones in my hand 
-// so someone shoot me if i'm wrong
-// the only true exceptions i can think of from the top of my head are go -> went, see -> saw and of course be -> was were 
-// there are no ways to apply morphology rules to reach their past tense, and there aren't any other verbs like them
-// EVERY OTHER EXISTING VERB does similar operations to at least a handful of others, such as:
-// draw -> drew, come -> came. (vowel change)
-// think -> thought, teach ->  taught: (complex suffix appending)
-// love -> loved, paint -> painted: (simple suffix appending)
-// feed -> fed , meet -> met: simple vowel reduction
 
 
-
-// this will happen at some point
-// a final check for anomaly fixing
-// it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
-// and a normalized frequency number like 0.7, to say whether or not it is valid
 typedef struct{
      vector<int> ngram;
      float frequency;
@@ -45,19 +27,6 @@ vector<FrequencyTable> table_sv = {
     { {5, 2, 7}, 0.7 },
     { {4, 4, 3}, 0.3 }
 };
-
-
-
-
-
-// also for the future:
-// this would be for homonyms only, i have differnt plans for polysemy;
-// but stuff like banco (pra sentar) e banco (pra guardar dinheiro), PRECISA de uma camada a mais pra analise semantica
-// vou guardar tipos de palavras que geralmente são encontradas em cada tipo pra apaziguar conflitos;
-// manga (fruit vs clothing), laranja (fruit vs color), banco (furniture vs institution), pena (feather vs pity), cabo (yikes), grama (grass vs gram)
-// like manga would definitely be a fruit if followed by verbs like "comer" ou "colher", or even shit like "de", cause suco de manga, doce de manga
-// where as you cant make juice out of sleeves, and the prefere preposition would be "da" manga,
-// so i think checking i-1, i-2, i, i+1, i+2 seems fine
 
 
 
@@ -232,19 +201,19 @@ constexpr Entry fixed_ngrams[] = {
   
   {"desse_jeito", "this way"},
   
-  {"banco_de_dados", "database"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
+  {"banco_de_dados", "databas"}, // this needs to account for PLURAL FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK, LIKE BANCOS DE DADOS ARGH
   {"roupa_intima", "underwear"},
  
   {"quanto_mais", "the more"},
   {"qual_é", "what is"},
-  {"por_que", "why"},
+  {"por_que", "varför"},
   {"do_que", "than"},
   {"por_favor", "please"},
-  {"para_sempre", "forever"},
-  {"pra_sempre", "forever"},
+  {"para_sempre", "för alltid"},
+  {"pra_sempre", "för alltid"},
   {"o_seu", "your"},
-  {"bom_dia", "good morning"},
-  {"boa_noite", "good night"},
+  {"bom_dia", "god morgon"},
+  {"boa_noite", "god natt"},
   {"boa_tarde", "good evening"},
   
   {"papai_noel", "Santa Claus"},
@@ -1226,13 +1195,6 @@ static Word createNounFromVerb(string verb){
     
     return Word{verb, n, 0};
 }
-//maybe adjectives as well? but idk, like bless[3] -> blessed[1], curse -> cursed, (that lowk might be easier)
-//does it work in pt tho?
-// abençoar -> abençoado, amaldiçoar -> amaldiçoado, curar -> curado
-// bless -> blessed, curse -> cursed, cure -> cured
-// seems like it does
-// but theres the irregular verbs of courseeeeeeeeee fuckdddddddddddd
-// think of written spoken, broken, at least is literally the past tense with an "N"
 
 
 static Word createAdjectiveFromVerb(string verb){
