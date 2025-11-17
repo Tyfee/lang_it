@@ -1,6 +1,12 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 
+#define INVERT(FIRST, SECOND) \
+    if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
+        invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
+        continue; \
+    }
+
 
 
 #include <string>
@@ -178,6 +184,13 @@ inline uint8_t lookupSuffFlags(const Suffix (&dict)[N], const char* word) {
 inline void invert(std::vector<Word>& output, const Word& first, const Word& second) {
     if (!output.empty()) output.pop_back(); 
     output.push_back(first);
+    output.push_back(second);
+}
+//
+inline void replace_first(std::vector<Word>& output, const Word& replacement, const Word& second) {
+    if (!output.empty()) output.pop_back();
+
+    output.push_back(replacement);
     output.push_back(second);
 }
 
@@ -423,60 +436,6 @@ inline std::vector<std::string> tokenize_cjk(const std::string &text) {
 }
 
 
-
-//imma cook with this.
-// one day, i'll make it so that all the ifs and else ifs on the loop over the vector can be described wiht a script language-like rule
-// sometihg like add_rule(vector, "IF NOUN THEN ADJECTIVE DO INVERT");
-// HOld up let me prototype more:
-// add_rule(vector, "IF ARTICLE THEN NOUN OR ADJECTIVE THEN VERB OR ADVERB DO REPLACE FIRST TO 'NOVO'");
-// i know nothing about how to do parsing in a serious manner but well see
-// but thats just a theory..................................................................
-// a game th-
-
-
-// it is now add_rules(input, output 
-// {"IF NOUN THEN ADJECTIVE DO INVERT"}, {"OTHER RULE"})
-// none of this works right now tho, i didnt even test it :p
-inline void add_rules(std::vector<Word>& input, std::vector<Word>& output, std::vector<std::string> rules) {
-
-    // first we parse the input vector
-    for (size_t i = 0; i < input.size(); ++i) {
-        bool one_ = (i == 0);
-        bool two_ = (i >= 1);
-        bool three_ = (i >= 2);
-
-         Word& current = input.at(i);
-         Word* previous = two_ ? &input.at(i - 1) : nullptr;
-         Word* previous_ = three_ ? &input.at(i - 2) : nullptr;
-    
-
-        //then the rules vector
-        for (int j = 0; j < rules.size(); ++j) {
-            std::vector<std::string>tokens = tokenize(rules[j]);
-            int vector_size = 1;
-            //i'll try to parse the inversion rule for adjectives and nouns first
-            // so IF NOUN THEN ADJECTIVE DO INVERT
-            for (int i = 0; i < tokens.size(); i++) {
-                if (tokens[i] == "THEN") { 
-                    if (vector_size == 1) {
-                        current = input.at(i);
-                        previous = &input.at(i - 1);
-                    }
-                    if (vector_size == 2) {
-                        previous =  &input.at(i - 2);
-                    }
-                    vector_size += 1; 
-                }
-            }
-
-            if (two_ && previous->type == NOUN && current.type == ADJECTIVE) {
-                invert(output, current, *previous);
-            }
-        }
-     
-
-    }
-    }
 
 
 

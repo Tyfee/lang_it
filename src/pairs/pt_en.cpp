@@ -2064,6 +2064,9 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     int word_count = sentence_arr.size();
 
 
+
+
+
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
     bool one_ = (i > 0);
     bool two_ = (i >= 1);
@@ -2072,7 +2075,10 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     const Word& current = sentence_arr.at(i);
     const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;
     const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
-    
+
+
+    // this is a rule with a macro, so crazyyyyyyy omg shes so crazy i lov eher
+    INVERT(NOUN, ADJECTIVE);
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
@@ -2122,6 +2128,8 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     return reordered_arr;
 }
 // demais
+
+
  if (two_ && previous->type == ADJECTIVE && current.word == "demais") {
 
         reordered_arr.pop_back();  
@@ -2260,9 +2268,9 @@ else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr
 
   // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-        else if (two_ && previous->type == NOUN && current.type == ADJECTIVE) {
+     /*   else if (two_ && previous->type == NOUN && current.type == ADJECTIVE) {
            invert(reordered_arr, current, *previous);
-        }
+        }*/
 
       
 

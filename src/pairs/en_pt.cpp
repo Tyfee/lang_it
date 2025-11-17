@@ -1512,10 +1512,14 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
     
-for (size_t j = 0; j < sentence_arr.size(); ++j) {
-}
+
+
+
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
+
+
+        INVERT(ADJECTIVE, NOUN);
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
@@ -1662,14 +1666,7 @@ else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr
 
   // ------------------------ ADJECTIVE ORDER  -----------------
         // a set is noun[0] and adjective[1], we switch order, so that casa[0] azul[1] -> blue[1] house[0]
-        else if (i > 0 && sentence_arr.at(i - 1).type == 1 && sentence_arr.at(i).type == 0) {
-            reordered_arr.pop_back();   
-
-            reordered_arr.push_back(sentence_arr.at(i));  
-            reordered_arr.push_back(sentence_arr.at(i - 1)); 
-            
-        }
-      
+   
 
       
 
