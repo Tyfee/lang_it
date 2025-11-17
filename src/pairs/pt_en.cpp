@@ -2083,13 +2083,13 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     if (word_count == 1 && (current.type == VERB || current.type == INTRANSITIVE_VERB )) {
     string pronoun;
 
-    if(current.word.back() == 'o' && current.word.substr(current.word.length() - 3) != "ndo"){
+    if(sentence_arr[0].word.length() >= 3 && (current.word.back() == 'o' && current.word.substr(current.word.length() - 3) != "ndo")){
         pronoun = "I ";   
     } else if(current.word.back() == 's'){
         pronoun = "we ";
     } else if(current.word.back() == 'm'){
         pronoun = "they ";
-    } else if(current.word.back() == 'e' || current.word.substr(sentence_arr[0].word.length() - 3) == "ndo"){
+    } else if(sentence_arr[0].word.length() >= 3 && (current.word.back() == 'e' || current.word.substr(sentence_arr[0].word.length() - 3) == "ndo")){
         pronoun = "";
     }else {
     const std::string &word = current.translation;
