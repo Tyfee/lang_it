@@ -110,7 +110,8 @@ typedef struct
 
 
 // making a decent API for the pairs to access and make implementing easier, but i know i'll keep changing it and never be satisfied
-
+// also, the reason as to why the flag lookups functions are all separate is because i implemented bit masking after having most of the shit done
+// i could return the whole struct and access jjust waht i need but i'm sooooooooooooooooooooo lazy.
 template <size_t N>
 inline const char* lookup(const Entry (&dict)[N], const char* word) {
     for (size_t i = 0; i < N; ++i) {
@@ -432,10 +433,50 @@ inline std::vector<std::string> tokenize_cjk(const std::string &text) {
 // but thats just a theory..................................................................
 // a game th-
 
-inline void add_rule(std::vector<Word>& output, std::string rule) {
 
-    std::vector<std::string>tokens =  tokenize(rule);
-}
+// it is now add_rules(input, output 
+// {"IF NOUN THEN ADJECTIVE DO INVERT"}, {"OTHER RULE"})
+// none of this works right now tho, i didnt even test it :p
+inline void add_rules(std::vector<Word>& input, std::vector<Word>& output, std::vector<std::string> rules) {
+
+    // first we parse the input vector
+    for (size_t i = 0; i < input.size(); ++i) {
+        bool one_ = (i == 0);
+        bool two_ = (i >= 1);
+        bool three_ = (i >= 2);
+
+         Word& current = input.at(i);
+         Word* previous = two_ ? &input.at(i - 1) : nullptr;
+         Word* previous_ = three_ ? &input.at(i - 2) : nullptr;
+    
+
+        //then the rules vector
+        for (int j = 0; j < rules.size(); ++j) {
+            std::vector<std::string>tokens = tokenize(rules[j]);
+            int vector_size = 1;
+            //i'll try to parse the inversion rule for adjectives and nouns first
+            // so IF NOUN THEN ADJECTIVE DO INVERT
+            for (int i = 0; i < tokens.size(); i++) {
+                if (tokens[i] == "THEN") { 
+                    if (vector_size == 1) {
+                        current = input.at(i);
+                        previous = &input.at(i - 1);
+                    }
+                    if (vector_size == 2) {
+                        previous =  &input.at(i - 2);
+                    }
+                    vector_size += 1; 
+                }
+            }
+
+            if (two_ && previous->type == NOUN && current.type == ADJECTIVE) {
+                invert(output, current, *previous);
+            }
+        }
+     
+
+    }
+    }
 
 
 
@@ -564,7 +605,7 @@ inline std::string detect_language(const char* sentence) {
          if (word.find("k") != std::string::npos || word.find("y") != std::string::npos || word.find("w") != std::string::npos){
             pt -= 1.0f;
         }
-         if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ä") != std::string::npos){
+         if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ö") != std::string::npos){
             sv += 0.9f;
             pt -= 1.0f;
             en -= 1.0f;

@@ -326,8 +326,7 @@ const Cluster to_replace[] = {
 
 
 
-Homonym homonyms_es[] = {
-};
+Homonym homonyms_es[1];
 
 const size_t homonymCount_es = sizeof(homonyms_es) / sizeof(homonyms_es[0]);
 
