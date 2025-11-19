@@ -2077,8 +2077,12 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
 
 
-    // this is a rule with a macro, so crazyyyyyyy omg shes so crazy i lov eher
-    INVERT(NOUN, ADJECTIVE);
+    // I FINALLY COOKED. i'll keep working on the rules but this is what i tested and saw it works.
+    // theres a parser function + a macro so its just RULE("WRITTEN RULE")
+
+     RULE("IF NOUN THEN ADJECTIVE DO INVERT");
+     RULE("IF OBLIQUE_PRONOUN THEN VERB OR INTRANSITIVE_VERB DO INVERT");
+    
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement
@@ -2128,7 +2132,6 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     return reordered_arr;
 }
 // demais
-
 
  if (two_ && previous->type == ADJECTIVE && current.word == "demais") {
 
@@ -2376,11 +2379,11 @@ else if (two_ && previous->translation == "not") {
         
      // ------------------------ OBLIQUE PRONOUNS  -----------------
         // a set is oblique pronoun[11] and verb[3], we switch order, so that te[11] amo[3] -> love[3] you[11]
-        else if (two_&& previous->type == OBLIQUE_PRONOUN && (current.type == VERB|| current.type == INTRANSITIVE_VERB)) {
+        // else if (two_&& previous->type == OBLIQUE_PRONOUN && (current.type == VERB|| current.type == INTRANSITIVE_VERB)) {
         
-            invert(sentence_arr, *previous, current);
+        //     invert(sentence_arr, *previous, current);
          
-        } 
+        // } 
 
     // intransitive verbs, just plug an "it" at the end, theres way more complicated nuance 
     // but i'm not doing allat now.

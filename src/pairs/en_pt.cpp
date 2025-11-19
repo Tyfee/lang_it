@@ -1519,7 +1519,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
 
 
-        INVERT(ADJECTIVE, NOUN);
+     RULE("IF ADJECTIVE THEN NOUN DO INVERT");
 
         // ------------------------ PRONOUN ASSIGNING  -----------------
         // english verbs do not conjugate person aside from third vs non-third (and even thats an understatement

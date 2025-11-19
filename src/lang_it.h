@@ -1,6 +1,10 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 
+#define RULE(str) \
+    if (rule(str, sentence_arr, reordered_arr, i)) continue;
+
+
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
         invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
@@ -56,6 +60,22 @@ enum WordType {
     ADVERB = 13,
     POSSESSIVE_PRONOUN = 40
 };
+
+inline WordType typeFromString(const std::string& s) {
+    if (s == "NOUN") return NOUN;
+    if (s == "ADJECTIVE") return ADJECTIVE;
+    if (s == "VERB") return VERB;
+    if (s == "INTRANSITIVE_VERB") return INTRANSITIVE_VERB;
+    if (s == "PRONOUN") return PRONOUN;
+    if (s == "OBLIQUE_PRONOUN") return OBLIQUE_PRONOUN;
+    if (s == "PREPOSITION") return PREPOSITION;
+    if (s == "ARTICLE") return ARTICLE;
+    if (s == "ADVERB") return ADVERB;
+    if (s == "POSSESSIVE_PRONOUN") return POSSESSIVE_PRONOUN;
+
+    return NOUN;
+}
+
 
 
 enum Flags: uint8_t {
@@ -345,7 +365,6 @@ inline std::string trigramLookup(const Entry (&fixed_ngrams)[N],
 }
 
 
-
 // Y is considered a vowel for english reasons obviously but one day i'll see what to do, but only
 // if another language i implement needs a vowel as a consonant
 inline bool isVowel(char x)
@@ -357,6 +376,9 @@ inline bool isVowel(char x)
     else
      return false;
 }
+
+
+
 
 
 inline void to_lower(char *s) {
@@ -482,6 +504,139 @@ inline uint32_t next_utf8_char(const std::string& s, size_t& i) {
     i += extra;
     return cp;
 }
+
+struct Action {
+    const char* key;
+    void (*fp)(std::vector<Word>&, const Word&, const Word&);
+};
+
+
+inline Action actions[] = {
+    { "INVERT", &invert }
+};
+
+
+inline std::vector<std::string> parser(const std::string& s) {
+    std::vector<std::string> out;
+    std::string current;
+
+    for (char c : s) {
+        if (c == ' ') {
+            if (!current.empty()) {
+                out.push_back(current);
+                current.clear();
+            }
+        } else {
+            current.push_back(c);
+        }
+    }
+
+    if (!current.empty()) {
+        out.push_back(current);
+    }
+
+    return out;
+}
+
+
+inline auto lookupFunction(const char* query)
+    -> void (*)(std::vector<Word>&, const Word&, const Word&)
+{
+    int actionCount = sizeof(actions) / sizeof(actions[0]);
+
+    for (int i = 0; i < actionCount; i++) {
+
+        const char* p = query;
+        const char* r = actions[i].key;
+        while (*p && *r && (*p == *r)) {
+            p++;
+            r++;
+        }
+        if (*p == *r) {
+            return actions[i].fp;
+        }
+    }
+
+    return nullptr;
+}
+inline bool rule(
+    const std::string& rule,
+    const std::vector<Word>& sentence_arr,
+    std::vector<Word>& reordered_arr,
+    int i
+){
+    std::vector<std::string> t = parser(rule);
+   
+    // this accounts for IF A THEN B(C..D..) DO ACTION
+    //its valud if theres more than 6 and starts in IF
+    if (t.size() < 6) return false;
+    if (t[0] != "IF") return false;
+
+    // -first parse a
+    std::string A_str = t[1];
+    WordType A = typeFromString(A_str);
+
+    if (t[2] != "THEN") return false;
+
+    // -parse  the b or optional c d
+    std::vector<WordType> Bs;
+
+    int idx = 3;
+
+    Bs.push_back(typeFromString(t[idx]));
+    idx++;
+
+    while (idx < (int)t.size() && t[idx] == "OR") {
+        idx++;
+        Bs.push_back(typeFromString(t[idx]));
+        idx++;
+    }
+
+    // find the 'do' key somewhere  (it could be later in the chain)
+    if (t[idx] != "DO") return false;
+    idx++;
+
+    if (idx >= (int)t.size()) return false;
+
+    std::string action_str = t[idx];
+
+    if (i < 1) return false;
+
+    WordType type_prev  = static_cast<WordType>(sentence_arr[i - 1].type);
+    WordType type_curr  = static_cast<WordType>(sentence_arr[i].type);
+
+    std::string word_prev = sentence_arr[i - 1].word;
+    std::string word_curr = sentence_arr[i].word;
+    
+    std::string translation_prev = sentence_arr[i - 1].translation;
+    std::string translation_curr = sentence_arr[i].translation;
+
+    // Check first condition: previous == A
+    if (type_prev != A) return false;
+
+    // Check second condition: current == one of Bs
+    bool matchesB = false;
+    for (size_t k = 0; k < Bs.size(); ++k) {
+        if (Bs[k] == type_curr) {
+            matchesB = true;
+            break;
+        }
+    }
+
+    if (!matchesB) return false;
+
+    // lookup the function you found and call the pointer
+
+    auto func = lookupFunction(action_str.c_str());
+    if (func) {
+        func(reordered_arr, sentence_arr[i], sentence_arr[i - 1]);
+        return true;
+    }
+
+    return false;
+}
+
+
 
 // this is the ugliest code you will see ever, do not pay attention to it :(
 // lowk might work tho, i'll tune the parameters later
