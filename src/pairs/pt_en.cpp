@@ -2727,12 +2727,28 @@ for (size_t i = 0; i < final_arr.size(); ++i) {
     return final_arr;
 }
 
-std::string traduzir_en(const char* sentence) {
+vector<string> auto_correct_pt(string sentence) {
+
+    vector<string> corrected_sentence = tokenize(sentence);
+
+    for (int i = 0; i < corrected_sentence.size(); ++i) {
+        string this_ = corrected_sentence[i];
+        if (this_.length() > 1) {
+
+        }
+    }
+
+    return corrected_sentence;
+
+}
+
+
+std::string traduzir_en(const char* sentence, bool auto_correct) {
     char buffer[250];
     strncpy(buffer, sentence, sizeof(buffer));
     buffer[sizeof(buffer) - 1] = '\0';
     to_lower(buffer);
-    vector<string> arr = tokenize(string(buffer));  
+    vector<string> arr = auto_correct ? auto_correct_pt(string(buffer)) : tokenize(string(buffer));  
     std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
     
     return script_adequation(translated); 

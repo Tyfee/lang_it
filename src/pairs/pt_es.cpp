@@ -217,7 +217,7 @@ struct VerbEnding {
 // is it intransitive?
 constexpr Verb reg_verbs[]  = {
   {"fal", "hablar", false, false},
-  {"gost", "gustar", false, true},
+  {"gost", "gustar", false, DATIVE_CONST},
   {"com", "comer", false, false},
   
 };

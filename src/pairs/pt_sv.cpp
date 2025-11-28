@@ -804,8 +804,6 @@ struct VerbEnding {
 constexpr Verb reg_verbs[]  = {
   {"am", "älsk", 0, false},
   {"gost", "gill", 0, false},
-  {"quis", "vill", 1, false},
-  {"quer", "vill", 1, false},
   {"funcion", "funger", 0, true},
   {"caç", "hunt", 1, true},
   {"corr", "run", 1, true},
@@ -880,7 +878,9 @@ static const Verb* lookupRegVerb(const char* root) {
 constexpr Verb irr_verbs[] = {
   {"entend", "forstå", 1, true},
   {"beb", "drink", 1, false},
-  {"sangr", "bleed", 1, true}
+  {"sangr", "bleed", 1, true},
+  {"quis", "vilj", 1, false},
+  {"quer", "vilj", 1, false},
 };
 
 static const Verb* lookupIrrVerb(const char* root) {
@@ -2052,7 +2052,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
 
        
  // article as suffix (common: en/n or neuter: et, t)
-            else if (two_ && previous->type == ARTICLE && current.type == NOUN) {
+            else if (two_ && (previous->type == ARTICLE || previous->type == PREPOSITION) && current.type == NOUN) {
      reordered_arr.push_back(current); 
      uint8_t f = lookupFlags(nouns, current.word.c_str());
      std::string suffix = (f & FEMININE_NEUTER) ? (isVowel(current.translation.back()) ? "t" : "et")

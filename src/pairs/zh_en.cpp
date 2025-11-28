@@ -1,4 +1,132 @@
+﻿#include "../lang_it.h"
+
+#if defined(ALL)
+#define ZH_EN
+#endif
+
 #ifdef ZH_EN
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+
+constexpr Entry fixed_ngrams[] = {
+  {"de_novo", "again"},
+  {"a_gente", "we"}
+};
+
+
+
+// adjectives
+constexpr Entry adj[] = {
+  {"frio", "cold"},
+  {"gelado", "cold"},
+  {"quente", "hot"},
+};
+
+constexpr Entry nouns[] = {
+  {"olá", "hello"}
+};
+
+constexpr Entry pro[] = {
+  {"我", "i"},
+  {"你", "you"},
+  {"我们",  "we"},
+};
+
+
+
+
+//normalization
+//this will turn sets of letters that shift on translation and change them accordingly.
+// stuff such as aceitar -> aceipt -> accept
+static string normalize(string word) {
+    string normalized_ = word;
+
+    if (word.length() > 3) {
+     
+    }
+
+
+
+    return normalized_;
+}
+
+static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
+    std::vector<Word> sentence_arr = copy;
+    vector<Word> reordered_arr;
+
+    int word_count = sentence_arr.size();
+
+
+
+
+
+    for (size_t i = 0; i < sentence_arr.size(); ++i) {
+        bool one_ = (i > 0);
+        bool two_ = (i >= 1);
+        bool three_ = (i >= 2);
+
+        const Word& current = sentence_arr.at(i);
+        const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;
+        const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
+
+
+
+    }
+}
+
+
+
+
+
+static Word nounLookup(const std::string& word) {
+    // TODO: Creaate hierarchy for word category
+    string translation;
+    // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
+    int word_type = -1;
+
+
+
+    // for each individual word loop, you look in the noun dictionary
+    //first with accentuation, 
+    if (lookup(nouns, word.c_str())) {
+        translation = lookup(nouns, word.c_str());
+        word_type = 0;
+    }
+    else if (lookup(adj, word.c_str())) {
+
+        translation = lookup(adj, word.c_str());
+        word_type = 1;
+
+    }
+    else if (lookup(pro, word.c_str())) {
+        translation = lookup(pro, word.c_str());
+        word_type = 4;
+    }
+    else {
+        return { word, word, -1 };
+
+    }
+
+    return { word, normalize(translation), word_type };
+}
+
+
+std::string translate_zh(const char* sentence) {
+    char buffer[250];
+    strncpy(buffer, sentence, sizeof(buffer));
+    buffer[sizeof(buffer) - 1] = '\0';
+    to_lower(buffer);
+    vector<string> arr = tokenize_cjk(string(buffer));
+    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
+
+    return translated;
+}
 
 #endif

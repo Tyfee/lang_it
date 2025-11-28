@@ -25,6 +25,8 @@ static void on_translate(GtkWidget *widget, gpointer data) {
         else if (strcmp(to_lang, "Japanese") == 0) to_code = "ja";
         else if (strcmp(to_lang, "Spanish") == 0) to_code = "es";
         else if (strcmp(to_lang, "Swedish") == 0) to_code = "sv";
+        
+        else if (strcmp(to_lang, "Chinese") == 0) to_code = "zh";
         if (from_code && to_code) {
             std::string output = translate(input_text, from_code, to_code);
             gtk_label_set_text(label, output.c_str());
@@ -55,6 +57,8 @@ static void on_choose(GtkComboBoxText *combo, gpointer data) {
     } else if (strcmp(from_lang, "English") == 0) {
         gtk_combo_box_text_append_text(to_combo, "Japanese");
         gtk_combo_box_text_append_text(to_combo, "Spanish");
+    }else if (strcmp(from_lang, "Chinese") == 0) {
+        gtk_combo_box_text_append_text(to_combo, "English");
     }
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(to_combo), 0);
@@ -143,6 +147,7 @@ g_signal_connect(settings, "clicked", G_CALLBACK(on_settings), NULL);
 
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(from), "Portuguese");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(from), "English");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(from), "Chinese");
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(from), 0);
     on_choose(GTK_COMBO_BOX_TEXT(from), to);

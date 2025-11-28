@@ -21,7 +21,7 @@
 // pairs
 
 #if defined(PT_EN) || defined(ALL) 
-std::string traduzir_en(const char* sentence);
+std::string traduzir_en(const char* sentence, bool auto_correct);
 #endif
 
 #if defined(PT_ES) || defined(ALL)
@@ -41,7 +41,9 @@ std::string traduzir_sv(const char* sentence);
 #endif
 
 
-
+#if defined(ZH_EN) || defined(ALL)
+std::string translate_zh(const char* sentence);
+#endif
 
 
 /* ------- GLOBAL CORE FUNCTIONS -----------
@@ -58,7 +60,8 @@ enum WordType {
     PREPOSITION = 8,
     ARTICLE = 9,
     ADVERB = 13,
-    POSSESSIVE_PRONOUN = 40
+    POSSESSIVE_PRONOUN = 40,
+    UNKNOWN = 99
 };
 
 inline WordType typeFromString(const std::string& s) {
@@ -73,7 +76,7 @@ inline WordType typeFromString(const std::string& s) {
     if (s == "ADVERB") return ADVERB;
     if (s == "POSSESSIVE_PRONOUN") return POSSESSIVE_PRONOUN;
 
-    return NOUN;
+    return UNKNOWN;;
 }
 
 
@@ -512,7 +515,8 @@ struct Action {
 
 
 inline Action actions[] = {
-    { "INVERT", &invert }
+    { "INVERT", &invert },
+    {"REPLACE_FIRST", &replace_first}
 };
 
 
@@ -558,83 +562,88 @@ inline auto lookupFunction(const char* query)
     }
 
     return nullptr;
-}
-inline bool rule(
+
+
+
+}inline bool rule(
     const std::string& rule,
     const std::vector<Word>& sentence_arr,
     std::vector<Word>& reordered_arr,
     int i
-){
+) {
     std::vector<std::string> t = parser(rule);
-   
-    // this accounts for IF A THEN B(C..D..) DO ACTION
-    //its valud if theres more than 6 and starts in IF
     if (t.size() < 6) return false;
     if (t[0] != "IF") return false;
 
-    // -first parse a
     std::string A_str = t[1];
     WordType A = typeFromString(A_str);
 
     if (t[2] != "THEN") return false;
 
-    // -parse  the b or optional c d
-    std::vector<WordType> Bs;
+    struct Matcher { bool isType; WordType type; std::string literal; };
+    std::vector<Matcher> Bs;
 
     int idx = 3;
-
-    Bs.push_back(typeFromString(t[idx]));
-    idx++;
-
-    while (idx < (int)t.size() && t[idx] == "OR") {
-        idx++;
-        Bs.push_back(typeFromString(t[idx]));
+    {
+        WordType wt = typeFromString(t[idx]);
+        if (wt == WordType::UNKNOWN)
+            Bs.push_back({ false, WordType::UNKNOWN, t[idx] });
+        else
+            Bs.push_back({ true, wt, "" });
         idx++;
     }
 
-    // find the 'do' key somewhere  (it could be later in the chain)
-    if (t[idx] != "DO") return false;
-    idx++;
+    while (idx < (int)t.size() && t[idx] == "OR") {
+        idx++;
+        WordType wt = typeFromString(t[idx]);
+        if (wt == WordType::UNKNOWN)
+            Bs.push_back({ false, WordType::UNKNOWN, t[idx] });
+        else
+            Bs.push_back({ true, wt, "" });
+        idx++;
+    }
 
-    if (idx >= (int)t.size()) return false;
+    std::vector<std::string> actions;
+    while (idx < (int)t.size()) {
+        if (t[idx] == "DO") {
+            idx++;
+            if (idx < (int)t.size()) actions.push_back(t[idx]);
+            idx++;
+        }
+        else idx++;
+    }
 
-    std::string action_str = t[idx];
-
+    if (actions.empty()) return false;
     if (i < 1) return false;
 
-    WordType type_prev  = static_cast<WordType>(sentence_arr[i - 1].type);
-    WordType type_curr  = static_cast<WordType>(sentence_arr[i].type);
+    WordType type_prev = static_cast<WordType>(sentence_arr[i - 1].type);
+    WordType type_curr = static_cast<WordType>(sentence_arr[i].type);
 
-    std::string word_prev = sentence_arr[i - 1].word;
     std::string word_curr = sentence_arr[i].word;
-    
-    std::string translation_prev = sentence_arr[i - 1].translation;
-    std::string translation_curr = sentence_arr[i].translation;
 
-    // Check first condition: previous == A
     if (type_prev != A) return false;
 
-    // Check second condition: current == one of Bs
     bool matchesB = false;
-    for (size_t k = 0; k < Bs.size(); ++k) {
-        if (Bs[k] == type_curr) {
-            matchesB = true;
-            break;
+    for (auto& m : Bs) {
+        if (m.isType) {
+            if (m.type == type_curr) { matchesB = true; break; }
+        }
+        else {
+            if (m.literal == word_curr) { matchesB = true; break; }
         }
     }
 
     if (!matchesB) return false;
 
-    // lookup the function you found and call the pointer
-
-    auto func = lookupFunction(action_str.c_str());
-    if (func) {
-        func(reordered_arr, sentence_arr[i], sentence_arr[i - 1]);
-        return true;
+    for (auto& act : actions) {
+        auto func = lookupFunction(act.c_str());
+        if (func)
+            func(reordered_arr, sentence_arr[i], sentence_arr[i - 1]);
     }
 
-    return false;
+    return true;
 }
+
 
 
 
@@ -817,7 +826,7 @@ inline std::string detect_language(const char* sentence) {
 
 
 
-inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2){
+inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2, bool auto_correct = false){
     // script will be passed to languages that can be written in more than one script
     // japanese (0 = kana, 1 = kana + kanji, 2 = romaji ), malay(0 = rumi, 1 = jawi) and mandarin chinese (0 = hanzi, 1 = pinyin) 
     //  are the ones i plan to implement
@@ -825,7 +834,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
     std::string f(from), t(to);
     #if defined(PT_EN) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "en" || t == "EN")) {
-            return traduzir_en(sentence);
+            return traduzir_en(sentence, auto_correct);
         }
     #endif
     #if defined(PT_ES) || defined(ALL)
@@ -848,6 +857,12 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return translate_pt(sentence);
         }
     #endif
+
+#if defined(ZH_EN) || defined(ALL)
+        if ((f == "zh" || f == "ZH") && (t == "en" || t == "EN")) {
+            return translate_zh(sentence);
+        }
+#endif
 
       return "No translation module found :(";
 }

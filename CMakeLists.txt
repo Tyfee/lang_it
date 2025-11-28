@@ -11,6 +11,7 @@ target_sources(lang_it_lib
    src/pairs/pt_sv.cpp
    src/pairs/en_pt.cpp
    src/pairs/en_ja.cpp
+   src/pairs/zh_en.cpp
 )
 
 target_include_directories(lang_it_lib PUBLIC src)
