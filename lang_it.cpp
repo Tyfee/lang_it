@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
             ? "Hello world! The translator works normally."
             : (std::strcmp(from, "es") == 0)
             ? "Hola mundo! El traductor funcciona normalmente."
+            : (std::strcmp(from, "zh") == 0)
+            ? "你好世界！翻译器工作正常"
             : ".";
 
          const char* prompt = (std::strcmp(from, "pt") == 0)
@@ -36,6 +38,8 @@ int main(int argc, char* argv[]) {
             ? "What do you want to translate?"
             : (std::strcmp(from, "es") == 0)
             ? "Que deseas traducir?"
+            : (std::strcmp(from, "zh") == 0)
+            ? "你想翻译什么？"
             : ".";
 
          const char* quit_message = (std::strcmp(from, "pt") == 0)
@@ -44,6 +48,8 @@ int main(int argc, char* argv[]) {
             ? "Type 'exit' to close.\n"
             : (std::strcmp(from, "es") == 0)
             ? "Digite 'salir' para cerrar."
+            : (std::strcmp(from, "zh") == 0)
+            ? "输入“exit”离开\n"
             : ".";
 
         const char* quit_cmd = (std::strcmp(from, "pt") == 0)

@@ -17,7 +17,7 @@ using namespace std;
 
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
-  {"a_gente", "we"}
+  {"我_们",  "we"}
 };
 
 
@@ -33,10 +33,15 @@ constexpr Entry nouns[] = {
   {"olá", "hello"}
 };
 
+//specific entries for particles cause for silly ol me, the line between prepositions and other types of particles is blurr-ay;
+constexpr Entry part[] = {
+  {"和", "and"}
+};
+
+
 constexpr Entry pro[] = {
   {"我", "i"},
-  {"你", "you"},
-  {"我们",  "we"},
+  {"你", "you"}
 };
 
 
@@ -79,6 +84,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
 
 
     }
+    return copy;
 }
 
 
@@ -108,12 +114,17 @@ static Word nounLookup(const std::string& word) {
     else if (lookup(pro, word.c_str())) {
         translation = lookup(pro, word.c_str());
         word_type = 4;
+        
+    }
+     else if (lookup(part, word.c_str())) {
+        translation = lookup(part, word.c_str());
+        word_type = 67; //random
+        
     }
     else {
         return { word, word, -1 };
 
     }
-
     return { word, normalize(translation), word_type };
 }
 
@@ -122,10 +133,8 @@ std::string translate_zh(const char* sentence) {
     char buffer[250];
     strncpy(buffer, sentence, sizeof(buffer));
     buffer[sizeof(buffer) - 1] = '\0';
-    to_lower(buffer);
     vector<string> arr = tokenize_cjk(string(buffer));
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
-
+    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup, true); //true for continuous non-spaced char languages
     return translated;
 }
 

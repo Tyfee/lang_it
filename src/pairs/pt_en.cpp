@@ -2360,7 +2360,7 @@ else if (two_ && previous->translation == "not") {
    
           // ------------------------ ADJ + VERBS ----------------- 
         // yk like, muito fácil correr -> very easy run. you cant have an adjective and a verb without the connector "to"
-        else if (i > 1 &&sentence_arr.at(i - 1).type == 1  &&  (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB)) {
+        else if (i > 1 &&sentence_arr.at(i - 1).type == ADJECTIVE  &&  (sentence_arr.at(i).type == VERB|| sentence_arr.at(i).type == INTRANSITIVE_VERB)) {
                 if (i > 1 && sentence_arr.at(i - 2).type == 0 && sentence_arr.at(i - 1).type == 1) {
         // This is actually part of a noun-adjective-verb sequence, skip this rule
         reordered_arr.push_back(sentence_arr.at(i));

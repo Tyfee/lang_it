@@ -259,7 +259,7 @@ using NounLookup = Word(*)(const std::string&);
 
 //ngram groups
 inline std::string unigramLookup(const std::vector<std::string>& array_of_words,
-                                 const std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr){
+                                 const std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr, bool non_spaced = false){
 
   std::vector<Word> sentence_arr;
   std::vector<Word> word_arr;
@@ -299,8 +299,8 @@ inline std::string unigramLookup(const std::vector<std::string>& array_of_words,
                           firstChar == '.' || firstChar == ','
                           || firstChar == '-' || firstChar == '/' || firstChar == ':');
 
-    if (!sentence.empty() && !isPunctuation) {
-        sentence += " ";
+    if (!sentence.empty() && !isPunctuation && !non_spaced) {
+     sentence += " ";
     }
 
     sentence += token;
@@ -311,7 +311,7 @@ inline std::string unigramLookup(const std::vector<std::string>& array_of_words,
 template <size_t N>
 inline std::string bigramLookup(const Entry (&fixed_ngrams)[N],
                                 const std::vector<std::string>& words,
-                                std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr) {
+                                std::vector<int>& ignore_flags, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr, bool non_spaced = false) {
     std::vector<std::string> mended_array_of_words;
     std::vector<int> new_ignore_flags;
 
@@ -334,13 +334,13 @@ inline std::string bigramLookup(const Entry (&fixed_ngrams)[N],
         i++;
     }
 
-    return unigramLookup(mended_array_of_words, new_ignore_flags, reorder_helpers, nounLookup);
+    return unigramLookup(mended_array_of_words, new_ignore_flags, reorder_helpers, nounLookup, non_spaced);
 }
 
 
 template <size_t N>
 inline std::string trigramLookup(const Entry (&fixed_ngrams)[N],
-                                 const std::vector<std::string>& words, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr) { 
+                                 const std::vector<std::string>& words, Reorder reorder_helpers = nullptr, NounLookup nounLookup = nullptr, bool non_spaced = false) { 
                                     std::vector<std::string> mended;
                                     std::vector<int> ignore_flags(words.size(), 0);
 
@@ -364,7 +364,7 @@ inline std::string trigramLookup(const Entry (&fixed_ngrams)[N],
     }
 
     // Then process bigrams on the result
-   return bigramLookup(fixed_ngrams, mended, ignore_flags, reorder_helpers, nounLookup);
+   return bigramLookup(fixed_ngrams, mended, ignore_flags, reorder_helpers, nounLookup, non_spaced);
 }
 
 
