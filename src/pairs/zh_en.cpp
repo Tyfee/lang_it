@@ -17,25 +17,30 @@ using namespace std;
 
 constexpr Entry fixed_ngrams[] = {
   {"de_novo", "again"},
-  {"我_们",  "we"}
+  {"我_们",  "we"},
+  {"我_的",  "my"},
+  {"你_好",  "hello"},
+  {"世_界",  "world"}
 };
 
 
 
 // adjectives
 constexpr Entry adj[] = {
-  {"frio", "cold"},
-  {"gelado", "cold"},
-  {"quente", "hot"},
+  {"小", "little"}
 };
 
 constexpr Entry nouns[] = {
-  {"olá", "hello"}
+  {"狗", "dog"},
+  {"猫", "cat"},
+  {"爱", "love"}
 };
 
 //specific entries for particles cause for silly ol me, the line between prepositions and other types of particles is blurr-ay;
 constexpr Entry part[] = {
-  {"和", "and"}
+  {"和", "and"},
+  {"不", "no"},
+  {"是", "is"}
 };
 
 
@@ -44,7 +49,9 @@ constexpr Entry pro[] = {
   {"你", "you"}
 };
 
-
+constexpr Verb verbs[] = {
+  {"吃", "eat", 0}
+};
 
 
 //normalization
@@ -134,7 +141,7 @@ std::string translate_zh(const char* sentence) {
     strncpy(buffer, sentence, sizeof(buffer));
     buffer[sizeof(buffer) - 1] = '\0';
     vector<string> arr = tokenize_cjk(string(buffer));
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup, true); //true for continuous non-spaced char languages
+    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup, false); //true for continuous non-spaced char languages
     return translated;
 }
 

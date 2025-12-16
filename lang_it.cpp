@@ -8,20 +8,43 @@ bool isFile(const std::string& filename) {
     return filename.size() >= 4 && filename.compare(filename.size() - 4, 4, ".txt") == 0;
 }
 
+bool isNumber(const char* s) {
+    if (!s || *s == '\0') return false;
+
+    if (*s == '\0') return false;
+
+    while (*s) {
+        if (*s < '0' || *s > '9')
+            return false;
+        s++;
+    }
+    return true;
+}
+
+
 int main(int argc, char* argv[]) {
     bool help = (argc == 2 && std::strcmp(argv[1], "-help") == 0);
     bool info = (argc == 2 && std::strcmp(argv[1], "-info") == 0);
     bool version = (argc == 2 && std::strcmp(argv[1], "-v") == 0);
 
     bool d_l = (argc == 3 && std::strcmp(argv[1], "-detect") == 0);
-    bool replMode = (argc == 4 && std::strcmp(argv[1], "-REPL") == 0);
+    
+    bool replMode = std::strcmp(argv[1], "-REPL") == 0 && (argc == 4 ||(argc == 5 && isNumber(argv[4])));
+
     bool fileMode = (argc == 4 && isFile(argv[1]));
     bool newFile = (argc == 5 && isFile(argv[1]) && isFile(argv[4]));
 
     if (replMode) {
         const char* from = argv[2];
         const char* to = argv[3];
+      int script = 2;
 
+        if (argc == 5 && argv[4]) {
+            script = 0;
+            for (const char* p = argv[4]; *p; ++p) {
+                script = script * 10 + (*p - '0');
+            }
+        }
         const char* sample = (std::strcmp(from, "pt") == 0)
             ? "Olá mundo! O tradutor funciona normalmente."
             : (std::strcmp(from, "en") == 0)
@@ -56,11 +79,13 @@ int main(int argc, char* argv[]) {
             ? "sair"
             : (std::strcmp(from, "en") == 0)
             ? "exit"
+            : (std::strcmp(from, "zh") == 0)
+            ? "exit"
             : (std::strcmp(from, "es") == 0)
             ? "salir"
             : ".";
         
-        std::cout << sample << " -> " << translate(sample, from, to, 2) << std::endl;
+        std::cout << sample << " -> " << translate(sample, from, to, script) << std::endl;
         std::cout << prompt << " (" << from << "-" << to << ")\n";
         std::cout << quit_message;
 
@@ -68,7 +93,7 @@ int main(int argc, char* argv[]) {
         while (true) {
             std::getline(std::cin, input);
             if (input == quit_cmd) break;
-            std::cout << translate(input.c_str(), from, to, 2) << std::endl;
+            std::cout << translate(input.c_str(), from, to, script) << std::endl;
         }
 
         return 0;
@@ -168,7 +193,16 @@ int main(int argc, char* argv[]) {
     const char* original_sentence = argv[1];
     const char* from = argv[2];
     const char* to = argv[3];
+      int script = 2;
 
-    std::cout << translate(original_sentence, from, to, 2) << std::endl;
+        if (argc == 5 && argv[4]) {
+            script = 0;
+            for (const char* p = argv[4]; *p; ++p) {
+                script = script * 10 + (*p - '0');
+            }
+        }
+    
+
+    std::cout << translate(original_sentence, from, to, script) << std::endl;
     return 0;
 }
