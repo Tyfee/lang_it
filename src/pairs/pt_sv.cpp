@@ -191,7 +191,7 @@ const size_t homonymCount_sv = sizeof(homonyms_sv) / sizeof(homonyms_sv[0]);
 
 // any set of (n)words in portuguese that can't be translated separately
 
-constexpr Entry fixed_ngrams[] = {
+DICT(fixed_ngrams, {
   {"de_novo", "igen"},
   {"a_gente", "vi"},
   {"o_que", "var"},
@@ -245,14 +245,14 @@ constexpr Entry fixed_ngrams[] = {
   {"hoje_em_dia", "nowadays"},
   {"de_vez_em_quando", "sometimes"},
   {"se_preocup", "worry"} // need to deal with this bitch as well ..... TRUST, YOU WILL BE DEALT WITH
-};
+});
 static vector<string> modals = {"kan", "must", "skulle", "kunde", "may", "ska", "är"};
 
 
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
-constexpr Entry nouns[] = {
+DICT(nouns, {
   {"olá", "hej"},
   {"ola", "hej"},
   {"oi", "hej"},
@@ -541,16 +541,16 @@ constexpr Entry nouns[] = {
   {"merda", "shit"},
   {"bosta", "shit"},
   {"caralho", "fuck"}
-};
+});
 
-constexpr Entry art[] = {
+DICT(art, {
   {"o", "en"},
   {"a", "en"},
   {"um", "en"},
   {"uma", "en"}
-};
+});
 
-constexpr Entry pre[] = { 
+DICT(pre, { 
   {"do", "of the"},
   {"da", "of the"},
   {"de", "of"},
@@ -578,10 +578,10 @@ constexpr Entry pre[] = {
   {"vamos", "ska"},
 
   {"num", "in a"}
-};
+});
 
 // nominative/personal pronouns
-constexpr Entry pro[] = {
+DICT(pro, {
   {"eu", "jag"},
   {"você", "du"},
   {"voce", "du"},
@@ -609,8 +609,10 @@ constexpr Entry pro[] = {
   {"isto", "det"},
   {"comigo", "med mig"}
   
-};
-constexpr Entry poss_pro[] = {
+});
+
+
+DICT(poss_pro, {
   {"seu", "your"},
   {"dela", "her"},
   {"dele",  "his"},
@@ -619,16 +621,16 @@ constexpr Entry poss_pro[] = {
   {"meus", "mina"},
   {"minha",  "min"},
   {"minhas",  "mina"}
-};
+});
 
 //object pronoun match (in english)
 
-constexpr Entry obj_pro[] = {
+DICT(obj_pro, {
   {"she", "her"},
   {"he", "him"},
   {"they", "them"},
   {"you", "you"},
-};
+});
 
 
 
@@ -1764,61 +1766,21 @@ bool diminutive = false;
    bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
    bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
   
-
-  // for each individual word loop, you look in the noun dictionary
-  //first with accentuation, 
-  if(lookup(nouns, word.c_str())){
-   translation = lookup(nouns, word.c_str());
-   word_type = 0;
-   }
-   //then without accentuation (helpful in plural)
-   else if(lookup(nouns, script_adequation(word).c_str())){
-       translation = lookup(nouns, script_adequation(word).c_str());
-       word_type = 0; 
-   }
-   else if(lookup(adj, (script_adequation(word)).c_str())){
-    
-      translation = lookup(adj, script_adequation(word).c_str());
-      word_type = 1;
-
-    }
-    else if(lookup(pro, word.c_str())){
-      translation = lookup(pro, word.c_str());
-      word_type = 4;
-    } else if(lookup(poss_pro, word.c_str())){
-      translation = lookup(poss_pro, word.c_str());
-      word_type = 40;
-    }
-  
-    else if(lookup(obl_pro, word.c_str())){
-      translation = lookup(obl_pro, word.c_str());
-      word_type = 11;
-    }
-
-     else if(lookup(pre, word.c_str())){
-      translation = lookup(pre, word.c_str());
-      word_type = 8;
-    }//preposition plurals are simple i guess
-    else if(lookup(pre, word.substr(0, word.length() - 1).c_str())){
-      translation = lookup(pre, word.substr(0, word.length() - 1).c_str());
-      word_type = 8;
-    }
-     else if(lookup(art, word.c_str())){
-      translation = lookup(art, word.c_str());
-      word_type = 9;
-    }
-     else if(article_plural){
-      translation = lookup(art, (word.substr(0, word.length() - 1).c_str()));
-      word_type = 9;
-    }
-    
-     else if(lookup(adv, word.c_str())){
-      translation = lookup(adv, word.c_str());
-      word_type = 13;
-    }
+ 
+   LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+  LOOKUP_BLOCK(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  LOOKUP_BLOCK(adj, ADJECTIVE, script_adequation(word).c_str());
+  LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+  LOOKUP_BLOCK(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  LOOKUP_BLOCK(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  LOOKUP_BLOCK(pre, PREPOSITION, word.c_str());
+  LOOKUP_BLOCK(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  LOOKUP_BLOCK(art, ARTICLE, word.c_str()); // preposition plurals
+  LOOKUP_BLOCK(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  LOOKUP_BLOCK(adv, ADVERB, word.c_str());
     
     
-  else if(plural){
+  if(plural){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;

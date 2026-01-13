@@ -1,9 +1,10 @@
 #ifndef LANG_IT_H
 #define LANG_IT_H
 
+
+
 #define RULE(str) \
     if (rule(str, sentence_arr, reordered_arr, i)) continue;
-
 
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
@@ -11,7 +12,20 @@
         continue; \
     }
 
+#define REMOVE_FIRST(FIRST, SECOND) \
+    if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
+        remove_first(reordered_arr, "dummy", "dummy"); \
+        continue; \
+    }
+    
+#define LOOKUP_BLOCK(DICTIONARY, TYPE, WORD) \
+    if (const char* result = lookup(DICTIONARY, WORD)) { \
+        translation = result; \
+        word_type = TYPE; \
+        return { word, normalize(translation), word_type }; \
+    }
 
+    
 
 #include <string>
 #include <cstdint>
@@ -50,12 +64,37 @@ std::string translate_zh(const char* sentence);
 |           all pairs use                  |  
 ------------------------------------------*/
 
+
+
+typedef struct {
+    const char* w;
+    const char* t;
+    uint8_t flags;
+} Entry;
+
+struct Verb {
+    const char* root;       
+    const char* translation; 
+    int type;      
+    uint8_t flags;
+};
+
+
+using Dictionary = Entry[];
+using VerbDictionary = Verb[];
+
+#define DICT(name, ...) constexpr Dictionary name = __VA_ARGS__
+#define V_DICT(name, ...) constexpr VerbDictionary name = __VA_ARGS__
+
+
+
 enum WordType {
     NOUN = 0,
     ADJECTIVE = 1,
     VERB = 3,
     INTRANSITIVE_VERB = 36,
     PRONOUN = 4,
+    PARTICLE = 67, 
     OBLIQUE_PRONOUN = 11,
     PREPOSITION = 8,
     ARTICLE = 9,
@@ -105,11 +144,7 @@ enum SuffixFlags: uint8_t {
     FEMININE = 1 << 0
 };
 
-typedef struct {
-    const char* w;
-    const char* t;
-    uint8_t flags;
-} Entry;
+
 
 
 typedef struct {
@@ -120,12 +155,6 @@ typedef struct {
 
 
 
-struct Verb {
-    const char* root;       
-    const char* translation; 
-    int type;      
-    uint8_t flags;
-};
 
 
 typedef struct
@@ -238,7 +267,7 @@ inline void remove_middle(std::vector<Word>& output, const Word& first, const Wo
     output.push_back(first);
     output.push_back(last);
 }
-inline void remove_previous(std::vector<Word>& output) {
+inline void remove_first(std::vector<Word>& output, const Word& first, const Word& second) {
     output.erase(output.end() - 2);  
 }
 
@@ -516,6 +545,7 @@ struct Action {
 
 inline Action actions[] = {
     { "INVERT", &invert },
+    {"REMOVE_FIRST", &remove_first},
     {"REPLACE_FIRST", &replace_first}
 };
 
@@ -565,7 +595,12 @@ inline auto lookupFunction(const char* query)
 
 
 
-}inline bool rule(
+}
+
+
+
+
+inline bool rule(
     const std::string& rule,
     const std::vector<Word>& sentence_arr,
     std::vector<Word>& reordered_arr,

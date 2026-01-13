@@ -15,43 +15,41 @@
 using namespace std;
 
 
-constexpr Entry fixed_ngrams[] = {
-  {"de_novo", "again"},
-  {"我_们",  "we"},
-  {"我_的",  "my"},
-  {"你_好",  "hello"},
-  {"世_界",  "world"}
-};
-
+DICT(fixed_ngrams, {
+    {"我_们", "we"},
+    {"我_的", "my"},
+    {"你_好", "hello"},
+    {"世_界", "world"}
+});
 
 
 // adjectives
-constexpr Entry adj[] = {
+DICT(adj, {
   {"小", "little"}
-};
+  
+});
 
-constexpr Entry nouns[] = {
+DICT(nouns, {
   {"狗", "dog"},
   {"猫", "cat"},
   {"爱", "love"}
-};
+});
 
 //specific entries for particles cause for silly ol me, the line between prepositions and other types of particles is blurr-ay;
-constexpr Entry part[] = {
+DICT(part, {
   {"和", "and"},
   {"不", "no"},
   {"是", "is"}
-};
+});
 
-
-constexpr Entry pro[] = {
+DICT(pro, {
   {"我", "i"},
   {"你", "you"}
-};
+});
 
-constexpr Verb verbs[] = {
+V_DICT(verbs,{
   {"吃", "eat", 0}
-};
+});
 
 
 //normalization
@@ -76,9 +74,6 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
     int word_count = sentence_arr.size();
 
 
-
-
-
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
         bool one_ = (i > 0);
         bool two_ = (i >= 1);
@@ -94,45 +89,17 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
     return copy;
 }
 
-
-
-
-
 static Word nounLookup(const std::string& word) {
-    // TODO: Creaate hierarchy for word category
     string translation;
-    // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
     int word_type = -1;
-
-
-
-    // for each individual word loop, you look in the noun dictionary
-    //first with accentuation, 
-    if (lookup(nouns, word.c_str())) {
-        translation = lookup(nouns, word.c_str());
-        word_type = 0;
-    }
-    else if (lookup(adj, word.c_str())) {
-
-        translation = lookup(adj, word.c_str());
-        word_type = 1;
-
-    }
-    else if (lookup(pro, word.c_str())) {
-        translation = lookup(pro, word.c_str());
-        word_type = 4;
-        
-    }
-     else if (lookup(part, word.c_str())) {
-        translation = lookup(part, word.c_str());
-        word_type = 67; //random
-        
-    }
-    else {
-        return { word, word, -1 };
-
-    }
-    return { word, normalize(translation), word_type };
+    
+    LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+    LOOKUP_BLOCK(adj, ADJECTIVE, word.c_str());
+    LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+    LOOKUP_BLOCK(part, PARTICLE, word.c_str());
+    
+    // If we get here, nothing was found
+    return { word, word, -1 };
 }
 
 

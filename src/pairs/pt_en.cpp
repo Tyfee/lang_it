@@ -1824,7 +1824,11 @@ static Word nounLookup(const std::string& word) {
   
   
   // rules
-   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "m").c_str()) || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
+   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) 
+   || lookup(nouns, (word.substr(0, word.length() - 2) + "m").c_str()) 
+   || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) 
+   || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
+   
    bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
 
    // adjectives need diminutive as well
@@ -1862,63 +1866,25 @@ bool diminutive = false;
     }
    bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
    bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
-   bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
-  
+
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  if(lookup(nouns, word.c_str())){
-   translation = lookup(nouns, word.c_str());
-   word_type = 0;
-   }
-   //then without accentuation (helpful in plural)
-   else if(lookup(nouns, script_adequation(word).c_str())){
-       translation = lookup(nouns, script_adequation(word).c_str());
-       word_type = 0; 
-   }
-   else if(lookup(adj, (script_adequation(word)).c_str())){
-    
-      translation = lookup(adj, script_adequation(word).c_str());
-      word_type = 1;
+  LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+  LOOKUP_BLOCK(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  LOOKUP_BLOCK(adj, ADJECTIVE, script_adequation(word).c_str());
+  LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+  LOOKUP_BLOCK(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  LOOKUP_BLOCK(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  LOOKUP_BLOCK(pre, PREPOSITION, word.c_str());
+  LOOKUP_BLOCK(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  LOOKUP_BLOCK(art, ARTICLE, word.c_str()); // preposition plurals
+  LOOKUP_BLOCK(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  LOOKUP_BLOCK(adv, ADVERB, word.c_str());
 
-    }
-    else if(lookup(pro, word.c_str())){
-      translation = lookup(pro, word.c_str());
-      word_type = 4;
-    } else if(lookup(poss_pro, word.c_str())){
-      translation = lookup(poss_pro, word.c_str());
-      word_type = 40;
-    }
-  
-    else if(lookup(obl_pro, word.c_str())){
-      translation = lookup(obl_pro, word.c_str());
-      word_type = 11;
-    }
-
-     else if(lookup(pre, word.c_str())){
-      translation = lookup(pre, word.c_str());
-      word_type = 8;
-    }//preposition plurals are simple i guess
-    else if(lookup(pre, word.substr(0, word.length() - 1).c_str())){
-      translation = lookup(pre, word.substr(0, word.length() - 1).c_str());
-      word_type = 8;
-    }
-     else if(lookup(art, word.c_str())){
-      translation = lookup(art, word.c_str());
-      word_type = 9;
-    }
-     else if(article_plural){
-      translation = lookup(art, (word.substr(0, word.length() - 1).c_str()));
-      word_type = 9;
-    }
-    
-     else if(lookup(adv, word.c_str())){
-      translation = lookup(adv, word.c_str());
-      word_type = 13;
-    }
     
     
-  else if(plural){
+  if(plural){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
@@ -2081,6 +2047,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     // theres a parser function + a macro so its just RULE("WRITTEN RULE")
 
      RULE("IF NOUN THEN ADJECTIVE DO INVERT");
+
      RULE("IF OBLIQUE_PRONOUN THEN VERB OR INTRANSITIVE_VERB DO INVERT");
     
 
@@ -2260,7 +2227,7 @@ if(sentence_arr.at(i).word.back() == 'o' &&
 
 
        // -------------------- KIND OF MEIO [ADJ] -----------------------------------------
-else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr.at(i).type == 1) {
+else if (i > 0 && sentence_arr.at(i - 1).translation == "middle" && sentence_arr.at(i).type == ADJECTIVE) {
     if (!reordered_arr.empty())
         reordered_arr.pop_back();  
 
