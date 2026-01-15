@@ -1033,7 +1033,7 @@ vector<string> imperative = {"e", "a", "eja", "enha", "á"};
 
 // common suffixes with traceable trnaslation pattern
 // TODO: ADD AN EXAMPLE FOR EACH CAUSE TS IS CONFUSING
-constexpr Suffix suff[] = {
+SUFFIX_RULES(suff, {
   {"dade", "ty", NOUN},
   {"mente", "ly", ADVERB},
   {"ental", "ental", ADJECTIVE},
@@ -1093,7 +1093,7 @@ constexpr Suffix suff[] = {
   {"arra", "ar", NOUN},
   {"ano", "ane", ADJECTIVE},
   {"este", "est", NOUN}
-};
+});
 
 inline string script_adequation(string word) {
     auto replace_all = [&](const std::string& from, const std::string& to) {
@@ -1146,48 +1146,21 @@ static string normalize(string word) {
             normalized_ = word.substr(0, word.size() - 3) + "ed";
             
         }
-            size_t pos = normalized_.find("cio");
-            if (pos != std::string::npos) {
-                normalized_.replace(pos, 3, "tio"); 
-            }
-        if (word.substr(0, 3) == "esp") {
-            normalized_ = normalized_.substr(1);  
-        }
-         if (word.substr(0, 3) == "teo") {
-              normalized_ = "theo" + normalized_.substr(3);
-        }
+            NORMALIZE("cio", REPLACE_ALL, "tio");
+            NORMALIZE("alfa", REPLACE_ALL, "alpha");
+            NORMALIZE("fone", REPLACE_ALL, "phone");
+            NORMALIZE("psico", REPLACE_ALL, "psycho");
+            NORMALIZE("fisi", REPLACE_ALL, "phisi");
 
-        if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "icaly") {
-            normalized_ = normalized_.substr(0, normalized_.size() - 5) + "ically";
-        }
-           if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 5) == "sctly") {
-            normalized_ = normalized_.substr(0, normalized_.size() - 5) + "stly";
-        }
-         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "taly") {
-            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "ctly";
-        }
-          if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 3) == "yly") {
-            normalized_ = normalized_.substr(0, normalized_.size() - 3) + "ily";
-        }
-        if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 3) == "gys") {
-  
-            normalized_ = normalized_.substr(0, normalized_.size() - 3) + "gies";
-        }
-        if (normalized_.size() > 5 && normalized_.substr(normalized_.size() - 4) == "fone") {
-  
-            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "phone";
-        }
+            NORMALIZE("teo", REPLACE_START, "theo");
+            NORMALIZE("esp", REPLACE_START, "sp");
+            
+            NORMALIZE("icaly", REPLACE_END, "ically");            
+            NORMALIZE("sctly", REPLACE_END, "stly");
+            NORMALIZE("taly", REPLACE_END, "ctly");
+            NORMALIZE("yly", REPLACE_END, "ily");
+            NORMALIZE("gys", REPLACE_END, "gies");
 
-        if (normalized_.size() > 5 && normalized_.substr(0, 5) == "psico") {
-            normalized_ = "psycho" + normalized_.substr(5);
-        }
-         if (normalized_.size() > 5 && normalized_.substr(0, 4) == "fisi") {
-            normalized_ = "physi" + normalized_.substr(4);
-        }
-         if (normalized_.size() > 5 && normalized_.substr(0, 4) == "alfa") {
-            normalized_ = "alpha" + normalized_.substr(4);
-        }
-      
     }
 
     return normalized_;
@@ -1824,46 +1797,74 @@ static Word nounLookup(const std::string& word) {
   
   
   // rules
-   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) 
-   || lookup(nouns, (word.substr(0, word.length() - 2) + "m").c_str()) 
-   || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) 
-   || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
-   
+
    bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
 
    // adjectives need diminutive as well
 bool diminutive = false;
-    if (isDiminutive_PT(word, "inho")) {
+
+LIST(dim, {
+    {"o", {"inho", "inhos", "zinho", "zinhos"}},
+    {"a", {"inha", "inhas", "zinha", "zinhas"}}
+});
+
+
+LIST(plu, {
+    {"o", {"os"}},
+    {"a", {"as"}},
+    {"o", {"as"}},
+    {"r", {"res"}},
+    {"n", {"ns"}},
+    {"m", {"ns"}},
+    {"o", {"s"}}
+});
+
+GENDER_DEF(true, 2, "o", {"a"});
+
+bool plural = false;
+
+for (int i = 0; i < plu.size(); ++i) {
+
+    for (int j = 0; j < plu[i].suffixes.size(); ++j) {
+
+        const string& suff = plu[i].suffixes[j];
+        int suffLength = suff.length();
+
+        if (word.length() < suffLength)
+            continue;
+
+        if (word.substr(word.length() - suffLength) != suff)
+            continue;
+
+        string stem = word.substr(0, word.length() - suffLength);
+
+        if (lookup(nouns, (stem + plu[i].root).c_str())) {
+            plural = true;
+            break;
         
-         word_type = 0; 
-        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "o").c_str()));
+        if (lookup(nouns, stem.c_str())) {
+            plural = true;
+            break;
+        }
     }
-    
-    else if (isDiminutive_PT(word, "inha")) {
+
+    if (plural)
+        break;
+}
+}
+
+
+ for(size_t i = 0; i < dim.size(); i++){
+    for(size_t j = 0; j < dim[i].suffixes.size(); ++j){
+       if (isDiminutive(word, dim[i].suffixes[j].c_str())) {
+          word_type = 0; 
+         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - (dim[i].suffixes[j].length())) + dim[i].root).c_str()));
+     }
+    }
      
-        word_type = 0; 
-        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "a").c_str()));
-    }
-    else if (isDiminutive_PT(word, "inhos")) {
-        
-        word_type = 0; 
-        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
-    }
-    else if (isDiminutive_PT(word, "inhas")) {
-        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
-    }
-    else if (isDiminutive_PT(word, "zinho")) {
-        diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
-    }
-    else if (isDiminutive_PT(word, "zinha")) {
-         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
-    }
-    else if (isDiminutive_PT(word, "zinhos")) {
-      diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "o").c_str()));
-    }
-    else if (isDiminutive_PT(word, "zinhas")) {
-         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "a").c_str()));
-    }
+ }
+
+  
    bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
    bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
 
@@ -1871,15 +1872,25 @@ bool diminutive = false;
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
   LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+
   LOOKUP_BLOCK(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  
   LOOKUP_BLOCK(adj, ADJECTIVE, script_adequation(word).c_str());
+  
   LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+  
   LOOKUP_BLOCK(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  
   LOOKUP_BLOCK(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  
   LOOKUP_BLOCK(pre, PREPOSITION, word.c_str());
+  
   LOOKUP_BLOCK(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  
   LOOKUP_BLOCK(art, ARTICLE, word.c_str()); // preposition plurals
+  
   LOOKUP_BLOCK(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  
   LOOKUP_BLOCK(adv, ADVERB, word.c_str());
 
     
@@ -1950,7 +1961,7 @@ bool diminutive = false;
              translation = lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str());
           }
 
-      word_type = 1;
+      word_type = ADJECTIVE;
     }  
     // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
    else if(gender_shift){

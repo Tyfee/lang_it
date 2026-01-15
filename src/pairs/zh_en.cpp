@@ -57,18 +57,16 @@ V_DICT(verbs,{
 // stuff such as aceitar -> aceipt -> accept
 static string normalize(string word) {
     string normalized_ = word;
-
     if (word.length() > 3) {
-     
+      if (word.substr(0, 3) == "esp") {
+            normalized_ = normalized_.substr(1);  
+        }
     }
-
-
-
     return normalized_;
 }
 
-static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
-    std::vector<Word> sentence_arr = copy;
+static vector<Word> reorder_helpers(const vector<Word>& copy) {
+    vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
 
     int word_count = sentence_arr.size();
@@ -83,32 +81,30 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
         const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;
         const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
 
-
-
     }
     return copy;
 }
 
-static Word nounLookup(const std::string& word) {
-    string translation;
-    int word_type = -1;
-    
+static Word nounLookup(const string& word) {
+
     LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+    
     LOOKUP_BLOCK(adj, ADJECTIVE, word.c_str());
+
     LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+
     LOOKUP_BLOCK(part, PARTICLE, word.c_str());
     
-    // If we get here, nothing was found
     return { word, word, -1 };
 }
 
 
-std::string translate_zh(const char* sentence) {
+string translate_zh(const char* sentence) {
     char buffer[250];
     strncpy(buffer, sentence, sizeof(buffer));
     buffer[sizeof(buffer) - 1] = '\0';
     vector<string> arr = tokenize_cjk(string(buffer));
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup, false); //true for continuous non-spaced char languages
+    string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup, false); //true for continuous non-spaced char languages
     return translated;
 }
 

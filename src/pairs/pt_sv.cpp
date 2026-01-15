@@ -1731,35 +1731,35 @@ static Word nounLookup(const std::string& word) {
 
    // adjectives need diminutive as well
 bool diminutive = false;
-    if (isDiminutive_PT(word, "inho")) {
+    if (isDiminutive(word, "inho")) {
         
          word_type = 0; 
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "o").c_str()));
     }
     
-    else if (isDiminutive_PT(word, "inha")) {
+    else if (isDiminutive(word, "inha")) {
      
         word_type = 0; 
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 4) + "a").c_str()));
     }
-    else if (isDiminutive_PT(word, "inhos")) {
+    else if (isDiminutive(word, "inhos")) {
         
         word_type = 0; 
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
     }
-    else if (isDiminutive_PT(word, "inhas")) {
+    else if (isDiminutive(word, "inhas")) {
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
     }
-    else if (isDiminutive_PT(word, "zinho")) {
+    else if (isDiminutive(word, "zinho")) {
         diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "o").c_str()));
     }
-    else if (isDiminutive_PT(word, "zinha")) {
+    else if (isDiminutive(word, "zinha")) {
          diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 5) + "a").c_str()));
     }
-    else if (isDiminutive_PT(word, "zinhos")) {
+    else if (isDiminutive(word, "zinhos")) {
       diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "o").c_str()));
     }
-    else if (isDiminutive_PT(word, "zinhas")) {
+    else if (isDiminutive(word, "zinhas")) {
          diminutive = lookup(nouns, (script_adequation(word.substr(0, word.size() - 6) + "a").c_str()));
     }
    bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only

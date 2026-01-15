@@ -6,6 +6,8 @@
 #define RULE(str) \
     if (rule(str, sentence_arr, reordered_arr, i)) continue;
 
+
+        
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
         invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
@@ -20,10 +22,36 @@
     
 #define LOOKUP_BLOCK(DICTIONARY, TYPE, WORD) \
     if (const char* result = lookup(DICTIONARY, WORD)) { \
+    std::string translation; \
+    int word_type = -1; \
         translation = result; \
         word_type = TYPE; \
         return { word, normalize(translation), word_type }; \
     }
+
+
+
+enum NORMALIZATION_RULES {
+   REPLACE_ALL = 0,
+   REPLACE_START = 1,
+   REPLACE_END = 2
+};
+
+#define NORMALIZE(ORIGINAL, RULE, REPLACEMENT)            \
+    do {                                                  \
+        size_t pos = normalized_.find(ORIGINAL);          \
+        if (pos != std::string::npos) {                   \
+            const string& orig = ORIGINAL;                \
+            int rule = RULE;                    \
+            const string& repl = REPLACEMENT;                    \
+            if(rule == REPLACE_ALL) normalized_.replace(pos, orig.length(), REPLACEMENT); \
+            if(rule == REPLACE_START && word.substr(0, orig.length()) == orig)  normalized_ = REPLACEMENT + normalized_.substr(orig.length());\
+            if(rule == REPLACE_END && (normalized_.size() >= orig.length() && normalized_.substr(normalized_.size() - orig.length()) == orig))  normalized_ = normalized_.substr(0, normalized_.size() - orig.length()) + repl;\
+        }                                                 \
+    } while (0)
+
+
+
 
     
 
@@ -80,11 +108,35 @@ struct Verb {
 };
 
 
+typedef struct
+{
+  const char* w;
+  const char* t;
+  int type;
+  uint8_t flags;
+} Suffix;
+
+typedef struct 
+{
+   bool isDefined;
+   int number_of_variations;
+   std::string def;
+   std::vector<std::string> variations;
+} Gender;
+
+
 using Dictionary = Entry[];
 using VerbDictionary = Verb[];
+using SuffixDictionary = Suffix[];
+
 
 #define DICT(name, ...) constexpr Dictionary name = __VA_ARGS__
 #define V_DICT(name, ...) constexpr VerbDictionary name = __VA_ARGS__
+#define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
+#define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
+#define GENDER_DEF(...) Gender gender_def = {__VA_ARGS__}
+
+
 
 
 
@@ -101,6 +153,16 @@ enum WordType {
     ADVERB = 13,
     POSSESSIVE_PRONOUN = 40,
     UNKNOWN = 99
+};
+
+enum VerbForm {
+    INFINITIVE = 0,
+    PAST_TENSE = 1,
+    SUBJUNCTIVE = 2,
+    PRESENT_TENSE = 3,
+    PRESENT_CONTINUOUS = 5,
+    CONDITIONAL = 6,
+    IMPERATIVE = 7
 };
 
 inline WordType typeFromString(const std::string& s) {
@@ -144,7 +206,16 @@ enum SuffixFlags: uint8_t {
     FEMININE = 1 << 0
 };
 
+typedef struct {
+    
+    std::string root;
+    std::vector<std::string> suffixes;
+} SuffixRule;
 
+typedef struct {
+  std::string original;
+  std::string replacement;
+} Normalization;
 
 
 typedef struct {
@@ -157,14 +228,11 @@ typedef struct {
 
 
 
-typedef struct
-{
-  const char* w;
-  const char* t;
-  int type;
-  uint8_t flags;
-} Suffix;
 
+inline std::string normalize_test(std::string word){
+
+    return "";
+}
 
 
 // making a decent API for the pairs to access and make implementing easier, but i know i'll keep changing it and never be satisfied
@@ -298,6 +366,7 @@ inline std::string unigramLookup(const std::vector<std::string>& array_of_words,
   for(size_t i = 0; i < array_of_words.size(); ++i){
     
     Word match = nounLookup(array_of_words[i]);
+    
     switch (ignore_flags[i])
     {
     case 0:{
@@ -1032,7 +1101,7 @@ inline bool isPortuguese(const std::string& word){
     return isIt;
 }
 
-inline bool isDiminutive_PT(const std::string& s, const char* suffix) {
+inline bool isDiminutive(const std::string& s, const char* suffix) {
     size_t n = 0;
     while (suffix[n] != '\0') n++; 
     if (s.size() < n) return false;
