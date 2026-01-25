@@ -1767,17 +1767,17 @@ bool diminutive = false;
    bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
   
  
-   LOOKUP_BLOCK(nouns, NOUN, word.c_str());
-  LOOKUP_BLOCK(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
-  LOOKUP_BLOCK(adj, ADJECTIVE, script_adequation(word).c_str());
-  LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
-  LOOKUP_BLOCK(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
-  LOOKUP_BLOCK(obl_pro, OBLIQUE_PRONOUN, word.c_str());
-  LOOKUP_BLOCK(pre, PREPOSITION, word.c_str());
-  LOOKUP_BLOCK(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
-  LOOKUP_BLOCK(art, ARTICLE, word.c_str()); // preposition plurals
-  LOOKUP_BLOCK(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
-  LOOKUP_BLOCK(adv, ADVERB, word.c_str());
+   LOOKUP(nouns, NOUN, word.c_str());
+  LOOKUP(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  LOOKUP(adj, ADJECTIVE, script_adequation(word).c_str());
+  LOOKUP(pro, PRONOUN, word.c_str(), false, false);
+  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  LOOKUP(pre, PREPOSITION, word.c_str());
+  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  LOOKUP(art, ARTICLE, word.c_str(), false, false); // preposition plurals
+  LOOKUP(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  LOOKUP(adv, ADVERB, word.c_str());
     
     
   if(plural){

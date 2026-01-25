@@ -57,11 +57,7 @@ V_DICT(verbs,{
 // stuff such as aceitar -> aceipt -> accept
 static string normalize(string word) {
     string normalized_ = word;
-    if (word.length() > 3) {
-      if (word.substr(0, 3) == "esp") {
-            normalized_ = normalized_.substr(1);  
-        }
-    }
+
     return normalized_;
 }
 
@@ -87,13 +83,13 @@ static vector<Word> reorder_helpers(const vector<Word>& copy) {
 
 static Word nounLookup(const string& word) {
 
-    LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+    LOOKUP(nouns, NOUN, word.c_str());
     
-    LOOKUP_BLOCK(adj, ADJECTIVE, word.c_str());
+    LOOKUP(adj, ADJECTIVE, word.c_str());
 
-    LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+    LOOKUP(pro, PRONOUN, word.c_str());
 
-    LOOKUP_BLOCK(part, PARTICLE, word.c_str());
+    LOOKUP(part, PARTICLE, word.c_str());
     
     return { word, word, -1 };
 }

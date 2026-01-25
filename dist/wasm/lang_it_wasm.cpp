@@ -4,7 +4,7 @@
 
 std::string translate_it(std::string sentence,
                               std::string from,
-                              std::string to, int type) {
+                              std::string to, int type = 0) {
     return translate(sentence.c_str(), from.c_str(), to.c_str(), type);
 }
 

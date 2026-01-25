@@ -205,7 +205,7 @@ const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 
 // any set of (n)words in portuguese that can't be translated separately
 
-constexpr Entry fixed_ngrams[] = {
+DICT(fixed_ngrams, {
   {"de_novo", "again"},
   {"a_gente", "we"},
   {"o_que", "what"},
@@ -259,13 +259,13 @@ constexpr Entry fixed_ngrams[] = {
   {"hoje_em_dia", "nowadays"},
   {"de_vez_em_quando", "sometimes"},
   {"se_preocup", "worry"} // need to deal with this bitch as well ..... TRUST, YOU WILL BE DEALT WITH
-};
+});
 vector<string> modals = {"can", "must", "should", "could", "may", "will", "am", "is", "are"};
 
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
-constexpr Entry nouns[] = {
+DICT(nouns, {
   {"olá", "hello"},
   {"ola", "hello"},
   {"oi", "hi"},
@@ -559,16 +559,16 @@ constexpr Entry nouns[] = {
   {"merda", "shit"},
   {"bosta", "shit"},
   {"caralho", "fuck"}
-};
+});
 
-constexpr Entry art[] = {
+DICT(art,{
   {"o", "the"},
   {"a", "the"},
   {"um", "a"},
   {"uma", "a"}
-};
+});
 
-constexpr Entry pre[] = { 
+DICT(pre, { 
   {"do", "of the"},
   {"da", "of the"},
   {"de", "of"},
@@ -596,10 +596,10 @@ constexpr Entry pre[] = {
   {"vamos", "will"},
 
   {"num", "in a"}
-};
+});
 
 // nominative/personal pronouns
-constexpr Entry pro[] = {
+DICT(pro, {
   {"eu", "i"},
   {"você", "you"},
   {"voce", "you"},
@@ -627,8 +627,9 @@ constexpr Entry pro[] = {
   {"isto", "this"},
   {"comigo", "with myself"}
   
-};
-constexpr Entry poss_pro[] = {
+});
+
+DICT(poss_pro, {
   {"seu", "your"},
   {"dela", "her"},
   {"dele",  "his"},
@@ -637,7 +638,7 @@ constexpr Entry poss_pro[] = {
   {"meus", "my"},
   {"minha",  "my"},
   {"minhas",  "my"}
-};
+});
 
 //object pronoun match (in english)
 
@@ -1871,27 +1872,27 @@ for (int i = 0; i < plu.size(); ++i) {
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  LOOKUP_BLOCK(nouns, NOUN, word.c_str());
+  LOOKUP(nouns, NOUN, word.c_str());
 
-  LOOKUP_BLOCK(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  LOOKUP(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
   
-  LOOKUP_BLOCK(adj, ADJECTIVE, script_adequation(word).c_str());
+  LOOKUP(adj, ADJECTIVE, script_adequation(word).c_str());
   
-  LOOKUP_BLOCK(pro, PRONOUN, word.c_str());
+  LOOKUP(pro, PRONOUN, word.c_str());
   
-  LOOKUP_BLOCK(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
   
-  LOOKUP_BLOCK(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word.c_str());
   
-  LOOKUP_BLOCK(pre, PREPOSITION, word.c_str());
+  LOOKUP(pre, PREPOSITION, word.c_str());
   
-  LOOKUP_BLOCK(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
   
-  LOOKUP_BLOCK(art, ARTICLE, word.c_str()); // preposition plurals
+  LOOKUP(art, ARTICLE, word.c_str()); // preposition plurals
   
-  LOOKUP_BLOCK(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  LOOKUP(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
   
-  LOOKUP_BLOCK(adv, ADVERB, word.c_str());
+  LOOKUP(adv, ADVERB, word.c_str());
 
     
     

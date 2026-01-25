@@ -44,7 +44,7 @@ constexpr Entry fixed_ngrams[] = {
 
 // noun dictionary, not only nouns anymore lol
 // basically every word that can't be matched with rules of breakdown will be translated directly from here
-constexpr Entry nouns[] = {
+DICT(nouns, {
   {"olá", "hola"},
   {"oi", "hola"},
   {"dois", "dos"},
@@ -84,16 +84,17 @@ constexpr Entry nouns[] = {
   {"cadeira", "silla"},
   {"mãe", "madre"},
   {"pai", "padre"}
-};
+});
 
-constexpr Entry art[] = {
+DICT(art, {
   {"o", "el"},
+  {"os", "los"},
   {"a", "la"},
   {"um", "un"},
   {"uma", "una"}
-};
+});
 
-constexpr Entry pre[] = { 
+DICT(pre, { 
   {"do", "del"},
   {"da", "de la"},
   {"ou", "o"},
@@ -108,10 +109,10 @@ constexpr Entry pre[] = {
   {"é", "és"},
   {"sou", "soy"},
   {"num", "en un"}
-};
+});
 
 // nominative/personal pronouns
-constexpr Entry pro[] = {
+DICT(pro, {
   {"eu", "yo"},
   {"você", "tu"},
   {"nós",  "we"},
@@ -120,8 +121,8 @@ constexpr Entry pro[] = {
   {"elas",  "ellas"},
   {"eles", "ellos"}
   
-};
-constexpr Entry poss_pro[] = {
+});
+DICT(poss_pro, {
   {"seu", "tu"},
   {"dela", "su"},
   {"dele",  "su"},
@@ -130,24 +131,21 @@ constexpr Entry poss_pro[] = {
   {"meus", "mis"},
   {"minha",  "mi"},
   {"minhas",  "mis"}
-};
+});
 
 //object pronoun match (in english)
 
-constexpr Entry obj_pro[] = {
-  {"she", "la"},
-  {"he", "lo"},
-  {"they", "los"},
-  {"you", "te"},
-};
+DICT(obj_pro, {
+  {"ella", "la"},
+  {"él", "lo"},
+  {"ellos", "los"},
+  {"tu", "te"},
+});
 
 
-
-
-// oblique pronouns
 
 // adjectives
-constexpr Entry adj[] = {
+DICT(adj,  {
   {"vermelho", "rojo"},
   {"bonito", "belo"},
   {"legal", "genial"},
@@ -174,11 +172,11 @@ constexpr Entry adj[] = {
   {"perto", "close"},
   {"pesado", "heavy"},
   {"torto", "bent"}
-};
+});
 
 //adverbs
 
-constexpr Entry adv[] = {
+DICT(adv, {
   {"se", "si"},
   {"talvez", "tal vez"},
   {"tomara", "ojalá"},
@@ -205,7 +203,7 @@ constexpr Entry adv[] = {
   {"só", "solo"},
   {"apenas", "solamente"},
   {"então", "entonces"}
-};
+});
 
 
 struct VerbEnding {
@@ -268,57 +266,19 @@ constexpr Suffix suff[] = {
   {"ção", "cion", 0,0},
 };
 
-
-
-//normalization
-//this will turn sets of letters that shift on translation and change them accordingly.
-// stuff such as aceitar -> aceipt -> accept
-
-typedef struct {
-    const char* letters;
-    const char* replacement;
-    int length; // length in bytes!!! so ça is 3 bytes cause ç is 2 bytes :p
-} Cluster;
-
 static string normalize(string word) {
  
 
-
-const Cluster to_replace[] = {
-        {"ch", "ll", 2},
-        {"qu", "cu", 2},
-        {"lh", "j", 2},
-        {"ça", "za", 3}, // ça = 3 bytes, see
-        {"nh", "ñ", 2},
-        {"vr", "br", 2}
-};
     string normalized_ = word;
     
     if (word.length() > 3) {
-        char thirdLast = word[word.size() - 3];
-        string last2 = word.substr(word.size() - 2);
        
-     // replace every entry in the Cluster struct regardless of position
-     // only useful for sounds that DO NOT exist in language B and are 1:1 equivalent to langugage A
-        for(int i = 0; i < (sizeof(to_replace) / sizeof(to_replace[0])); i++){
-            size_t pos = 0;
-            while ((pos = normalized_.find(to_replace[i].letters, pos)) != string::npos) {
-                normalized_.replace(pos, to_replace[i].length, to_replace[i].replacement);
-                pos += 2; 
-            }
-        }
-        
-         if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "agem") {
-            normalized_ = normalized_.substr(0, normalized_.size() - 4) + "aje";
-        }
-        if (normalized_.size() >= 5 && normalized_.substr(normalized_.size() - 4) == "eiro") {
-                    normalized_ = normalized_.substr(0, normalized_.size() - 4) + "ero";
-         }
+         NORMALIZE("ch", REPLACE_ALL, "ll");
+            NORMALIZE("qu", REPLACE_START, "cu");
+            NORMALIZE("lh", REPLACE_ALL, "j");
+            NORMALIZE("ça", REPLACE_ALL, "za");
+            NORMALIZE("nh", REPLACE_ALL, "ñ");
 
-       
-        if (normalized_.size() >= 3 && (normalized_.substr(normalized_.size() - 2) == "ém" || normalized_.substr(normalized_.size() - 2) == "em")) {
-            normalized_ = normalized_.substr(0, normalized_.size() - 2) + "ién";
-        }
     }
 
     return normalized_;
@@ -452,54 +412,30 @@ static Word nounLookup(const std::string& word) {
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  if(lookup(nouns, word.c_str())){
-   translation = lookup(nouns, word.c_str());
-   word_type = 0;
-   }
-   //then without accentuation (helpful in plural)
-   else if(lookup(nouns, word.c_str())){
-       translation = lookup(nouns, word.c_str());
-       word_type = 0; 
-   }
-   else if(lookup(adj, word.c_str())){
-    
-      translation = lookup(adj, word.c_str());
-      word_type = 1;
-
-    }
-    else if(lookup(pro, word.c_str())){
-      translation = lookup(pro, word.c_str());
-      word_type = 4;
-    } else if(lookup(poss_pro, word.c_str())){
-      translation = lookup(poss_pro, word.c_str());
-      word_type = 40;
-    }
+ LOOKUP(nouns, NOUN, word.c_str());
+ 
+  LOOKUP(adj, ADJECTIVE, word.c_str());
   
+  LOOKUP(adj, ADJECTIVE,word.substr(0, word.length() - 1).c_str()); // figure out how to set the plural
+ 
+ LOOKUP(pro, PRONOUN, word.c_str());
+ 
+ LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  
+ LOOKUP(pre, PREPOSITION, word.c_str());
+ 
+   LOOKUP(pre, PREPOSITION,word.substr(0, word.length() - 1).c_str());
+ 
+    LOOKUP(art, ARTICLE, word.c_str());
 
-     else if(lookup(pre, word.c_str())){
-      translation = lookup(pre, word.c_str());
-      word_type = 8;
-    }//preposition plurals are simple i guess
-    else if(lookup(pre, word.substr(0, word.length() - 1).c_str())){
-      translation = lookup(pre, word.substr(0, word.length() - 1).c_str());
-      word_type = 8;
-    }
-     else if(lookup(art, word.c_str())){
-      translation = lookup(art, word.c_str());
-      word_type = 9;
-    }
-     else if(article_plural){
-      translation = lookup(art, (word.substr(0, word.length() - 1).c_str()));
-      word_type = 9;
-    }
-    
-     else if(lookup(adv, word.c_str())){
-      translation = lookup(adv, word.c_str());
-      word_type = 13;
-    }
+    LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1).c_str());
+    LOOKUP(adv, ADVERB, word.substr(0, word.length() - 1).c_str());
+ 
+
+
     
     
-  else if(plural){
+if(plural){
     // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
     //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
     string singular_pt;
@@ -537,20 +473,7 @@ static Word nounLookup(const std::string& word) {
     }
 }
 
-    // same as above for adjectives. e.g bonito[s] -> bonito, except we dont plug in 's' cause english has no adj. plurals ;p
-      else if(adj_plural){
-
-        if(lookup(adj, (word.substr(0, word.length() - 1).c_str()))){
-         translation = lookup(adj, (word.substr(0, word.length() - 1).c_str()));
-
-        }
-        
-        else if(lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str())){
-             translation = lookup(adj,(word.substr(0, word.length() - 2) + "o").c_str());
-          }
-
-      word_type = 1;
-    }  
+ 
     // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
    else if(gender_shift){
           

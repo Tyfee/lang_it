@@ -20,15 +20,37 @@
         continue; \
     }
     
-#define LOOKUP_BLOCK(DICTIONARY, TYPE, WORD) \
-    if (const char* result = lookup(DICTIONARY, WORD)) { \
+#define LOOKUP(DICTIONARY, TYPE, WORD) \
+    if (const char* result = lookup(DICTIONARY, WORD.c_str())) { \
     std::string translation; \
     int word_type = -1; \
         translation = result; \
         word_type = TYPE; \
         return { word, normalize(translation), word_type }; \
-    }
+  }
 
+#define VERB_LOOKUP(DICTIONARY, WORD, CONJUGATIONS)                         \
+{                                                                           \
+    for (size_t ci = 0; ci < CONJUGATIONS.size(); ++ci) {                  \
+        for (size_t ei = 0; ei < CONJUGATIONS[ci].endings.size(); ++ei) {  \
+            const std::string& ending = CONJUGATIONS[ci].endings[ei];      \
+            int form = CONJUGATIONS[ci].form;\
+            if (WORD.size() <= ending.size()) continue;                   \
+            if (WORD.compare(WORD.size() - ending.size(),                 \
+                              ending.size(), ending) != 0)                \
+                continue;                                                   \
+            std::string root = WORD.substr(0, WORD.size() - ending.size());\
+            Verb v = verb_lookup(DICTIONARY, root.c_str());                \
+            if (v.translation && *v.translation) {                         \
+                return Word{ WORD, v.translation, form };                  \
+            }                                                               \
+        }                                                                   \
+    }                                                                       \
+    return Word{ WORD, WORD, -1 };                                          \
+}
+
+
+   
 
 
 enum NORMALIZATION_RULES {
@@ -65,6 +87,11 @@ enum NORMALIZATION_RULES {
 #if defined(PT_EN) || defined(ALL) 
 std::string traduzir_en(const char* sentence, bool auto_correct);
 #endif
+
+#if defined(PT_MBL) || defined(ALL) 
+std::string pt_mbl(const char* sentence);
+#endif
+
 
 #if defined(PT_ES) || defined(ALL)
 std::string traduzir_es(const char* sentence);
@@ -124,10 +151,17 @@ typedef struct
    std::vector<std::string> variations;
 } Gender;
 
+typedef struct 
+{
+    std::vector<std::string> endings;
+    int form;
+} VerbRule;
+
 
 using Dictionary = Entry[];
 using VerbDictionary = Verb[];
 using SuffixDictionary = Suffix[];
+using VerbRuleDictionary = std::vector<VerbRule>;
 
 
 #define DICT(name, ...) constexpr Dictionary name = __VA_ARGS__
@@ -135,8 +169,7 @@ using SuffixDictionary = Suffix[];
 #define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
 #define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
 #define GENDER_DEF(...) Gender gender_def = {__VA_ARGS__}
-
-
+#define VERB_CONJUGATION(name, ...) VerbRuleDictionary name = __VA_ARGS__
 
 
 
@@ -145,6 +178,9 @@ enum WordType {
     ADJECTIVE = 1,
     VERB = 3,
     INTRANSITIVE_VERB = 36,
+    INFINITIVE_VERB = 37,
+    PAST_TENSE_VERB = 38,
+    PRESENT_CONTINUOUS_VERB = 38,
     PRONOUN = 4,
     PARTICLE = 67, 
     OBLIQUE_PRONOUN = 11,
@@ -162,7 +198,8 @@ enum VerbForm {
     PRESENT_TENSE = 3,
     PRESENT_CONTINUOUS = 5,
     CONDITIONAL = 6,
-    IMPERATIVE = 7
+    IMPERATIVE = 7,
+    IRREGULAR = 8
 };
 
 inline WordType typeFromString(const std::string& s) {
@@ -247,6 +284,26 @@ inline const char* lookup(const Entry (&dict)[N], const char* word) {
         if (*p == *q) return dict[i].t;
     }
     return nullptr;
+}
+template <size_t N>
+inline Verb verb_lookup(const Verb (&dict)[N], const char* word) {
+    for (size_t i = 0; i < N; ++i) {
+        const char* p = dict[i].root;
+        const char* q = word;
+        while (*p && *q && *p == *q) { ++p; ++q; }
+        if (*p == *q) return Verb{
+            dict[i].root,
+            dict[i].translation,
+            dict[i].type,      
+            dict[i].flags
+        };
+    }
+    return Verb{
+            "",       
+            "", 
+            -1,      
+            0
+        };
 }
 
 template <size_t N>
@@ -941,6 +998,13 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return traduzir_en(sentence, auto_correct);
         }
     #endif
+
+    #if defined(PT_MBL) || defined(ALL)
+        if ((f == "pt" || f == "PT") && (t == "mbl" || t == "MBL")) {
+            return pt_mbl(sentence);
+        }
+    #endif
+
     #if defined(PT_ES) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "es" || t == "ES")) {
             return traduzir_es(sentence);
