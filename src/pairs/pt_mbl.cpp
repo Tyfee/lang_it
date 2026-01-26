@@ -65,9 +65,11 @@ VERB_ENDINGS(reg, {
    {{""}, IRREGULAR}
 });
 
-VERB_CONJUGATIONS( 
+VERB_CONJUGATIONS(def, 
+    {
 {PAST_TENSE, NONE, ""}
-)
+}
+);
 
 
 static string normalize(string word) {

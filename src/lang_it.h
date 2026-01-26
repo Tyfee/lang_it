@@ -184,10 +184,10 @@ typedef struct
 
 typedef struct 
 {
-    VERB_FORM form;
-    AFFIX_TYPE type;
+    int form;
+    int type;
     std::string affix;
-} VerbRule;
+} VerbConjugation;
 
 
 using Dictionary = Entry[];
@@ -224,7 +224,7 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 #define GENDER_DEF(...) Gender gender_def = {__VA_ARGS__}
 #define VERB_ENDINGS(name, ...) VerbRuleDictionary name = __VA_ARGS__
 
-#define VERB_CONJUGATIONS(name, ...) VerbRuleDictionary name = __VA_ARGS__
+#define VERB_CONJUGATIONS(name, ...) VerbConjugationDictionary  name = __VA_ARGS__
 
 #define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION) \
 std::string name(const char* sentence) {\
@@ -271,7 +271,8 @@ enum VerbForm {
 
 enum AFFIX_TYPE {
     PREFIX = 0,
-    SUFFIX = 1
+    SUFFIX = 1,
+    NONE
 };
 
 
