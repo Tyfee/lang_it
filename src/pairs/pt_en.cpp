@@ -2042,9 +2042,6 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     int word_count = sentence_arr.size();
 
 
-
-
-
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
     bool one_ = (i > 0);
     bool two_ = (i >= 1);

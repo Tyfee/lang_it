@@ -6,7 +6,27 @@
 #define RULE(str) \
     if (rule(str, sentence_arr, reordered_arr, i)) continue;
 
+#define DEFAULT()\
+  if (sentence_arr.at(i).type != -1){\
+             reordered_arr.push_back(Word{ sentence_arr.at(i).word, normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});\
+        }
+#define INIT_REORDER()\
+    bool one_ = (i > 0);\
+    bool two_ = (i >= 1);\
+    bool three_ = (i >= 2);\
+    const Word& current = sentence_arr.at(i);\
+    const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;\
+    const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;\
 
+#define CLEANUP(ARR)\
+ARR.erase( \
+    std::remove_if(ARR.begin(), ARR.end(),\
+        [](const Word &w) {\
+            return w.translation.empty() ||\
+                   std::all_of(w.translation.begin(), w.translation.end(), ::isspace);\
+        }),\
+    ARR.end()\
+);
         
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
@@ -16,7 +36,7 @@
 
 #define REMOVE_FIRST(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
-        remove_first(reordered_arr, "dummy", "dummy"); \
+        remove_first(reordered_arr,sentence_arr.at(i), sentence_arr.at(i - 1)); \
         continue; \
     }
     
@@ -28,6 +48,9 @@
         word_type = TYPE; \
         return { word, normalize(translation), word_type }; \
   }
+
+
+
 
 #define VERB_LOOKUP(DICTIONARY, WORD, CONJUGATIONS)                         \
 {                                                                           \
@@ -42,7 +65,7 @@
             std::string root = WORD.substr(0, WORD.size() - ending.size());\
             Verb v = verb_lookup(DICTIONARY, root.c_str());                \
             if (v.translation && *v.translation) {                         \
-                return Word{ WORD, v.translation, form };                  \
+                return Word{ WORD, v.translation, VERB };                  \
             }                                                               \
         }                                                                   \
     }                                                                       \
@@ -60,16 +83,18 @@ enum NORMALIZATION_RULES {
 };
 
 #define NORMALIZE(ORIGINAL, RULE, REPLACEMENT)            \
-    do {                                                  \
+    do {                           \
+            const string& orig = ORIGINAL;                        \
+          if (word.length() > orig.length()) {                        \
         size_t pos = normalized_.find(ORIGINAL);          \
         if (pos != std::string::npos) {                   \
-            const string& orig = ORIGINAL;                \
             int rule = RULE;                    \
             const string& repl = REPLACEMENT;                    \
             if(rule == REPLACE_ALL) normalized_.replace(pos, orig.length(), REPLACEMENT); \
             if(rule == REPLACE_START && word.substr(0, orig.length()) == orig)  normalized_ = REPLACEMENT + normalized_.substr(orig.length());\
             if(rule == REPLACE_END && (normalized_.size() >= orig.length() && normalized_.substr(normalized_.size() - orig.length()) == orig))  normalized_ = normalized_.substr(0, normalized_.size() - orig.length()) + repl;\
-        }                                                 \
+        } \
+                                                    }                                                \
     } while (0)
 
 
@@ -157,19 +182,61 @@ typedef struct
     int form;
 } VerbRule;
 
+typedef struct 
+{
+    VERB_FORM form;
+    AFFIX_TYPE type;
+    std::string affix;
+} VerbRule;
+
 
 using Dictionary = Entry[];
 using VerbDictionary = Verb[];
 using SuffixDictionary = Suffix[];
 using VerbRuleDictionary = std::vector<VerbRule>;
+using VerbConjugationDictionary = std::vector<VerbConjugation>;
 
+
+#define ENTRY(w, t) { w, t, 0 }
+
+#define SYNONYMS_2(t, a, b) \
+    ENTRY(a, t), ENTRY(b, t)
+
+#define SYNONYMS_3(t, a, b, c) \
+    ENTRY(a, t), ENTRY(b, t), ENTRY(c, t)
+
+#define SYNONYMS_4(t, a, b, c, d) \
+    ENTRY(a, t), ENTRY(b, t), ENTRY(c, t), ENTRY(d, t)
+
+
+#define GET_MACRO(_1,_2,_3,_4,NAME,...) NAME
+
+#define SYNONYMS(t, ...) \
+    GET_MACRO(__VA_ARGS__, \
+              SYNONYMS_4, \
+              SYNONYMS_3, \
+              SYNONYMS_2)(t, __VA_ARGS__)
 
 #define DICT(name, ...) constexpr Dictionary name = __VA_ARGS__
 #define V_DICT(name, ...) constexpr VerbDictionary name = __VA_ARGS__
 #define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
 #define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
 #define GENDER_DEF(...) Gender gender_def = {__VA_ARGS__}
-#define VERB_CONJUGATION(name, ...) VerbRuleDictionary name = __VA_ARGS__
+#define VERB_ENDINGS(name, ...) VerbRuleDictionary name = __VA_ARGS__
+
+#define VERB_CONJUGATIONS(name, ...) VerbRuleDictionary name = __VA_ARGS__
+
+#define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION) \
+std::string name(const char* sentence) {\
+    char buffer[250];\
+    strncpy(buffer, sentence, sizeof(buffer));\
+    buffer[sizeof(buffer) - 1] = '\0';\
+    to_lower(buffer);\
+    std::vector<string> arr = tokenize(std::string(buffer));\
+    std::string translated = trigramLookup(NGRAMS, arr, REORDER_HELPERS, LOOKUP_FUNCTION);\
+    return translated;\
+}
+
 
 
 
@@ -201,6 +268,12 @@ enum VerbForm {
     IMPERATIVE = 7,
     IRREGULAR = 8
 };
+
+enum AFFIX_TYPE {
+    PREFIX = 0,
+    SUFFIX = 1
+};
+
 
 inline WordType typeFromString(const std::string& s) {
     if (s == "NOUN") return NOUN;
@@ -393,11 +466,14 @@ inline void remove_middle(std::vector<Word>& output, const Word& first, const Wo
     output.push_back(last);
 }
 inline void remove_first(std::vector<Word>& output, const Word& first, const Word& second) {
-    output.erase(output.end() - 2);  
+  if (!output.empty()) {output.pop_back(); }
+    output.push_back(first);
 }
 
 inline void remove_current(std::vector<Word>& output) {
-    output.pop_back();            
+  if (output.size() > 1) {
+        output.erase(output.end() - 1, output.end()); 
+    }           
 }
 
 inline void remove_pair(std::vector<Word>& output) {
@@ -983,10 +1059,6 @@ inline std::string detect_language(const char* sentence) {
     }
     return language;
 }
-
-
-
-
 inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2, bool auto_correct = false){
     // script will be passed to languages that can be written in more than one script
     // japanese (0 = kana, 1 = kana + kanji, 2 = romaji ), malay(0 = rumi, 1 = jawi) and mandarin chinese (0 = hanzi, 1 = pinyin) 

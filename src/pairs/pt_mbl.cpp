@@ -20,12 +20,10 @@ DICT(fixed_ngrams, {
  
 });
 
-
-//pra definir um dicionario, precisamos da construção DICT(nome, {{"palavra", "tradução"}, {"palavra", "tradução"}})
-// nosso dicionario de adjetivos recebe um nome arbitrario "adj" e qualquer lugar onde a palavra "vazio"
-//for encontrada, ela será traduzida como "hãmok"
 DICT(adj, {
- {"vazio", "hãmhok"}
+ {"vazio", "hãmhok"},                          // SYNONYMS(traduz_para, um, dois, tres)  
+ SYNONYMS("yĩxux", "azul", "amarelo", "verde") // nos dicionarios maxakali as palavras azul, amarelo, verde
+                                                // sao todas traduzidas como yĩxux
 });
 
 DICT(nouns, {
@@ -38,7 +36,8 @@ DICT(nouns, {
 });
 
 DICT(pro, {
- {"eu", "ãte"}
+ {"eu", "ãte"},
+ SYNONYMS("ha", "ele", "ela", "isso")
 });
 
 
@@ -46,6 +45,12 @@ DICT(adv, {
  {"também", "kama"}
 });
 
+DICT(art, {
+ {"o", "o"},
+ {"a", "a"},
+ {"os", "os"},
+ {"as", "as"}
+});
 
 V_DICT(verbs, {
     {"empurr", "kaxix"},
@@ -53,49 +58,44 @@ V_DICT(verbs, {
     {"esfri", "ãxi"}
 });
 
-VERB_CONJUGATION(reg, {
+VERB_ENDINGS(reg, {
    {{"ou", "ei", "aram"}, PAST_TENSE},
    {{"ar", "er", "ir"}, INFINITIVE},
    {{"o", "a", "e"}, PRESENT_TENSE},
    {{""}, IRREGULAR}
 });
 
+VERB_CONJUGATIONS( 
+{PAST_TENSE, NONE, ""}
+)
+
 
 static string normalize(string word) {
     string normalized_ = word;
-
-    if (word.length() > 3) {
-
-    }
+    NORMALIZE("rr", REPLACE_ALL, "h");
     return normalized_;
 }
 
-static std::vector<Word> reorder_helpers(const std::vector<Word>& copy) {
+static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
     std::vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
 
-    int word_count = sentence_arr.size();
-
-
-
-
-
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
-        bool one_ = (i > 0);
-        bool two_ = (i >= 1);
-        bool three_ = (i >= 2);
-
-        const Word& current = sentence_arr.at(i);
-        const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;
-        const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;
-
-
-
+     INIT_REORDER()
+     RULE("IF ARTICLE THEN NOUN DO REMOVE_FIRST")
+     DEFAULT()
     }
 
-    
-    return copy;
+    CLEANUP(reordered_arr)
+
+vector<Word> final_arr;
+for (size_t i = 0; i < reordered_arr.size(); ++i) {
+    final_arr.push_back(reordered_arr[i]);
 }
+
+    return final_arr;
+}
+
 
 static Word nounLookup(const string& word) {
 
@@ -107,22 +107,13 @@ static Word nounLookup(const string& word) {
 
     LOOKUP(adv, ADJECTIVE, word);
 
+    LOOKUP(art, ARTICLE, word);
+
     VERB_LOOKUP(verbs, word, reg);
 
     return { word, word, -1 };
 }
 
-
-
-std::string pt_mbl(const char* sentence) {
-    char buffer[250];
-    strncpy(buffer, sentence, sizeof(buffer));
-    buffer[sizeof(buffer) - 1] = '\0';
-    to_lower(buffer);
-    vector<string> arr = tokenize(string(buffer));
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
-
-    return translated;
-}
+MAIN(pt_mbl, fixed_ngrams, reorder_helpers, nounLookup)
 
 #endif
