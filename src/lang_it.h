@@ -52,21 +52,35 @@ ARR.erase( \
 
 
 
-#define VERB_LOOKUP(DICTIONARY, WORD, CONJUGATIONS)                         \
+#define VERB_LOOKUP(DICTIONARY, WORD,ENDINGS, CONJUGATIONS)                         \
 {                                                                           \
-    for (size_t ci = 0; ci < CONJUGATIONS.size(); ++ci) {                  \
-        for (size_t ei = 0; ei < CONJUGATIONS[ci].endings.size(); ++ei) {  \
-            const std::string& ending = CONJUGATIONS[ci].endings[ei];      \
-            int form = CONJUGATIONS[ci].form;\
+    for (size_t ci = 0; ci <ENDINGS.size(); ++ci) {                  \
+        for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {  \
+            const std::string& ending = ENDINGS[ci].endings[ei];      \
+            int form = ENDINGS[ci].form;\
             if (WORD.size() <= ending.size()) continue;                   \
             if (WORD.compare(WORD.size() - ending.size(),                 \
                               ending.size(), ending) != 0)                \
                 continue;                                                   \
             std::string root = WORD.substr(0, WORD.size() - ending.size());\
             Verb v = verb_lookup(DICTIONARY, root.c_str());                \
+            std::string affix = "";\
+            bool has_affix = false;\
+                int affix_form = NONE;\
+                int affix_type = NONE;\
             if (v.translation && *v.translation) {                         \
-                return Word{ WORD, v.translation, VERB };                  \
-            }                                                               \
+                if (CONJUGATIONS.size() > 0) {                         \
+            for (size_t i = 0; i < CONJUGATIONS.size(); ++i) {                         \
+                affix_form = CONJUGATIONS[i].form;\
+                affix_type = CONJUGATIONS[i].type;\
+                if(affix_form == form){\
+                        has_affix = true;\
+                        affix = CONJUGATIONS[i].affix;\
+                }\
+                }\
+            }\
+                   return Word{ WORD,(has_affix && affix_type == PREFIX ? affix : "") +  v.translation + (has_affix && affix_type == SUFFIX ? affix : ""), VERB };                  \
+                }\
         }                                                                   \
     }                                                                       \
     return Word{ WORD, WORD, -1 };                                          \

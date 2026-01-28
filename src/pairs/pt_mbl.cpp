@@ -1,4 +1,6 @@
 /** esse é um experimento usando o par maxakali -> português */
+/** this is an experiment using the maxakali -> portuguese pair */
+
 #include "../lang_it.h"
 #if defined(ALL)
 #define PT_MBL
@@ -32,7 +34,9 @@ DICT(nouns, {
  {"amanhã", "hãptup putut"},
  {"mundo", "hãhãm"},
  {"noite", "ãmũy"},
- {"açucar", "axok"}
+ {"açucar", "axok"},
+ {"leite", "xokhep"},
+ {"criança", "kakxop"}
 });
 
 DICT(pro, {
@@ -55,19 +59,21 @@ DICT(art, {
 V_DICT(verbs, {
     {"empurr", "kaxix"},
     {"ajud", "ãyonat"},
-    {"esfri", "ãxi"}
+    {"esfri", "ãxi"},
+    {"beb", "xo'op"},
+    {"d", "hõm"}
 });
 
 VERB_ENDINGS(reg, {
-   {{"ou", "ei", "aram"}, PAST_TENSE},
+   {{"ou", "ei", "aram", "eu"}, PAST_TENSE},
    {{"ar", "er", "ir"}, INFINITIVE},
    {{"o", "a", "e"}, PRESENT_TENSE},
    {{""}, IRREGULAR}
 });
 
 VERB_CONJUGATIONS(def, 
-    {
-{PAST_TENSE, NONE, ""}
+{
+   {INFINITIVE, NONE, ""},
 }
 );
 
@@ -84,7 +90,14 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
      INIT_REORDER()
+     // maxacali não possui artigos, logo se um artigo é seguido por um substantivo, removemos ele
+     // maxacali does not use articles, so if we have a noun following an article, we remove it
      RULE("IF ARTICLE THEN NOUN DO REMOVE_FIRST")
+
+     // a ordem do português é SVO, já a do maxakalí na maioria das vezes é SOV
+     // logo se temos um verbo e depois um substantivo em portugues, invertemos a ordem S[VO] -> S[OV]
+     RULE("IF VERB THEN NOUN DO INVERT")
+
      DEFAULT()
     }
 
@@ -111,7 +124,7 @@ static Word nounLookup(const string& word) {
 
     LOOKUP(art, ARTICLE, word);
 
-    VERB_LOOKUP(verbs, word, reg);
+    VERB_LOOKUP(verbs, word, reg, def);
 
     return { word, word, -1 };
 }
