@@ -23,11 +23,13 @@ bool isNumber(const char* s) {
 
 
 int main(int argc, char* argv[]) {
+    
     bool help = (argc == 2 && std::strcmp(argv[1], "-help") == 0);
     bool info = (argc == 2 && std::strcmp(argv[1], "-info") == 0);
     bool version = (argc == 2 && std::strcmp(argv[1], "-v") == 0);
 
     bool d_l = (argc == 3 && std::strcmp(argv[1], "-detect") == 0);
+    bool l_m = (argc == 3 && std::strcmp(argv[1], "-load") == 0);
     
     bool replMode = std::strcmp(argv[1], "-REPL") == 0 && (argc == 4 ||(argc == 5 && isNumber(argv[4])));
 
@@ -178,10 +180,50 @@ int main(int argc, char* argv[]) {
             std::cout << detect_language(sentence) << std::endl;
             return 0; 
         }
+        else if(l_m) {
+            const unsigned char magic_number[] = {0x6C, 0x61, 0x6E, 0x67, 0x00};
+            const unsigned char from[] = {0xF0 /* from */, 0x02 /* 2 bytes */, 0x65 , 0x6E /* EN */, 0x00};
+            const unsigned char to[] = {0xF1 /* from */, 0x03 /* 2 bytes */, 0x6D , 0x62, 0x6C /* MBL */, 0x00};
+
+            const unsigned char dict_sect[] = {0xD1 /* dict */, 0x01 /* number of entries */,  0x00};
+
+            const unsigned char word_sect[] = {0xF0 /* word */, 0x03 /* length  (3)*/, 0x01 /* number_of_words (1) */, 0x00};
+            const unsigned char word[] = { 0x6B, 0x69, 0x64, 0x00};
+
+            const unsigned char translation_sect[] = {0xF1 /* translation */, 0x06 /* length  (3)*/, 0x00};
+            const unsigned char translation[] = {0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0x00};
+
+            const unsigned char type[] = {0xF2 /*type*/, 0x00 /* (0 = noun )*/};
+
+
+
+            const unsigned char end[] = {0x00, 0x00, 0x00};
+            const unsigned char* full_buffer[] = {magic_number, from, to, dict_sect, end};
+
+            load_from_bin(reinterpret_cast<const char*>(full_buffer));
+
+            const char* sample = "Olá mundo! O tradutor funciona normalmente.";
+            const char* prompt = "O que deseja traduzir?";
+            const char* quit_message = "Digite 'sair' para encerrar.\n";
+            const char* quit_cmd = "sair";
+        
+        std::cout << sample << " -> " << translate_from_bin(sample) << std::endl;
+        std::cout << quit_message;
+
+        std::string input;
+        while (true) {
+            std::getline(std::cin, input);
+            if (input == quit_cmd) break;
+            std::cout << translate_from_bin(input.c_str()) << std::endl;
+        }
+
+        return 0;
+        }
         else {
             std::cerr << "Usage:\n"
                 << "Installed version:" << argv[0] << " -v>\n"
                 << "Auto detect language:" << argv[0] << " -detect <sentence>\n"
+                << "Load translation module:" << argv[0] << " -load <file.lang>\n"
                 << "Translate a sentence: " << argv[0] << " <sentence> <from> <to>\n"
                 << "Interactive translator:" << argv[0] << " -REPL <from> <to>\n"
                 << "Translate files:" << argv[0] << " <file.txt> <from> <to>\n"

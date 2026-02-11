@@ -98,12 +98,12 @@ enum NORMALIZATION_RULES {
 
 #define NORMALIZE(ORIGINAL, RULE, REPLACEMENT)            \
     do {                           \
-            const string& orig = ORIGINAL;                        \
+            const std::string& orig = ORIGINAL;                        \
           if (word.length() > orig.length()) {                        \
         size_t pos = normalized_.find(ORIGINAL);          \
         if (pos != std::string::npos) {                   \
             int rule = RULE;                    \
-            const string& repl = REPLACEMENT;                    \
+            const std::string& repl = REPLACEMENT;                    \
             if(rule == REPLACE_ALL) normalized_.replace(pos, orig.length(), REPLACEMENT); \
             if(rule == REPLACE_START && word.substr(0, orig.length()) == orig)  normalized_ = REPLACEMENT + normalized_.substr(orig.length());\
             if(rule == REPLACE_END && (normalized_.size() >= orig.length() && normalized_.substr(normalized_.size() - orig.length()) == orig))  normalized_ = normalized_.substr(0, normalized_.size() - orig.length()) + repl;\
@@ -119,8 +119,9 @@ enum NORMALIZATION_RULES {
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <cstring>
+#include <algorithm>
 #include <iostream>
-
 // pairs
 
 #if defined(PT_EN) || defined(ALL) 
@@ -131,6 +132,9 @@ std::string traduzir_en(const char* sentence, bool auto_correct);
 std::string pt_mbl(const char* sentence);
 #endif
 
+#if defined(AA_BB) || defined(ALL) 
+std::string aa_bb(const char* sentence);
+#endif
 
 #if defined(PT_ES) || defined(ALL)
 std::string traduzir_es(const char* sentence);
@@ -901,10 +905,13 @@ inline bool rule(
 
 // this is the ugliest code you will see ever, do not pay attention to it :(
 // lowk might work tho, i'll tune the parameters later
+
+
 inline std::string detect_language(const char* sentence) {
     std::string language = "Not Sure.";
     std::vector<std::string> tokens = tokenize(std::string(sentence));
-
+    
+    #if defined(DETECT_LANGUAGE) || defined(ALL) 
     float en = 0.0f;
     float pt = 0.0f;
     float ja = 0.0f;
@@ -1072,8 +1079,96 @@ inline std::string detect_language(const char* sentence) {
     }else if (maxScore == my) {
         language = "my";
     }
+    #endif
+    
     return language;
 }
+
+
+static inline Entry default_fixed_ngrams[] = {
+  {"", ""}
+};
+
+static inline Entry default_nouns[] = {
+  {"", ""}
+};
+
+inline char buffer[250];
+inline int number_of_words = 100;
+inline unsigned int arr_length = 0;
+//default for binary modules
+
+
+static std::string default_normalize(std::string word) {
+    std::string normalized_ = word;
+    NORMALIZE("rr", REPLACE_ALL, "h");
+    return normalized_;
+}
+
+
+static std::vector<Word> default_reorderHelpers(const std::vector<Word>& copy){
+    std::vector<Word> sentence_arr = copy;
+    std::vector<Word> reordered_arr;
+
+    for (size_t i = 0; i < sentence_arr.size(); ++i) {
+     INIT_REORDER()
+       if (sentence_arr.at(i).type != -1){
+             reordered_arr.push_back(Word{ sentence_arr.at(i).word, default_normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});
+        }
+    }
+CLEANUP(reordered_arr)
+
+std::vector<Word> final_arr;
+for (size_t i = 0; i < reordered_arr.size(); ++i) {
+    final_arr.push_back(reordered_arr[i]);
+}
+    return final_arr;
+}
+
+
+static Word default_nounLookup(const std::string& word) {
+    if (const char* result = lookup(default_nouns, word.c_str())) { 
+        std::string translation = result; 
+        int word_type = NOUN; 
+        return { word, default_normalize(translation), word_type }; 
+    }
+    return Word{ word, word, -1 };  
+}
+
+// mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
+// it works!!
+void load_from_bin(const char* file){
+
+static const char t = 0x00;
+static const char ngram_size = 0x01;
+static const char s[] = { 0x6B, 0x69, 0x64, 0 }; // kid
+static const char r[] = { 0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0}; // kakxop
+
+if (arr_length < number_of_words && t == 0x00) {
+     switch(ngram_size){
+        case 0x01: 
+        default_nouns[arr_length++] = Entry{s, r, 0};
+        break;
+        case 0x02:
+        case 0x03:
+        default_fixed_ngrams[arr_length++] = Entry{s, r, 0}; 
+        break;
+     }
+} 
+}
+
+inline std::string translate_from_bin(const char* sentence, int script = 0, bool auto_correct = false){
+    char buffer[250];
+strncpy(buffer, sentence, sizeof(buffer));
+buffer[sizeof(buffer) - 1] = '\0';
+
+to_lower(buffer);
+std::vector<std::string> arr = tokenize(std::string(buffer));
+std::string translated = trigramLookup(default_fixed_ngrams, arr, default_reorderHelpers, default_nounLookup);
+return translated;
+}
+
+
 inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2, bool auto_correct = false){
     // script will be passed to languages that can be written in more than one script
     // japanese (0 = kana, 1 = kana + kanji, 2 = romaji ), malay(0 = rumi, 1 = jawi) and mandarin chinese (0 = hanzi, 1 = pinyin) 
@@ -1091,6 +1186,13 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return pt_mbl(sentence);
         }
     #endif
+
+    #if defined(AA_BB) || defined(ALL)
+        if ((f == "aa" || f == "AA") && (t == "bb" || t == "BB")) {
+            return aa_bb(sentence);
+        }
+    #endif
+
 
     #if defined(PT_ES) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "es" || t == "ES")) {

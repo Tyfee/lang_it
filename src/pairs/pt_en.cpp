@@ -1137,7 +1137,7 @@ replace_all("\xC3\x87", "c"); // Ç
 //normalization
 //this will turn sets of letters that shift on translation and change them accordingly.
 // stuff such as aceitar -> aceipt -> accept
-static string normalize(string word) {
+inline static string normalize(string word) {
     string normalized_ = word;
 
     if (word.length() > 3) {
@@ -1872,27 +1872,27 @@ for (int i = 0; i < plu.size(); ++i) {
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  LOOKUP(nouns, NOUN, word.c_str());
+  LOOKUP(nouns, NOUN, word);
 
-  LOOKUP(nouns, NOUN, script_adequation(word).c_str()); //without accentuation, helpful for adjectives
+  LOOKUP(nouns, NOUN, script_adequation(word)); //without accentuation, helpful for adjectives
   
-  LOOKUP(adj, ADJECTIVE, script_adequation(word).c_str());
+  LOOKUP(adj, ADJECTIVE, script_adequation(word));
   
-  LOOKUP(pro, PRONOUN, word.c_str());
+  LOOKUP(pro, PRONOUN, word);
   
-  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
+  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word);
   
-  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word.c_str());
+  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word);
   
-  LOOKUP(pre, PREPOSITION, word.c_str());
+  LOOKUP(pre, PREPOSITION, word);
   
-  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1).c_str()); // preposition plurals
+  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1)); // preposition plurals
   
-  LOOKUP(art, ARTICLE, word.c_str()); // preposition plurals
+  LOOKUP(art, ARTICLE, word); // preposition plurals
   
-  LOOKUP(art, ARTICLE, (word.substr(0, word.length() - 1).c_str()));
+  LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1));
   
-  LOOKUP(adv, ADVERB, word.c_str());
+  LOOKUP(adv, ADVERB, word);
 
     
     
