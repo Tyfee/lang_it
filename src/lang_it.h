@@ -1137,7 +1137,7 @@ static Word default_nounLookup(const std::string& word) {
 
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
-void load_from_bin(const char* file){
+inline void load_from_bin(const char* file){
 
 static const char t = 0x00;
 static const char ngram_size = 0x01;
