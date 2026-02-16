@@ -1159,13 +1159,50 @@ static Word default_nounLookup(const std::string& word) {
 
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
-void load_from_bin(const char* file){
+inline void load_from_bin(const char* file, size_t size)
+{
+    const uint8_t* ptr = reinterpret_cast<const uint8_t*>(file);
+    const uint8_t* end = ptr + size;
+
+    const char* s = nullptr;
+    const char* r = nullptr;
+
+    uint8_t word_length = 0;
+    uint8_t ngram_size = 0x01;
+    uint8_t type = 0x00;
+
+    while (ptr < end)
+    {
+        uint8_t marker = *ptr++;
+
+        switch (marker)
+        {
+            case 0xF0: // word section
+            {
+                word_length = *ptr++;
+                ngram_size = *ptr++;
+                ptr++; // skip reserved byte
+
+                s = reinterpret_cast<const char*>(ptr);
+                ptr += word_length + 1;
+                break;
+            }
+
+            case 0xF1: // translation section
+            {
+                uint8_t translation_length = *ptr++;
+                ptr++; // skip reserved byte
+
+                r = reinterpret_cast<const char*>(ptr);
+                ptr += translation_length + 1;
+                break;
+            }
 
             case 0xF2: // type section
             {
                 type = *ptr++;
 
-                // store the entry based on the number of ngrams, since it only supports 3 word entries by now
+                // store entry
                 switch (ngram_size)
                 {
                     case 0x01:
@@ -1182,12 +1219,11 @@ void load_from_bin(const char* file){
             }
 
             default:
-                std::cout << "Weird byte: " << std::hex << (int)marker << "\n";
+                std::cout << "Weird bit: " << std::hex << (int)marker << "\n";
                 return;
         }
     }
 }
-
 
 
 inline std::string translate_from_bin(const char* sentence, int script = 0, bool auto_correct = false){
