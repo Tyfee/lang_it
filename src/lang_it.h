@@ -377,6 +377,28 @@ inline const char* lookup(const Entry (&dict)[N], const char* word) {
     }
     return nullptr;
 }
+
+inline const char* lookup_test(const Entry* dict, size_t count, const char* word)
+{
+    for (size_t i = 0; i < count; ++i)
+    {
+        const char* p = dict[i].w;
+        const char* q = word;
+
+        if (!p) continue;
+
+        while (*p && *q && *p == *q)
+        {
+            ++p;
+            ++q;
+        }
+
+        if (*p == '\0' && *q == '\0')
+            return dict[i].t;
+    }
+    return nullptr;
+}
+
 template <size_t N>
 inline Verb verb_lookup(const Verb (&dict)[N], const char* word) {
     for (size_t i = 0; i < N; ++i) {
@@ -1127,7 +1149,7 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 
 
 static Word default_nounLookup(const std::string& word) {
-    if (const char* result = lookup(default_nouns, word.c_str())) { 
+    if (const char* result = lookup_test(default_nouns, arr_length,word.c_str())) { 
         std::string translation = result; 
         int word_type = NOUN; 
         return { word, default_normalize(translation), word_type }; 
@@ -1137,25 +1159,36 @@ static Word default_nounLookup(const std::string& word) {
 
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
-inline void load_from_bin(const char* file){
+void load_from_bin(const char* file){
 
-static const char t = 0x00;
-static const char ngram_size = 0x01;
-static const char s[] = { 0x6B, 0x69, 0x64, 0 }; // kid
-static const char r[] = { 0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0}; // kakxop
+            case 0xF2: // type section
+            {
+                type = *ptr++;
 
-if (arr_length < number_of_words && t == 0x00) {
-     switch(ngram_size){
-        case 0x01: 
-        default_nouns[arr_length++] = Entry{s, r, 0};
-        break;
-        case 0x02:
-        case 0x03:
-        default_fixed_ngrams[arr_length++] = Entry{s, r, 0}; 
-        break;
-     }
-} 
+                // store the entry based on the number of ngrams, since it only supports 3 word entries by now
+                switch (ngram_size)
+                {
+                    case 0x01:
+                        default_nouns[arr_length++] = Entry{s, r, type};
+                        break;
+
+                    case 0x02:
+                    case 0x03:
+                        default_fixed_ngrams[arr_length++] = Entry{s, r, type};
+                        break;
+                }
+
+                break;
+            }
+
+            default:
+                std::cout << "Weird byte: " << std::hex << (int)marker << "\n";
+                return;
+        }
+    }
 }
+
+
 
 inline std::string translate_from_bin(const char* sentence, int script = 0, bool auto_correct = false){
     char buffer[250];
