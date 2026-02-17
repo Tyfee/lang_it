@@ -18,16 +18,25 @@
     const Word* previous = two_ ? &sentence_arr.at(i - 1) : nullptr;\
     const Word* previous_ = three_ ? &sentence_arr.at(i - 2) : nullptr;\
 
-#define CLEANUP(ARR)\
-ARR.erase( \
-    std::remove_if(ARR.begin(), ARR.end(),\
-        [](const Word &w) {\
-            return w.translation.empty() ||\
-                   std::all_of(w.translation.begin(), w.translation.end(), ::isspace);\
-        }),\
-    ARR.end()\
-);
-        
+#define CLEANUP(ARR)                                 \
+    do {                                             \
+        size_t write_idx = 0;                        \
+        for (size_t read_idx = 0; read_idx < ARR.size(); ++read_idx) { \
+            const Word& w = ARR[read_idx];          \
+            bool only_spaces = true;                \
+            for (size_t i = 0; i < w.translation.length(); ++i) { \
+                if (!isspace(static_cast<unsigned char>(w.translation[i]))) { \
+                    only_spaces = false;           \
+                    break;                          \
+                }                                   \
+            }                                       \
+            if (!w.translation.empty() && !only_spaces) { \
+                ARR[write_idx++] = ARR[read_idx];   \
+            }                                       \
+        }                                           \
+        ARR.resize(write_idx);                       \
+    } while(0);
+
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
         invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
@@ -95,23 +104,36 @@ enum NORMALIZATION_RULES {
    REPLACE_START = 1,
    REPLACE_END = 2
 };
-
-#define NORMALIZE(ORIGINAL, RULE, REPLACEMENT)            \
-    do {                           \
-            const std::string& orig = ORIGINAL;                        \
-          if (word.length() > orig.length()) {                        \
-        size_t pos = normalized_.find(ORIGINAL);          \
-        if (pos != std::string::npos) {                   \
-            int rule = RULE;                    \
-            const std::string& repl = REPLACEMENT;                    \
-            if(rule == REPLACE_ALL) normalized_.replace(pos, orig.length(), REPLACEMENT); \
-            if(rule == REPLACE_START && word.substr(0, orig.length()) == orig)  normalized_ = REPLACEMENT + normalized_.substr(orig.length());\
-            if(rule == REPLACE_END && (normalized_.size() >= orig.length() && normalized_.substr(normalized_.size() - orig.length()) == orig))  normalized_ = normalized_.substr(0, normalized_.size() - orig.length()) + repl;\
-        } \
-                                                    }                                                \
-    } while (0)
-
-
+#define NORMALIZE(ORIGINAL, RULE, REPLACEMENT)                     \
+    do {                                                            \
+        const std::string& orig = ORIGINAL;                         \
+        const std::string& repl = REPLACEMENT;                      \
+        size_t word_len = word.length();                            \
+        size_t orig_len = orig.length();                             \
+        if (word_len > orig_len) {                                   \
+                             \
+            if (RULE == REPLACE_ALL) {                              \
+                size_t pos = 0;                                      \
+                while (pos + orig_len <= normalized_.length()) {     \
+                    if (normalized_.compare(pos, orig_len, orig) == 0) { \
+                        normalized_.replace(pos, orig_len, repl);    \
+                        pos += repl.length();                        \
+                    } else {                                         \
+                        ++pos;                                       \
+                    }                                                \
+                }                                                    \
+            }                                                        \
+                                                \
+            if (RULE == REPLACE_START && normalized_.compare(0, orig_len, orig) == 0) { \
+                normalized_ = repl + normalized_.substr(orig_len);    \
+            }                                                        \
+                                                \
+            if (RULE == REPLACE_END && normalized_.length() >= orig_len && \
+                normalized_.compare(normalized_.length() - orig_len, orig_len, orig) == 0) { \
+                normalized_ = normalized_.substr(0, normalized_.length() - orig_len) + repl; \
+            }                                                        \
+        }                                                            \
+    } while(0)
 
 
     
@@ -120,8 +142,7 @@ enum NORMALIZATION_RULES {
 #include <cstdint>
 #include <vector>
 #include <cstring>
-#include <algorithm>
-#include <iostream>
+
 // pairs
 
 #if defined(PT_EN) || defined(ALL) 
@@ -739,13 +760,20 @@ inline std::vector<std::string> tokenize_cjk(const std::string &text) {
 inline bool isPunctuation(const std::string &token) {
     if (token.empty()) return false;
 
-    const std::string punct = ".,?!-/:;()[]{}\"'";
+    const char punct[] = ".,?!-/:;()[]{}\"'";
 
     char first = token.front();
     char last  = token.back();
 
-    return punct.find(first) != std::string::npos || punct.find(last) != std::string::npos;
+    for (size_t i = 0; i < sizeof(punct) - 1; ++i) {
+        if (first == punct[i] || last == punct[i]) {
+            return true;
+        }
+    }
+
+    return false;
 }
+
 
 inline uint32_t next_utf8_char(const std::string& s, size_t& i) {
     unsigned char c = s[i];
@@ -924,187 +952,189 @@ inline bool rule(
 
 
 
-
+//maybe i'll move this somewhere else? it's too deterministic (even for a deterministic translator),
+// maybe when i'm not feeling as lazy i'll feed the data from the modules. idk
+// having this fixed here is completely out of place
 // this is the ugliest code you will see ever, do not pay attention to it :(
 // lowk might work tho, i'll tune the parameters later
 
 
-inline std::string detect_language(const char* sentence) {
-    std::string language = "Not Sure.";
-    std::vector<std::string> tokens = tokenize(std::string(sentence));
+// inline std::string detect_language(const char* sentence) {
+//     std::string language = "Not Sure.";
+//     std::vector<std::string> tokens = tokenize(std::string(sentence));
     
-    #if defined(DETECT_LANGUAGE) || defined(ALL) 
-    float en = 0.0f;
-    float pt = 0.0f;
-    float ja = 0.0f;
-    float es = 0.0f;
-    float fr = 0.0f;
-    float zh = 0.0f;
-    float sv = 0.0f;
-    float my = 0.0f;
+//     #if defined(DETECT_LANGUAGE) || defined(ALL) 
+//     float en = 0.0f;
+//     float pt = 0.0f;
+//     float ja = 0.0f;
+//     float es = 0.0f;
+//     float fr = 0.0f;
+//     float zh = 0.0f;
+//     float sv = 0.0f;
+//     float my = 0.0f;
 
-    for (size_t i = 0; i < tokens.size(); i++) {
-        const std::string& word = tokens[i];
+//     for (size_t i = 0; i < tokens.size(); i++) {
+//         const std::string& word = tokens[i];
 
         
-        if(word == "o" || word == "e") {
-            pt += 0.5f; 
-            en += 0.5f;
-        };
+//         if(word == "o" || word == "e") {
+//             pt += 0.5f; 
+//             en += 0.5f;
+//         };
 
-        if(word.length() > 1 && std::string(word).substr(word.length() - 2) == "ll"){
-                   en += 1.0f;
-        }
-        if(word == "i") en += 0.5f;
-        if(word == "y"){ es += 0.5f; fr += 0.4f;}
+//         if(word.length() > 1 && std::string(word).substr(word.length() - 2) == "ll"){
+//                    en += 1.0f;
+//         }
+//         if(word == "i") en += 0.5f;
+//         if(word == "y"){ es += 0.5f; fr += 0.4f;}
 
-        if(word == "em" || word == "sou" || word == "eu"){ pt += 1.0f;}
+//         if(word == "em" || word == "sou" || word == "eu"){ pt += 1.0f;}
 
-        if(word == "je" || word == "moi") {fr += 1.0f;}
+//         if(word == "je" || word == "moi") {fr += 1.0f;}
 
-        if(word == "are" || word == "you") {en += 1.0f;}
+//         if(word == "are" || word == "you") {en += 1.0f;}
 
-        if(word == "lo" || word == "la") {es += 1.0f;}
+//         if(word == "lo" || word == "la") {es += 1.0f;}
 
-        if(word == "tu") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
-        if(word == "te") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
-        if(word.back() == 'g') en += 7.0f;
-        auto first_char = [](const std::string &s) -> std::string {
-            if (s.empty()) return "";
-            size_t len = 1;
-            unsigned char c = static_cast<unsigned char>(s[0]);
-            if ((c & 0x80) == 0x00) len = 1;    
-            else if ((c & 0xE0) == 0xC0) len = 2;
-            else if ((c & 0xF0) == 0xE0) len = 3;  
-            else if ((c & 0xF8) == 0xF0) len = 4;  
-            return s.substr(0, len);
-        };
+//         if(word == "tu") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
+//         if(word == "te") {fr += 0.5f; pt += 0.5f; es += 0.5f;}
+//         if(word.back() == 'g') en += 7.0f;
+//         auto first_char = [](const std::string &s) -> std::string {
+//             if (s.empty()) return "";
+//             size_t len = 1;
+//             unsigned char c = static_cast<unsigned char>(s[0]);
+//             if ((c & 0x80) == 0x00) len = 1;    
+//             else if ((c & 0xE0) == 0xC0) len = 2;
+//             else if ((c & 0xF0) == 0xE0) len = 3;  
+//             else if ((c & 0xF8) == 0xF0) len = 4;  
+//             return s.substr(0, len);
+//         };
 
-        auto last_char = [](const std::string &s) -> std::string {
-            if (s.empty()) return "";
-            size_t i = s.size();
-            while (i > 0 && (static_cast<unsigned char>(s[i-1]) & 0xC0) == 0x80) --i;
-            return s.substr(i-1);
-        };
+//         auto last_char = [](const std::string &s) -> std::string {
+//             if (s.empty()) return "";
+//             size_t i = s.size();
+//             while (i > 0 && (static_cast<unsigned char>(s[i-1]) & 0xC0) == 0x80) --i;
+//             return s.substr(i-1);
+//         };
 
-        if (last_char(word) == std::string("é")) { 
-            fr += 0.7f;
-            pt += 0.4f;
-            es += 0.7f;
-        }
-        if (last_char(word) == std::string("ó")) { 
-            pt += 0.4f;
-            es += 0.8f;
-        }
-        if (first_char(word) == std::string("ç")) { 
-            pt -= 1.0f;
-            fr += 0.6f;
-        }
-        if (word.find("ñ") != std::string::npos){
-            es += 1.0f;
-        }
-        if (word.find("ç") != std::string::npos){
-            pt += 0.7f; fr += 0.6f;
-        }
-         if (word.find("k") != std::string::npos || word.find("y") != std::string::npos || word.find("w") != std::string::npos){
-            pt -= 1.0f;
-        }
-         if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ö") != std::string::npos){
-            sv += 0.9f;
-            pt -= 1.0f;
-            en -= 1.0f;
-            es -= 1.0f;
-            fr -= 1.0f;
-        }
+//         if (last_char(word) == std::string("é")) { 
+//             fr += 0.7f;
+//             pt += 0.4f;
+//             es += 0.7f;
+//         }
+//         if (last_char(word) == std::string("ó")) { 
+//             pt += 0.4f;
+//             es += 0.8f;
+//         }
+//         if (first_char(word) == std::string("ç")) { 
+//             pt -= 1.0f;
+//             fr += 0.6f;
+//         }
+//         if (word.find("ñ") != std::string::npos){
+//             es += 1.0f;
+//         }
+//         if (word.find("ç") != std::string::npos){
+//             pt += 0.7f; fr += 0.6f;
+//         }
+//          if (word.find("k") != std::string::npos || word.find("y") != std::string::npos || word.find("w") != std::string::npos){
+//             pt -= 1.0f;
+//         }
+//          if (word.find("å") != std::string::npos || word.find("ä") != std::string::npos || word.find("ö") != std::string::npos){
+//             sv += 0.9f;
+//             pt -= 1.0f;
+//             en -= 1.0f;
+//             es -= 1.0f;
+//             fr -= 1.0f;
+//         }
         
-        if (word.find("ão") != std::string::npos)
-           { pt += 0.9f;}
-        if (word.find("yo") != std::string::npos)
-            {es += 0.6f; en += 0.7f; fr -= 0.8f; ja += 0.5;
-            }
-        if (word.find("nh") != std::string::npos || word.find("lh") != std::string::npos){
-            pt += 1.0f;}
+//         if (word.find("ão") != std::string::npos)
+//            { pt += 0.9f;}
+//         if (word.find("yo") != std::string::npos)
+//             {es += 0.6f; en += 0.7f; fr -= 0.8f; ja += 0.5;
+//             }
+//         if (word.find("nh") != std::string::npos || word.find("lh") != std::string::npos){
+//             pt += 1.0f;}
 
-        if (word.find("sh") != std::string::npos || word.find("wr") != std::string::npos || word.find("ys") != std::string::npos || word.find("hy") != std::string::npos)
-         {   en += 1.0f;}
+//         if (word.find("sh") != std::string::npos || word.find("wr") != std::string::npos || word.find("ys") != std::string::npos || word.find("hy") != std::string::npos)
+//          {   en += 1.0f;}
 
-        if(word.find("wh") != std::string::npos)
-         {  en += 1.0f;}
+//         if(word.find("wh") != std::string::npos)
+//          {  en += 1.0f;}
         
-           if (word.find("ux") != std::string::npos || word.find("ée") != std::string::npos)
-          {  fr += 0.8f;}
-           if (word.find("uis") != std::string::npos)
-          {  fr += 1.0f;}
-            if (word.find("ois") != std::string::npos)
-          {  fr += 0.6f;pt += 0.6f;}
-         if (word.find("um") != std::string::npos || word.find("tu") != std::string::npos)
-          {  pt += 0.7f;}
-           if (word.find("mbre") != std::string::npos)
-          { 
-            en += 0.2f;
-             es += 0.7f;
-        }
+//            if (word.find("ux") != std::string::npos || word.find("ée") != std::string::npos)
+//           {  fr += 0.8f;}
+//            if (word.find("uis") != std::string::npos)
+//           {  fr += 1.0f;}
+//             if (word.find("ois") != std::string::npos)
+//           {  fr += 0.6f;pt += 0.6f;}
+//          if (word.find("um") != std::string::npos || word.find("tu") != std::string::npos)
+//           {  pt += 0.7f;}
+//            if (word.find("mbre") != std::string::npos)
+//           { 
+//             en += 0.2f;
+//              es += 0.7f;
+//         }
 
 
-        if (word.find("ph") != std::string::npos) {
-            en += 0.4f;
-            fr += 0.2f;
-        }
-        if (word.find("eu") != std::string::npos) {
-            fr += 0.3f;
-            pt += 0.7f;
-        }
+//         if (word.find("ph") != std::string::npos) {
+//             en += 0.4f;
+//             fr += 0.2f;
+//         }
+//         if (word.find("eu") != std::string::npos) {
+//             fr += 0.3f;
+//             pt += 0.7f;
+//         }
 
-        for (size_t j = 0; j < word.size(); ++j) {
-            uint32_t unicode_c = next_utf8_char(word, j);
-            // does it have hiragana
-            if (unicode_c >= 0x3040 && unicode_c <= 0x309F) ja += 1.0;
-            // does it have katakana
-            if (unicode_c >= 0x30A0 && unicode_c <= 0x30FF) ja += 1.0;
-            // does it have ideograms?
-            if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF){
-                ja += 0.5;
-                zh += 0.5;
-            };
-                if(unicode_c == 0x6211 || unicode_c == 0x4F60 ){
-                   ja -= 1.0;
-                   zh += 1.0;     
-                }
-        }
-    }
+//         for (size_t j = 0; j < word.size(); ++j) {
+//             uint32_t unicode_c = next_utf8_char(word, j);
+//             does it have hiragana
+//             if (unicode_c >= 0x3040 && unicode_c <= 0x309F) ja += 1.0;
+//             does it have katakana
+//             if (unicode_c >= 0x30A0 && unicode_c <= 0x30FF) ja += 1.0;
+//             does it have ideograms?
+//             if (unicode_c >= 0x4E00 && unicode_c <= 0x9FFF){
+//                 ja += 0.5;
+//                 zh += 0.5;
+//             };
+//                 if(unicode_c == 0x6211 || unicode_c == 0x4F60 ){
+//                    ja -= 1.0;
+//                    zh += 1.0;     
+//                 }
+//         }
+//     }
     
-    float maxScore = en;
-    if (pt > maxScore) maxScore = pt;
-    if (ja > maxScore) maxScore = ja;
-    if (es > maxScore) maxScore = es;
-    if (fr > maxScore) maxScore = fr;
-    if (zh > maxScore) maxScore = zh;
-    if (sv > maxScore) maxScore = sv;
-    if (my > maxScore) maxScore = my;
+//     float maxScore = en;
+//     if (pt > maxScore) maxScore = pt;
+//     if (ja > maxScore) maxScore = ja;
+//     if (es > maxScore) maxScore = es;
+//     if (fr > maxScore) maxScore = fr;
+//     if (zh > maxScore) maxScore = zh;
+//     if (sv > maxScore) maxScore = sv;
+//     if (my > maxScore) maxScore = my;
 
-    if (maxScore == 0.0f) {
-        language = "unknown";
-    } else if (maxScore == en) {
-        language = "en";
-    } else if (maxScore == pt) {
-        language = "pt";
-    } else if (maxScore == ja) {
-        language = "ja";
-    } else if (maxScore == es) {
-        language = "es";
-    } else if (maxScore == fr) {
-        language = "fr";
-    }else if (maxScore == zh) {
-        language = "zh";
-    }else if (maxScore == sv) {
-        language = "sv";
-    }else if (maxScore == my) {
-        language = "my";
-    }
-    #endif
+//     if (maxScore == 0.0f) {
+//         language = "unknown";
+//     } else if (maxScore == en) {
+//         language = "en";
+//     } else if (maxScore == pt) {
+//         language = "pt";
+//     } else if (maxScore == ja) {
+//         language = "ja";
+//     } else if (maxScore == es) {
+//         language = "es";
+//     } else if (maxScore == fr) {
+//         language = "fr";
+//     }else if (maxScore == zh) {
+//         language = "zh";
+//     }else if (maxScore == sv) {
+//         language = "sv";
+//     }else if (maxScore == my) {
+//         language = "my";
+//     }
+//     #endif
     
-    return language;
-}
+//     return language;
+// }
 
 
 static inline Entry default_fixed_ngrams[] = {
@@ -1219,7 +1249,6 @@ inline void load_from_bin(const char* file, size_t size)
             }
 
             default:
-                std::cout << "Weird bit: " << std::hex << (int)marker << "\n";
                 return;
         }
     }
