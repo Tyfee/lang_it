@@ -48,160 +48,117 @@ vector<FrequencyTable> table = {
 
 // homonyms in portuguese
 
-// a homonym needs three structures BROTHER EUGHHHHHH
+HOMONYM_DEF(
+    manga,
+    HOMONYM_OUTCOMES(
+        { "mango", 0 },
+        { "sleeve", 0 }
+    ),
+    HOMONYM_FORBIDDEN(98, 99),
+    "eat", "taste", "pick", "juice", "sweet",
+    "candy", "dessert", "flavor", "taste",
+    "ripe", "$", "shirt", "sew", "ripped",
+    "rip", "button", "tight", "loose"
+);
 
-// you need every outcome as an array Outcome {"word", 0.0f, word_type}
-// So you initialize it as a possible outcome of the translation with the score zeroed and it's type(0 = noun , etc)
-//the first one is the default
-static Outcome manga_outcomes[] = {
-    {"mango", 0.0f, 0}, {"sleeve", 0.0f, 0}
-};
-// you then need to specify every and any word that comes to mind (LOL) that can settle dispute between the two words
-// Thats obviously prone to error but we can add more layers as we go
-// in our case "Manga", can be translated as mango or sleeve,
-// you add all words that point to mango   "eat", "taste", "pick", "juice".... and separate it with a '$'
-// and define the other words for sleeve "shirt", "sew", "ripped", "rip".
-// you can add as many as you need, but you need to keep track of how many tokens are there including the separators ($)
-// here we have 18
-static const char* manga_tokens[] = {
-    "eat", "taste", "pick", "juice", "sweet", "candy", "dessert", "flavor","taste","ripe","$",
-    "shirt", "sew", "ripped", "rip", "button", "tight", "loose"
-};
-
-//here we add 1 forbidden previous word for each!, we have two words, and we define one type for each
-// here there are NONE lol, so lets just add a number that never shows up (not a type) 98
-static const int manga_forbidden[] = {
-   98, 98
-};
-
-
-static Outcome rosa_outcomes[] = {
-    {"pink", 0.0f, 0}, {"rose", 0.0f, 0}
-};
-static const char* rosa_tokens[] = {
+HOMONYM_DEF(
+    rosa,
+    HOMONYM_OUTCOMES(
+       {"pink", 0}, {"rose", 0}
+    ),
+    HOMONYM_FORBIDDEN(1, 2),
     "color", "shirt", "clothes", "light","$",
     "flower", "button", "sprout", "thorn", "a", "an"
-};
+);
 
-static const int rosa_forbidden[] = {
-    1, 2
-};
+HOMONYM_DEF(
+    sede,
+    HOMONYM_OUTCOMES(
+      {"thirst", 0}, {"headquarters", 0}
+    ),
+HOMONYM_FORBIDDEN(1, 2),
+      "drink", "water", "feel","$",
+      "company", "location", "building"
+);
 
-
-static Outcome sede_outcomes[] = {
-    {"thirst", 0.0f, 0}, {"headquarters", 0.0f, 0}
-};
-static const char* sede_tokens[] = {
-    "drink", "water", "feel","$",
-    "company", "location", "building"
-};
-
-static const int sede_forbidden[] = {
-    1, 2
-};
-
-
-static Outcome novo_outcomes[] = {
-    {"new", 0.0f, 0}, {"young", 0.0f, 0}
-};
-// once i implament bit flags for person/non-person. implement it too
-static const char* novo_tokens[] = {
+HOMONYM_DEF(novo,
+HOMONYM_OUTCOMES(
+         {"new", 0}, {"young", 0}
+    ),
+HOMONYM_FORBIDDEN(1, 2),
     "buy", "brand", "product", "$",
-    "very", "person", "she", "he", "i",
-};
+    "very", "person", "she", "he", "i"
+);
 
-static const int novo_forbidden[] = {
-    1, 2
-};
-
-
-
-static Outcome banco_outcomes[] = {
-    {"bank", 0.0f, 0}, {"bench", 0.0f, 0}
-};
-static const char* banco_tokens[] = {
-    "pay", "money", "loan", "work", "central", "national","$",
+HOMONYM_DEF(banco,
+HOMONYM_OUTCOMES(
+          {"bank", 0}, {"bench", 0}
+    ),
+HOMONYM_FORBIDDEN(1, 2),
+       "pay", "money", "loan", "work", "central", "national","$",
      "sit", "beautiful", "outside"
-};
+);
 
-static const int banco_forbidden[] = {
-    1, 2
-};
-
-
-static Outcome pena_outcomes[] = {
-    {"feather", 0.0f, 0}, {"pity", 0.0f, 0}
-};
-static const char* pena_tokens[] = {
+HOMONYM_DEF(pena,
+HOMONYM_OUTCOMES(
+         {"feather", 0}, {"pity", 0}
+    ),
+HOMONYM_FORBIDDEN(1, 2),
     "bird", "animal", "$",
      "feel", "what", "for"
-};
+);
 
-static const int pena_forbidden[] = {
-    1, 2
-};
-
-
-static Outcome bateria_outcomes[] = {
-    {"battery", 0.0f, 0}, {"drums", 0.0f, 0}, {"would hit", 0.0f, 3}
-};
-static const char* bateria_tokens[] = {
-    "phone", "charge","percentage","computer","laptop","$",
+HOMONYM_DEF(bateria,
+HOMONYM_OUTCOMES(
+             {"battery", 0}, {"drums", 0}, {"would hit", 3}
+    ),
+HOMONYM_FORBIDDEN(1, 2, 3),
+   "phone", "charge","percentage","computer","laptop","$",
     "play", "music", "sound","loud", "$",
     "i","you"
-};
+);
 
-static const int bateria_forbidden[] = {
-    1, 2
-};
-
-
-static Outcome alto_outcomes[] = {
-    {"tall", 0.0f, 0}, {"high", 0.0f, 0}, {"loud", 0.0f, 3}
-};
-static const char* alto_tokens[] = {
-    "person", "he","she","i","am", "height","$",
+HOMONYM_DEF(alto,
+HOMONYM_OUTCOMES(
+             {"tall", 0}, {"high", 0}, {"loud", 3}
+    ),
+HOMONYM_FORBIDDEN(1, 2, 3),
+     "person", "he","she","i","am", "height","$",
     "fly", "$",
     "music","volume", "low", "turn"
-};
+);
 
-static const int alto_forbidden[] = {
-    1, 2
-};
 
-static Outcome como_outcomes[] = {
-    {"like", 0.0f, 13}, {"as", 0.0f, 13}, {"eat", 0.0f, 3}, {"how", 0.0f, 13}
-};
-static const char* como_tokens[] = {
+HOMONYM_DEF(como,
+HOMONYM_OUTCOMES(
+          {"like", 13}, {"as", 13}, {"eat", 3}, {"how", 13}
+    ),
+HOMONYM_FORBIDDEN( 1, 2, 1, 4),
     "him", "me","her","a","it's", "the","$",
     "if", "$",
     "food","dinner", "lunch","i", "snack", "$",
     "do","are", "is", "can"
+);
+
+
+
+Homonym pt_en_homonyms[] = {
+    HOMONYM("manga", manga),
+    HOMONYM("banco", banco),
+    HOMONYM("pena", pena),
+
+    HOMONYM("alto", alto),
+    HOMONYM("alta", alto), 
+
+    HOMONYM("novo", novo),
+    HOMONYM("nova", novo),
+
+    HOMONYM("bateria", bateria),
+    HOMONYM("sede", sede),  
+    HOMONYM("rosa", rosa),
+    HOMONYM("como", como),
+
 };
-
-static const int como_forbidden[] = {
-    1, 2, 1, 4
-};
-
-
-
-
-
-Homonym homonyms[] = {
-    {"manga", manga_outcomes, 2, manga_tokens, manga_forbidden, 13},
-    {"banco", banco_outcomes, 2, banco_tokens, banco_forbidden, 7},
-    {"pena", pena_outcomes, 2, pena_tokens, pena_forbidden, 6},
-    {"sede", sede_outcomes, 2, sede_tokens, sede_forbidden,7},
-    {"bateria", sede_outcomes, 3, sede_tokens, bateria_forbidden, 7},
-    {"novo", novo_outcomes, 2, novo_tokens, novo_forbidden,8},
-    {"nova", novo_outcomes, 2, novo_tokens, novo_forbidden, 8},
-    {"alto", alto_outcomes, 3, alto_tokens, alto_forbidden,13},
-    {"alta", alto_outcomes, 3, alto_tokens, alto_forbidden, 13},
-    {"rosa", rosa_outcomes, 2, rosa_tokens, rosa_forbidden, 11},
-    {"como", como_outcomes, 4, como_tokens, como_forbidden, 19}
-};
-
-const size_t homonymCount = sizeof(homonyms) / sizeof(homonyms[0]);
 
 // any set of (n)words in portuguese that can't be translated separately
 
@@ -291,14 +248,14 @@ DICT(nouns, {
   {"mês", "month"},
   {"semana", "week"},
   {"hora", "hour"},
-  {"leite", "milk", UNCOUNTABLE | NO_PLURAL},
+  {"leite", "milk",UNCOUNTABLE | NO_PLURAL},
   {"roda", "wheel"},
   
   {"blusa", "shirt"},
   {"camisa", "shirt"},
   {"camiseta", "t-shirt"},
-  {"calça", "pants", NO_PLURAL},
-  {"calças", "pants", NO_PLURAL},
+  {"calça", "pants",NO_PLURAL},
+  {"calças", "pants",NO_PLURAL},
   {"cinto", "belt"},
   {"saia", "skirt"},
   {"sapato", "shoe"},
@@ -314,13 +271,13 @@ DICT(nouns, {
   
   {"chaminé", "chimney"},
 
-  {"terra", "dirt", IS_PLACE}, //dirt, earth, land 
-  {"praia", "beach", IS_PLACE},
+  {"terra", "dirt",IS_PLACE}, //dirt, earth, land 
+  {"praia", "beach",IS_PLACE},
 
-  {"escola", "school", IS_PLACE},
-  {"loja", "store", IS_PLACE},
+  {"escola", "school",IS_PLACE},
+  {"loja", "store",IS_PLACE},
   {"lago", "lake", IS_PLACE},
-  {"fazenda", "farm", IS_PLACE},
+  {"fazenda", "farm",IS_PLACE},
   
 
   {"morte", "death"},
@@ -336,8 +293,8 @@ DICT(nouns, {
   {"prédio", "building"},
 
   
-  {"rua", "street", ON},
-  {"estrada", "highway", ON},
+  {"rua", "street",ON},
+  {"estrada", "highway",ON},
 
   {"chocolate", "chocolate"},
   {"melancia", "watermelon"},
@@ -345,11 +302,11 @@ DICT(nouns, {
   {"pêssego", "peach"},
   {"melancia", "watermelon"},
 
-  {"natal", "christmas", ON},
-  {"páscoa", "easter", ON},
-  {"aniversário", "birthday", ON},
+  {"natal", "christmas",ON},
+  {"páscoa", "easter",ON},
+  {"aniversário", "birthday",ON},
   {"véspera", "eve", ON},
-  {"feriado", "holiday", ON},
+  {"feriado", "holiday",ON},
 
   {"espada", "sword"},
   {"escudo", "shield"},
@@ -374,7 +331,7 @@ DICT(nouns, {
   {"frango", "chicken"}, 
   {"macarrão", "pasta"}, 
   {"molho", "sauce"},
-  {"peixe", "fish", NO_PLURAL},
+  {"peixe", "fish",NO_PLURAL},
   {"cenoura", "carrot"},
   {"batata", "potato"},
   {"repolho", "cabbage"},
@@ -400,28 +357,28 @@ DICT(nouns, {
 
   {"asa", "wing"},
   {"anjo", "angel"},
-  {"ponta", "tip", ON},
-  {"ponto", "point", IS_PLACE},
+  {"ponta", "tip",ON},
+  {"ponto", "point",IS_PLACE},
 
   {"agua", "water"}, // this is a verbifiable ig?
   {"suco", "juice"},
   {"laranja", "orange"}, // how the hell will i handle that ?
-  {"porta", "door", IS_PLACE},
+  {"porta", "door",IS_PLACE},
   {"janela", "window"},
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
-  {"todo", "all", NO_PLURAL},
-  {"cidade", "town", IS_PLACE},
+  {"todo", "all",NO_PLURAL},
+  {"cidade", "town",IS_PLACE},
   {"arma", "gun"},
   {"vida", "life"},
   {"folha", "leaf"},
-  {"papel", "paper", ON},
+  {"papel", "paper",ON},
   {"faca", "knife"},
   {"tatuagem", "tattoo"},
   {"cruz", "cross"},
-  {"celular", "phone", ON},
-  {"tela", "screen", ON},
-  {"mulher", "woman", IRREGULAR_PLURAL},
-  {"homem", "man", IRREGULAR_PLURAL},
+  {"celular", "phone",ON},
+  {"tela", "screen",ON},
+  {"mulher", "woman",IRREGULAR_PLURAL},
+  {"homem", "man",IRREGULAR_PLURAL},
   {"garoto", "boy"},
   {"menino", "boy"},
   {"árvore", "tree"},
@@ -445,8 +402,8 @@ DICT(nouns, {
   {"dinheiro", "money"},
   {"criança", "kid"},
   {"amigo", "friend"},
-  {"fome", "hunger", UNCOUNTABLE},
-  {"sede", "thirst", UNCOUNTABLE},
+  {"fome", "hunger",UNCOUNTABLE},
+  {"sede", "thirst",UNCOUNTABLE},
   {"dia", "day"},
   {"noite", "night"},
   {"manhã", "morning"},
@@ -459,9 +416,9 @@ DICT(nouns, {
   {"filme", "movie"},
   {"casa", "house"},
   {"teto", "ceiling"},
-  {"parede", "wall", ON},
-  {"muro", "wall", ON},
-  {"chão", "floor", ON},
+  {"parede", "wall",ON},
+  {"muro", "wall",ON},
+  {"chão", "floor",ON},
   {"compania", "company"},
   {"empresa", "company"},
   {"música", "music"},
@@ -480,8 +437,8 @@ DICT(nouns, {
 
   {"manga", "mango"},
   
-  {"mão", "hand", ON},
-  {"pé", "foot", IRREGULAR_PLURAL},
+  {"mão", "hand",ON},
+  {"pé", "foot",IRREGULAR_PLURAL},
   {"braço", "arm"},
   {"perna", "leg"},
   {"cabeça", "head"},
@@ -490,8 +447,8 @@ DICT(nouns, {
   {"boca", "mouth"},
   {"dedo", "finger"},
   {"unha", "nail"},
-  {"dente", "tooth", IRREGULAR_PLURAL},
-  {"lingua", "tongue", ON},
+  {"dente", "tooth",IRREGULAR_PLURAL},
+  {"lingua", "tongue",ON},
   {"garganta", "throat"},
   {"cérebro", "brain"},
   {"coração", "heart"},
@@ -512,9 +469,9 @@ DICT(nouns, {
   {"biblioteca", "library"},
   {"detalhe", "detail"},
   {"estação", "season"},
-  {"mesa", "table", ON},
-  {"cama", "bed", ON},
-  {"cadeira", "chair", ON},
+  {"mesa", "table",ON},
+  {"cama", "bed",ON},
+  {"cadeira", "chair",ON},
   {"lanterna", "flashlight"},
   {"tudo", "all"},
   {"perdão", "forgiveness"},
@@ -548,8 +505,8 @@ DICT(nouns, {
   {"floresta", "forest"},
   {"selva", "jungle"},
   {"consolo", "consolation"},
-  {"padaria", "bakery", IS_PLACE},
-  {"mercado", "market", IS_PLACE},
+  {"padaria", "bakery",IS_PLACE},
+  {"mercado", "market",IS_PLACE},
   
 
   //slang and curse words cause i'm soooo young and hip
@@ -1820,7 +1777,7 @@ LIST(plu, {
     {"o", {"s"}}
 });
 
-GENDER_DEF(true, 2, "o", {"a"});
+
 
 bool plural = false;
 
@@ -1872,27 +1829,27 @@ for (int i = 0; i < plu.size(); ++i) {
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  LOOKUP(nouns, NOUN, word);
+  LOOKUP(nouns, NOUN, word, (Gender*)nullptr, (Gender*)nullptr);
 
-  LOOKUP(nouns, NOUN, script_adequation(word)); //without accentuation, helpful for adjectives
+  LOOKUP(nouns, NOUN, script_adequation(word), (Gender*)nullptr, (Gender*)nullptr); //without accentuation, helpful for adjectives
   
-  LOOKUP(adj, ADJECTIVE, script_adequation(word));
+  LOOKUP(adj, ADJECTIVE, script_adequation(word), (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(pro, PRONOUN, word);
+  LOOKUP(pro, PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word);
+  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word);
+  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(pre, PREPOSITION, word);
+  LOOKUP(pre, PREPOSITION, word, (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1)); // preposition plurals
+  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1), (Gender*)nullptr, (Gender*)nullptr); // preposition plurals
   
-  LOOKUP(art, ARTICLE, word); // preposition plurals
+  LOOKUP(art, ARTICLE, word, (Gender*)nullptr, (Gender*)nullptr); // preposition plurals
   
-  LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1));
+  LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1), (Gender*)nullptr, (Gender*)nullptr);
   
-  LOOKUP(adv, ADVERB, word);
+  LOOKUP(adv, ADVERB, word, (Gender*)nullptr, (Gender*)nullptr);
 
     
     
@@ -2666,38 +2623,10 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
 }
 //homonym mediation
-for (size_t i = 0; i < final_arr.size(); ++i) {
-    if (final_arr[i].word == "manga" || 
-        final_arr[i].word == "banco" || 
-        final_arr[i].word == "pena" || 
-        final_arr[i].word == "novo" || final_arr[i].word == "nova" ||
-        final_arr[i].word == "alto" || final_arr[i].word == "alta" ||
-        final_arr[i].word == "rosa" ||
-        final_arr[i].word == "como" 
-    
-    ) {
-        
-        int start = max(0, static_cast<int>(i) - 2);
-        int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);
 
-        vector<string> context;
-        for (int j = start; j <= end; ++j) {
-            context.push_back(final_arr[j].translation);
-        }
 
-        size_t contextIndex = static_cast<size_t>(i - start);
-        
-        // Create a temporary context with the Portuguese word at the target position
-        vector<string> portuguese_context = context;
-        vector<int> word_types(context.size(), 0); 
-        portuguese_context[contextIndex] = final_arr[i].word;  
-        word_types[contextIndex] = final_arr[i].type;  
-        
-        string resolved_word = semantics(portuguese_context, word_types,contextIndex, homonyms, homonymCount);
 
-        final_arr[i].translation = resolved_word;
-    }
-}
+final_arr = MEDIATE_HOMONYMS(final_arr, {"manga", "banco", "pena", "alto", "alta", "novo", "nova", "bateria", "sede", "rosa", "como"}, pt_en_homonyms);
 
 
     return final_arr;

@@ -2,6 +2,13 @@
 #define LANG_IT_H
 
 
+#include <string>
+#include <cstdint>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <cstddef>
+#include <iostream>
 
 #define RULE(str) \
     if (rule(str, sentence_arr, reordered_arr, i)) continue;
@@ -37,6 +44,25 @@
         ARR.resize(write_idx);                       \
     } while(0);
 
+
+#define HOMONYM_OUTCOMES(...) { __VA_ARGS__ }
+#define HOMONYM_FORBIDDEN(...) { __VA_ARGS__ }
+
+#define HOMONYM_DEF(word, outcomes_init, forbidden_init, ...) \
+static Outcome word##_outcomes[] = outcomes_init; \
+static const int word##_forbidden[] = forbidden_init;\
+static const char* word##_tokens[] = { __VA_ARGS__ }; 
+
+#define HOMONYM(surface, word) \
+{ \
+    surface, \
+    word##_outcomes, \
+    sizeof(word##_outcomes) / sizeof(word##_outcomes[0]), \
+    word##_tokens, \
+    word##_forbidden, \
+    sizeof(word##_tokens) / sizeof(word##_tokens[0]) \
+}
+
 #define INVERT(FIRST, SECOND) \
     if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
         invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
@@ -49,14 +75,15 @@
         continue; \
     }
     
-#define LOOKUP(DICTIONARY, TYPE, WORD) \
-    if (const char* result = lookup(DICTIONARY, WORD.c_str())) { \
-    std::string translation; \
-    int word_type = -1; \
-        translation = result; \
-        word_type = TYPE; \
-        return { word, normalize(translation), word_type }; \
-  }
+#define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO) \
+{ \
+    GenderResult g = detect_gender(WORD, GENDER_FROM); \
+    if (const char* result = lookup(DICTIONARY, g.root.c_str())) { \
+        std::string translation = result; \
+        translation = apply_gender(translation, g.matched_variation, GENDER_TO); \
+        return { WORD, normalize(translation), TYPE }; \
+    } \
+}
 
 
 
@@ -92,7 +119,41 @@
                 }\
         }                                                                   \
     }                                                                       \
-    return Word{ WORD, WORD, -1 };                                          \
+}
+
+
+   #define SUFFIX_LOOKUP(DICTIONARY, WORD, ADJECTIVES)                         \
+{                                                                           \
+ std::string translation;\
+ int word_type = 0;\
+  for (int len = 6; len >= 2; --len) {\
+    if (WORD.length() >= static_cast<size_t>(len)) {\
+        std::string ending = WORD.substr(WORD.length() - len);\
+        Suffix suffResult = lookupSuff(DICTIONARY, ending.c_str());\
+        if (suffResult.t) {\
+            const char* mapped = suffResult.t;\
+            std::string stem = WORD.substr(0, WORD.length() - len);\
+            word_type = suffResult.type;\
+            const char* adjResult = lookup(ADJECTIVES, stem.c_str());\
+            if (adjResult) {\
+                translation = std::string(adjResult) + mapped;\
+            word_type = 1;\
+            }\
+            else if (!stem.empty()) {\
+                std::string altStem = stem.substr(0, stem.length() - 1) + "o";\
+                const char* altAdj = lookup(ADJECTIVES, altStem.c_str());\
+                if (altAdj)\
+                    translation = std::string(altAdj) + mapped;\
+                else\
+                    translation = stem + mapped;\
+            }\
+            else {\
+                translation = stem + mapped;\
+            }\
+            return Word{WORD, normalize(translation), word_type};\
+        }\
+    }\
+}                                                                            \
 }
 
 
@@ -138,10 +199,7 @@ enum NORMALIZATION_RULES {
 
     
 
-#include <string>
-#include <cstdint>
-#include <vector>
-#include <cstring>
+
 
 // pairs
 
@@ -151,6 +209,10 @@ std::string traduzir_en(const char* sentence, bool auto_correct);
 
 #if defined(PT_MBL) || defined(ALL) 
 std::string pt_mbl(const char* sentence);
+#endif
+
+#if defined(PT_RU) || defined(ALL) 
+std::string pt_ru(const char* sentence);
 #endif
 
 #if defined(AA_BB) || defined(ALL) 
@@ -188,6 +250,7 @@ std::string translate_zh(const char* sentence);
 typedef struct {
     const char* w;
     const char* t;
+    uint8_t orig_flags; // flags for original word, just remembered that in languages that have same linguistic features but with variation (e.g gender in portuguese and russian) we need to know the flags for both the original word and the translation to make decisions.
     uint8_t flags;
 } Entry;
 
@@ -207,13 +270,81 @@ typedef struct
   uint8_t flags;
 } Suffix;
 
-typedef struct 
+
+struct CaseVariation {
+    uint8_t flag;
+    uint8_t gender;
+    std::string ending;
+    std::string form;
+};
+
+struct Case {
+    int type; 
+    std::vector<CaseVariation> variations;
+};
+
+struct GenderVariation {
+    uint8_t flag;
+    std::string form;
+};
+
+struct Gender {
+    int type; 
+    std::vector<GenderVariation> variations;
+};
+
+
+struct GenderResult {
+    std::string root;
+    const GenderVariation* matched_variation; 
+};
+
+
+inline GenderResult detect_gender(const std::string& word, const Gender* gender_from) {
+    if (!gender_from) {
+        return { word, nullptr };
+    }
+
+    for (const auto& var : gender_from->variations) {
+        const std::string& suffix = var.form;
+
+        if (word.size() >= suffix.size() &&
+            word.compare(word.size() - suffix.size(), suffix.size(), suffix) == 0)
+        {
+            std::string root = word.substr(0, word.size() - suffix.size());
+            return { root, &var };
+        }
+    }
+
+    // no suffix matched — treat as default
+    return { word, nullptr };
+}
+
+
+inline std::string apply_gender(
+    const std::string& translation,
+    const GenderVariation* from_var,
+    const Gender* gender_to)
 {
-   bool isDefined;
-   int number_of_variations;
-   std::string def;
-   std::vector<std::string> variations;
-} Gender;
+    if (!gender_to)
+        return translation;
+
+    // NON → GENDERED
+    if (!from_var) {
+        if (!gender_to->variations.empty())
+            return translation + gender_to->variations[0].form;
+        return translation;
+    }
+
+    // GENDERED → GENDERED
+    for (const auto& to_var : gender_to->variations) {
+        if (to_var.flag == from_var->flag)
+            return translation + to_var.form;
+    }
+
+    // fallback
+    return translation;
+}
 
 typedef struct 
 {
@@ -260,10 +391,16 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 #define V_DICT(name, ...) constexpr VerbDictionary name = __VA_ARGS__
 #define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
 #define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
-#define GENDER_DEF(...) Gender gender_def = {__VA_ARGS__}
+
+#define GENDER_DEF(name,...) Gender name = {__VA_ARGS__}
+#define CASE_DEF(name,...) Case name = {__VA_ARGS__}
+
 #define VERB_ENDINGS(name, ...) VerbRuleDictionary name = __VA_ARGS__
 
 #define VERB_CONJUGATIONS(name, ...) VerbConjugationDictionary  name = __VA_ARGS__
+
+
+
 
 #define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION) \
 std::string name(const char* sentence) {\
@@ -327,7 +464,7 @@ inline WordType typeFromString(const std::string& s) {
     if (s == "ADVERB") return ADVERB;
     if (s == "POSSESSIVE_PRONOUN") return POSSESSIVE_PRONOUN;
 
-    return UNKNOWN;;
+    return UNKNOWN;
 }
 
 
@@ -340,9 +477,20 @@ enum Flags: uint8_t {
     IS_PLACE = 1 << 3,
     ON = 1 << 4, // should use ON instead of IN
     UNCOUNTABLE = 1 << 5,
-    FEMININE_NEUTER = 1 << 6, // need that // will call that the FEMININE_NEUTER so that swedish works too, don't know what i'd do for three-gendered languages
-    NOT_GENDERED = 1 << 7 // need that as well
+    FEMININE_GENDER = 1 << 6, // need that // will call that the FEMININE_NEUTER so that swedish works too, don't know what i'd do for three-gendered languages
+    NEUTRAL_GENDER = 1 << 7 // need that as well
                             // MAYBE if something is FEMININE_NEUTER AND NOT_GENDERED SIMULTANEOUSLY i'll consider it the third neutral gender
+};
+
+enum GrammaticalCase : uint8_t {
+    NOMINATIVE      = 1 << 0,
+    ACCUSATIVE      = 1 << 1,
+    GENITIVE        = 1 << 2,
+    DATIVE          = 1 << 3,
+    INSTRUMENTAL    = 1 << 4,
+    PREPOSITIONAL   = 1 << 5, 
+    VOCATIVE        = 1 << 6,
+    ABLATIVE        = 1 << 7
 };
 
 enum VerbFlags: uint8_t {
@@ -374,8 +522,70 @@ typedef struct {
    int type;
 } Word;
 
+struct Outcome {
+    const char* word;
+    float score;
+    int type;
+
+       constexpr Outcome(const char* w, int t )
+        : word(w), score(0.0f), type(t) {}
+};
+
+struct Homonym {
+    const char* word;
+    Outcome* outcomes; 
+    size_t num_outcomes;
+    const char** tokens;
+    const int* forbidden_previous_type;
+    size_t num_tokens;
+};
 
 
+template <size_t N>
+std::vector<Word> MEDIATE_HOMONYMS(
+    std::vector<Word> arr,
+    const std::vector<std::string>& words,
+    Homonym (&homonyms)[N]
+) {
+    for (size_t i = 0; i < arr.size(); ++i) {
+
+        for (const auto& w : words) {
+
+            if (arr[i].word == w) {
+
+                int start = std::max(0, static_cast<int>(i) - 2);
+                int end   = std::min(
+                    static_cast<int>(arr.size()) - 1,
+                    static_cast<int>(i) + 2
+                );
+
+                std::vector<std::string> context;
+                for (int j = start; j <= end; ++j) {
+                    context.push_back(arr[j].translation);
+                }
+
+                size_t contextIndex = static_cast<size_t>(i - start);
+
+                std::vector<std::string> this_context = context;
+                std::vector<int> word_types(context.size(), 0);
+
+                this_context[contextIndex] = arr[i].word;
+                word_types[contextIndex]   = arr[i].type;
+
+                std::string resolved_word =
+                    semantics(this_context,
+                              word_types,
+                              contextIndex,
+                              homonyms,   
+                              N);        
+
+                arr[i].translation = resolved_word;
+            }
+        }
+    }
+
+    return arr;
+}
 
 
 
@@ -1137,17 +1347,25 @@ inline bool rule(
 // }
 
 
+inline unsigned int ngrams_length = 0;
 static inline Entry default_fixed_ngrams[] = {
   {"", ""}
 };
 
+inline unsigned int nouns_length = 0;
 static inline Entry default_nouns[] = {
+  {"", ""}
+};
+
+
+inline unsigned int adjective_length = 0;
+static inline Entry default_adjectives[] = {
   {"", ""}
 };
 
 inline char buffer[250];
 inline int number_of_words = 100;
-inline unsigned int arr_length = 0;
+
 //default for binary modules
 
 
@@ -1179,17 +1397,19 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 
 
 static Word default_nounLookup(const std::string& word) {
-    if (const char* result = lookup_test(default_nouns, arr_length,word.c_str())) { 
+    if (const char* result = lookup_test(default_nouns, nouns_length,word.c_str())) { 
         std::string translation = result; 
         int word_type = NOUN; 
         return { word, default_normalize(translation), word_type }; 
     }
     return Word{ word, word, -1 };  
+
 }
 
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
-inline void load_from_bin(const char* file, size_t size)
+inline void load_from_bin(const uint8_t* file, size_t size)
+
 {
     const uint8_t* ptr = reinterpret_cast<const uint8_t*>(file);
     const uint8_t* end = ptr + size;
@@ -1236,12 +1456,13 @@ inline void load_from_bin(const char* file, size_t size)
                 switch (ngram_size)
                 {
                     case 0x01:
-                        default_nouns[arr_length++] = Entry{s, r, type};
+                        if(type == 0x00) default_nouns[nouns_length++] = Entry{s, r, type};
+                        if(type == 0x01) default_adjectives[adjective_length++] = Entry{s, r, type};
                         break;
 
                     case 0x02:
                     case 0x03:
-                        default_fixed_ngrams[arr_length++] = Entry{s, r, type};
+                        default_fixed_ngrams[ngrams_length++] = Entry{s, r, type};
                         break;
                 }
 
@@ -1252,19 +1473,48 @@ inline void load_from_bin(const char* file, size_t size)
                 return;
         }
     }
+    std::cout << "nouns_length = " << nouns_length << "\n";
+std::cout << "ngrams_length = " << ngrams_length << "\n";
 }
 
+inline std::string translate_from_bin(const char* sentence,
+                                      int script = 0,
+                                      bool auto_correct = false)
+{
+    if (sentence == nullptr) {
+        return "";
+    }
 
-inline std::string translate_from_bin(const char* sentence, int script = 0, bool auto_correct = false){
+    if (sentence[0] == '\0') {
+        return "";
+    }
+
     char buffer[250];
-strncpy(buffer, sentence, sizeof(buffer));
-buffer[sizeof(buffer) - 1] = '\0';
 
-to_lower(buffer);
-std::vector<std::string> arr = tokenize(std::string(buffer));
-std::string translated = trigramLookup(default_fixed_ngrams, arr, default_reorderHelpers, default_nounLookup);
-return translated;
+    strncpy(buffer, sentence, sizeof(buffer) - 1);
+    buffer[sizeof(buffer) - 1] = '\0';
+
+    if (buffer[0] == '\0') {
+        return "";
+    }
+
+    to_lower(buffer);
+
+    std::vector<std::string> arr = tokenize(std::string(buffer));
+
+    if (arr.empty()) {
+        return "";
+    }
+
+    std::string translated =
+        trigramLookup(default_fixed_ngrams,
+                      arr,
+                      default_reorderHelpers,
+                      default_nounLookup);
+
+    return translated;
 }
+
 
 
 inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2, bool auto_correct = false){
@@ -1284,6 +1534,13 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return pt_mbl(sentence);
         }
     #endif
+
+      #if defined(PT_RU) || defined(ALL)
+        if ((f == "pt" || f == "PT") && (t == "ru" || t == "RU")) {
+            return pt_ru(sentence);
+        }
+    #endif
+
 
     #if defined(AA_BB) || defined(ALL)
         if ((f == "aa" || f == "AA") && (t == "bb" || t == "BB")) {
@@ -1323,20 +1580,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
 }
 
 
-struct Outcome {
-    const char* word;
-    float score;
-    int type;
-};
 
-struct Homonym {
-    const char* word;
-    Outcome* outcomes; 
-    size_t num_outcomes;
-    const char** tokens;
-    const int* forbidden_previous_type;
-    size_t num_tokens;
-};
 
 extern Homonym homonyms[];
 extern const size_t homonymCount;

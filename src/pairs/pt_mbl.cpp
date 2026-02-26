@@ -78,6 +78,23 @@ VERB_CONJUGATIONS(def,
 );
 
 
+HOMONYM_DEF(
+    manga,
+    HOMONYM_OUTCOMES(
+        { "mango", 0 },
+        { "sleeve", 0 }
+    ),
+    HOMONYM_FORBIDDEN(98, 99),
+    "eat", "taste", "pick", "juice", "sweet",
+    "candy", "dessert", "flavor", "taste",
+    "ripe", "$", "shirt", "sew", "ripped",
+    "rip", "button", "tight", "loose"
+);
+
+Homonym pt_mbl_homonyms[] = {
+    HOMONYM("manga", manga)
+};
+
 static string normalize(string word) {
     string normalized_ = word;
     NORMALIZE("rr", REPLACE_ALL, "h");
@@ -101,28 +118,31 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
      DEFAULT()
     }
 
-    CLEANUP(reordered_arr)
+    CLEANUP(reordered_arr);
 
 vector<Word> final_arr;
 for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
 }
 
-    return final_arr;
+
+final_arr = MEDIATE_HOMONYMS(final_arr, {"manga", "banco"}, pt_mbl_homonyms);
+
+return final_arr;
 }
 
 
 static Word nounLookup(const string& word) {
 
-    LOOKUP(nouns, NOUN, word);
+    LOOKUP(nouns, NOUN, word, (Gender*)nullptr, (Gender*)nullptr);
     
-    LOOKUP(adj, ADJECTIVE, word);
+    LOOKUP(adj, ADJECTIVE, word, (Gender*)nullptr, (Gender*)nullptr);
 
-    LOOKUP(pro, PRONOUN, word);
+    LOOKUP(pro, PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
 
-    LOOKUP(adv, ADJECTIVE, word);
+    LOOKUP(adv, ADJECTIVE, word, (Gender*)nullptr, (Gender*)nullptr);
 
-    LOOKUP(art, ARTICLE, word);
+    LOOKUP(art, ARTICLE, word, (Gender*)nullptr, (Gender*)nullptr);
 
     VERB_LOOKUP(verbs, word, reg, def);
 

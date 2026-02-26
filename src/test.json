@@ -1,0 +1,44 @@
+﻿{
+  "dictionary": [
+    {
+      "entry": "kid",
+      "translation": "子供",
+      "word_type": 0
+    },
+    {
+      "entry": "shooting_star",
+      "translation": "流れ星",
+      "word_type": 0
+    }, {
+      "entry": "lie",
+      "translation": "噓",
+      "word_type": 0
+    },
+     {
+      "entry": "dog",
+      "translation": "犬",
+      "word_type": 0
+    },
+     {
+      "entry": "cat",
+      "translation": "猫",
+      "word_type": 0
+    },
+     {
+      "entry": "person",
+      "translation": "人",
+      "word_type": 0
+    },
+     {
+      "entry": "i",
+      "translation": "私",
+      "word_type": 4
+    },
+     {
+      "entry": "color",
+      "translation": "色",
+      "word_type": 0
+
+    }
+  ]
+}
