@@ -227,6 +227,11 @@ std::string traduzir_es(const char* sentence);
 std::string translate_ja(const char* sentence, int script);
 #endif
 
+#if defined(MA_ZH) || defined(ALL)
+std::string ma_zh(const char* sentence);
+#endif
+
+
 #if defined(EN_PT) || defined(ALL)
 std::string translate_pt(const char* sentence);
 #endif
@@ -1564,6 +1569,12 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return translate_ja(sentence, script);
         }
     #endif
+     #if defined(MA_ZH) || defined(ALL)
+      if ((f == "ma") && (t == "zh")) {
+          return ma_zh(sentence); 
+      }
+          #endif
+
   #if defined(EN_PT) || defined(ALL)
         if ((f == "en" || f == "EN") && (t == "pt" || t == "PT")) {
             return translate_pt(sentence);
