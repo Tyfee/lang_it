@@ -17,6 +17,9 @@ wrappers/ruby/lang_it_rb.so
 pairs/*.o
 src/lang_it.h.gch
 src/json.hpp
+src/json.hpp
+src/test.lang_it
+src/compiler
 testing/*.exe
 testing/test
 build

@@ -248,14 +248,14 @@ DICT(nouns, {
   {"mês", "month"},
   {"semana", "week"},
   {"hora", "hour"},
-  {"leite", "milk",UNCOUNTABLE | NO_PLURAL},
+  {"leite", "milk",UNCOUNTABLE | NO_PLURAL_},
   {"roda", "wheel"},
   
   {"blusa", "shirt"},
   {"camisa", "shirt"},
   {"camiseta", "t-shirt"},
-  {"calça", "pants",NO_PLURAL},
-  {"calças", "pants",NO_PLURAL},
+  {"calça", "pants",NO_PLURAL_},
+  {"calças", "pants",NO_PLURAL_},
   {"cinto", "belt"},
   {"saia", "skirt"},
   {"sapato", "shoe"},
@@ -331,7 +331,7 @@ DICT(nouns, {
   {"frango", "chicken"}, 
   {"macarrão", "pasta"}, 
   {"molho", "sauce"},
-  {"peixe", "fish",NO_PLURAL},
+  {"peixe", "fish",NO_PLURAL_},
   {"cenoura", "carrot"},
   {"batata", "potato"},
   {"repolho", "cabbage"},
@@ -366,7 +366,7 @@ DICT(nouns, {
   {"porta", "door",IS_PLACE},
   {"janela", "window"},
   {"jogo", "game"}, // TODO, differentiate a noun vs the 1st person singular (um jogo vs eu jogo) // polysemy coming soon
-  {"todo", "all",NO_PLURAL},
+  {"todo", "all",NO_PLURAL_},
   {"cidade", "town",IS_PLACE},
   {"arma", "gun"},
   {"vida", "life"},
@@ -1829,27 +1829,27 @@ for (int i = 0; i < plu.size(); ++i) {
 
   // for each individual word loop, you look in the noun dictionary
   //first with accentuation, 
-  LOOKUP(nouns, NOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(nouns, NOUN, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
 
-  LOOKUP(nouns, NOUN, script_adequation(word), (Gender*)nullptr, (Gender*)nullptr); //without accentuation, helpful for adjectives
+  LOOKUP(nouns, NOUN, script_adequation(word), NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL); //without accentuation, helpful for adjectives
   
-  LOOKUP(adj, ADJECTIVE, script_adequation(word), (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(adj, ADJECTIVE, script_adequation(word), NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(pro, PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(pre, PREPOSITION, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(pre, PREPOSITION, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1), (Gender*)nullptr, (Gender*)nullptr); // preposition plurals
+  LOOKUP(pre, PREPOSITION, word.substr(0, word.length() - 1), NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL); // preposition plurals
   
-  LOOKUP(art, ARTICLE, word, (Gender*)nullptr, (Gender*)nullptr); // preposition plurals
+  LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL); // preposition plurals
   
-  LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1), (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1), NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
   
-  LOOKUP(adv, ADVERB, word, (Gender*)nullptr, (Gender*)nullptr);
+  LOOKUP(adv, ADVERB, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
 
     
     
@@ -1890,7 +1890,7 @@ for (int i = 0; i < plu.size(); ++i) {
             }
             word_type = 0;
                uint8_t f = lookupFlags(nouns, singular_pt.c_str());
-                if (f & (NO_PLURAL | UNCOUNTABLE)) { // we now have bit flags, one of them check for words with no plural forms like (all).
+                if (f & (NO_PLURAL_ | UNCOUNTABLE)) { // we now have bit flags, one of them check for words with no plural forms like (all).
                     translation = lookup(nouns, singular_pt.c_str()); // there's also the irregular_plural flag but who knows when i'll fkn do that
                 } else if(f & IRREGULAR_PLURAL){
                     translation = lookup(nouns, singular_pt.c_str());

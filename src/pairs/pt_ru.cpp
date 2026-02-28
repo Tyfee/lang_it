@@ -1,8 +1,7 @@
-﻿/** esse é um experimento usando o par maxakali -> português */
-/** this is an experiment using the maxakali -> portuguese pair */
-
-#include "../lang_it.h"
+﻿#include "../lang_it.h"
 #if defined(ALL)
+#define FROM "pt"
+#define TO "ru"
 #define PT_RU
 
 #endif
@@ -27,7 +26,11 @@ Info pt_ru_info = {
 
 CASE_DEF(ptru_case_to, SUFFIX,
 {
-{ACCUSATIVE, FEMININE_GENDER, "а", "у"}
+  {ACCUSATIVE, FEMININE_GENDER, "а", "у"},   // собака → собаку
+    {ACCUSATIVE, FEMININE_GENDER, "я", "ю"},   // неделя → неделю
+    {ACCUSATIVE, ON, "", ""},    // мужчина → мужчину handled separately maybe
+    {ACCUSATIVE, NEUTRAL_GENDER, "о", "о"},    // окно → окно (same for accusative)
+   {ACCUSATIVE, NEUTRAL_GENDER, "е", "е"}     // море → море
 });
 
 DICT(fixed_ngrams, {
@@ -44,10 +47,11 @@ DICT(nouns, {
  {"olá", "привет"},
  {"cobra", "змея"},
  {"cachorr", "собака", FEMININE_GENDER},
+ {"familia", "семья", FEMININE_GENDER},
  {"gat", "кот"},
  {"hoje", "сегодня"},
  {"amanhã", "завтр",FEMININE_GENDER},
- {"book", "книга",FEMININE_GENDER},
+ {"livro", "книга",FEMININE_GENDER},
  {"mundo", "мир"},
  {"noite", "ночь"},
  {"açucar", "сахар"},
@@ -147,6 +151,21 @@ Homonym pt_ru_homonyms[] = {
        {NEUTRAL_GENDER, "ое"}
     });
 
+     PLURAL_DEF(ptru_plural_from, SUFFIX,
+        {
+           {NONE, "", "s"}
+        });
+
+    PLURAL_DEF(ptru_plural_to, SUFFIX,
+    {
+       {NEUTRAL_GENDER, "о", "а"},
+       {FEMININE_GENDER, "я", "и"},
+       {FEMININE_GENDER, "ь","и"},
+       {FEMININE_GENDER, "а", "ы"}
+    });
+
+
+
 
 
 static string normalize(string word) {
@@ -198,7 +217,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
 
     CLEANUP(reordered_arr);
     
-     HANDLE_CASE()
+    HANDLE_CASE(NO_CASE,&ptru_case_to)
 vector<Word> final_arr;
 for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
@@ -215,17 +234,17 @@ static Word nounLookup(const string& word) {
  
   
 
-    LOOKUP(nouns, NOUN, word, &ptru_gender_from, NO_GENDER);
+    LOOKUP(nouns, NOUN, word, &ptru_gender_from, NO_GENDER, &ptru_plural_from, &ptru_plural_to);
     
-    LOOKUP(adj, ADJECTIVE, word, &ptru_gender_from,&ptru_gender_to);
+    LOOKUP(adj, ADJECTIVE, word, &ptru_gender_from,&ptru_gender_to, &ptru_plural_from, &ptru_plural_from);
 
-    LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER);
+    LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, NO_GENDER, NO_GENDER);
+    LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(adv, ADJECTIVE, word, NO_GENDER, NO_GENDER);
+    LOOKUP(adv, ADJECTIVE, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER);
+    LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
     
     SUFFIX_LOOKUP(suff, word, adj);

@@ -134,15 +134,15 @@ return final_arr;
 
 static Word nounLookup(const string& word) {
 
-    LOOKUP(nouns, NOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(nouns, NOUN, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
     
-    LOOKUP(adj, ADJECTIVE, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(adj, ADJECTIVE, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(pro, PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(pro, PRONOUN, word, (Gender*)nullptr,NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(adv, ADJECTIVE, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(adv, ADJECTIVE, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(art, ARTICLE, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(art, ARTICLE, word, (Gender*)nullptr, NO_GENDER,  NO_PLURAL, NO_PLURAL);
 
     VERB_LOOKUP(verbs, word, reg, def);
 

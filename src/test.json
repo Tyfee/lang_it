@@ -4,6 +4,16 @@
     "to": "de",
     "script": [0]
   },
+  "original": {
+    "plural": false,
+    "gender": false,
+    "case_system": false    
+  },
+  "target": {
+    "plural": false,
+    "gender": false,
+    "case_system": false    
+  },
   "dictionary": [
     {
       "entry": "dog",

@@ -68,20 +68,31 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
         continue; \
     }
     
-#define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO)          \
+#define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO, PLURAL_FROM, PLURAL_TO)          \
 {                                                                       \
     GenderResult g = detect_gender(WORD, GENDER_FROM);                  \
+    PluralResult p = detect_plural(WORD, PLURAL_FROM); \
+            /*DEFAULT */         \
     if (const char* result = lookup(DICTIONARY, WORD.c_str())) {                \
         return { WORD, normalize(result), TYPE };                       \
-    }                                                                   \
+    }                             \
+                 /*GENDER BUT SINGULAR */                               \
     if (const char* result = lookup(DICTIONARY, g.root.c_str())) {      \
         std::string translation = result;                                \
         translation = apply_gender(translation, g.matched_variation, GENDER_TO); \
         return { WORD, normalize(translation), TYPE };                   \
     }                                                                   \
+        /*PLURAL BUT NO GENDER */  \
+    if (const char* result = lookup(DICTIONARY, p.root.c_str())) {      \
+        std::string translation = result;                                \
+         uint8_t f = lookupFlags(nouns, p.root.c_str());\
+        translation = apply_plural(translation, p.matched_variation, PLURAL_TO, f); \
+        return { WORD, normalize(translation), TYPE };                   \
+    }  \
 }
 
 #define NO_GENDER (Gender*)nullptr
+#define NO_PLURAL (Plural*)nullptr
 #define NO_CASE (Case*)nullptr
 
 
@@ -328,14 +339,18 @@ struct GenderResult {
 
 struct PluralVariation {
     uint8_t flag;
+    std::string ending;
     std::string form;
 };
 
 struct Plural {
     int type; 
-    std::vector<GenderVariation> variations;
+    std::vector<PluralVariation> variations;
 };
-
+struct PluralResult {
+    std::string root;
+    const PluralVariation* matched_variation; 
+};
 
 
 inline CaseResult detect_case(const std::string& word, const Case* case_from) {
@@ -369,19 +384,20 @@ inline std::string apply_case(
  if (!from_var && case_to) {
      
     // NON-CASE → CASE
-    for (const auto& var : case_to->variations) {
-        if (!from_var || var.flag == from_var->flag) {      
-            if (word_gender == 0 || (var.gender & word_gender)) {
-                const std::string& ending = var.ending;
-                const std::string& form   = var.form;
+   for (const auto& var : case_to->variations) {
+    if (!from_var || var.flag == from_var->flag) {      
+        if (word_gender == 0 || (var.gender & word_gender)) {
+            const std::string& ending = var.ending;
+            const std::string& form   = var.form;
 
-                if (ending.length() <= translation.length())
-                    return translation.substr(0, translation.length() - ending.length()) + form;
-                else
-                    return form;
+            if (translation.size() >= ending.size() &&
+                translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
+            {
+                return translation.substr(0, translation.size() - ending.size()) + form;
             }
         }
     }
+}
 
     for (const auto& var : case_to->variations) {
         if (word_gender == 0 || (var.gender & word_gender)) {
@@ -429,6 +445,30 @@ inline GenderResult detect_gender(const std::string& word, const Gender* gender_
 }
 
 
+
+
+inline PluralResult detect_plural(const std::string& word, const Plural* plural_from) {
+    if (!plural_from) {
+        return { word, nullptr };
+    }
+
+    for (const auto& var : plural_from->variations) {
+        const std::string& suffix = var.form;
+        const std::string& orig_end = var.ending;
+
+        if (word.size() >= suffix.size() &&
+            word.compare(word.size() - suffix.size(), suffix.size(), suffix) == 0)
+        {
+            std::string root = word.substr(0, word.size() - suffix.size());
+            return { root, &var };
+        }
+    }
+    return { word, nullptr };
+}
+
+
+
+
 inline std::string apply_gender(
     const std::string& translation,
     const GenderVariation* from_var,
@@ -454,6 +494,42 @@ inline std::string apply_gender(
     return translation;
 }
 
+
+
+inline std::string apply_plural(
+    const std::string& translation,
+    const PluralVariation* from_var,
+    const Plural* plural_to,
+    uint8_t word_gender)
+{
+    if (!plural_to)
+        return translation;
+
+    // NON → PLURAL
+    if (!from_var) {
+        if (!plural_to->variations.empty())
+            return translation + plural_to->variations[0].form;
+        return translation;
+    }
+
+    for (const auto& var : plural_to->variations) {
+        if (from_var || var.flag == from_var->flag) {      
+            if (word_gender == 0 || (var.flag & word_gender)) {
+                const std::string& ending = var.ending;
+                const std::string& form   = var.form;
+                
+                if (translation.size() >= ending.size() &&
+                    translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
+                {
+                    return translation.substr(0, translation.size() - ending.size()) + form;
+                }
+            }
+        }
+    }
+
+    // fallback
+    return translation;
+}
 typedef struct 
 {
     std::vector<std::string> endings;
@@ -534,15 +610,15 @@ std::string name(const char* sentence) {\
              reordered_arr.push_back(Word{ sentence_arr.at(i).word, normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});\
    }
 
-#define HANDLE_CASE()\
+#define HANDLE_CASE(FROM_CASE, TO_CASE)\
      if (!sentence_arr.empty()) {\
      for (size_t i = 0; i + 1 < reordered_arr.size(); ++i) {\
     auto &current = reordered_arr.at(i);\
     auto &next = reordered_arr.at(i + 1);\
     if (current.type == 3 && next.type == 0) {\
           uint8_t f = lookupFlags(nouns, next.word.c_str());\
-            CaseResult g = detect_case(current.word, NO_CASE);\
-            next.translation = apply_case(next.translation, g.matched_variation, &ptru_case_to, f);\
+            CaseResult g = detect_case(current.word, FROM_CASE);\
+            next.translation = apply_case(next.translation, g.matched_variation, TO_CASE, f);\
     }\
 }\
         }
@@ -578,7 +654,12 @@ enum VerbForm {
 enum AFFIX_TYPE {
     PREFIX = 0,
     SUFFIX = 1,
-    NONE
+    PREV_WORD = 2,
+    NEXT_WORD = 3,
+    INFIX = 4,
+    CIRCUMFIX = 5,
+    REDUPLICATION = 6,
+    NONE = 7
 };
 
 enum ClauseOrders {
@@ -610,7 +691,7 @@ inline WordType typeFromString(const std::string& s) {
 enum Flags: uint8_t {
     ANIMATE = 0,
     IS_HUMAN = 1 << 0,
-    NO_PLURAL = 1 << 1,
+    NO_PLURAL_ = 1 << 1,
     IRREGULAR_PLURAL = 1 << 2,
     IS_PLACE = 1 << 3,
     ON = 1 << 4, // should use ON instead of IN
