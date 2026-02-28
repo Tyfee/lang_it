@@ -1,44 +1,65 @@
 ﻿{
+  "metadata": {
+    "from": "en",
+    "to": "de",
+    "script": [0]
+  },
   "dictionary": [
     {
-      "entry": "kid",
-      "translation": "子供",
+      "entry": "dog",
+      "translation": "Hund",
       "word_type": 0
     },
     {
-      "entry": "shooting_star",
-      "translation": "流れ星",
-      "word_type": 0
-    }, {
-      "entry": "lie",
-      "translation": "噓",
-      "word_type": 0
-    },
-     {
-      "entry": "dog",
-      "translation": "犬",
-      "word_type": 0
-    },
-     {
       "entry": "cat",
-      "translation": "猫",
+      "translation": "Katze",
       "word_type": 0
     },
-     {
+    {
       "entry": "person",
-      "translation": "人",
+      "translation": "Person",
       "word_type": 0
     },
-     {
+    {
+      "entry": "child",
+      "translation": "Kind",
+      "word_type": 0
+    },
+    {
+      "entry": "big",
+      "translation": "groß",
+      "word_type": 1
+    },
+    {
+      "entry": "small",
+      "translation": "klein",
+      "word_type": 1
+    },
+    {
+      "entry": "see",
+      "translation": "sehen",
+      "word_type": 3
+    },
+    {
+      "entry": "love",
+      "translation": "lieben",
+      "word_type": 3
+    },
+    {
+      "entry": "run",
+      "translation": "laufen",
+      "word_type": 3
+    },
+    {
       "entry": "i",
-      "translation": "私",
+      "translation": "ich",
       "word_type": 4
-    },
-     {
-      "entry": "color",
-      "translation": "色",
-      "word_type": 0
-
     }
+  ],
+  "rules": [
+    "IF VERB THEN NOUN DO INVERT"
+  ],
+  "replace": [
+    { "original": "ness","target": "heit", "where": 2 }
   ]
 }

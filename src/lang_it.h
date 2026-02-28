@@ -10,13 +10,6 @@
 #include <cstddef>
 #include <iostream>
 
-#define RULE(str) \
-    if (rule(str, sentence_arr, reordered_arr, i)) continue;
-
-#define DEFAULT()\
-  if (sentence_arr.at(i).type != -1){\
-             reordered_arr.push_back(Word{ sentence_arr.at(i).word, normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});\
-        }
 #define INIT_REORDER()\
     bool one_ = (i > 0);\
     bool two_ = (i >= 1);\
@@ -75,16 +68,39 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
         continue; \
     }
     
-#define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO) \
-{ \
-    GenderResult g = detect_gender(WORD, GENDER_FROM); \
-    if (const char* result = lookup(DICTIONARY, g.root.c_str())) { \
-        std::string translation = result; \
+#define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO)          \
+{                                                                       \
+    GenderResult g = detect_gender(WORD, GENDER_FROM);                  \
+    if (const char* result = lookup(DICTIONARY, WORD.c_str())) {                \
+        return { WORD, normalize(result), TYPE };                       \
+    }                                                                   \
+    if (const char* result = lookup(DICTIONARY, g.root.c_str())) {      \
+        std::string translation = result;                                \
         translation = apply_gender(translation, g.matched_variation, GENDER_TO); \
-        return { WORD, normalize(translation), TYPE }; \
-    } \
+        return { WORD, normalize(translation), TYPE };                   \
+    }                                                                   \
 }
 
+#define NO_GENDER (Gender*)nullptr
+#define NO_CASE (Case*)nullptr
+
+
+enum SCRIPTS {
+    LATIN = 0,
+    CYRILIC = 2,
+    HAN = 3,
+    KANA = 4,
+    ARABIC = 5,
+    PERSIAN = 6,
+    HANGUL = 7
+};
+
+typedef struct {
+   int clause_order_from;
+   int clause_order_to;
+   int scripts_from[4];
+   int scripts_to[4];
+} Info;
 
 
 
@@ -288,6 +304,12 @@ struct Case {
     std::vector<CaseVariation> variations;
 };
 
+struct CaseResult {
+    std::string root;
+    const CaseVariation* matched_variation; 
+};
+
+
 struct GenderVariation {
     uint8_t flag;
     std::string form;
@@ -298,12 +320,95 @@ struct Gender {
     std::vector<GenderVariation> variations;
 };
 
-
 struct GenderResult {
     std::string root;
     const GenderVariation* matched_variation; 
 };
 
+
+struct PluralVariation {
+    uint8_t flag;
+    std::string form;
+};
+
+struct Plural {
+    int type; 
+    std::vector<GenderVariation> variations;
+};
+
+
+
+inline CaseResult detect_case(const std::string& word, const Case* case_from) {
+    if (!case_from) {
+        return { word, nullptr };
+    }
+
+    for (const auto& var : case_from->variations) {
+        const std::string& suffix = var.form;
+
+        if (word.size() >= suffix.size() &&
+            word.compare(word.size() - suffix.size(), suffix.size(), suffix) == 0)
+        {
+            std::string root = word.substr(0, word.size() - suffix.size());
+            return { root, &var };
+        }
+    }
+    return { word, nullptr };
+}
+
+
+inline std::string apply_case(
+    const std::string& translation,
+    const CaseVariation* from_var,
+    const Case* case_to,
+    uint8_t word_gender) 
+{
+    if (!case_to || case_to->variations.empty())
+        return translation; 
+
+ if (!from_var && case_to) {
+     
+    // NON-CASE → CASE
+    for (const auto& var : case_to->variations) {
+        if (!from_var || var.flag == from_var->flag) {      
+            if (word_gender == 0 || (var.gender & word_gender)) {
+                const std::string& ending = var.ending;
+                const std::string& form   = var.form;
+
+                if (ending.length() <= translation.length())
+                    return translation.substr(0, translation.length() - ending.length()) + form;
+                else
+                    return form;
+            }
+        }
+    }
+
+    for (const auto& var : case_to->variations) {
+        if (word_gender == 0 || (var.gender & word_gender)) {
+            const std::string& ending = var.ending;
+            const std::string& form   = var.form;
+
+            if (ending.length() <= translation.length())
+                return translation.substr(0, translation.length() - ending.length()) + form;
+            else
+                return form;
+        }
+    }
+    }else if (from_var && !case_to) {
+    // CASE → NON-CASE
+    }else if (from_var && case_to) {
+    // CASE → CASE
+}
+
+
+
+    // Final fallback: just use the first variation
+    const auto& var = case_to->variations[0];
+    if (var.ending.length() <= translation.length())
+        return translation.substr(0, translation.length() - var.ending.length()) + var.form;
+    else
+        return var.form;
+}
 
 inline GenderResult detect_gender(const std::string& word, const Gender* gender_from) {
     if (!gender_from) {
@@ -320,8 +425,6 @@ inline GenderResult detect_gender(const std::string& word, const Gender* gender_
             return { root, &var };
         }
     }
-
-    // no suffix matched — treat as default
     return { word, nullptr };
 }
 
@@ -397,8 +500,10 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 #define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
 #define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
 
+#define PLURAL_DEF(name,...) Plural name = {__VA_ARGS__}
 #define GENDER_DEF(name,...) Gender name = {__VA_ARGS__}
 #define CASE_DEF(name,...) Case name = {__VA_ARGS__}
+
 
 #define VERB_ENDINGS(name, ...) VerbRuleDictionary name = __VA_ARGS__
 
@@ -421,6 +526,26 @@ std::string name(const char* sentence) {\
 
 
 
+#define RULE(str) \
+    if (rule(str, sentence_arr, reordered_arr, i)) continue;
+
+#define DEFAULT()\
+  if (sentence_arr.at(i).type != -1){\
+             reordered_arr.push_back(Word{ sentence_arr.at(i).word, normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});\
+   }
+
+#define HANDLE_CASE()\
+     if (!sentence_arr.empty()) {\
+     for (size_t i = 0; i + 1 < reordered_arr.size(); ++i) {\
+    auto &current = reordered_arr.at(i);\
+    auto &next = reordered_arr.at(i + 1);\
+    if (current.type == 3 && next.type == 0) {\
+          uint8_t f = lookupFlags(nouns, next.word.c_str());\
+            CaseResult g = detect_case(current.word, NO_CASE);\
+            next.translation = apply_case(next.translation, g.matched_variation, &ptru_case_to, f);\
+    }\
+}\
+        }
 enum WordType {
     NOUN = 0,
     ADJECTIVE = 1,
@@ -455,6 +580,14 @@ enum AFFIX_TYPE {
     SUFFIX = 1,
     NONE
 };
+
+enum ClauseOrders {
+    SVO = 0,
+    SOV = 1,
+    VSO = 2,
+    VOS = 3
+};
+
 
 
 inline WordType typeFromString(const std::string& s) {
@@ -593,11 +726,6 @@ std::vector<Word> MEDIATE_HOMONYMS(
 }
 
 
-
-inline std::string normalize_test(std::string word){
-
-    return "";
-}
 
 
 // making a decent API for the pairs to access and make implementing easier, but i know i'll keep changing it and never be satisfied
@@ -1358,25 +1486,45 @@ static inline Entry default_fixed_ngrams[] = {
 };
 
 inline unsigned int nouns_length = 0;
-static inline Entry default_nouns[] = {
-  {"", ""}
-};
+static inline Entry default_nouns[1000];
 
 
 inline unsigned int adjective_length = 0;
-static inline Entry default_adjectives[] = {
-  {"", ""}
-};
+static inline Entry default_adjectives[1000];
+
+inline unsigned int pronoun_length = 0;
+static inline Entry default_pronouns[20];
+
 
 inline char buffer[250];
-inline int number_of_words = 100;
 
 //default for binary modules
 
 
-static std::string default_normalize(std::string word) {
+struct NormalizationRule {
+     std::string from;
+     std::string to;
+     int type;
+};
+
+inline unsigned int normalizationRuleLength = 0;
+static inline NormalizationRule default_normalizationRules[50];
+
+inline std::string default_normalize(
+    std::string word,
+    NormalizationRule* rules,
+    unsigned int rule_count
+) {
+
     std::string normalized_ = word;
-    NORMALIZE("rr", REPLACE_ALL, "h");
+     for (unsigned int i = 0; i < rule_count; ++i)
+{
+    NORMALIZE(
+        rules[i].from,
+        rules[i].type,
+        rules[i].to
+    );
+}
     return normalized_;
 }
 
@@ -1387,9 +1535,9 @@ static std::vector<Word> default_reorderHelpers(const std::vector<Word>& copy){
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
      INIT_REORDER()
-       if (sentence_arr.at(i).type != -1){
-             reordered_arr.push_back(Word{ sentence_arr.at(i).word, default_normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});
-        }
+      if (sentence_arr.at(i).type != -1){\
+             reordered_arr.push_back(Word{ sentence_arr.at(i).word, default_normalize(sentence_arr.at(i).translation, default_normalizationRules,normalizationRuleLength), sentence_arr.at(i).type});\
+      }
     }
 CLEANUP(reordered_arr)
 
@@ -1405,7 +1553,12 @@ static Word default_nounLookup(const std::string& word) {
     if (const char* result = lookup_test(default_nouns, nouns_length,word.c_str())) { 
         std::string translation = result; 
         int word_type = NOUN; 
-        return { word, default_normalize(translation), word_type }; 
+        return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
+    }else if(const char* result = lookup_test(default_adjectives, adjective_length,word.c_str())){
+            std::string translation = result; 
+            int word_type = ADJECTIVE; 
+            return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
+
     }
     return Word{ word, word, -1 };  
 
@@ -1413,14 +1566,16 @@ static Word default_nounLookup(const std::string& word) {
 
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
-inline void load_from_bin(const uint8_t* file, size_t size)
+inline std::string load_from_bin(const uint8_t* file, size_t size)
 
 {
     const uint8_t* ptr = reinterpret_cast<const uint8_t*>(file);
     const uint8_t* end = ptr + size;
-
+    int current_area = 0;
     const char* s = nullptr;
     const char* r = nullptr;
+    std::string from = "";
+    std::string to = "";
 
     uint8_t word_length = 0;
     uint8_t ngram_size = 0x01;
@@ -1432,37 +1587,103 @@ inline void load_from_bin(const uint8_t* file, size_t size)
 
         switch (marker)
         {
-            case 0xF0: // word section
+            case 0xD0:
+            current_area = 0;
+            break;
+
+        case 0xD1:
+            current_area = 1;
+            break;
+        case 0xD2:
+            current_area = 2;
+            break;
+        case 0xD3:
+            current_area = 3;
+            break;
+        case 0xF0:
+        {
+            if (current_area == 0)
             {
                 word_length = *ptr++;
-                ngram_size = *ptr++;
-                ptr++; // skip reserved byte
+
+                s = reinterpret_cast<const char*>(ptr);
+                from = std::string(s);
+                ptr += word_length + 1;
+            }
+            else if (current_area == 1)
+            {
+                // FULL DICTIONARY FORMAT
+                word_length = *ptr++;
+                ngram_size  = *ptr++;
+
+                ptr++; // reserved
 
                 s = reinterpret_cast<const char*>(ptr);
                 ptr += word_length + 1;
-                break;
+            }
+            else if(current_area == 2){
+                  word_length = *ptr++;
+                  ptr++; 
+                  ptr += word_length + 1;
+            }
+            else if(current_area == 3){
+                 word_length = *ptr++;
+                    s = reinterpret_cast<const char*>(ptr);
+                    ptr += word_length + 1;
+
             }
 
-            case 0xF1: // translation section
-            {
-                uint8_t translation_length = *ptr++;
-                ptr++; // skip reserved byte
-
-                r = reinterpret_cast<const char*>(ptr);
-                ptr += translation_length + 1;
-                break;
+            break;
             }
+            case 0xF1:
+                {
+                    if (current_area == 0)
+                    {
+                        uint8_t translation_length = *ptr++;
+
+                        r = reinterpret_cast<const char*>(ptr);
+                        ptr += translation_length + 1;
+                        
+                        to = std::string(r);
+                    }
+                    else if (current_area == 1)
+                    {
+                        uint8_t translation_length = *ptr++;
+                        ptr++; // reserved
+
+                        r = reinterpret_cast<const char*>(ptr);
+                        ptr += translation_length + 1;
+                    } 
+                    else if (current_area == 2)
+                    {
+                      
+                    }
+                    else if (current_area == 3)
+                    {
+                        uint8_t target_length = *ptr++;
+                        r = reinterpret_cast<const char*>(ptr);
+                        ptr += target_length + 1;
+                    }
+
+
+                    break;
+                }
 
             case 0xF2: // type section
             {
-                type = *ptr++;
+              type = *ptr++;
+              if(current_area == 1){
+            
 
                 // store entry
                 switch (ngram_size)
                 {
+                    
                     case 0x01:
                         if(type == 0x00) default_nouns[nouns_length++] = Entry{s, r, type};
                         if(type == 0x01) default_adjectives[adjective_length++] = Entry{s, r, type};
+                        if(type == 0x04) default_pronouns[pronoun_length++] = Entry{s, r, type};
+                      
                         break;
 
                     case 0x02:
@@ -1470,16 +1691,25 @@ inline void load_from_bin(const uint8_t* file, size_t size)
                         default_fixed_ngrams[ngrams_length++] = Entry{s, r, type};
                         break;
                 }
+                }
+                else if(current_area == 3){
+                  default_normalizationRules[normalizationRuleLength++] = NormalizationRule{s, r, type};
+                }
 
                 break;
             }
 
             default:
-                return;
+               
+        return "";
         }
     }
-    std::cout << "nouns_length = " << nouns_length << "\n";
+std::cout << "nouns_length = " << nouns_length << "\n";
+std::cout << "adjective_length = " << adjective_length << "\n";
+std::cout << "pronoun_length = " << pronoun_length << "\n";
 std::cout << "ngrams_length = " << ngrams_length << "\n";
+
+return std::string("Loaded translator: " + from + " > " + to + "\n");
 }
 
 inline std::string translate_from_bin(const char* sentence,

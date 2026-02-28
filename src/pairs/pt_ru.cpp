@@ -4,18 +4,34 @@
 #include "../lang_it.h"
 #if defined(ALL)
 #define PT_RU
+
 #endif
 
 #ifdef PT_RU
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 
+Info pt_ru_info = {
+    SVO, {0},
+    SVO, {1}
+};
+
+
+
+
+
+CASE_DEF(ptru_case_to, SUFFIX,
+{
+{ACCUSATIVE, FEMININE_GENDER, "а", "у"}
+});
+
 DICT(fixed_ngrams, {
- {"como_sempre", "ehe"},
+ {"por_exemplo", "например"},
  
 });
 
@@ -27,7 +43,7 @@ DICT(adj, {
 DICT(nouns, {
  {"olá", "привет"},
  {"cobra", "змея"},
- {"cachorr", "собака"},
+ {"cachorr", "собака", FEMININE_GENDER},
  {"gat", "кот"},
  {"hoje", "сегодня"},
  {"amanhã", "завтр",FEMININE_GENDER},
@@ -72,13 +88,13 @@ DICT(art, {
 V_DICT(verbs, {
     {"sab", "зна"},
     {"v", "виде"},
-    {"funcion", "работа"}
+    {"funcio", "работа"}
 });
 
 VERB_ENDINGS(pt_ru_reg, {
    {{"ou", "ei", "aram", "eu", "i"}, PAST_TENSE},
    {{"ar", "er", "ir"}, INFINITIVE},
-   {{"o", "a", "e"}, PRESENT_TENSE},
+   {{"jo", "no", "na", "ne"}, PRESENT_TENSE},
    {{""}, IRREGULAR}
 });
 
@@ -116,6 +132,21 @@ HOMONYM_DEF(
 Homonym pt_ru_homonyms[] = {
     HOMONYM("manga", manga)
 };
+
+
+  GENDER_DEF(ptru_gender_from, SUFFIX,
+        {
+           {NONE, "o"},
+           {FEMININE_GENDER, "a"}
+        });
+
+    GENDER_DEF(ptru_gender_to, SUFFIX,
+    {
+       {NONE, "ий"},
+       {FEMININE_GENDER, "ая"},
+       {NEUTRAL_GENDER, "ое"}
+    });
+
 
 
 static string normalize(string word) {
@@ -159,11 +190,15 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
      
      RULE("IF OBLIQUE_PRONOUN THEN VERB DO INVERT")
 
+     
+
      DEFAULT()
+
     }
 
     CLEANUP(reordered_arr);
-
+    
+     HANDLE_CASE()
 vector<Word> final_arr;
 for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
@@ -178,38 +213,19 @@ return final_arr;
 
 static Word nounLookup(const string& word) {
  
-    GENDER_DEF(ptru_gender_from, SUFFIX,
-        {
-           {NONE, "o"},
-           {FEMININE_GENDER, "a"}
-        });
+  
 
-    GENDER_DEF(ptru_gender_to, SUFFIX,
-    {
-       {NONE, "ий"},
-       {FEMININE_GENDER, "ая"},
-       {NEUTRAL_GENDER, "ое"}
-    });
-
-
-
-    CASE_DEF(ptru_case_to, SUFFIX,
-    {
-       {ACCUSATIVE, FEMININE_GENDER, "а", "у"}
-    });
-
-
-    LOOKUP(nouns, NOUN, word,  &ptru_gender_from, (Gender*)nullptr);
+    LOOKUP(nouns, NOUN, word, &ptru_gender_from, NO_GENDER);
     
     LOOKUP(adj, ADJECTIVE, word, &ptru_gender_from,&ptru_gender_to);
 
-    LOOKUP(pro, PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER);
 
-    LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(obl_pro, OBLIQUE_PRONOUN, word, NO_GENDER, NO_GENDER);
 
-    LOOKUP(adv, ADJECTIVE, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(adv, ADJECTIVE, word, NO_GENDER, NO_GENDER);
 
-    LOOKUP(art, ARTICLE, word, (Gender*)nullptr, (Gender*)nullptr);
+    LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER);
 
     
     SUFFIX_LOOKUP(suff, word, adj);

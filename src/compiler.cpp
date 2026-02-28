@@ -64,30 +64,74 @@ void compile_from_buffer(const char* output_path,
 
     json j = json::parse(data, data + size);
 
+    
+    //metadata section 
+
+    write_u(fs, (uint8_t)0xD0);
+    auto metadata = j["metadata"];
+    
+    std::string from = metadata["from"];
+     write_u(fs, (uint8_t)0xF0);
+     write_u(fs, static_cast<uint8_t>(from.size()));   
+     write_cstring(fs, from);      
+
+     std::string to = metadata["to"];
+     write_u(fs, (uint8_t)0xF1);
+     write_u(fs, static_cast<uint8_t>(to.size()));                             
+     write_cstring(fs, to);    
+
+     
+     //dictionary section
+    write_u(fs, (uint8_t)0xD1);
     for (auto& item : j["dictionary"]) {
 
         std::string entry = item["entry"];
         std::string translation = item["translation"];
         uint8_t word_type = item["word_type"];
 
-        // ---- F0 BLOCK ----
+        // entry
         write_u(fs, (uint8_t)0xF0);
         write_u(fs, static_cast<uint8_t>(entry.size()));   
         write_u(fs, count_words(entry));                   
         write_u(fs, (uint8_t)0x00);                       
         write_cstring(fs, entry);                          
 
-        // ---- F1 BLOCK ----
+        // translation
         write_u(fs, (uint8_t)0xF1);
         write_u(fs, static_cast<uint8_t>(translation.size())); 
         write_u(fs, (uint8_t)0x00);                          
         write_cstring(fs, translation);                         
 
-        // ---- F2 BLOCK ----
+        // type
         write_u(fs, (uint8_t)0xF2);
         write_u(fs, word_type);
     }
 
+    // rules section
+    write_u(fs, (uint8_t)0xD2);
+
+    // NORMALIZING rules section
+
+    write_u(fs, (uint8_t)0xD3);
+    for (auto& item : j["replace"]) {
+        std::string original = item["original"];
+        std::string target = item["target"];
+        uint8_t where = item["where"];
+        
+        write_u(fs, (uint8_t)0xF0);
+        write_u(fs, static_cast<uint8_t>(original.size()));                             
+        write_cstring(fs, original);    
+
+               
+        write_u(fs, (uint8_t)0xF1);
+        write_u(fs, static_cast<uint8_t>(target.size()));                             
+        write_cstring(fs, target);  
+
+        write_u(fs, (uint8_t)0xF2);
+        write_u(fs, where);
+                       
+    }
+    
     fs.close();
 }
 
