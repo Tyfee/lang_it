@@ -1,49 +1,45 @@
-// VERY EARLY, dont use this shi 
 #include "../lang_it.h"
-
 #if defined(ALL)
+#define FROM "pt"
+#define TO "es"
 #define PT_ES
+
 #endif
 
 #ifdef PT_ES
 
-#include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <cstring>
+#include <iostream>
 
 using namespace std;
 
-// this will happen at some point
-// a final check for anomaly fixing
-// it will store different sets of word types like 'i[4] love[3] you[11]' => {4, 3, 11};
-// and a normalized frequency number like 0.7, to say whether or not it is valid
-typedef struct{
-     vector<int> ngram;
-     float frequency;
-} FrequencyTable;
 
-vector<FrequencyTable> tabela = {
-    { {4, 3, 0}, 1.0 },
-    { {5, 2, 7}, 0.7 },
-    { {4, 4, 3}, 0.3 }
+Info PT_ES_info = {
+    SVO,
+    {0},
+    SVO, 
+    {1}
 };
 
 
-Homonym homonimos[1];
-
-const size_t homonimosCount = sizeof(homonimos) / sizeof(homonimos[0]);
-
-// any set of (n)words in portuguese that can't be translated separately
-
-constexpr Entry fixed_ngrams[] = {
-  {"bem_vindo", "bienvenido"}
-};
 
 
-// noun dictionary, not only nouns anymore lol
-// basically every word that can't be matched with rules of breakdown will be translated directly from here
+
+CASE_DEF(ptes_case_to, SUFFIX,
+{
+  {ACCUSATIVE, FEMININE_GENDER, "а", "у"},   // собака → собаку
+    {ACCUSATIVE, FEMININE_GENDER, "я", "ю"},   // неделя → неделю
+    {ACCUSATIVE, ON, "", ""},    // мужчина → мужчину handled separately maybe
+    {ACCUSATIVE, NEUTRAL_GENDER, "о", "о"},    // окно → окно (same for accusative)
+   {ACCUSATIVE, NEUTRAL_GENDER, "е", "е"}     // море → море
+});
+
+DICT(fixed_ngrams, {
+ {"", ""},
+ 
+});
+
 DICT(nouns, {
   {"olá", "hola"},
   {"oi", "hola"},
@@ -57,7 +53,7 @@ DICT(nouns, {
   {"cem", "a hundred"},
   {"mil", "a thousand"},
   {"segundo", "second"},
-  {"ano", "year"},
+  {"ano", "año"},
   {"mês", "month"},
   {"hora", "hour"},
   {"leite", "leche"},
@@ -97,11 +93,13 @@ DICT(art, {
 DICT(pre, { 
   {"do", "del"},
   {"da", "de la"},
+  {"de", "de"},
   {"ou", "o"},
-  {"no", "in the"},
-  {"na", "in the"},
-  {"nos", "in the"},
-  {"nas", "in the"},
+  {"em", "en"},
+  {"no", "en el"},
+  {"na", "en la"},
+  {"nos", "en los"},
+  {"nas", "en las"},
   {"à", "to"},
   {"às", "to the"},
   {"ao", "to the"},
@@ -198,59 +196,70 @@ DICT(adv, {
   {"depois", "despues"},
   {"pra", "para"},
   {"por", "por"},
+  {"sobre", "acerca de"},
   {"ainda", "aún"},
   {"somente", "solamente"},
   {"só", "solo"},
+  {"não", "no"},
+  {"sim", "sí"},
   {"apenas", "solamente"},
   {"então", "entonces"}
 });
 
 
-struct VerbEnding {
-    const char* ending;
-    int code;
-};
+V_DICT(verbs, {
+  {"fal", "habl", false, false},
+  {"gost", "gust", false, DATIVE_CONST},
+  {"com", "com", false, false},
+  {"quer", "quier"}
+});
 
-// verb prefixes where 0 = regular, 1 = irregular conjugation
-// is it intransitive?
-constexpr Verb reg_verbs[]  = {
-  {"fal", "hablar", false, false},
-  {"gost", "gustar", false, DATIVE_CONST},
-  {"com", "comer", false, false},
-  
-};
+#define AR_VERB FREE_BIT_1  // 0x0060
+#define ER_VERB FREE_BIT_2  // 0x0070
+#define IR_VERB FREE_BIT_1  // Could reuse if mutually exclusive
 
-static const Verb* lookupRegVerb(const char* root) {
-    for (const auto& v : reg_verbs) {
-        const char* p = v.root;
-        const char* q = root;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-        if (*p == *q) return &v; 
-    }
-    return nullptr;
-}
+// DEBUG: Are we getting here?
+VERB_ENDINGS(PT_ES_reg, {
+   // Infinitive endings - just tense (no person/number)
+   {{"ar"}, INFINITIVE | AR_VERB},  // 0x2000
+   {{"er"}, INFINITIVE | ER_VERB},  // 0x2000
+   {{"ir"}, INFINITIVE | IR_VERB},  // 0x2000
+   {{"ei"}, PAST | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR},  // 0x6010?
+   {{"i"},  PAST | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR },  // for -ir verbs
+   {{"ou"}, PAST | INDICATIVE | SIMPLE | ACTIVE | THIRD_PERSON | SINGULAR},
+   {{"aram"}, PAST | INDICATIVE | SIMPLE | ACTIVE | THIRD_PERSON | PLURAL_V},
+   {{"o"}, PRESENT | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR},
+   {{"as"}, PRESENT | INDICATIVE | SIMPLE | ACTIVE | SECOND_PERSON | SINGULAR},
+   {{"a"}, PRESENT | INDICATIVE | SIMPLE | ACTIVE | THIRD_PERSON | SINGULAR},
+});
 
+VERB_CONJUGATIONS(PT_ES_def, 
+{
+   // Infinitive mapping (Portuguese infinitive → Spanish infinitive)
+   {INFINITIVE | AR_VERB, SUFFIX, "", "ar"},  // hablar
+   {INFINITIVE | ER_VERB, SUFFIX, "", "er"},  // comer
+   {INFINITIVE | IR_VERB, SUFFIX, "", "ir"},  // vivir
+   
+   // Past tense 1st person singular
+   {PAST | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR, 
+    SUFFIX, "", "é"},  // hablé
+   {PAST | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR, 
+    SUFFIX, "i", "í"},   // for -ir verbs: partí
+   
+   // Past tense 3rd person singular
+   {PAST | INDICATIVE | SIMPLE | ACTIVE | THIRD_PERSON | SINGULAR, 
+    SUFFIX, "ou", "ó"},  // habló
+   
+   // Present tense 1st person singular
+   {PRESENT | INDICATIVE | SIMPLE | ACTIVE | FIRST_PERSON | SINGULAR, 
+    SUFFIX, "o", "o"},   // hablo
+   
+   // Present tense 3rd person singular
+   {PRESENT | INDICATIVE | SIMPLE | ACTIVE | THIRD_PERSON | SINGULAR, 
+    SUFFIX, "", "a"},   // habla
+});
 
-constexpr Verb irr_verbs[] = {
-  {"fal", "speak", false},
-  
-};
-
-static const Verb* lookupIrrVerb(const char* root) {
-    for (const auto& v : irr_verbs) {
-        const char* p = v.root;
-        const char* q = root;
-        while (*p && *q && *p == *q) { ++p; ++q; }
-        if (*p == *q) return &v; 
-    }
-    return nullptr;
-}
-
-
-
-// common suffixes with traceable trnaslation pattern
-constexpr Suffix suff[] = {
-
+SUFFIX_RULES(suff, {
   {"inho", "ito",0, 0},
   {"inha", "ita", 0, 0},
   {"mento", "ment", 0, 0},
@@ -258,410 +267,108 @@ constexpr Suffix suff[] = {
   {"ível", "ible", 1, 0},
   {"ória", "ory", 0, 0},
   {"cidade", "cidad", 0, 0},
-  {"ções", "tions", 0, 1},
   {"tor", "ctor", 0,0},
   {"ais", "ales", 0, 1},
   {"eito", "ecto", 1,0},
   {"ês", "és", 0, 0},
-  {"ção", "cion", 0,0},
-};
+  {"ção", "ción", 0,0},
+  {"ções", "ciónes", 0,0},
+});
+
+
+
+  GENDER_DEF(ptes_gender_from, SUFFIX,
+        {
+           {NONE, "o"},
+           {FEMININE_GENDER, "a"}
+        });
+
+    GENDER_DEF(ptes_gender_to, SUFFIX,
+    {
+       {NONE, "o"},
+        {FEMININE_GENDER, "a"}
+    });
+
+     PLURAL_DEF(ptes_plural_from, SUFFIX,
+        {
+           {NONE, "s", ""}
+        });
+
+    PLURAL_DEF(ptes_plural_to, SUFFIX,
+    {
+        {NONE, "s", ""}
+    });
+
+
+
+
 
 static string normalize(string word) {
- 
-
     string normalized_ = word;
-    
-    if (word.length() > 3) {
-       
+
+
          NORMALIZE("ch", REPLACE_ALL, "ll");
-            NORMALIZE("qu", REPLACE_START, "cu");
+            NORMALIZE("qua", REPLACE_START, "cua");
             NORMALIZE("lh", REPLACE_ALL, "j");
             NORMALIZE("ça", REPLACE_ALL, "za");
             NORMALIZE("nh", REPLACE_ALL, "ñ");
-
-    }
-
+            NORMALIZE("ess", REPLACE_ALL, "est");
     return normalized_;
 }
 
-
-
-Homonym homonyms_es[1];
-
-const size_t homonymCount_es = sizeof(homonyms_es) / sizeof(homonyms_es[0]);
-
-static Word morphemeLookup(string word){
-  string translation_; 
-  string p;
-  string m;
-  string s;
-  int word_type_;
-
-  return Word{word, translation_, word_type_};
-};
-Word prefixLookup(const std::string &word) {
-    using namespace std;
-    string translation;
-
-    static const vector<string> infinitive = {"ar", "er", "ir", "ber", "zer"};
-    static const vector<string> past_tense_first_sin = {"ei", "ti", "ri", "is", "ia"};
-    static const vector<string> past_tense_second_sin = {"iu", "ou", "eu"};
-
-    static const vector<pair<const vector<string>*, int>> groups = {
-        {&infinitive, 0},
-        {&past_tense_first_sin, 1},
-        {&past_tense_second_sin, 2}
-    };
-
-    for (auto &[vec, type] : groups) {
-        for (const auto &ending : *vec) {
-            if (word.size() > ending.size() &&
-                word.compare(word.size() - ending.size(), ending.size(), ending) == 0) {
-
-                string base = word.substr(0, word.size() - ending.size());
-
-                // infinitive: just confirm it's a verb form
-                if (type == 0) {
-                    translation = base  + ending; 
-                    return Word{word, translation, 3};
-                }
-
-                // past 1st singular
-                if (type == 1) {
-                    translation = base + "é";
-                    return Word{word, translation, 3};
-                }
-
-                // past 2nd singular
-                if (type == 2) {
-                    translation = base + "ó";
-                    return Word{word, translation, 3};
-                }
-            }
-        }
-    }
-
-    return Word{word, "", -1};
-}
-
-
-
-static Word suffixLookup(const std::string& word) {
-    std::string translation;
-    int word_type = 0;
-
-    // example: in- prefix detection
-  
-
-    // check suffix patterns
-   for (int len = 6; len >= 2; --len) {
-    if (word.length() >= static_cast<size_t>(len)) {
-
-        std::string ending = word.substr(word.length() - len);
-        Suffix suffResult = lookupSuff(suff, ending.c_str());
-
-        if (suffResult.t) {
-            const char* mapped = suffResult.t;
-            std::string stem = word.substr(0, word.length() - len);
-            word_type = suffResult.type;
-            const char* adjResult = lookup(adj, stem.c_str());
-            if (adjResult) {
-                translation = std::string(adjResult) + mapped;
-            word_type = 1;
-            }
-            else if (!stem.empty()) {
-                std::string altStem = stem.substr(0, stem.length() - 1) + "o";
-                const char* altAdj = lookup(adj, altStem.c_str());
-                if (altAdj)
-                    translation = std::string(altAdj) + mapped;
-                else
-                    translation = stem + mapped;
-            }
-            else {
-                translation = stem + mapped;
-            }
-
-            return {word, normalize(translation), word_type};
-        }
-    }
-}
-
-
-    return {word, word, -1}; // fallback: unchanged
-}
-
-
-static Word nounLookup(const std::string& word) {
-  // TODO: Creaate hierarchy for word category
-  string translation;
-  // 0 = noun 1 = adj 2 = adverb 3 = verb 4 = pronoun
-  int word_type = -1;
-
-
-  
-  
-  // rules
-   bool plural = ((lookup(nouns, (word.substr(0, word.length() - 2)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 1)).c_str()) || lookup(nouns, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural nouns only
-   bool gender_shift = lookup(nouns, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for nouns only
-
-
-   bool adj_plural = ((lookup(adj ,(word.substr(0, word.length() - 1).c_str())) || lookup(adj, (word.substr(0, word.length() - 2) + "o").c_str())) && word.substr(word.length() - 1) == "s"); // this is plural adjectives only
-   bool adj_gender_shift = lookup(adj, (word.substr(0, word.length() - 1)  + "o").c_str()); // this is gender shift for adjectives only
-   bool article_plural = lookup(art, (word.substr(0, word.length() - 1).c_str()));
-  
-
-  // for each individual word loop, you look in the noun dictionary
-  //first with accentuation, 
- LOOKUP(nouns, NOUN, word.c_str());
- 
-  LOOKUP(adj, ADJECTIVE, word.c_str());
-  
-  LOOKUP(adj, ADJECTIVE,word.substr(0, word.length() - 1).c_str()); // figure out how to set the plural
- 
- LOOKUP(pro, PRONOUN, word.c_str());
- 
- LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word.c_str());
-  
- LOOKUP(pre, PREPOSITION, word.c_str());
- 
-   LOOKUP(pre, PREPOSITION,word.substr(0, word.length() - 1).c_str());
- 
-    LOOKUP(art, ARTICLE, word.c_str());
-
-    LOOKUP(art, ARTICLE, word.substr(0, word.length() - 1).c_str());
-    LOOKUP(adv, ADVERB, word.substr(0, word.length() - 1).c_str());
- 
-
-
-    
-    
-if(plural){
-    // by removing the last letter of the word, we can check for **BASIC** plural. e.g casa[s] -> casa
-    //if the noun ends in f or fe, we substitute for ves, life -> lives, leaf => leaves
-    string singular_pt;
-    string word_normalized = word;
-
-    if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "os") {
-        singular_pt = word.substr(0, word.size() - 2) + "o"; // gatos -> gato, cachorros -> cachorro
-    } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "as") {
-        singular_pt = word.substr(0, word.size() - 2) + "a"; // casas -> casa, cachorras -> cachorra, crianças -> criança
-               std::string key = singular_pt.substr(0, singular_pt.size() - 1) + "o";
-                    if(lookup(nouns, key.c_str())){
-                        singular_pt = key; 
-                    }
-    } else if (word_normalized.size() > 2 && word_normalized.substr(word_normalized.size() - 2) == "es") {
-        singular_pt = word.substr(0, word.size() - 2);       // flores -> flor
-    } else if (word_normalized.size() > 1 && word_normalized.back() == 's') {
-        singular_pt = word.substr(0, word.size() - 1);       // fallback para palavras terminadas em s
-    } else {
-        singular_pt = ""; // não é plural conhecido
-    }
-
-    if (lookup(nouns, singular_pt.c_str())) {
-        string singular_en = lookup(nouns, singular_pt.c_str());
-        if (!singular_en.empty()) {
-            if (singular_en.size() >= 2 && singular_en.substr(singular_en.size()-2) == "fe") {
-                translation = singular_en.substr(0, singular_en.size()-2) + "ves";
-            } else if (singular_en.back() == 'f') {
-                translation = singular_en.substr(0, singular_en.size()-1) + "ves";
-            } else {
-                translation = singular_en + "s";
-            }
-            word_type = 0;
-            translation = normalize(translation);
-        }
-    }
-}
-
- 
-    // by switching the last letter of the word, we can check for **BASIC** gender shift. e.g cachorra -> (cachorra - a) + o -> cachorro 
-   else if(gender_shift){
-          
-         translation = lookup(nouns, (word.substr(0, word.length() - 1) + "o").c_str());
-         word_type = 0;
-        }
-        
-    // same as above for adjectives. e.g pequena -> (pequena - a) + o -> pequeno
-    else if(adj_gender_shift){
-
-         translation = lookup(adj,(word.substr(0, word.length() - 1) + "o").c_str());
-         word_type = 1;
-        }
-    
-         // if not found morpheme
-        else if(morphemeLookup(word).translation.length() > 0){
-        // if suffix not found, look for morpheme breakdown
-        translation = morphemeLookup(word).translation;
-        word_type = morphemeLookup(word).type;
-        
-      }
-   
-        // if preffix not found, look for prefix
-       else if(prefixLookup(word).translation.length() > 0){
-        translation = prefixLookup(word).translation;
-        word_type = prefixLookup(word).type;
-       }
-       // if not found suffix match
-        else if(suffixLookup(word).translation.length() > 0 || suffixLookup(word.substr(0, word.length() - 1)).translation.length() > 0){     
-           string look = suffixLookup(word).translation.length() > 0 ? suffixLookup(word).translation : suffixLookup(word.substr(0, word.length() - 1)).translation + "s";
-        translation = look;
-        word_type = suffixLookup(word).translation.length() > 0 ? suffixLookup(word).type : suffixLookup(word.substr(0, word.length() - 1)).type;
-       }
-   
-       else{
-           return {word, word, -1};
-      }
-  return {word, normalize(translation), word_type};
-}
-
-
-
-// when words need to switch order
-// this is actually various manipulations (Take Off The Blindfold REFERENCE????)
-//not only word order, but i'm not changing the name at this point
 static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
-    vector<Word> sentence_arr = copy;
+    std::vector<Word> sentence_arr = copy;
     vector<Word> reordered_arr;
-for (size_t j = 0; j < sentence_arr.size(); ++j) {
-}
 
     for (size_t i = 0; i < sentence_arr.size(); ++i) {
+     INIT_REORDER()
 
+     DEFAULT()
 
-        // ------------------------ ADJ + VERBS ----------------- 
-        // yk like, díficil de jogar -> very hard of to play . you cant have an adjective and a verb with a broken connector (8)
-            if (i > 0 && sentence_arr[i - 2].type == 1 && sentence_arr[i - 1].type == 8  &&  (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-            if (sentence_arr[i - 1].translation == "don't" || sentence_arr[i - 1].translation == "doesn't") {
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
-                continue;
-            }
-            reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{ sentence_arr[i - 1].word, sentence_arr[i - 1].translation, sentence_arr[i].type});
-            reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{"de", "to", -1}); 
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
-          
+    }
+
+    CLEANUP(reordered_arr);
     
-    } 
+    HANDLE_CASE(&PT_ES_info, NO_CASE, &ptes_case_to)
 
-  
-
-else if (i > 0 && (sentence_arr[i - 1].type == 8 || sentence_arr[i - 1].type == 13) && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36 )) {
-
- 
-}
-  // ------------------------ ARTICLE VS PREPOSITION (e.g A VS À) COMPETITION  --------------------
-        // when a match is 'a', is the next word a pronoun[4] or an article[9]? that means its "à" if not "a"
-        // since it defaults to 'the' i dont think i need a fallback 
-        else if (i > 0 && sentence_arr[i - 1].translation == "the" && (sentence_arr[i].type == 4 || sentence_arr[i].type == 9)) {
-          reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{"à","to", 20});
-            reordered_arr.push_back(Word{sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});  
-        } 
-        
-
-
-        else if (i > 1 && (sentence_arr[i - 2].type == 3 || sentence_arr[i - 2].type == 3) && sentence_arr[i - 1].translation == "of" && (sentence_arr[i].type == 3 || sentence_arr[i].type == 36)) {
-            reordered_arr.pop_back(); 
-            reordered_arr.push_back(Word{sentence_arr[i - 2].word, sentence_arr[i - 2].translation, sentence_arr[i - 2].type});  
-            reordered_arr.push_back(Word{"de", "to", -1});  
-            reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
-        } 
-
-      
-
-        else {
-            if (sentence_arr[i].type != -1)  // only push if not processed
-                reordered_arr.push_back(Word{ sentence_arr[i].word, sentence_arr[i].translation, sentence_arr[i].type});
-        }
-    }
-
-    // this guy will do word manipulation, the above one will take the name literally (reorder helpers)
-    // needed to do this cause handling it all on the same iteration on the original array was impossible    
-
-     for (size_t i = 0; i < reordered_arr.size(); ++i) {
-    if (reordered_arr[i].translation == "is") {
-        
-        bool preceded_by_pronoun = (i > 0 &&
-            (reordered_arr[i-1].type == 4 || reordered_arr[i-1].type == 0 || reordered_arr[i-1].type == 13 || reordered_arr[i-1].type == 2));
-
-        if (preceded_by_pronoun) {
-            reordered_arr[i].translation = "is";
-        } else {
-            reordered_arr.push_back(Word{"$it", "it", 4 });
-            i++; 
-        }
-    }  
-
-
-}
-
-// interrogative
-if(sentence_arr.size() > 0){
-    string to_push;
-    string last = sentence_arr[sentence_arr.size() - 1].word;
-    //　QUESTION　QUESTION　僕は　QUESTION　QUESTION　いったい　QUESTION　QUESTION　君の何を知っていたの????????????
-    if(last == "?"){
-        to_push = "¿";
-    }else if(last == "!"){
-        to_push = "¡";
-    }
-        reordered_arr.clear();
-        reordered_arr.push_back(Word{to_push, to_push, -2});
-        for(int i = 0; i < sentence_arr.size(); ++i){
-              reordered_arr.push_back(sentence_arr[i]);
-        }
-    }
-
-
-
-//statistics layer
+    
 vector<Word> final_arr;
 for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
 }
-//homonym mediation
-// need to remember what portuguese homonyms arent homonyms in spanish
-for (size_t i = 0; i < final_arr.size(); ++i) {
-    if (final_arr[i].word == "manga") {
-        
-        int start = max(0, static_cast<int>(i) - 2);
-        int end   = min(static_cast<int>(final_arr.size()) - 1, static_cast<int>(i) + 2);
 
-        vector<string> context;
-        for (int j = start; j <= end; ++j) {
-            context.push_back(final_arr[j].translation);
-        }
-        
-        size_t contextIndex = static_cast<size_t>(i - start);
-
-        vector<string> spanish_context = context;
-        vector<int> word_types;
-        spanish_context[contextIndex] = final_arr[i].word;  
-        word_types[contextIndex] = final_arr[i].type;  
-        
-        string resolved_word = semantics(spanish_context, word_types,contextIndex, homonyms_es, homonymCount_es);
-
-        final_arr[i].translation = resolved_word;
-    }
+return final_arr;
 }
 
 
-    return final_arr;
-}
-
-
-
-std::string traduzir_es(const char* sentence) {
-    char buffer[250];
-    strncpy(buffer, sentence, sizeof(buffer));
-    buffer[sizeof(buffer) - 1] = '\0';
-    to_lower(buffer);
-    vector<string> arr = tokenize(string(buffer));  
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
+static Word nounLookup(const string& word) {
+ 
+  
+LOOKUP(pre, PREPOSITION, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(pre, PREPOSITION, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(nouns, NOUN, word, &ptes_gender_from, NO_GENDER, &ptes_plural_from, &ptes_plural_to);
     
+    LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
     
-    return translated; 
+
+     LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
+  
+    LOOKUP(adj, ADJECTIVE, word, &ptes_gender_from,&ptes_gender_to, &ptes_plural_from, &ptes_plural_from);
+
+
+
+    LOOKUP(adv, ADJECTIVE, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
+
+    
+    SUFFIX_LOOKUP(suff, word, adj);
+
+    VERB_LOOKUP(verbs, word, PT_ES_reg, PT_ES_def);
+
+
+    return { word, word, -1 };
 }
+
+MAIN(pt_es, fixed_ngrams, reorder_helpers, nounLookup, false)
 
 #endif

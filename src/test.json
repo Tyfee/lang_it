@@ -1,69 +1,82 @@
 ﻿{
   "metadata": {
     "from": "en",
-    "to": "de",
-    "script": [0]
+    "to": "ru"
   },
   "original": {
-    "plural": false,
+    "script": [0],
+    "clause_order": 0,
+    "plural": {},
     "gender": false,
     "case_system": false    
   },
   "target": {
-    "plural": false,
-    "gender": false,
-    "case_system": false    
+    "script": [1],
+    "clause_order": 1,
+    "plural": {},
+    "gender": {},
+    "case_system": {}    
   },
   "dictionary": [
     {
       "entry": "dog",
       "translation": "Hund",
-      "word_type": 0
+      "word_type": 0,
+      "word_flags": []
     },
     {
       "entry": "cat",
       "translation": "Katze",
-      "word_type": 0
+      "word_type": 0,
+      "word_flags": []
     },
     {
       "entry": "person",
       "translation": "Person",
-      "word_type": 0
+      "word_type": 0,
+      "word_flags": []
     },
     {
       "entry": "child",
       "translation": "Kind",
-      "word_type": 0
+      "word_type": 0,
+      "word_flags": []
     },
     {
       "entry": "big",
       "translation": "groß",
-      "word_type": 1
+      "word_type": 1,
+      "word_flags": []
     },
     {
       "entry": "small",
       "translation": "klein",
-      "word_type": 1
+      "word_type": 1,
+      "word_flags": []
     },
     {
       "entry": "see",
       "translation": "sehen",
-      "word_type": 3
+      "word_type": 3,
+      "word_flags": []
     },
     {
       "entry": "love",
       "translation": "lieben",
-      "word_type": 3
+      "word_type": 3,
+      "word_flags": []
     },
     {
       "entry": "run",
       "translation": "laufen",
-      "word_type": 3
+      "word_type": 3,
+      "word_flags": []
     },
     {
       "entry": "i",
       "translation": "ich",
-      "word_type": 4
+      "word_type": 4,
+      "word_flags": []
     }
   ],
   "rules": [

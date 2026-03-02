@@ -56,17 +56,8 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
     sizeof(word##_tokens) / sizeof(word##_tokens[0]) \
 }
 
-#define INVERT(FIRST, SECOND) \
-    if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
-        invert(reordered_arr, sentence_arr.at(i), sentence_arr.at(i - 1)); \
-        continue; \
-    }
 
-#define REMOVE_FIRST(FIRST, SECOND) \
-    if ((i >= 1) && (&sentence_arr.at(i - 1))->type == FIRST &&  sentence_arr.at(i).type == SECOND) { \
-        remove_first(reordered_arr,sentence_arr.at(i), sentence_arr.at(i - 1)); \
-        continue; \
-    }
+
     
 #define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO, PLURAL_FROM, PLURAL_TO)          \
 {                                                                       \
@@ -89,6 +80,11 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
         translation = apply_plural(translation, p.matched_variation, PLURAL_TO, f); \
         return { WORD, normalize(translation), TYPE };                   \
     }  \
+    if(WORD.length() > 3){\
+       if (auto_correct(DICTIONARY, WORD)) {                \
+        return { WORD, normalize(auto_correct(DICTIONARY, WORD)), TYPE };                       \
+    }\
+}\
 }
 
 #define NO_GENDER (Gender*)nullptr
@@ -111,43 +107,65 @@ typedef struct {
    int clause_order_to;
    int scripts_from[4];
    int scripts_to[4];
-} Info;
+} Info;// And the lookup becomes much simpler:
 
-
-
-#define VERB_LOOKUP(DICTIONARY, WORD,ENDINGS, CONJUGATIONS)                         \
+#define VERB_LOOKUP(DICTIONARY, WORD, ENDINGS, CONJUGATIONS)                         \
 {                                                                           \
-    for (size_t ci = 0; ci <ENDINGS.size(); ++ci) {                  \
-        for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {  \
-            const std::string& ending = ENDINGS[ci].endings[ei];      \
-            int form = ENDINGS[ci].form;\
-            if (WORD.size() <= ending.size()) continue;                   \
-            if (WORD.compare(WORD.size() - ending.size(),                 \
-                              ending.size(), ending) != 0)                \
-                continue;                                                   \
+    for (size_t ci = 0; ci < ENDINGS.size(); ++ci) {                       \
+        for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {       \
+            const std::string& ending = ENDINGS[ci].endings[ei];           \
+            int ending_form = ENDINGS[ci].form;                            \
+            if (WORD.size() <= ending.size()) continue;                    \
+                                                                           \
+            /* Check if word ends with this ending */                      \
+            if (WORD.compare(WORD.size() - ending.size(),                  \
+                              ending.size(), ending) != 0) {               \
+                continue;                                                  \
+            }                                                              \
             std::string root = WORD.substr(0, WORD.size() - ending.size());\
             Verb v = verb_lookup(DICTIONARY, root.c_str());                \
-            std::string affix = "";\
-            bool has_affix = false;\
-                int affix_form = NONE;\
-                int affix_type = NONE;\
             if (v.translation && *v.translation) {                         \
-                if (CONJUGATIONS.size() > 0) {                         \
-            for (size_t i = 0; i < CONJUGATIONS.size(); ++i) {                         \
-                affix_form = CONJUGATIONS[i].form;\
-                affix_type = CONJUGATIONS[i].type;\
-                if(affix_form == form){\
-                        has_affix = true;\
-                        affix = CONJUGATIONS[i].affix;\
-                }\
-                }\
-            }\
-                   return Word{ WORD,(has_affix && affix_type == PREFIX ? affix : "") +  v.translation + (has_affix && affix_type == SUFFIX ? affix : ""), VERB };                  \
-                }\
-        }                                                                   \
-    }                                                                       \
+                std::string translation = v.translation;                   \
+                std::string prefix = "";                                   \
+                std::string suffix = "";                                   \
+                bool conjugation_applied = false;                          \
+                                                                           \
+                /* Find matching conjugation */                            \
+                for (const auto& conj : CONJUGATIONS) {                    \
+                    if (conj.form == ending_form) {                        \
+                        bool condition_met = conj.required_ending.empty() || \
+                            (translation.size() >= conj.required_ending.size() && \
+                             translation.compare(translation.size() - conj.required_ending.size(), \
+                                                conj.required_ending.size(), \
+                                                conj.required_ending) == 0); \
+                                                                           \
+                        if (condition_met) {                               \
+                            /* Remove required ending from translation if not empty */ \
+                            std::string stem = translation;               \
+                            if (!conj.required_ending.empty()) {          \
+                                stem = translation.substr(0,              \
+                                    translation.size() - conj.required_ending.size()); \
+                            }                                              \
+                                                                           \
+                            if (conj.type == PREFIX) {                    \
+                                prefix = conj.affix;                      \
+                                translation = stem;                       \
+                            } else {                                       \
+                                suffix = conj.affix;                      \
+                                translation = stem;                       \
+                            }                                              \
+                            conjugation_applied = true;                    \
+                            break;                                         \
+                        }                                                  \
+                    }                                                      \
+                }                                                          \
+                                                                           \
+                return Word{ WORD, prefix + translation + suffix, VERB };  \
+            }                                                              \
+        }                                                                  \
+    }                                                                      \
+    return Word{ WORD, WORD, -1 };  /* No match found */                   \
 }
-
 
    #define SUFFIX_LOOKUP(DICTIONARY, WORD, ADJECTIVES)                         \
 {                                                                           \
@@ -238,8 +256,13 @@ std::string traduzir_en(const char* sentence, bool auto_correct);
 std::string pt_mbl(const char* sentence);
 #endif
 
+
 #if defined(PT_RU) || defined(ALL) 
 std::string pt_ru(const char* sentence);
+#endif
+
+#if defined(PT_JA) || defined(ALL) 
+std::string pt_ja(const char* sentence);
 #endif
 
 #if defined(AA_BB) || defined(ALL) 
@@ -247,7 +270,7 @@ std::string aa_bb(const char* sentence);
 #endif
 
 #if defined(PT_ES) || defined(ALL)
-std::string traduzir_es(const char* sentence);
+std::string pt_es(const char* sentence);
 #endif
 
 #if defined(EN_JA) || defined(ALL)
@@ -393,7 +416,7 @@ inline std::string apply_case(
             if (translation.size() >= ending.size() &&
                 translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
             {
-                return translation.substr(0, translation.size() - ending.size()) + form;
+                return (translation.substr(0, translation.size() - ending.size()) + form);
             }
         }
     }
@@ -445,24 +468,24 @@ inline GenderResult detect_gender(const std::string& word, const Gender* gender_
 }
 
 
-
-
 inline PluralResult detect_plural(const std::string& word, const Plural* plural_from) {
     if (!plural_from) {
         return { word, nullptr };
     }
 
     for (const auto& var : plural_from->variations) {
-        const std::string& suffix = var.form;
-        const std::string& orig_end = var.ending;
-
-        if (word.size() >= suffix.size() &&
-            word.compare(word.size() - suffix.size(), suffix.size(), suffix) == 0)
+        const std::string& plural_ending = var.ending; 
+        const std::string& singular_ending = var.form;    
+        
+        if (word.size() >= plural_ending.size() &&
+            word.compare(word.size() - plural_ending.size(), plural_ending.size(), plural_ending) == 0)
         {
-            std::string root = word.substr(0, word.size() - suffix.size());
+            std::string base = word.substr(0, word.size() - plural_ending.size());
+            std::string root = base + singular_ending;
             return { root, &var };
         }
     }
+    
     return { word, nullptr };
 }
 
@@ -512,20 +535,20 @@ inline std::string apply_plural(
         return translation;
     }
 
-    for (const auto& var : plural_to->variations) {
-        if (from_var || var.flag == from_var->flag) {      
-            if (word_gender == 0 || (var.flag & word_gender)) {
-                const std::string& ending = var.ending;
-                const std::string& form   = var.form;
-                
-                if (translation.size() >= ending.size() &&
-                    translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
-                {
-                    return translation.substr(0, translation.size() - ending.size()) + form;
-                }
+  for (const auto& var : plural_to->variations) {
+    if (from_var || var.flag == from_var->flag) {      
+        if ((var.flag & word_gender) == var.flag) {  
+            const std::string& ending = var.ending;
+            const std::string& form   = var.form;
+            
+            if (translation.size() >= ending.size() &&
+                translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
+            {
+                return translation.substr(0, translation.size() - ending.size()) + form;
             }
         }
     }
+}
 
     // fallback
     return translation;
@@ -538,17 +561,18 @@ typedef struct
 
 typedef struct 
 {
-    int form;
-    int type;
+    int form;     
+    int type;       
+    std::string required_ending;
     std::string affix;
 } VerbConjugation;
-
 
 using Dictionary = Entry[];
 using VerbDictionary = Verb[];
 using SuffixDictionary = Suffix[];
 using VerbRuleDictionary = std::vector<VerbRule>;
 using VerbConjugationDictionary = std::vector<VerbConjugation>;
+
 
 
 #define ENTRY(w, t) { w, t, 0 }
@@ -588,40 +612,47 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 
 
 
-#define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION) \
+#define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION, SPACED) \
 std::string name(const char* sentence) {\
     char buffer[250];\
     strncpy(buffer, sentence, sizeof(buffer));\
     buffer[sizeof(buffer) - 1] = '\0';\
     to_lower(buffer);\
     std::vector<string> arr = tokenize(std::string(buffer));\
-    std::string translated = trigramLookup(NGRAMS, arr, REORDER_HELPERS, LOOKUP_FUNCTION);\
+    std::string translated = trigramLookup(NGRAMS, arr, REORDER_HELPERS, LOOKUP_FUNCTION, SPACED);\
     return translated;\
 }
 
 
 
 
-#define RULE(str) \
-    if (rule(str, sentence_arr, reordered_arr, i)) continue;
+#define RULE(str, ...) \
+    if (rule(str, sentence_arr, reordered_arr, i, ##__VA_ARGS__)) continue;
+
 
 #define DEFAULT()\
   if (sentence_arr.at(i).type != -1){\
              reordered_arr.push_back(Word{ sentence_arr.at(i).word, normalize(sentence_arr.at(i).translation), sentence_arr.at(i).type});\
    }
-
-#define HANDLE_CASE(FROM_CASE, TO_CASE)\
-     if (!sentence_arr.empty()) {\
-     for (size_t i = 0; i + 1 < reordered_arr.size(); ++i) {\
-    auto &current = reordered_arr.at(i);\
-    auto &next = reordered_arr.at(i + 1);\
-    if (current.type == 3 && next.type == 0) {\
-          uint8_t f = lookupFlags(nouns, next.word.c_str());\
-            CaseResult g = detect_case(current.word, FROM_CASE);\
-            next.translation = apply_case(next.translation, g.matched_variation, TO_CASE, f);\
-    }\
-}\
-        }
+#define HANDLE_CASE(INFO_ARG, FROM_CASE, TO_CASE) \
+    if (!reordered_arr.empty()) { \
+        for (size_t i = 0; i + 1 < reordered_arr.size(); ++i) { \
+            auto &current = reordered_arr.at(i); \
+            auto &next = reordered_arr.at(i + 1); \
+            Word current_translation_temp = reordered_arr.at(i); \
+            Word next_translation_temp = reordered_arr.at(i + 1); \
+            if (current.type == 3 && (next.type == 0 || next.type == 4)) { \
+                uint8_t f = lookupFlags(nouns, next.word.c_str()); \
+                CaseResult g = detect_case(current.word, FROM_CASE); \
+                if ((INFO_ARG)->clause_order_to == SVO) { \
+                    next.translation = apply_case(next.translation, g.matched_variation, TO_CASE, f); \
+                } else if ((INFO_ARG)->clause_order_to == SOV) { \
+                    current = Word{next.word,apply_case(next.translation, g.matched_variation, TO_CASE, f), next.type}; \
+                    next = current_translation_temp; \
+                } \
+            } \
+        } \
+    }
 enum WordType {
     NOUN = 0,
     ADJECTIVE = 1,
@@ -640,16 +671,70 @@ enum WordType {
     UNKNOWN = 99
 };
 
-enum VerbForm {
-    INFINITIVE = 0,
-    PAST_TENSE = 1,
-    SUBJUNCTIVE = 2,
-    PRESENT_TENSE = 3,
-    PRESENT_CONTINUOUS = 5,
-    CONDITIONAL = 6,
-    IMPERATIVE = 7,
-    IRREGULAR = 8
+enum VerbBases {
+    // TENSE (bits 15-13) - 8 values
+    TENSE_MASK    = 0xE000,
+    INFINITIVE    = 0x2000,
+    PRESENT       = 0x4000,
+    PAST          = 0x6000,
+    FUTURE        = 0x8000,
+    CONTINUOUS        = 0xA000,
+    TENSE6        = 0xC000,
+    TENSE7        = 0xE000,
+    
+    // MOOD (bits 12-11) - 4 values
+    MOOD_MASK     = 0x1800,
+    INDICATIVE    = 0x0000,
+    SUBJUNCTIVE   = 0x0800,
+    IMPERATIVE    = 0x1000,
+    CONDITIONAL   = 0x1800,
+    
+    // ASPECT (bits 10-9) - 4 values
+    ASPECT_MASK   = 0x0600,
+    SIMPLE        = 0x0000,
+    PERFECTIVE    = 0x0200,
+    IMPERFECTIVE  = 0x0400,
+    PROGRESSIVE   = 0x0600,  // Replaced HABITUAL
+    
+    // VOICE (bit 8) - 2 values (now a single bit)
+    VOICE_MASK    = 0x0100,
+    ACTIVE        = 0x0000,
+    PASSIVE       = 0x0100,
+    // MIDDLE and CAUSATIVE can be handled by required_ending or separate constructions
+    
+    // ANIMACY (bit 7) - 2 values (NEW!)
+    ANIMACY_MASK  = 0x0080,
+    INANIMATE     = 0x0000,  // Default
+    ANIMATE_V       = 0x0080,
+    
+    // PERSON (bits 6-4) - 8 values (still 5 used, 3 free)
+    PERSON_MASK   = 0x0070,
+    FIRST_PERSON  = 0x0010,
+    SECOND_PERSON = 0x0020,
+    THIRD_PERSON  = 0x0030,
+    FOURTH_PERSON = 0x0040,
+    ZERO_PERSON   = 0x0050,
+    // 0x0060 and 0x0070 are FREE for future use
+    
+    // NUMBER (bits 3-2) - 4 values
+    NUMBER_MASK   = 0x000C,
+    SINGULAR      = 0x0004,
+    PLURAL_V        = 0x0008,
+    DUAL          = 0x000C,
+    
+    // GENDER (bits 1-0) - 4 values
+    GENDER_MASK   = 0x0003,
+    MASCULINE     = 0x0001,
+    FEMININE_V      = 0x0002,
+    NEUTER        = 0x0003,
+    // 0x0000 means "no gender specified"
+
+    FREE_BIT_1 = 0x0060,  // Available for any language to use
+    FREE_BIT_2 = 0x0070,  // Available for any language to use
 };
+
+#define COMBINE(tense, mood, aspect, person, number, gender, voice) \
+    ((tense) | (mood) | (aspect) | (person) | (number) | (gender) | (voice))
 
 enum AFFIX_TYPE {
     PREFIX = 0,
@@ -689,16 +774,14 @@ inline WordType typeFromString(const std::string& s) {
 
 
 enum Flags: uint8_t {
-    ANIMATE = 0,
-    IS_HUMAN = 1 << 0,
-    NO_PLURAL_ = 1 << 1,
-    IRREGULAR_PLURAL = 1 << 2,
-    IS_PLACE = 1 << 3,
-    ON = 1 << 4, // should use ON instead of IN
-    UNCOUNTABLE = 1 << 5,
-    FEMININE_GENDER = 1 << 6, // need that // will call that the FEMININE_NEUTER so that swedish works too, don't know what i'd do for three-gendered languages
-    NEUTRAL_GENDER = 1 << 7 // need that as well
-                            // MAYBE if something is FEMININE_NEUTER AND NOT_GENDERED SIMULTANEOUSLY i'll consider it the third neutral gender
+    ANIMATE = 1 << 0,      
+    NO_PLURAL_ = 1 << 1,  
+    IRREGULAR_PLURAL = 1 << 2, 
+    IS_PLACE = 1 << 3,    
+    ON = 1 << 4,          
+    UNCOUNTABLE = 1 << 5, 
+    FEMININE_GENDER = 1 << 6, 
+    NEUTRAL_GENDER = 1 << 7 
 };
 
 enum GrammaticalCase : uint8_t {
@@ -713,8 +796,8 @@ enum GrammaticalCase : uint8_t {
 };
 
 enum VerbFlags: uint8_t {
-    REFLEXIVE = 0,
-    INTRANSITIVE = 1 << 0,
+    REFLEXIVE_BIT = 0,
+    INTRANSITIVE_BIT = 1 << 0,
     DATIVE_CONST = 1 << 1
 };
 
@@ -807,6 +890,75 @@ std::vector<Word> MEDIATE_HOMONYMS(
 }
 
 
+inline std::vector<Word> INSERT_PARTICLE(
+    std::vector<Word> arr,
+    int type_before,
+    int type_after,
+    const char* particle_word,
+    bool sentence_size,
+    const char* particle_translation = nullptr,
+    int particle_type = -1
+) {
+    std::vector<Word> result;
+    
+    for (size_t i = 0; i < arr.size(); ++i) {
+        if (i + 1 < arr.size() && 
+            arr[i].type == type_before && 
+            arr[i + 1].type == type_after && sentence_size) {
+            
+            result.push_back(arr[i]); 
+            result.push_back(Word{
+                particle_word, 
+                particle_translation ? particle_translation : particle_word, 
+                particle_type
+            }); 
+            result.push_back(arr[i + 1]); 
+            i++; 
+        } else {
+            result.push_back(arr[i]);
+        }
+    }
+    
+    return result;
+}
+
+struct ParticleRule {
+    int type_before;
+    int type_after;
+    const char* particle;
+    bool sentence_size;
+};
+
+inline std::vector<Word> INSERT_PARTICLES(
+    std::vector<Word> arr, 
+    const std::vector<ParticleRule>& rules
+) {
+    for (const auto& rule : rules) {
+        arr = INSERT_PARTICLE(arr, rule.type_before, rule.type_after, rule.particle, rule.sentence_size);
+    }
+    return arr;
+}
+
+
+
+
+inline std::vector<Word> POST_CONJUGATION(
+    std::vector<Word> arr
+   
+) {
+    std::vector<Word> result;
+    
+    for (size_t i = 0; i < arr.size(); ++i) {
+        if (i + 1 < arr.size()) {
+            
+        } else {
+            result.push_back(arr[i]);
+        }
+    }
+    
+    return result;
+}
+
 
 
 // making a decent API for the pairs to access and make implementing easier, but i know i'll keep changing it and never be satisfied
@@ -843,6 +995,57 @@ inline const char* lookup_test(const Entry* dict, size_t count, const char* word
     }
     return nullptr;
 }
+
+
+template <size_t N>
+inline const char* auto_correct(const Entry(&dict)[N] , std::string word) {
+   std::string result = word;
+   std::string word_temp = word;
+   
+   //try different letters at every position (femilia -> familia)
+   std::string possible_letters = "abcdefghjijklmnopqrstuvwxyz";
+   for(size_t i = 0; i < word.length(); i++){
+    for(size_t j = 0; j < possible_letters.length(); j++){
+      word_temp.replace(i, 1, 1, possible_letters[j]);
+      const char* lookup_ = lookup(dict, word_temp.c_str());
+      if(lookup_ && std::string(lookup_).length() > 2) {
+        return lookup_;
+    }else{
+        //reset after failed 
+        word_temp = word;
+    };
+    }
+   }
+
+   //now we try to add a letter at each given position (fmilia -> familia)
+  for(size_t i = 0; i < word.length(); i++){
+    for(size_t j = 0; j < possible_letters.length(); j++){
+      word_temp.insert(word_temp.begin() + i, possible_letters[j]);
+      const char* lookup_ = lookup(dict, word_temp.c_str());
+      if(lookup_ && std::string(lookup_).length() > 2) {
+        return lookup_;
+    }else{
+        //reset after failed 
+        word_temp = word;
+    };
+    }
+   }
+
+   //now we try to remove extra letters at any given position (faamilia -> familia)
+        for(size_t i = 0; i < word.length(); i++){
+             word_temp.erase(i, 1);
+                const char* lookup_ = lookup(dict, word_temp.c_str());
+            if(lookup_ && std::string(lookup_).length() > 2) {
+                        return lookup_;
+            }else{
+                        //reset after failed 
+                        word_temp = word;
+            };
+        }
+
+    return nullptr;
+}
+
 
 template <size_t N>
 inline Verb verb_lookup(const Verb (&dict)[N], const char* word) {
@@ -917,13 +1120,13 @@ inline uint8_t lookupSuffFlags(const Suffix (&dict)[N], const char* word) {
 
 
 //invert a pair (casa azul -> azul casa)
-inline void invert(std::vector<Word>& output, const Word& first, const Word& second) {
+inline void invert(std::vector<Word>& output, const Word& first, const Word& second, const char*) {
     if (!output.empty()) output.pop_back(); 
     output.push_back(first);
     output.push_back(second);
 }
 //
-inline void replace_first(std::vector<Word>& output, const Word& replacement, const Word& second) {
+inline void replace_first(std::vector<Word>& output, const Word& replacement, const Word& second, const char*) {
     if (!output.empty()) output.pop_back();
 
     output.push_back(replacement);
@@ -931,15 +1134,15 @@ inline void replace_first(std::vector<Word>& output, const Word& replacement, co
 }
 
 // inject a word in the middle of two words (orange juice -> suco de laranja)
-inline void sandwich(std::vector<Word>& output, const Word& first, const Word& middle, const Word& second) {
+inline void sandwich(std::vector<Word>& output, const Word& first, const Word& second, const char* word) {
     if (!output.empty()) output.pop_back(); 
     output.push_back(first);
-    output.push_back(middle);
+    output.push_back(Word{word, word, 0});
     output.push_back(second);
 }
 
 // replace a word in the middle of two words (orange juice -> suco de laranja)
-inline void sandwich_replace(std::vector<Word>& output,const Word& middle, const Word& second) {
+inline void sandwich_replace(std::vector<Word>& output,const Word& middle, const Word& second, const char*) {
     if (!output.empty()) output.pop_back(); 
     output.push_back(middle);
     output.push_back(second);
@@ -951,7 +1154,7 @@ inline void remove_middle(std::vector<Word>& output, const Word& first, const Wo
     output.push_back(first);
     output.push_back(last);
 }
-inline void remove_first(std::vector<Word>& output, const Word& first, const Word& second) {
+inline void remove_first(std::vector<Word>& output, const Word& first, const Word& second, const char*) {
   if (!output.empty()) {output.pop_back(); }
     output.push_back(first);
 }
@@ -1234,13 +1437,14 @@ inline uint32_t next_utf8_char(const std::string& s, size_t& i) {
 
 struct Action {
     const char* key;
-    void (*fp)(std::vector<Word>&, const Word&, const Word&);
+    void (*fp)(std::vector<Word>&, const Word&, const Word&, const char*);  
 };
 
 
 inline Action actions[] = {
-    { "INVERT", &invert },
+    {"INVERT", &invert },
     {"REMOVE_FIRST", &remove_first},
+    {"SANDWICH", &sandwich},
     {"REPLACE_FIRST", &replace_first}
 };
 
@@ -1267,9 +1471,8 @@ inline std::vector<std::string> parser(const std::string& s) {
     return out;
 }
 
-
 inline auto lookupFunction(const char* query)
-    -> void (*)(std::vector<Word>&, const Word&, const Word&)
+    -> void (*)(std::vector<Word>&, const Word&, const Word&, const char*)  
 {
     int actionCount = sizeof(actions) / sizeof(actions[0]);
 
@@ -1296,10 +1499,11 @@ inline auto lookupFunction(const char* query)
 
 
 inline bool rule(
-    const std::string& rule,
+       const std::string& rule,
     const std::vector<Word>& sentence_arr,
     std::vector<Word>& reordered_arr,
-    int i
+    int i,
+    const char* action_arg = nullptr 
 ) {
     std::vector<std::string> t = parser(rule);
     if (t.size() < 6) return false;
@@ -1368,7 +1572,7 @@ inline bool rule(
     for (auto& act : actions) {
         auto func = lookupFunction(act.c_str());
         if (func)
-            func(reordered_arr, sentence_arr[i], sentence_arr[i - 1]);
+            func(reordered_arr, sentence_arr[i], sentence_arr[i - 1], action_arg);
     }
 
     return true;
@@ -1587,7 +1791,7 @@ struct NormalizationRule {
      std::string to;
      int type;
 };
-
+inline unsigned int target_flags_length = 0;
 inline unsigned int normalizationRuleLength = 0;
 static inline NormalizationRule default_normalizationRules[50];
 
@@ -1661,6 +1865,8 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
     uint8_t word_length = 0;
     uint8_t ngram_size = 0x01;
     uint8_t type = 0x00;
+    
+    static uint8_t target_flags = 0;
 
     while (ptr < end)
     {
@@ -1756,22 +1962,7 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
               if(current_area == 1){
             
 
-                // store entry
-                switch (ngram_size)
-                {
-                    
-                    case 0x01:
-                        if(type == 0x00) default_nouns[nouns_length++] = Entry{s, r, type};
-                        if(type == 0x01) default_adjectives[adjective_length++] = Entry{s, r, type};
-                        if(type == 0x04) default_pronouns[pronoun_length++] = Entry{s, r, type};
-                      
-                        break;
-
-                    case 0x02:
-                    case 0x03:
-                        default_fixed_ngrams[ngrams_length++] = Entry{s, r, type};
-                        break;
-                }
+            
                 }
                 else if(current_area == 3){
                   default_normalizationRules[normalizationRuleLength++] = NormalizationRule{s, r, type};
@@ -1779,9 +1970,74 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
 
                 break;
             }
+            case 0xF3:
+{
+    if (current_area == 0)
+    {
+        uint8_t translation_length = *ptr++;
+        r = reinterpret_cast<const char*>(ptr);
+        ptr += translation_length + 1;
+        to = std::string(r);
+    }
+    else if (current_area == 1)
+    {
+        uint8_t translation_length = *ptr++;
+        ptr++; // reserved
+        
+        if (translation_length > 0) {
+            uint8_t flag_value = *ptr++;
+            target_flags |= flag_value;
+            std::cout << "Added flag: 0x" << std::hex << (int)flag_value 
+                      << ", combined now: 0x" << (int)target_flags << std::dec << std::endl;
+        }
+        
+        ptr += translation_length;
+        
+        switch (ngram_size)
+        {
+            case 0x01:
+                if(type == 0x00) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_nouns[nouns_length++] = e;
+                }
+                if(type == 0x01) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_adjectives[adjective_length++] = e;
+                }
+                if(type == 0x04) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_pronouns[pronoun_length++] = e;
+                }
+                break;
+                
+            case 0x02:
+            case 0x03:
+                {
+                    Entry e = {s, r, 0, target_flags};
+                    default_fixed_ngrams[ngrams_length++] = e;
+                }
+                break;
+        }
+        
+        target_flags = 0; // Reset for next entry
+    }
+    else if (current_area == 2)
+    {
+        // handle area 2
+    }
+    else if (current_area == 3)
+    {
+        uint8_t target_length = *ptr++;
+        r = reinterpret_cast<const char*>(ptr);
+        ptr += target_length + 1;
+    }
+}
+break; // ← Don't forget this break!
 
-            default:
-               
+default:
+    // Handle unknown markers
+    break;
+
         return "";
         }
     }
@@ -1856,7 +2112,11 @@ inline std::string translate(const char* sentence, const char* from, const char*
             return pt_ru(sentence);
         }
     #endif
-
+    #if defined(PT_JA) || defined(ALL)
+        if ((f == "pt" || f == "PT") && (t == "ja" || t == "JA")) {
+            return pt_ja(sentence);
+        }
+    #endif
 
     #if defined(AA_BB) || defined(ALL)
         if ((f == "aa" || f == "AA") && (t == "bb" || t == "BB")) {
@@ -1867,7 +2127,7 @@ inline std::string translate(const char* sentence, const char* from, const char*
 
     #if defined(PT_ES) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "es" || t == "ES")) {
-            return traduzir_es(sentence);
+            return pt_es(sentence);
         }
     #endif
     #if defined(PT_SV) || defined(ALL)
