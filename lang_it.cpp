@@ -179,39 +179,42 @@ if(l_m){
 // };
 
 //             load_from_bin(full_buffer, sizeof(full_buffer));
+#ifdef ALLOW_IMPORTS
 
        std::cout << "Loaded translator: " << from << " > " << to << std::endl;
         std::cout << translate_from_bin(argv[1]) << std::endl;
+        #endif
 }
 
  if(l_m_repl) {
         
- 
+ #ifdef ALLOW_IMPORTS
+
     const unsigned char magic_number[] = {0x6C, 0x61, 0x6E, 0x67, 0x00};
             const unsigned char from[] = {0xF0 /* from */, 0x02 /* 2 bytes */, 0x65 , 0x6E /* EN */, 0x00};
             const unsigned char to[] = {0xF1 /* from */, 0x03 /* 2 bytes */, 0x6D , 0x62, 0x6C /* MBL */, 0x00};
 
     
-            //  const unsigned char end[] = {0x00, 0x00, 0x00};
-            //   std::ifstream file(argv[2], std::ios::binary | std::ios::ate);
-            //   std::streamsize size = file.tellg();
-            //   file.seekg(0, std::ios::beg);
+              const unsigned char end[] = {0x00, 0x00, 0x00};
+               std::ifstream file(argv[2], std::ios::binary | std::ios::ate);
+               std::streamsize size = file.tellg();
+               file.seekg(0, std::ios::beg);
 
-            //   std::vector<uint8_t> buffer(size);
-            //   if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
-            //       std::cout << "Failed to read file\n";
-            //       return 1;
-            //   }
+               std::vector<uint8_t> buffer(size);
+               if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
+                   std::cout << "Failed to read file\n";
+                   return 1;
+               }
 
                  static const uint8_t full_buffer[] = {
-             0xD0,
+             0xD0, // metadata
              
                 0xF0, 0x02, 0x65 , 0x6E, 0x00,
                 0xF1, 0x03, 0x6D , 0x62, 0x6C , 0x00,
-             0xD1,
-               0xF0, 0x03, 0x01, 0x00,
+             0xD1, // dictionary 
+               0xF0, 0x03, 0x01, 0x00, //original word
                  0x6B, 0x69, 0x64, 0x00,
-               0xF1, 0x06, 0x00,
+               0xF1, 0x06, 0x00, // translation
                  0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0x00,
                0xF2, 0x00,
                0xF3, 0x02, 0x00, //THERE ARE TWO FLAGS
@@ -241,9 +244,9 @@ if(l_m){
            };
 
 
-          std::string result = load_from_bin(full_buffer, sizeof(full_buffer));
+          //std::string result = load_from_bin(full_buffer, sizeof(full_buffer));
           
-            //std::string result = load_from_bin(buffer.data(), buffer.size());
+            std::string result = load_from_bin(buffer.data(), buffer.size());
             const char* sample = "Olá mundo! O tradutor funciona normalmente.";
             const char* prompt = "O que deseja traduzir?";
             const char* quit_message = "Digite 'sair' para encerrar.\n";
@@ -259,7 +262,7 @@ if(l_m){
             if (input == quit_cmd) break;
             std::cout << translate_from_bin(input.c_str()) << std::endl;
         }
-
+#endif
         return 0;
         }
     if (argc < 4) {

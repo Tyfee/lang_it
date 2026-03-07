@@ -107,64 +107,179 @@ typedef struct {
    int clause_order_to;
    int scripts_from[4];
    int scripts_to[4];
-} Info;// And the lookup becomes much simpler:
+} Info;
 
-#define VERB_LOOKUP(DICTIONARY, WORD, ENDINGS, CONJUGATIONS)                         \
+
+
+inline size_t utf8_length(const std::string& str) {
+    size_t len = 0;
+    size_t i = 0;
+    while (i < str.size()) {
+        unsigned char c = str[i];
+        if ((c & 0x80) == 0) i += 1;
+        else if ((c & 0xE0) == 0xC0) i += 2;
+        else if ((c & 0xF0) == 0xE0) i += 3;
+        else if ((c & 0xF8) == 0xF0) i += 4;
+        else i += 1;
+        len++;
+    }
+    return len;
+}
+
+inline bool ends_with_multibyte(const std::string& str, const std::string& suffix) {
+    size_t str_chars = utf8_length(str);
+    size_t suffix_chars = utf8_length(suffix);
+    
+    if (str_chars < suffix_chars) return false;
+    
+    size_t chars_to_skip = str_chars - suffix_chars;
+    size_t byte_pos = 0;
+    
+    for (size_t i = 0; i < chars_to_skip; i++) {
+        unsigned char c = str[byte_pos];
+        if ((c & 0x80) == 0) byte_pos += 1;
+        else if ((c & 0xE0) == 0xC0) byte_pos += 2;
+        else if ((c & 0xF0) == 0xE0) byte_pos += 3;
+        else if ((c & 0xF8) == 0xF0) byte_pos += 4;
+        else byte_pos += 1;
+    }
+    
+    return str.compare(byte_pos, std::string::npos, suffix) == 0;
+}
+
+inline std::string remove_ending_multibyte(const std::string& str, const std::string& suffix) {
+    size_t str_chars = utf8_length(str);
+    size_t suffix_chars = utf8_length(suffix);
+    
+    if (str_chars <= suffix_chars) return "";
+    
+    size_t chars_to_keep = str_chars - suffix_chars;
+    size_t bytes_to_keep = 0;
+    size_t chars_kept = 0;
+    size_t i = 0;
+    
+    while (chars_kept < chars_to_keep && i < str.size()) {
+        unsigned char c = str[i];
+        size_t char_bytes = 0;
+        if ((c & 0x80) == 0) char_bytes = 1;
+        else if ((c & 0xE0) == 0xC0) char_bytes = 2;
+        else if ((c & 0xF0) == 0xE0) char_bytes = 3;
+        else if ((c & 0xF8) == 0xF0) char_bytes = 4;
+        else char_bytes = 1;
+        
+        bytes_to_keep += char_bytes;
+        i += char_bytes;
+        chars_kept++;
+    }
+    
+    return str.substr(0, bytes_to_keep);
+}
+#define VERB_LOOKUP(DICTIONARY, WORD, ENDINGS, CONJUGATIONS, MULTIBYTE)    \
 {                                                                           \
-    for (size_t ci = 0; ci < ENDINGS.size(); ++ci) {                       \
-        for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {       \
-            const std::string& ending = ENDINGS[ci].endings[ei];           \
-            int ending_form = ENDINGS[ci].form;                            \
-            if (WORD.size() <= ending.size()) continue;                    \
-                                                                           \
-            /* Check if word ends with this ending */                      \
-            if (WORD.compare(WORD.size() - ending.size(),                  \
-                              ending.size(), ending) != 0) {               \
-                continue;                                                  \
-            }                                                              \
-            std::string root = WORD.substr(0, WORD.size() - ending.size());\
-            Verb v = verb_lookup(DICTIONARY, root.c_str());                \
-            if (v.translation && *v.translation) {                         \
-                std::string translation = v.translation;                   \
-                std::string prefix = "";                                   \
-                std::string suffix = "";                                   \
-                bool conjugation_applied = false;                          \
-                                                                           \
-                /* Find matching conjugation */                            \
-                for (const auto& conj : CONJUGATIONS) {                    \
-                    if (conj.form == ending_form) {                        \
-                        bool condition_met = conj.required_ending.empty() || \
-                            (translation.size() >= conj.required_ending.size() && \
-                             translation.compare(translation.size() - conj.required_ending.size(), \
-                                                conj.required_ending.size(), \
-                                                conj.required_ending) == 0); \
-                                                                           \
-                        if (condition_met) {                               \
-                            /* Remove required ending from translation if not empty */ \
-                            std::string stem = translation;               \
-                            if (!conj.required_ending.empty()) {          \
-                                stem = translation.substr(0,              \
-                                    translation.size() - conj.required_ending.size()); \
-                            }                                              \
-                                                                           \
-                            if (conj.type == PREFIX) {                    \
-                                prefix = conj.affix;                      \
-                                translation = stem;                       \
-                            } else {                                       \
-                                suffix = conj.affix;                      \
-                                translation = stem;                       \
-                            }                                              \
-                            conjugation_applied = true;                    \
-                            break;                                         \
-                        }                                                  \
-                    }                                                      \
+    if (MULTIBYTE) {                                                        \
+        /* Multibyte-aware version */                                      \
+        for (size_t ci = 0; ci < ENDINGS.size(); ++ci) {                   \
+            for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {   \
+                const std::string& ending = ENDINGS[ci].endings[ei];       \
+                int ending_form = ENDINGS[ci].form;                        \
+                /* Check if word ends with this ending (multibyte aware) */ \
+                if (!ends_with_multibyte(WORD, ending)) {                  \
+                     continue;                                              \
                 }                                                          \
                                                                            \
-                return Word{ WORD, prefix + translation + suffix, VERB };  \
+                /* Get root by removing ending (multibyte aware) */       \
+                std::string root = remove_ending_multibyte(WORD, ending);  \
+                Verb v = verb_lookup(DICTIONARY, root.c_str());           \
+                if (v.translation && *v.translation) {                    \
+                    std::string translation = v.translation;              \
+                    std::string prefix = "";                              \
+                    std::string suffix = "";                              \
+                    bool conjugation_applied = false;                     \
+                                                                           \
+                    for (const auto& conj : CONJUGATIONS) {               \
+                        if (conj.form == ending_form) {                   \
+                            bool condition_met = conj.required_ending.empty() || \
+                                ends_with_multibyte(translation, conj.required_ending); \
+                                                                           \
+                            if (condition_met) {                          \
+                               std::string stem = translation;          \
+                                if (!conj.required_ending.empty()) {      \
+                                    stem = remove_ending_multibyte(translation, \
+                                                                  conj.required_ending); \
+                                }                                         \
+                                                                           \
+                                if (conj.type == PREFIX) {                \
+                                    prefix = conj.affix;                  \
+                                 } else {                                   \
+                                    suffix = conj.affix;                  \
+                                }                                          \
+                                translation = stem;                       \
+                                conjugation_applied = true;               \
+                                break;                                     \
+                            } else {                                       \
+                            }                                              \
+                        }                                                  \
+                    }                                                      \
+                     return Word{ WORD, prefix + translation + suffix, VERB }; \
+                } else {                                                   \
+                }                                                          \
             }                                                              \
         }                                                                  \
-    }                                                                      \
-    return Word{ WORD, WORD, -1 };  /* No match found */                   \
+    } else {                                                               \
+        /* Original ASCII version with debug */                           \
+        for (size_t ci = 0; ci < ENDINGS.size(); ++ci) {                  \
+            for (size_t ei = 0; ei < ENDINGS[ci].endings.size(); ++ei) {  \
+                const std::string& ending = ENDINGS[ci].endings[ei];      \
+                int ending_form = ENDINGS[ci].form;                       \
+                if (WORD.size() <= ending.size()) continue;               \
+                 if (WORD.compare(WORD.size() - ending.size(),             \
+                                  ending.size(), ending) != 0) {          \
+                    continue;                                             \
+                }                                                         \
+                   std::string root = WORD.substr(0, WORD.size() - ending.size());\
+                                                                            \
+                Verb v = verb_lookup(DICTIONARY, root.c_str());          \
+                if (v.translation && *v.translation) {                   \
+                     std::string translation = v.translation;             \
+                    std::string prefix = "";                             \
+                    std::string suffix = "";                             \
+                    bool conjugation_applied = false;                    \
+                                                                           \
+                    for (const auto& conj : CONJUGATIONS) {              \
+                        if (conj.form == ending_form) {                  \
+                             bool condition_met = conj.required_ending.empty() || \
+                                (translation.size() >= conj.required_ending.size() && \
+                                 translation.compare(translation.size() - conj.required_ending.size(), \
+                                                    conj.required_ending.size(), \
+                                                    conj.required_ending) == 0); \
+                                                                           \
+                            if (condition_met) {                         \
+                                  std::string stem = translation;         \
+                                if (!conj.required_ending.empty()) {    \
+                                    stem = translation.substr(0,       \
+                                        translation.size() - conj.required_ending.size()); \
+                                 }                                        \
+                                                                           \
+                                if (conj.type == PREFIX) {              \
+                                    prefix = conj.affix;                \
+                                } else {                                 \
+                                    suffix = conj.affix;                \
+                                }                                        \
+                                translation = stem;                     \
+                                conjugation_applied = true;              \
+                                break;                                   \
+                            } else {                                     \
+                            }                                            \
+                        }                                                \
+                    }                                                    \
+                                                                           \
+                     return Word{ WORD, prefix + translation + suffix, VERB }; \
+                } else {                                                   \
+                 }                                                          \
+            }                                                            \
+        }                                                                \
+    }                                                                    \
+   return Word{ WORD, WORD, -1 };                                       \
 }
 
    #define SUFFIX_LOOKUP(DICTIONARY, WORD, ADJECTIVES)                         \
@@ -256,6 +371,15 @@ std::string traduzir_en(const char* sentence, bool auto_correct);
 std::string pt_mbl(const char* sentence);
 #endif
 
+#if defined(JA_MBL) || defined(ALL) 
+std::string ja_mbl(const char* sentence);
+#endif
+
+
+#if defined(AR_TH) || defined(ALL) 
+std::string ar_th(const char* sentence);
+#endif
+
 
 #if defined(PT_RU) || defined(ALL) 
 std::string pt_ru(const char* sentence);
@@ -305,8 +429,8 @@ std::string translate_zh(const char* sentence);
 typedef struct {
     const char* w;
     const char* t;
-    uint8_t orig_flags; // flags for original word, just remembered that in languages that have same linguistic features but with variation (e.g gender in portuguese and russian) we need to know the flags for both the original word and the translation to make decisions.
-    uint8_t flags;
+    uint16_t orig_flags; // flags for original word, just remembered that in languages that have same linguistic features but with variation (e.g gender in portuguese and russian) we need to know the flags for both the original word and the translation to make decisions.
+    uint16_t flags;
 } Entry;
 
 struct Verb {
@@ -612,19 +736,125 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 
 
 
-#define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION, SPACED) \
-std::string name(const char* sentence) {\
-    char buffer[250];\
-    strncpy(buffer, sentence, sizeof(buffer));\
-    buffer[sizeof(buffer) - 1] = '\0';\
-    to_lower(buffer);\
-    std::vector<string> arr = tokenize(std::string(buffer));\
-    std::string translated = trigramLookup(NGRAMS, arr, REORDER_HELPERS, LOOKUP_FUNCTION, SPACED);\
-    return translated;\
+#define COMBINE_VERB_TOKENS(INPUT, OUTPUT, VERB_DICT, ENDINGS, MAX_STEM, MAX_ENDING) \
+    do { \
+        std::vector<std::string> temp; \
+        size_t i = 0; \
+        while (i < (INPUT).size()) { \
+            bool found = false; \
+            for (size_t stem_len = (MAX_STEM); stem_len >= 1; --stem_len) { \
+                if (i + stem_len > (INPUT).size()) continue; \
+                std::string stem_candidate; \
+                for (size_t k = 0; k < stem_len; ++k) \
+                    stem_candidate += (INPUT)[i + k]; \
+                Verb v = verb_lookup((VERB_DICT), stem_candidate.c_str()); \
+                if (v.translation && *v.translation) { \
+                    for (size_t ending_len = (MAX_ENDING); ending_len >= 1; --ending_len) { \
+                        if (i + stem_len + ending_len > (INPUT).size()) continue; \
+                        std::string ending_candidate; \
+                        for (size_t k = 0; k < ending_len; ++k) \
+                            ending_candidate += (INPUT)[i + stem_len + k]; \
+                        bool ending_match = false; \
+                        for (const auto& group : (ENDINGS)) { \
+                            for (const auto& e : group.endings) { \
+                                if (ending_candidate == e) { \
+                                    ending_match = true; \
+                                    break; \
+                                } \
+                            } \
+                            if (ending_match) break; \
+                        } \
+                        if (ending_match) { \
+                            temp.push_back(stem_candidate + ending_candidate); \
+                            i += stem_len + ending_len; \
+                            found = true; \
+                            break; \
+                        } \
+                    } \
+                    if (found) break; \
+                } \
+            } \
+            if (!found) { \
+                temp.push_back((INPUT)[i]); \
+                ++i; \
+            } \
+        } \
+        (OUTPUT) = temp; \
+    } while(0)
+#define COMBINE_VERB_STEMS(INPUT, OUTPUT, VERB_DICT, ENDINGS)              \
+    do {                                                                    \
+        std::vector<Word> temp;                                             \
+        for (size_t i = 0; i < (INPUT).size(); ++i) {                      \
+            bool combined = false;                                          \
+            Verb v = verb_lookup(VERB_DICT, (INPUT)[i].word.c_str());      \
+            if (v.translation && *v.translation) {                         \
+               if (i + 1 < (INPUT).size()) {                              \
+                    const std::string& next = (INPUT)[i+1].word;           \
+                    for (size_t ci = 0; ci < (ENDINGS).size(); ++ci) {     \
+                        for (size_t ei = 0; ei < (ENDINGS)[ci].endings.size(); ++ei) { \
+                            if (next == (ENDINGS)[ci].endings[ei]) {       \
+                                 Word w;                                     \
+                                w.word = (INPUT)[i].word + next;           \
+                                w.translation = "";                        \
+                                w.type = UNKNOWN;                          \
+                                temp.push_back(w);                         \
+                                i++; /* skip the ending token */           \
+                                combined = true;                           \
+                                break;                                      \
+                            }                                               \
+                        }                                                   \
+                        if (combined) break;                               \
+                    }                                                       \
+                }                                                           \
+            }                                                               \
+            if (!combined) {                                                \
+                temp.push_back((INPUT)[i]);                                \
+            }                                                               \
+        }                                                                   \
+        (OUTPUT) = temp;                                                    \
+    } while(0)
+
+
+
+#define MAIN(name, NGRAMS, REORDER_HELPERS, LOOKUP_FUNCTION, MULTIBYTE, SPACED, VERB_ENDINGS, DICT_CHECK) \
+std::string name(const char* sentence) { \
+    char buffer[250]; \
+    strncpy(buffer, sentence, sizeof(buffer)); \
+    buffer[sizeof(buffer) - 1] = '\0'; \
+    to_lower(buffer); \
+    std::vector<std::string> arr; \
+    if(MULTIBYTE == true) { \
+        arr = tokenize_cjk(std::string(buffer)); \
+        /* 1. Combine verb stems + endings */ \
+        std::vector<std::string> verb_combined; \
+        COMBINE_VERB_TOKENS(arr, verb_combined, verbs, VERB_ENDINGS, 3, 2); \
+        std::vector<std::string> final_combined; \
+        size_t i = 0; \
+        while (i < verb_combined.size()) { \
+            bool found = false; \
+            for (size_t len = 4; len >= 1; --len) { \
+                if (i + len > verb_combined.size()) continue; \
+                std::string cand; \
+                for (size_t k = 0; k < len; ++k) cand += verb_combined[i + k]; \
+                if (DICT_CHECK) { \
+                    final_combined.push_back(cand); \
+                    i += len; \
+                    found = true; \
+                    break; \
+                } \
+            } \
+            if (!found) { \
+                final_combined.push_back(verb_combined[i]); \
+                ++i; \
+            } \
+        } \
+        arr = final_combined; \
+    } else { \
+        arr = tokenize(std::string(buffer)); \
+    } \
+    std::string translated = trigramLookup(NGRAMS, arr, REORDER_HELPERS, LOOKUP_FUNCTION, SPACED); \
+    return translated; \
 }
-
-
-
 
 #define RULE(str, ...) \
     if (rule(str, sentence_arr, reordered_arr, i, ##__VA_ARGS__)) continue;
@@ -773,7 +1003,7 @@ inline WordType typeFromString(const std::string& s) {
 
 
 
-enum Flags: uint8_t {
+enum Flags: uint16_t {
     ANIMATE = 1 << 0,      
     NO_PLURAL_ = 1 << 1,  
     IRREGULAR_PLURAL = 1 << 2, 
@@ -781,7 +1011,10 @@ enum Flags: uint8_t {
     ON = 1 << 4,          
     UNCOUNTABLE = 1 << 5, 
     FEMININE_GENDER = 1 << 6, 
-    NEUTRAL_GENDER = 1 << 7 
+    NEUTRAL_GENDER = 1 << 7,
+    CONJUNCTIVE = 1 << 8, // and
+    CONTRASTIVE = 1 << 9, // but
+    DISJUNCTIVE = 1 << 10 // or
 };
 
 enum GrammaticalCase : uint8_t {
@@ -1352,36 +1585,43 @@ inline std::vector<std::string> tokenize(const std::string &text) {
       return tokens;
   }
 
-  
-
-inline std::vector<std::string> tokenize_cjk(const std::string &text) {
+  inline std::vector<std::string> tokenize_cjk(const std::string &text) {
     std::vector<std::string> tokens;
     size_t i = 0;
 
     while (i < text.size()) {
         unsigned char c = text[i];
-        size_t len = 0;
 
-        // Determine UTF-8 sequence length
         if ((c & 0x80) == 0) {
-            // ASCII
-            len = 1;
-        } else if ((c & 0xE0) == 0xC0) len = 2;
-        else if ((c & 0xF0) == 0xE0) len = 3;
-        else if ((c & 0xF8) == 0xF0) len = 4;
-        else len = 1; // fallback, invalid byte
+            // ASCII alphanumeric word
+            if (std::isalnum(c)) {
+                std::string current;
+                while (i < text.size() && (text[i] & 0x80) == 0 && std::isalnum(text[i])) {
+                    current += text[i];
+                    ++i;
+                }
+                tokens.push_back(current);
+            } else {
+                // ASCII punctuation or space
+                if (!std::isspace(c))
+                    tokens.push_back(std::string(1, c));
+                ++i;
+            }
+        } else {
+            // Multi‑byte UTF‑8 character – treat as one token
+            size_t len = 0;
+            if ((c & 0xE0) == 0xC0) len = 2;
+            else if ((c & 0xF0) == 0xE0) len = 3;
+            else if ((c & 0xF8) == 0xF0) len = 4;
+            else len = 1; // fallback
 
-        std::string utf8char = text.substr(i, len);
-        tokens.push_back(utf8char);
-
-        i += len;
+            tokens.push_back(text.substr(i, len));
+            i += len;
+        }
     }
 
     return tokens;
 }
-
-
-
 
 
 inline bool isPunctuation(const std::string &token) {
@@ -1764,6 +2004,7 @@ inline bool rule(
 //     return language;
 // }
 
+#ifdef ALLOW_IMPORTS
 
 inline unsigned int ngrams_length = 0;
 static inline Entry default_fixed_ngrams[] = {
@@ -1771,14 +2012,14 @@ static inline Entry default_fixed_ngrams[] = {
 };
 
 inline unsigned int nouns_length = 0;
-static inline Entry default_nouns[1000];
+inline Entry default_nouns[1000];
 
 
 inline unsigned int adjective_length = 0;
-static inline Entry default_adjectives[1000];
+inline Entry default_adjectives[1000];
 
 inline unsigned int pronoun_length = 0;
-static inline Entry default_pronouns[20];
+inline Entry default_pronouns[20];
 
 
 inline char buffer[250];
@@ -1793,7 +2034,7 @@ struct NormalizationRule {
 };
 inline unsigned int target_flags_length = 0;
 inline unsigned int normalizationRuleLength = 0;
-static inline NormalizationRule default_normalizationRules[50];
+inline NormalizationRule default_normalizationRules[50];
 
 inline std::string default_normalize(
     std::string word,
@@ -1843,7 +2084,10 @@ static Word default_nounLookup(const std::string& word) {
             std::string translation = result; 
             int word_type = ADJECTIVE; 
             return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
-
+    }else if(const char* result = lookup_test(default_pronouns, pronoun_length,word.c_str())){
+            std::string translation = result; 
+            int word_type = ADJECTIVE; 
+            return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
     }
     return Word{ word, word, -1 };  
 
@@ -1852,7 +2096,6 @@ static Word default_nounLookup(const std::string& word) {
 // mapping out how i'm gonna receive the binary file buffers to dinamically define the rules 
 // it works!!
 inline std::string load_from_bin(const uint8_t* file, size_t size)
-
 {
     const uint8_t* ptr = reinterpret_cast<const uint8_t*>(file);
     const uint8_t* end = ptr + size;
@@ -1870,7 +2113,8 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
 
     while (ptr < end)
     {
-        uint8_t marker = *ptr++;
+          uint8_t marker = *ptr++;
+  
 
         switch (marker)
         {
@@ -1952,7 +2196,6 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
                         ptr += target_length + 1;
                     }
 
-
                     break;
                 }
 
@@ -1961,7 +2204,6 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
               type = *ptr++;
               if(current_area == 1){
             
-
             
                 }
                 else if(current_area == 3){
@@ -1970,7 +2212,7 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
 
                 break;
             }
-            case 0xF3:
+           case 0xF3:
 {
     if (current_area == 0)
     {
@@ -1981,17 +2223,78 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
     }
     else if (current_area == 1)
     {
-        uint8_t translation_length = *ptr++;
-        ptr++; // reserved
+        // Read flag count (16-bit little-endian)
+        uint16_t flag_count = *ptr++;
+        flag_count |= (*ptr++) << 8;
         
-        if (translation_length > 0) {
+        target_flags = 0;
+        
+        // Read EXACTLY flag_count bytes
+        for (int i = 0; i < flag_count; i++) {
             uint8_t flag_value = *ptr++;
             target_flags |= flag_value;
-            std::cout << "Added flag: 0x" << std::hex << (int)flag_value 
-                      << ", combined now: 0x" << (int)target_flags << std::dec << std::endl;
+         }
+        
+        // NOW create the entry
+        switch (ngram_size)
+        {
+            case 0x01:
+                if(type == 0x00) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_nouns[nouns_length++] = e;
+                }
+                if(type == 0x01) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_adjectives[adjective_length++] = e;
+                 }
+                if(type == 0x04) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_pronouns[pronoun_length++] = e;
+                 }
+                break;
+                
+            case 0x02:
+            case 0x03:
+                {
+                    Entry e = {s, r, 0, target_flags};
+                    default_fixed_ngrams[ngrams_length++] = e;
+                }
+                break;
         }
         
-        ptr += translation_length;
+        target_flags = 0;
+    }
+    else if (current_area == 2)
+    {
+        // handle area 2
+    }
+    else if (current_area == 3)
+    {
+        uint8_t target_length = *ptr++;
+        r = reinterpret_cast<const char*>(ptr);
+        ptr += target_length + 1;
+    }
+    break; 
+}
+{
+    if (current_area == 0)
+    {
+        uint8_t translation_length = *ptr++;
+        r = reinterpret_cast<const char*>(ptr);
+        ptr += translation_length + 1;
+        to = std::string(r);
+    }
+    else if (current_area == 1)
+    {
+        uint16_t flag_count = *ptr++;
+        flag_count |= (*ptr++) << 8;
+        
+        target_flags = 0;
+        
+        for (int i = 0; i < flag_count; i++) {
+            uint8_t flag_value = *ptr++;
+            target_flags |= flag_value;
+        }
         
         switch (ngram_size)
         {
@@ -2019,7 +2322,7 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
                 break;
         }
         
-        target_flags = 0; // Reset for next entry
+        target_flags = 0;
     }
     else if (current_area == 2)
     {
@@ -2031,14 +2334,13 @@ inline std::string load_from_bin(const uint8_t* file, size_t size)
         r = reinterpret_cast<const char*>(ptr);
         ptr += target_length + 1;
     }
+    break; 
 }
-break; // ← Don't forget this break!
 
 default:
     // Handle unknown markers
     break;
 
-        return "";
         }
     }
 std::cout << "nouns_length = " << nouns_length << "\n";
@@ -2048,7 +2350,6 @@ std::cout << "ngrams_length = " << ngrams_length << "\n";
 
 return std::string("Loaded translator: " + from + " > " + to + "\n");
 }
-
 inline std::string translate_from_bin(const char* sentence,
                                       int script = 0,
                                       bool auto_correct = false)
@@ -2087,6 +2388,7 @@ inline std::string translate_from_bin(const char* sentence,
     return translated;
 }
 
+#endif
 
 
 inline std::string translate(const char* sentence, const char* from, const char* to, int script = 2, bool auto_correct = false){
@@ -2104,6 +2406,18 @@ inline std::string translate(const char* sentence, const char* from, const char*
     #if defined(PT_MBL) || defined(ALL)
         if ((f == "pt" || f == "PT") && (t == "mbl" || t == "MBL")) {
             return pt_mbl(sentence);
+        }
+    #endif
+
+     #if defined(JA_MBL) || defined(ALL)
+        if ((f == "ja" || f == "JA") && (t == "mbl" || t == "MBL")) {
+            return ja_mbl(sentence);
+        }
+    #endif
+    
+     #if defined(AR_TH) || defined(ALL)
+        if ((f == "ar" || f == "AR") && (t == "th" || t == "TH")) {
+            return ar_th(sentence);
         }
     #endif
 

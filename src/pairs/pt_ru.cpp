@@ -334,12 +334,12 @@ static Word nounLookup(const string& word) {
     
     SUFFIX_LOOKUP(suff, word, adj);
 
-    VERB_LOOKUP(verbs, word, pt_ru_reg, pt_ru_def);
+    VERB_LOOKUP(verbs, word, pt_ru_reg, pt_ru_def, false);
 
 
     return { word, word, -1 };
 }
 
-MAIN(pt_ru, fixed_ngrams, reorder_helpers, nounLookup, false)
+MAIN(pt_ru, fixed_ngrams, reorder_helpers, nounLookup, false,false, pt_ru_reg)
 
 #endif

@@ -2647,16 +2647,6 @@ vector<string> auto_correct_pt(string sentence) {
 
 }
 
-
-std::string traduzir_en(const char* sentence, bool auto_correct) {
-    char buffer[250];
-    strncpy(buffer, sentence, sizeof(buffer));
-    buffer[sizeof(buffer) - 1] = '\0';
-    to_lower(buffer);
-    vector<string> arr = auto_correct ? auto_correct_pt(string(buffer)) : tokenize(string(buffer));  
-    std::string translated = trigramLookup(fixed_ngrams, arr, reorder_helpers, nounLookup);
-    
-    return script_adequation(translated); 
-}
+MAIN(traduzir_en, fixed_ngrams, reorder_helpers, nounLookup, false,true);
 
 #endif

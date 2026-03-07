@@ -11,6 +11,7 @@ std::string translate_it(std::string sentence,
 // std::string detect_it(std::string sentence) {
 //     return detect_language(sentence.c_str());
 // }
+#ifdef ALLOW_IMPORTS
 
 std::string translate_from_binary(std::string sentence,
                                   std::string file_buffer)
@@ -26,9 +27,14 @@ std::string translate_from_binary(std::string sentence,
     return translate_from_bin(sentence.c_str());
 }
 
+#endif
 
 EMSCRIPTEN_BINDINGS(translator) {
     emscripten::function("translate", &translate_it);
     // emscripten::function("detect_language", &detect_it);
+    #ifdef ALLOW_IMPORTS
+
     emscripten::function("translate_from_bin", &translate_from_binary);
+
+    #endif
 }

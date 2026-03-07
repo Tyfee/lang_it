@@ -16,6 +16,13 @@
 
 using namespace std;
 
+Info pt_mbl_info = {
+    SVO,
+    {0},
+    SVO, 
+    {0}
+};
+
 
 DICT(fixed_ngrams, {
  {"como_sempre", "ehe"},
@@ -36,7 +43,11 @@ DICT(nouns, {
  {"noite", "ãmũy"},
  {"açucar", "axok"},
  {"leite", "xokhep"},
- {"criança", "kakxop"}
+ {"criança", "kakxop"},
+ {"mandioca", "kot"},
+ {"segunda", "pa"},
+ {"carne", "xogyĩn"},
+ {"cachorr", "kokex"}
 });
 
 DICT(pro, {
@@ -46,7 +57,9 @@ DICT(pro, {
 
 
 DICT(adv, {
- {"também", "kama"}
+ {"também", "kama"},
+ {"mas", "pa", 0, CONTRASTIVE},
+ {"quando", "hã"}
 });
 
 DICT(art, {
@@ -61,22 +74,26 @@ V_DICT(verbs, {
     {"ajud", "ãyonat"},
     {"esfri", "ãxi"},
     {"beb", "xo'op"},
-    {"d", "hõm"}
+    {"com", "mãhã"},
+    {"d", "hõm"},
+    {"quer", "putup"},
+    {"cheg", "xupep"},
+    {"plant", "xok"},
+    {"ass", "kutet"}
 });
 
 VERB_ENDINGS(reg, {
-   {{"ou", "ei", "aram", "eu"}, PAST_TENSE},
-   {{"ar", "er", "ir"}, INFINITIVE},
-   {{"o", "a", "e"}, PRESENT_TENSE},
-   {{""}, IRREGULAR}
+   {{"ou", "ei", "aram", "eu", "i", "imos", "iu"}, PAST},
+   {{"ar", "er", "ir", ""}, INFINITIVE},
+   {{"jo", "no", "na", "ne", "o"}, PRESENT},
+   {{"endo", "ando", "indo"}, CONTINUOUS}
 });
 
 VERB_CONJUGATIONS(def, 
 {
-   {INFINITIVE, NONE, ""},
+   {NONE, NONE, "", ""},
 }
 );
-
 
 HOMONYM_DEF(
     manga,
@@ -90,6 +107,13 @@ HOMONYM_DEF(
     "ripe", "$", "shirt", "sew", "ripped",
     "rip", "button", "tight", "loose"
 );
+
+
+  GENDER_DEF(ptmbl_gender_from, SUFFIX,
+        {
+           {NONE, "o"},
+           {FEMININE_GENDER, "a"}
+        });
 
 Homonym pt_mbl_homonyms[] = {
     HOMONYM("manga", manga)
@@ -120,11 +144,18 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
 
     CLEANUP(reordered_arr);
 
+
+ HANDLE_CASE(&pt_mbl_info, NO_CASE, NO_CASE)
+
 vector<Word> final_arr;
 for (size_t i = 0; i < reordered_arr.size(); ++i) {
     final_arr.push_back(reordered_arr[i]);
 }
 
+final_arr = INSERT_PARTICLES(final_arr, {
+    {NOUN, NOUN, "te", (final_arr.size() > 2)},
+    {PRONOUN, NOUN, "te", (final_arr.size() > 2)}
+});
 
 final_arr = MEDIATE_HOMONYMS(final_arr, {"manga", "banco"}, pt_mbl_homonyms);
 
@@ -134,21 +165,25 @@ return final_arr;
 
 static Word nounLookup(const string& word) {
 
-    LOOKUP(nouns, NOUN, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(nouns, NOUN, word, &ptmbl_gender_from, NO_GENDER, NO_PLURAL, NO_PLURAL);
     
-    LOOKUP(adj, ADJECTIVE, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(adj, ADJECTIVE, word, &ptmbl_gender_from, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(pro, PRONOUN, word, (Gender*)nullptr,NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(pro, PRONOUN, word, NO_GENDER,NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(adv, ADJECTIVE, word, (Gender*)nullptr, NO_GENDER, NO_PLURAL, NO_PLURAL);
+    LOOKUP(adv, ADJECTIVE, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
 
-    LOOKUP(art, ARTICLE, word, (Gender*)nullptr, NO_GENDER,  NO_PLURAL, NO_PLURAL);
+    LOOKUP(art, ARTICLE, word, NO_GENDER, NO_GENDER,  NO_PLURAL, NO_PLURAL);
 
-    VERB_LOOKUP(verbs, word, reg, def);
+    VERB_LOOKUP(verbs, word, reg, def, false);
 
     return { word, word, -1 };
 }
 
-MAIN(pt_mbl, fixed_ngrams, reorder_helpers, nounLookup)
-
+MAIN(pt_mbl, fixed_ngrams, reorder_helpers, nounLookup, 
+     false,           // MULTIBYTE = false
+     false,            // NON_SPACED = false
+     reg,   // VERB_ENDINGS (can be empty)
+     (true)           // DICT_CHECK (won't be used, but needs to be valid)
+)
 #endif

@@ -1,88 +1,174 @@
 ﻿{
   "metadata": {
-    "from": "en",
-    "to": "ru"
+    "from": "pt",
+    "to": "mbl"
   },
   "original": {
     "script": [0],
     "clause_order": 0,
-    "plural": {},
+    "plural": {
+      "type": "suffix",
+      "rules": [
+        {"gender": "none", "ending": "o"},
+        {"gender": "feminine", "ending": "a"}
+      ]
+    },
     "gender": false,
-    "case_system": false    
+    "case_system": false,
+    "verb_conjugation": {}    
   },
   "target": {
-    "script": [1],
+    "script": [0],
     "clause_order": 1,
     "plural": {},
-    "gender": {},
-    "case_system": {}    
+    "gender": [],
+    "case_system": {},
+    "verb_conjugation": null
   },
   "dictionary": [
     {
-      "entry": "dog",
-      "translation": "Hund",
+      "entry": "cachorr",
+      "translation": "kokex",
       "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "cat",
-      "translation": "Katze",
+      "entry": "cobra",
+      "translation": "kãyã",
       "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "person",
-      "translation": "Person",
+      "entry": "hoje",
+      "translation": "hõnhã",
       "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "child",
-      "translation": "Kind",
+      "entry": "amanhã",
+      "translation": "hãptup putut",
       "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "big",
-      "translation": "groß",
-      "word_type": 1,
+      "entry": "mundo",
+      "translation": "hãhãm",
+      "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "small",
-      "translation": "klein",
-      "word_type": 1,
+      "entry": "noite",
+      "translation": "ãmũy",
+      "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "see",
-      "translation": "sehen",
-      "word_type": 3,
+      "entry": "açucar",
+      "translation": "axok",
+      "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "love",
-      "translation": "lieben",
-      "word_type": 3,
+      "entry": "leite",
+      "translation": "xokhep",
+      "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "run",
-      "translation": "laufen",
-      "word_type": 3,
+      "entry": "criança",
+      "translation": "kakxop",
+      "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "i",
-      "translation": "ich",
+      "entry": "mandioca",
+      "translation": "kot",
+      "word_type": 0,
+      "word_flags": []
+    },
+    { "entry": "segunda",
+      "translation": "xegõnpet",
+      "word_type": 0,
+      "word_flags": []
+
+    },
+    { "entry": "segunda-feira",
+      "translation": "xegõnpet",
+      "word_type": 0,
+      "word_flags": []
+    },
+    {
+      "entry": "eu",
+      "translation": "ãte",
       "word_type": 4,
       "word_flags": []
+    },
+    {
+      "entry": "ele",
+      "translation": "ha",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "ela",
+      "translation": "ha",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "isso",
+      "translation": "ha",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "empurr",
+      "translation": "kaxix",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "ajud",
+      "translation": "ãyonat",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "esfri",
+      "translation": "ãxi",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "beb",
+      "translation": "xo'op",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "d",
+      "translation": "hõm",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "também",
+      "translation": "kama",
+      "word_type": 4,
+      "word_flags": []
+    },
+    {
+      "entry": "também",
+      "translation": "putup",
+      "word_type": 8,
+      "word_flags": []
     }
+    
   ],
   "rules": [
     "IF VERB THEN NOUN DO INVERT"
   ],
   "replace": [
-    { "original": "ness","target": "heit", "where": 2 }
+    { "original": "rr","target": "h", "where": 0 }
   ]
 }

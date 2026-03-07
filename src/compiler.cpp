@@ -88,7 +88,7 @@ void compile_from_buffer(const char* output_path,
         std::string entry = item["entry"];
         std::string translation = item["translation"];
         uint8_t word_type = item["word_type"];
-
+        auto flags = item["word_flags"];
         // entry
         write_u(fs, (uint8_t)0xF0);
         write_u(fs, static_cast<uint8_t>(entry.size()));   
@@ -105,6 +105,22 @@ void compile_from_buffer(const char* output_path,
         // type
         write_u(fs, (uint8_t)0xF2);
         write_u(fs, word_type);
+
+        //flags_target
+
+       write_u(fs, (uint8_t)0xF3); 
+            if (flags.is_array()) {
+                uint16_t count = flags.size();
+                write_u(fs, (uint8_t)(count & 0xFF));
+                write_u(fs, (uint8_t)((count >> 8) & 0xFF));
+                
+                for (const auto& flag : flags) {
+                    write_u(fs, flag.get<uint8_t>());
+                }
+            } else {
+                write_u(fs, (uint8_t)0x00);
+                write_u(fs, (uint8_t)0x00);
+            }    
     }
 
     // rules section
