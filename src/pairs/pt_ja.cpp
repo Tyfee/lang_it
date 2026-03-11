@@ -17,6 +17,35 @@ using namespace std;
 Info pt_ja_info = {
     SVO,
     SOV, 
+
+    { 
+        {
+        MIDDLE_WORD, // how does it act?
+        2, // what word does it act upon, 0 = A or 1 = B or 2 = none?
+        POSSESSED_FIRST, // 0 == B * A OR  1 = A * B ?
+        0, //NO flags
+        "do" 
+        },
+        {
+        MIDDLE_WORD, // how does it act?
+        2, // what word does it act upon, 0 = A or 1 = B or 2 = none?
+        POSSESSED_FIRST, // 0 == B * A OR  1 = A * B ?
+        0, 
+        "de" 
+        }
+    },
+    { 
+       {
+        MIDDLE_WORD, // how does it act?
+        2, // what word does it act upon, 0 = A or 1 = B or 2 = none?
+        OWNER_FIRST, // 0 == B * A OR  1 = A * B ?
+        0, //NO flags
+        "の" 
+        }
+    },
+     2,
+     1,
+     
     {0},
     {1}
 };
@@ -92,6 +121,7 @@ DICT(art, {
 });
 
 V_DICT(verbs, {
+    {"com", "食べ"},
     {"sab", "知"},
     {"v", "見"},
     {"funcio", "効"},
@@ -99,10 +129,10 @@ V_DICT(verbs, {
 });
 
 VERB_ENDINGS(pt_ja_reg, {
-   {{"ou", "ei", "aram", "eu", "i", "imos", "iu"}, PAST},
-   {{"ar", "er", "ir"}, INFINITIVE},
-   {{"jo", "no", "na", "ne"}, PRESENT},
-   {{"endo", "ando", "indo"}, CONTINUOUS}
+   {{"ou", "ei", "aram", "eu", "i", "imos", "iu"}, SUFFIX, PAST},
+   {{"ar", "er", "ir"}, SUFFIX,INFINITIVE},
+   {{"jo", "no", "na", "ne"}, SUFFIX,PRESENT},
+   {{"endo", "ando", "indo"}, SUFFIX,CONTINUOUS}
 });
 
 VERB_CONJUGATIONS(pt_ja_def, 
@@ -186,6 +216,7 @@ static std::vector<Word> reorder_helpers(const std::vector<Word>& copy){
  
     CLEANUP(reordered_arr);
     
+    HANDLE_POSSESSION(&pt_ja_info, reordered_arr);
 
     HANDLE_CASE(&pt_ja_info, NO_CASE, &ptja_case_to)
 
@@ -197,11 +228,6 @@ for (size_t i = 0; i < reordered_arr.size(); ++i) {
 }
 
 
-final_arr = INSERT_PARTICLES(final_arr, {
-    {PRONOUN, NOUN, "は", (final_arr.size() > 2)},
-    {NOUN, NOUN, "は", (final_arr.size() > 2)},
-    {PRONOUN, VERB, "は", (final_arr.size() == 2)}
-});
 final_arr = MEDIATE_HOMONYMS(final_arr, {"manga", "banco"}, pt_ja_homonyms);
 
 
@@ -235,6 +261,10 @@ static Word nounLookup(const string& word) {
     return { word, word, -1 };
 }
 
-MAIN(pt_ja, fixed_ngrams, reorder_helpers, nounLookup, false,true, pt_ja_reg)
-
+MAIN(pt_ja, fixed_ngrams, reorder_helpers, nounLookup, 
+     false,           // MULTIBYTE = false
+     true,            // NON_SPACED = false
+     pt_ja_reg,   // VERB_ENDINGS (can be empty)
+     (true)           // DICT_CHECK (won't be used, but needs to be valid)
+)
 #endif

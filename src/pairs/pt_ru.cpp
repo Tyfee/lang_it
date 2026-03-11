@@ -29,6 +29,8 @@ Info pt_ru_info = {
 CASE_DEF(ptru_case_to, SUFFIX,
 {
   {ACCUSATIVE, FEMININE_GENDER, "а", "у"},   // собака → собаку
+  {GENITIVE, FEMININE_GENDER, "а", "чья"},
+  {GENITIVE, ON, "", ""}
     {ACCUSATIVE, FEMININE_GENDER, "я", "ю"},   // неделя → неделю
     {ACCUSATIVE, ON, "", ""},    // мужчина → мужчину handled separately maybe
     {ACCUSATIVE, NEUTRAL_GENDER, "о", "о"},    // окно → окно (same for accusative)
@@ -84,7 +86,7 @@ DICT(obl_pro, {
 
 DICT(adv, {
  {"também", "тоже"},
- {"e", "и"}
+ {"e", "и", 0, CONJUNCTIVE}
 });
 
 DICT(art, {

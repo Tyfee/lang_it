@@ -17,10 +17,10 @@
 using namespace std;
 
 Info JA_MBL_info = {
-    SVO,
-    {0},
+    SVO, // japanese is svo
     SVO, 
     {0}
+    {2, 3}
 };
 #define I_ADJECTIVE FREE_BIT_1
 #define NA_ADJECTIVE FREE_BIT_2

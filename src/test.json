@@ -1,174 +1,380 @@
 ﻿{
   "metadata": {
     "from": "pt",
-    "to": "mbl"
+    "to": "ru",
+    "multibyte": false
   },
   "original": {
-    "script": [0],
-    "clause_order": 0,
-    "plural": {
-      "type": "suffix",
-      "rules": [
-        {"gender": "none", "ending": "o"},
-        {"gender": "feminine", "ending": "a"}
-      ]
-    },
-    "gender": false,
-    "case_system": false,
-    "verb_conjugation": {}    
+    "verb_conjugations": [
+      {
+        "endings": ["ar", "er", "ir"],
+        "type": "SUFFIX",
+        "form": ["INFINITIVE"]
+      },
+      {
+        "endings": ["ei", "i", "ia"],
+        "type": "SUFFIX",
+        "form": ["PAST"]
+      },
+      {
+        "endings": ["ou", "eu"],
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["aram"],
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+      },
+      {
+        "endings": ["aste"],
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["amos"],
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+      },
+      {
+        "endings": ["i"],
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["o"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["as"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["a"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+      },
+      {
+        "endings": ["amos"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+      },
+      {
+        "endings": ["ais"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+      },
+      {
+        "endings": ["am"],
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+      }
+    ]
   },
   "target": {
-    "script": [0],
-    "clause_order": 1,
-    "plural": {},
-    "gender": [],
-    "case_system": {},
-    "verb_conjugation": null
+    "verb_conjugations": [
+      {
+        "required_ending": "",
+        "affix": "ть",
+        "type": "SUFFIX",
+        "form": ["INFINITIVE"]
+      },
+      {
+        "required_ending": "",
+        "affix": "л",
+        "type": "SUFFIX",
+        "form": ["PAST"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ла",
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "SINGULAR", "FEMININE"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ли",
+        "type": "SUFFIX",
+        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "PLURAL"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ю",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ешь",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ет",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ем",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ете",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+      },
+      {
+        "required_ending": "",
+        "affix": "ют",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+      },
+      {
+        "required_ending": "и",
+        "affix": "ишь",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+      },
+      {
+        "required_ending": "и",
+        "affix": "ит",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+      },
+      {
+        "required_ending": "и",
+        "affix": "им",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+      },
+      {
+        "required_ending": "и",
+        "affix": "ите",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+      },
+      {
+        "required_ending": "и",
+        "affix": "ят",
+        "type": "SUFFIX",
+        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+      }
+    ]
   },
   "dictionary": [
     {
       "entry": "cachorr",
-      "translation": "kokex",
+      "translation": "собак",
       "word_type": 0,
-      "word_flags": []
+      "word_flags": [64]
     },
     {
       "entry": "cobra",
-      "translation": "kãyã",
+      "translation": "змей",
       "word_type": 0,
       "word_flags": []
     },
     {
+      "entry": "gat",
+      "translation": "кот",
+      "word_type": 0,
+      "word_flags": []
+    },
+    {
+      "entry": "familia",
+      "translation": "семь",
+      "word_type": 0,
+      "word_flags": [64]
+    },
+    {
       "entry": "hoje",
-      "translation": "hõnhã",
+      "translation": "сегодня",
       "word_type": 0,
       "word_flags": []
     },
     {
       "entry": "amanhã",
-      "translation": "hãptup putut",
+      "translation": "завтр",
       "word_type": 0,
-      "word_flags": []
+      "word_flags": [64]
+    },
+    {
+      "entry": "livro",
+      "translation": "книг",
+      "word_type": 0,
+      "word_flags": [64]
     },
     {
       "entry": "mundo",
-      "translation": "hãhãm",
+      "translation": "мир",
       "word_type": 0,
       "word_flags": []
     },
     {
       "entry": "noite",
-      "translation": "ãmũy",
+      "translation": "ночь",
       "word_type": 0,
       "word_flags": []
     },
     {
       "entry": "açucar",
-      "translation": "axok",
+      "translation": "сахар",
       "word_type": 0,
       "word_flags": []
     },
     {
       "entry": "leite",
-      "translation": "xokhep",
+      "translation": "молок",
       "word_type": 0,
       "word_flags": []
     },
     {
       "entry": "criança",
-      "translation": "kakxop",
+      "translation": "ребенок",
       "word_type": 0,
       "word_flags": []
     },
     {
-      "entry": "mandioca",
-      "translation": "kot",
+      "entry": "grama",
+      "translation": "трав",
+      "word_type": 0,
+      "word_flags": [64]
+    },
+    {
+      "entry": "tradutor",
+      "translation": "переводчик",
+      "word_type": 0,
+      "word_flags": [128]
+    },
+    {
+      "entry": "manga",
+      "translation": "манго",
       "word_type": 0,
       "word_flags": []
     },
-    { "entry": "segunda",
-      "translation": "xegõnpet",
+    {
+      "entry": "juice",
+      "translation": "сок",
       "word_type": 0,
       "word_flags": []
-
     },
-    { "entry": "segunda-feira",
-      "translation": "xegõnpet",
+    {
+      "entry": "ontem",
+      "translation": "вчера",
       "word_type": 0,
       "word_flags": []
+    },
+    {
+      "entry": "camisa",
+      "translation": "рубашк",
+      "word_type": 0,
+      "word_flags": [64]
     },
     {
       "entry": "eu",
-      "translation": "ãte",
+      "translation": "я",
       "word_type": 4,
       "word_flags": []
     },
     {
       "entry": "ele",
-      "translation": "ha",
+      "translation": "он",
       "word_type": 4,
       "word_flags": []
     },
     {
       "entry": "ela",
-      "translation": "ha",
+      "translation": "она",
+      "word_type": 4,
+      "word_flags": [64]
+    },
+    {
+      "entry": "você",
+      "translation": "ты",
       "word_type": 4,
       "word_flags": []
     },
     {
-      "entry": "isso",
-      "translation": "ha",
-      "word_type": 4,
+      "entry": "te",
+      "translation": "тебя",
+      "word_type": 5,
       "word_flags": []
     },
     {
-      "entry": "empurr",
-      "translation": "kaxix",
-      "word_type": 4,
-      "word_flags": []
-    },
-    {
-      "entry": "ajud",
-      "translation": "ãyonat",
-      "word_type": 4,
-      "word_flags": []
-    },
-    {
-      "entry": "esfri",
-      "translation": "ãxi",
-      "word_type": 4,
-      "word_flags": []
-    },
-    {
-      "entry": "beb",
-      "translation": "xo'op",
-      "word_type": 4,
-      "word_flags": []
-    },
-    {
-      "entry": "d",
-      "translation": "hõm",
-      "word_type": 4,
+      "entry": "me",
+      "translation": "себя",
+      "word_type": 5,
       "word_flags": []
     },
     {
       "entry": "também",
-      "translation": "kama",
-      "word_type": 4,
-      "word_flags": []
-    },
-    {
-      "entry": "também",
-      "translation": "putup",
+      "translation": "тоже",
       "word_type": 8,
       "word_flags": []
+    },
+    {
+      "entry": "e",
+      "translation": "и",
+      "word_type": 8,
+      "word_flags": [256]
+    },
+    {
+      "entry": "sab",
+      "translation": "зна",
+      "word_type": 3,
+      "word_flags": []
+    },
+    {
+      "entry": "v",
+      "translation": "виде",
+      "word_type": 3,
+      "word_flags": []
+    },
+    {
+      "entry": "funcio",
+      "translation": "работа",
+      "word_type": 3,
+      "word_flags": []
+    },
+    {
+      "entry": "l",
+      "translation": "чита",
+      "word_type": 3,
+      "word_flags": []
     }
-    
-  ],
-  "rules": [
-    "IF VERB THEN NOUN DO INVERT"
   ],
   "replace": [
-    { "original": "rr","target": "h", "where": 0 }
+    { "original": "tec", "target": "тех", "where": 1 },
+    { "original": "a", "target": "а", "where": 0 },
+    { "original": "b", "target": "б", "where": 0 },
+    { "original": "c", "target": "к", "where": 0 },
+    { "original": "d", "target": "д", "where": 0 },
+    { "original": "e", "target": "е", "where": 0 },
+    { "original": "f", "target": "ф", "where": 0 },
+    { "original": "g", "target": "г", "where": 0 },
+    { "original": "h", "target": "х", "where": 0 },
+    { "original": "i", "target": "и", "where": 0 },
+    { "original": "j", "target": "ж", "where": 0 },
+    { "original": "k", "target": "к", "where": 0 },
+    { "original": "l", "target": "л", "where": 0 },
+    { "original": "m", "target": "м", "where": 0 },
+    { "original": "n", "target": "н", "where": 0 },
+    { "original": "o", "target": "о", "where": 0 },
+    { "original": "p", "target": "п", "where": 0 },
+    { "original": "r", "target": "р", "where": 0 },
+    { "original": "s", "target": "с", "where": 0 },
+    { "original": "t", "target": "т", "where": 0 },
+    { "original": "u", "target": "у", "where": 0 },
+    { "original": "v", "target": "в", "where": 0 },
+    { "original": "w", "target": "в", "where": 0 },
+    { "original": "x", "target": "кс", "where": 0 },
+    { "original": "y", "target": "и", "where": 0 },
+    { "original": "z", "target": "з", "where": 0 }
   ]
 }

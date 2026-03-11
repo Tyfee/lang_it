@@ -195,59 +195,75 @@ if(l_m){
             const unsigned char to[] = {0xF1 /* from */, 0x03 /* 2 bytes */, 0x6D , 0x62, 0x6C /* MBL */, 0x00};
 
     
-              const unsigned char end[] = {0x00, 0x00, 0x00};
-               std::ifstream file(argv[2], std::ios::binary | std::ios::ate);
-               std::streamsize size = file.tellg();
-               file.seekg(0, std::ios::beg);
+               const unsigned char end[] = {0x00, 0x00, 0x00};
+                std::ifstream file(argv[2], std::ios::binary | std::ios::ate);
+                std::streamsize size = file.tellg();
+              file.seekg(0, std::ios::beg);
 
-               std::vector<uint8_t> buffer(size);
+             std::vector<uint8_t> buffer(size);
                if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
-                   std::cout << "Failed to read file\n";
-                   return 1;
-               }
+                    std::cout << "Failed to read file\n";
+                    return 1;
+                }
 
-                 static const uint8_t full_buffer[] = {
-             0xD0, // metadata
+        //          static const uint8_t full_buffer[] = {
+        //      0xD0, // metadata
              
-                0xF0, 0x02, 0x65 , 0x6E, 0x00,
-                0xF1, 0x03, 0x6D , 0x62, 0x6C , 0x00,
-             0xD1, // dictionary 
-               0xF0, 0x03, 0x01, 0x00, //original word
-                 0x6B, 0x69, 0x64, 0x00,
-               0xF1, 0x06, 0x00, // translation
-                 0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0x00,
-               0xF2, 0x00,
-               0xF3, 0x02, 0x00, //THERE ARE TWO FLAGS
-                 0x00, 0x05, 0x00, //EACH FLAG (0 = ANIMATE, 5 = UNCOUNTABLE)
+        //         0xF0, 0x02, 0x65 , 0x6E, 0x00,
+        //         0xF1, 0x03, 0x6D , 0x62, 0x6C , 0x00,
+        //         0xF2, 0x00,0x00,
+        //      0xD1, // dictionary 
+        //        0xF0, 0x03, 0x01, 0x00, //original word
+        //          0x6B, 0x69, 0x64, 0x00,
+        //        0xF1, 0x06, 0x00, // translation
+        //          0x6B, 0x61, 0x6B, 0x78, 0x6F, 0x70, 0x00,
+        //        0xF2, 0x00,
+        //        0xF3, 0x02, 0x00, //THERE ARE TWO FLAGS
+        //          0x00, 0x05, 0x00, //EACH FLAG (0 = ANIMATE, 5 = UNCOUNTABLE)
 
-               0xF0, 0x05, 0x01, 0x00,
-                 0x74, 0x6F, 0x64, 0x61, 0x79, 0x00,
-               0xF1, 0x05, 0x00,
-                 0x68,0xF5,0x6E,0x68,0xE3, 0x00,
-               0xF2, 0x00,
-               0xF3, 0x01, 0x00, //THERE IS ONE FLAG
-                 0x05, 0x00, //EACH FLAG (5 = UNCOUNTABLE)
+        //        0xF0, 0x05, 0x01, 0x00,
+        //          0x74, 0x6F, 0x64, 0x61, 0x79, 0x00,
+        //        0xF1, 0x05, 0x00,
+        //          0x68,0xF5,0x6E,0x68,0xE3, 0x00,
+        //        0xF2, 0x00,
+        //        0xF3, 0x01, 0x00, //THERE IS ONE FLAG
+        //          0x05, 0x00, //EACH FLAG (5 = UNCOUNTABLE)
 
 
-            0xF0, 0x04, 0x01, 0x00,
-              0x68,0x6F,0x6C,0x65, 0x00,
-               0xF1, 0x03, 0x00,
-               0x6B,0x6F,0x78,0x00,
-               0xF2, 0x00,
-               0xF3, 0x00, 0x00, //no flags
+        //     0xF0, 0x04, 0x01, 0x00,
+        //       0x68,0x6F,0x6C,0x65, 0x00,
+        //        0xF1, 0x03, 0x00,
+        //        0x6B,0x6F,0x78,0x00,
+        //        0xF2, 0x00,
+        //        0xF3, 0x00, 0x00, //no flags
 
                
-            0xD2,
-            //sketching out a rule
-            0xF0, 0x06,   0x11, 0x03, 0xDE, 0x00, 0xD0,   0x01,     0x00
-                        // IF  [TYPE] THEN [TYPE]  DO   [ACTION]
-           };
+        //     0xD2,
+        //     //sketching out a rule
+        //     0xF0, 0x06,   0x11, 0x03, 0xDE, 0x00, 0xD0,   0x01,     0x00,
+        //                 // IF  [TYPE] THEN [TYPE]  DO   [ACTION]
+
+        //     0xD3, // verb from A
+        //     0xF0, // the actual endingS
+        //     NONE, 0x00, NONE, 0x00, NONE, 0x00, // words, separated by 0x00
+        //     0xF1, //how? 
+        //     0x00, //0x00 == suffix, 0x01 == preffix 
+        //     0xF2, // what does it imply?
+        //     //  FLAGS implied ex: FEMININE, PLURAL, FIRST_PERSON, ETC
+        //     0xD4, // verb from B
+        //     0xF0, //the actual ending
+        //     NONE, 0x00,
+        //     0xF1, //how? 
+        //     0x00, //0x00 == suffix, 0x01 == preffix 
+        //     0xF2, // what does it imply?
+        //     //  FLAGS implied ex: FEMININE, PLURAL, FIRST_PERSON, ETC
+        //    };
 
 
-          //std::string result = load_from_bin(full_buffer, sizeof(full_buffer));
+         // std::string result = load_from_bin(full_buffer, sizeof(full_buffer));
           
-            std::string result = load_from_bin(buffer.data(), buffer.size());
-            const char* sample = "Olá mundo! O tradutor funciona normalmente.";
+           std::string result = load_from_bin(buffer.data(), buffer.size());
+            const char* sample = "";
             const char* prompt = "O que deseja traduzir?";
             const char* quit_message = "Digite 'sair' para encerrar.\n";
             const char* quit_cmd = "sair";
