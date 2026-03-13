@@ -3,38 +3,40 @@
 #include <string>
 
 std::string translate_it(std::string sentence,
-                              std::string from,
-                              std::string to, int type = 0) {
+                         std::string from,
+                         std::string to, 
+                         int type = 0) {
     return translate(sentence.c_str(), from.c_str(), to.c_str(), type);
 }
 
-// std::string detect_it(std::string sentence) {
-//     return detect_language(sentence.c_str());
-// }
 #ifdef ALLOW_IMPORTS
 
-std::string translate_from_binary(std::string sentence,
-                                  std::string file_buffer)
-{
+static bool binary_loaded = false;
 
-   std::string copy = file_buffer; 
-
+void load_binary(std::string file_buffer) {
     load_from_bin(
-        reinterpret_cast<const uint8_t*>(copy.data()),
-        copy.size()
+        reinterpret_cast<const uint8_t*>(file_buffer.data()),
+        file_buffer.size()
     );
+    binary_loaded = true;
+}
 
+std::string translate_loaded(std::string sentence) {
     return translate_from_bin(sentence.c_str());
+}
+
+bool is_loaded() {
+    return binary_loaded;
 }
 
 #endif
 
 EMSCRIPTEN_BINDINGS(translator) {
     emscripten::function("translate", &translate_it);
-    // emscripten::function("detect_language", &detect_it);
+    
     #ifdef ALLOW_IMPORTS
-
-    emscripten::function("translate_from_bin", &translate_from_binary);
-
+    emscripten::function("load_binary", &load_binary);
+    emscripten::function("translate_loaded", &translate_loaded);
+    emscripten::function("is_loaded", &is_loaded);
     #endif
 }

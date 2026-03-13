@@ -56,13 +56,23 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
     sizeof(word##_tokens) / sizeof(word##_tokens[0]) \
 }
 
-
+enum AFFIX_TYPE {
+    PREFIX = 1,
+    SUFFIX = 0,
+    PREV_WORD = 2,
+    NEXT_WORD = 3,
+    INFIX = 4,
+    CIRCUMFIX = 5,
+    REDUPLICATION = 6,
+    MIDDLE_WORD = 7,
+    NONE = 8
+};
 
     
 #define LOOKUP(DICTIONARY, TYPE, WORD, GENDER_FROM, GENDER_TO, PLURAL_FROM, PLURAL_TO)          \
 {                                                                       \
     GenderResult g = detect_gender(WORD, GENDER_FROM);                  \
-    PluralResult p = detect_plural(WORD, PLURAL_FROM); \
+    MorphResult p = detect_plural(WORD, PLURAL_FROM); \
             /*DEFAULT */         \
     if (const char* result = lookup(DICTIONARY, WORD.c_str())) {                \
         return { WORD, normalize(result), TYPE };                       \
@@ -77,7 +87,7 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
     if (const char* result = lookup(DICTIONARY, p.root.c_str())) {      \
         std::string translation = result;                                \
          uint8_t f = lookupFlags(nouns, p.root.c_str());\
-        translation = apply_plural(translation, p.matched_variation, PLURAL_TO, f); \
+        translation = apply_morph(translation, p.matched_variation, PLURAL_TO, f); \
         return { WORD, normalize(translation), TYPE };                   \
     }  \
     if(WORD.length() > 3){\
@@ -88,7 +98,7 @@ static const char* word##_tokens[] = { __VA_ARGS__ };
 }
 
 #define NO_GENDER (Gender*)nullptr
-#define NO_PLURAL (Plural*)nullptr
+#define NO_PLURAL (Morph*)nullptr
 #define NO_CASE (Case*)nullptr
 
 
@@ -498,20 +508,30 @@ struct GenderResult {
     const GenderVariation* matched_variation; 
 };
 
+enum Morphology {
+   PLURAL_MORPH = 0,
+   DIMINUTIVE_MORPH = 1,
+   AUGMENTATIVE_MORPH = 2,
+   COMPARATIVE_MORPH = 3,
+   SUPERLATIVE_MORPH = 4
 
-struct PluralVariation {
+};
+
+
+struct MorphVariation {
     uint8_t flag;
     std::string ending;
     std::string form;
+    int type;
+    int morphology;
 };
 
-struct Plural {
-    int type; 
-    std::vector<PluralVariation> variations;
+struct Morph {
+    std::vector<MorphVariation> variations;
 };
-struct PluralResult {
+struct MorphResult {
     std::string root;
-    const PluralVariation* matched_variation; 
+    const MorphVariation* matched_variation; 
 };
 
 
@@ -607,7 +627,7 @@ inline GenderResult detect_gender(const std::string& word, const Gender* gender_
 }
 
 
-inline PluralResult detect_plural(const std::string& word, const Plural* plural_from) {
+inline MorphResult detect_plural(const std::string& word, const Morph* plural_from) {
     if (!plural_from) {
         return { word, nullptr };
     }
@@ -657,37 +677,58 @@ inline std::string apply_gender(
 }
 
 
-
-inline std::string apply_plural(
+inline std::string apply_morph(
     const std::string& translation,
-    const PluralVariation* from_var,
-    const Plural* plural_to,
+    const MorphVariation* from_var,
+    const Morph* morph_to,
     uint8_t word_gender)
 {
-    if (!plural_to)
+    if (!morph_to || !from_var)
         return translation;
 
-    // NON → PLURAL
-    if (!from_var) {
-        if (!plural_to->variations.empty())
-            return translation + plural_to->variations[0].form;
-        return translation;
-    }
+    int source_morph = from_var->morphology; 
 
-  for (const auto& var : plural_to->variations) {
-    if (from_var || var.flag == from_var->flag) {      
-        if ((var.flag & word_gender) == var.flag) {  
-            const std::string& ending = var.ending;
-            const std::string& form   = var.form;
+    for (const auto& var : morph_to->variations) {
+        // Matchmorphology type (PLURAL_MORPH, DIMINUTIVE_MORPH, etc.)
+        if (var.morphology == source_morph) { 
             
-            if (translation.size() >= ending.size() &&
-                translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
-            {
-                return translation.substr(0, translation.size() - ending.size()) + form;
+            // Check flags if needed
+            if ((var.flag & word_gender) == var.flag) {
+                const std::string& ending = var.ending;
+                const std::string& form   = var.form;
+                
+                  if (translation.size() >= ending.size() &&
+                    translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
+                {
+                    // what type of transformation are we doing
+                        switch (var.type) {
+                            case SUFFIX:
+                                if (translation.size() >= ending.size() &&
+                                    translation.compare(translation.size() - ending.size(), ending.size(), ending) == 0) 
+                                {
+                                    return translation.substr(0, translation.size() - ending.size()) + form;
+                                }
+                                break;
+                                
+                            case PREFIX:
+                                if (translation.size() >= ending.size() &&
+                                    translation.compare(0, ending.size(), ending) == 0)
+                                {
+                                    return translation.substr(ending.size()) + form;
+                                }
+                                break;
+                                
+                            case PREV_WORD:
+                                return form + translation;  // "大" + "犬", "big" + "dog"
+                                
+                            case NEXT_WORD:
+                                return translation + form;  // "犬" + "たち",
+                                
+                            // etc.
+                        }}
             }
         }
     }
-}
 
     // fallback
     return translation;
@@ -740,7 +781,7 @@ using VerbConjugationDictionary = std::vector<VerbConjugation>;
 #define SUFFIX_RULES(name, ...) constexpr SuffixDictionary name = __VA_ARGS__
 #define LIST(name, ...) std::vector<SuffixRule> name = __VA_ARGS__
 
-#define PLURAL_DEF(name,...) Plural name = {__VA_ARGS__}
+#define MORPH_DEF(name,...) Morph name = {__VA_ARGS__}
 #define GENDER_DEF(name,...) Gender name = {__VA_ARGS__}
 #define CASE_DEF(name,...) Case name = {__VA_ARGS__}
 
@@ -1089,17 +1130,7 @@ enum PossessionWordOrder {
     OWNER_FIRST = 0,      // B * A  (Japanese: 犬の歯)
     POSSESSED_FIRST = 1,  // A * B  (Portuguese: dente do cachorro)
 };
-enum AFFIX_TYPE {
-    PREFIX = 1,
-    SUFFIX = 0,
-    PREV_WORD = 2,
-    NEXT_WORD = 3,
-    INFIX = 4,
-    CIRCUMFIX = 5,
-    REDUPLICATION = 6,
-    MIDDLE_WORD = 7,
-    NONE = 8
-};
+
 
 enum ClauseOrders {
     SVO = 0,
@@ -2310,6 +2341,10 @@ static Word default_nounLookup(const std::string& word) {
             std::string translation = result; 
             int word_type = ADJECTIVE; 
             return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
+    }else if(const char* result = lookup_test(default_adverbs, adverb_length,word.c_str())){
+            std::string translation = result; 
+            int word_type = ADVERB; 
+            return { word, default_normalize(translation, default_normalizationRules,normalizationRuleLength), word_type }; 
     }
 
     Word vw = default_verb_lookup(word);
@@ -2544,6 +2579,10 @@ case 0xF2:
                     Entry e = {s, r, 0, target_flags};
                     default_pronouns[pronoun_length++] = e;
                  }
+                      if(type == 0x08) {
+                    Entry e = {s, r, 0, target_flags};
+                    default_adverbs[adverb_length++] = e;
+                 }
                 break;
                 
             case 0x02:
@@ -2686,7 +2725,8 @@ inline std::string translate_from_bin(const char* sentence,
                if (lookup_test(default_nouns, nouns_length, cand.c_str()) ||
                     lookup_test(default_adjectives, adjective_length, cand.c_str()) ||
                     lookup_test(default_pronouns, pronoun_length, cand.c_str()) ||
-                    lookup_test(default_adverbs, adverb_length, cand.c_str())) {
+                    lookup_test(default_adverbs, adverb_length, cand.c_str())
+                ) {
                     final_combined.push_back(cand); 
                     i += len; 
                     found = true; 

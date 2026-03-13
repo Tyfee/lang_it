@@ -129,7 +129,7 @@ V_DICT(verbs, {
 });
 
 VERB_ENDINGS(pt_ja_reg, {
-   {{"ou", "ei", "aram", "eu", "i", "imos", "iu"}, SUFFIX, PAST},
+   {{"ou", "ei", "aram", "eu", "i", "imos", "iu", "iram"}, SUFFIX, PAST},
    {{"ar", "er", "ir"}, SUFFIX,INFINITIVE},
    {{"jo", "no", "na", "ne"}, SUFFIX,PRESENT},
    {{"endo", "ando", "indo"}, SUFFIX,CONTINUOUS}
@@ -179,15 +179,21 @@ Homonym pt_ja_homonyms[] = {
         });
 
 
-PLURAL_DEF(ptja_plural_from, SUFFIX,
+MORPH_DEF(ptja_morph_from,
     {
-        {NONE, "is", "l"},  // ends with "is" → remove "is", add "l" (animais → animal)
-        {NONE, "es", "s"},  // ends with "es" → remove "es", add "s" (leões → leão)
-        {NONE, "s", ""}      // ends with "s" → remove "s", add nothing (gatos → gato)
+        {0, "is", "l", SUFFIX, PLURAL_MORPH},  // ends with "is" → remove "is", add "l" (animais → animal)
+        {0, "es", "s", SUFFIX, PLURAL_MORPH},  // ends with "es" → remove "es", add "s" (leões → leão)
+        {0, "os", "", SUFFIX, PLURAL_MORPH},
+        {0, "as", "", SUFFIX, PLURAL_MORPH},
+        {0, "s", "", SUFFIX, PLURAL_MORPH},      // ends with "s" → remove "s", add nothing (gatos → gato)
+        {0, "ão", "", SUFFIX, AUGMENTATIVE_MORPH},
+      {0, "inho", "", SUFFIX, DIMINUTIVE_MORPH},
     });
-    PLURAL_DEF(ptja_plural_to, SUFFIX,
+    MORPH_DEF(ptja_morph_to,
     {
-       {ANIMATE, "", "たち"},
+       {ANIMATE, "", "たち", NEXT_WORD, PLURAL_MORPH},
+       {0, "", "小", PREV_WORD, DIMINUTIVE_MORPH},
+       {0, "", "大", PREV_WORD, AUGMENTATIVE_MORPH}
     });
 
 
@@ -239,9 +245,9 @@ static Word nounLookup(const string& word) {
  
   
 
-    LOOKUP(nouns, NOUN, word, &ptja_gender_from, NO_GENDER, &ptja_plural_from, &ptja_plural_to);
+    LOOKUP(nouns, NOUN, word, &ptja_gender_from, NO_GENDER, &ptja_morph_from, &ptja_morph_to);
     
-    LOOKUP(adj, ADJECTIVE, word, &ptja_gender_from,NO_GENDER, &ptja_plural_from, &ptja_plural_from);
+    LOOKUP(adj, ADJECTIVE, word, &ptja_gender_from,NO_GENDER, &ptja_morph_from, &ptja_morph_from);
 
     LOOKUP(pro, PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);
     LOOKUP(poss_pro, POSSESSIVE_PRONOUN, word, NO_GENDER, NO_GENDER, NO_PLURAL, NO_PLURAL);

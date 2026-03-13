@@ -1,4 +1,4 @@
-﻿{
+{
   "metadata": {
     "from": "pt",
     "to": "ru",
@@ -7,69 +7,181 @@
   "original": {
     "verb_conjugations": [
       {
-        "endings": ["ar", "er", "ir"],
+        "endings": [
+          "ar",
+          "er",
+          "ir"
+        ],
         "type": "SUFFIX",
-        "form": ["INFINITIVE"]
+        "form": [
+          "INFINITIVE"
+        ]
       },
       {
-        "endings": ["ei", "i", "ia"],
+        "endings": [
+          "ei",
+          "i",
+          "ia"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST"]
+        "form": [
+          "PAST"
+        ]
       },
       {
-        "endings": ["ou", "eu"],
+        "endings": [
+          "ou",
+          "eu"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["aram"],
+        "endings": [
+          "aram"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "PLURAL"
+        ]
       },
       {
-        "endings": ["aste"],
+        "endings": [
+          "aste"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["amos"],
+        "endings": [
+          "amos"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "PLURAL"
+        ]
       },
       {
-        "endings": ["i"],
+        "endings": [
+          "i"
+        ],
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["o"],
+        "endings": [
+          "o"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["as"],
+        "endings": [
+          "as"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["a"],
+        "endings": [
+          "a"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "SINGULAR"
+        ]
       },
       {
-        "endings": ["amos"],
+        "endings": [
+          "amos"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "PLURAL"
+        ]
       },
       {
-        "endings": ["ais"],
+        "endings": [
+          "ais"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "PLURAL"
+        ]
       },
       {
-        "endings": ["am"],
+        "endings": [
+          "am"
+        ],
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "PLURAL"
+        ]
       }
     ]
   },
@@ -79,91 +191,185 @@
         "required_ending": "",
         "affix": "ть",
         "type": "SUFFIX",
-        "form": ["INFINITIVE"]
+        "form": [
+          "INFINITIVE"
+        ]
       },
       {
         "required_ending": "",
         "affix": "л",
         "type": "SUFFIX",
-        "form": ["PAST"]
+        "form": [
+          "PAST"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ла",
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "SINGULAR", "FEMININE"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SINGULAR",
+          "FEMININE"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ли",
         "type": "SUFFIX",
-        "form": ["PAST", "INDICATIVE", "SIMPLE", "ACTIVE", "PLURAL"]
+        "form": [
+          "PAST",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ю",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "SINGULAR"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ешь",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "SINGULAR"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ет",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "SINGULAR"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ем",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ете",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "",
         "affix": "ют",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "и",
         "affix": "ишь",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "SINGULAR"
+        ]
       },
       {
         "required_ending": "и",
         "affix": "ит",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "SINGULAR"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "SINGULAR"
+        ]
       },
       {
         "required_ending": "и",
         "affix": "им",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "FIRST_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "FIRST_PERSON",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "и",
         "affix": "ите",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "SECOND_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "SECOND_PERSON",
+          "PLURAL"
+        ]
       },
       {
         "required_ending": "и",
         "affix": "ят",
         "type": "SUFFIX",
-        "form": ["PRESENT", "INDICATIVE", "SIMPLE", "ACTIVE", "THIRD_PERSON", "PLURAL"]
+        "form": [
+          "PRESENT",
+          "INDICATIVE",
+          "SIMPLE",
+          "ACTIVE",
+          "THIRD_PERSON",
+          "PLURAL"
+        ]
       }
     ]
   },
@@ -172,7 +378,9 @@
       "entry": "cachorr",
       "translation": "собак",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "cobra",
@@ -190,7 +398,9 @@
       "entry": "familia",
       "translation": "семь",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "hoje",
@@ -202,13 +412,17 @@
       "entry": "amanhã",
       "translation": "завтр",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "livro",
       "translation": "книг",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "mundo",
@@ -244,13 +458,17 @@
       "entry": "grama",
       "translation": "трав",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "tradutor",
       "translation": "переводчик",
       "word_type": 0,
-      "word_flags": [128]
+      "word_flags": [
+        128
+      ]
     },
     {
       "entry": "manga",
@@ -274,7 +492,9 @@
       "entry": "camisa",
       "translation": "рубашк",
       "word_type": 0,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "eu",
@@ -292,7 +512,9 @@
       "entry": "ela",
       "translation": "она",
       "word_type": 4,
-      "word_flags": [64]
+      "word_flags": [
+        64
+      ]
     },
     {
       "entry": "você",
@@ -322,7 +544,9 @@
       "entry": "e",
       "translation": "и",
       "word_type": 8,
-      "word_flags": [256]
+      "word_flags": [
+        256
+      ]
     },
     {
       "entry": "sab",
@@ -347,34 +571,143 @@
       "translation": "чита",
       "word_type": 3,
       "word_flags": []
+    },
+    {
+      "entry": "pedra",
+      "translation": "камен",
+      "word_type": 0
     }
   ],
   "replace": [
-    { "original": "tec", "target": "тех", "where": 1 },
-    { "original": "a", "target": "а", "where": 0 },
-    { "original": "b", "target": "б", "where": 0 },
-    { "original": "c", "target": "к", "where": 0 },
-    { "original": "d", "target": "д", "where": 0 },
-    { "original": "e", "target": "е", "where": 0 },
-    { "original": "f", "target": "ф", "where": 0 },
-    { "original": "g", "target": "г", "where": 0 },
-    { "original": "h", "target": "х", "where": 0 },
-    { "original": "i", "target": "и", "where": 0 },
-    { "original": "j", "target": "ж", "where": 0 },
-    { "original": "k", "target": "к", "where": 0 },
-    { "original": "l", "target": "л", "where": 0 },
-    { "original": "m", "target": "м", "where": 0 },
-    { "original": "n", "target": "н", "where": 0 },
-    { "original": "o", "target": "о", "where": 0 },
-    { "original": "p", "target": "п", "where": 0 },
-    { "original": "r", "target": "р", "where": 0 },
-    { "original": "s", "target": "с", "where": 0 },
-    { "original": "t", "target": "т", "where": 0 },
-    { "original": "u", "target": "у", "where": 0 },
-    { "original": "v", "target": "в", "where": 0 },
-    { "original": "w", "target": "в", "where": 0 },
-    { "original": "x", "target": "кс", "where": 0 },
-    { "original": "y", "target": "и", "where": 0 },
-    { "original": "z", "target": "з", "where": 0 }
+    {
+      "original": "tec",
+      "target": "тех",
+      "where": 1
+    },
+    {
+      "original": "a",
+      "target": "а",
+      "where": 0
+    },
+    {
+      "original": "b",
+      "target": "б",
+      "where": 0
+    },
+    {
+      "original": "c",
+      "target": "к",
+      "where": 0
+    },
+    {
+      "original": "d",
+      "target": "д",
+      "where": 0
+    },
+    {
+      "original": "e",
+      "target": "е",
+      "where": 0
+    },
+    {
+      "original": "f",
+      "target": "ф",
+      "where": 0
+    },
+    {
+      "original": "g",
+      "target": "г",
+      "where": 0
+    },
+    {
+      "original": "h",
+      "target": "х",
+      "where": 0
+    },
+    {
+      "original": "i",
+      "target": "и",
+      "where": 0
+    },
+    {
+      "original": "j",
+      "target": "ж",
+      "where": 0
+    },
+    {
+      "original": "k",
+      "target": "к",
+      "where": 0
+    },
+    {
+      "original": "l",
+      "target": "л",
+      "where": 0
+    },
+    {
+      "original": "m",
+      "target": "м",
+      "where": 0
+    },
+    {
+      "original": "n",
+      "target": "н",
+      "where": 0
+    },
+    {
+      "original": "o",
+      "target": "о",
+      "where": 0
+    },
+    {
+      "original": "p",
+      "target": "п",
+      "where": 0
+    },
+    {
+      "original": "r",
+      "target": "р",
+      "where": 0
+    },
+    {
+      "original": "s",
+      "target": "с",
+      "where": 0
+    },
+    {
+      "original": "t",
+      "target": "т",
+      "where": 0
+    },
+    {
+      "original": "u",
+      "target": "у",
+      "where": 0
+    },
+    {
+      "original": "v",
+      "target": "в",
+      "where": 0
+    },
+    {
+      "original": "w",
+      "target": "в",
+      "where": 0
+    },
+    {
+      "original": "x",
+      "target": "кс",
+      "where": 0
+    },
+    {
+      "original": "y",
+      "target": "и",
+      "where": 0
+    },
+    {
+      "original": "z",
+      "target": "з",
+      "where": 0
+    }
   ]
 }
